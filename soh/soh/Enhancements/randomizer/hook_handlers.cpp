@@ -1399,6 +1399,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             }
             break;
         }
+        case VB_FREEZE_ON_SKULL_TOKEN:
         case VB_TRADE_TIMER_ODD_MUSHROOM:
         case VB_TRADE_TIMER_EYEDROPS:
         case VB_TRADE_TIMER_FROG:
@@ -2208,7 +2209,7 @@ void RandomizerRegisterHooks() {
         onSceneSpawnActorsHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneSpawnActors>(RandomizerOnSceneSpawnActorsHandler);
         onPlayDestroyHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnPlayDestroy>(RandomizerOnPlayDestroyHandler);
         onGoldenSkulltulaDefeatHook = GameInteractor::Instance->RegisterGameHookForID<GameInteractor::OnEnemyDefeat>(ACTOR_EN_SW, RandomizerOnGoldenSkulltulaDefeatHandler);
-        onPlayDestroyHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnExitGame>(RandomizerOnExitGameHandler);
+        onExitGameHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnExitGame>(RandomizerOnExitGameHandler);
         onKaleidoUpdateHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnKaleidoscopeUpdate>(RandomizerOnKaleidoscopeUpdateHandler);
 
         if (RAND_GET_OPTION(RSK_FISHSANITY) != RO_FISHSANITY_OFF) {
