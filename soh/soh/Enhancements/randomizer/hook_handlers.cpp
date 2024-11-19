@@ -2076,6 +2076,17 @@ void RandomizerOnPlayDestroyHandler() {
     }
 }
 
+void RandomizerOnEnemyDefeatHandler(void *refActor) {
+    Actor* actor = static_cast<Actor*>(refActor);
+    if (actor->id == ACTOR_EN_SW) {
+        auto rc = GetRandomizerCheckFromFlag(FlagType::FLAG_GS_TOKEN, actor->params);
+        auto itemLoc = Rando::Context::GetInstance()->GetItemLocation(rc);
+        if (itemLoc->GetCheckStatus() == RCSHOW_UNCHECKED) {
+            itemLoc->SetCheckStatus(RCSHOW_SEEN);
+        }
+    }
+}
+
 void RandomizerOnExitGameHandler(int32_t fileNum) {
     // When going from a rando save to a vanilla save within the same game instance
     // we need to reset the entrance table back to its vanilla state
@@ -2114,6 +2125,7 @@ void RandomizerRegisterHooks() {
     static uint32_t onGameFrameUpdateHook = 0;
     static uint32_t onSceneSpawnActorsHook = 0;
     static uint32_t onPlayDestroyHook = 0;
+    static uint32_t onEnemyDefeatHook = 0;
     static uint32_t onExitGameHook = 0;
     static uint32_t onKaleidoUpdateHook = 0;
 
@@ -2141,6 +2153,7 @@ void RandomizerRegisterHooks() {
         GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnGameFrameUpdate>(onGameFrameUpdateHook);
         GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnSceneSpawnActors>(onSceneSpawnActorsHook);
         GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnPlayDestroy>(onPlayDestroyHook);
+        GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnEnemyDefeat>(onEnemyDefeatHook);
         GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnExitGame>(onExitGameHook);
         GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnKaleidoscopeUpdate>(onKaleidoUpdateHook);
 
@@ -2163,6 +2176,7 @@ void RandomizerRegisterHooks() {
         onGameFrameUpdateHook = 0;
         onSceneSpawnActorsHook = 0;
         onPlayDestroyHook = 0;
+        onEnemyDefeatHook = 0;
         onExitGameHook = 0;
         onKaleidoUpdateHook = 0;
 
@@ -2195,6 +2209,7 @@ void RandomizerRegisterHooks() {
         onGameFrameUpdateHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnGameFrameUpdate>(RandomizerOnGameFrameUpdateHandler);
         onSceneSpawnActorsHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneSpawnActors>(RandomizerOnSceneSpawnActorsHandler);
         onPlayDestroyHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnPlayDestroy>(RandomizerOnPlayDestroyHandler);
+        onEnemyDefeatHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnEnemyDefeat>(RandomizerOnEnemyDefeatHandler);
         onPlayDestroyHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnExitGame>(RandomizerOnExitGameHandler);
         onKaleidoUpdateHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnKaleidoscopeUpdate>(RandomizerOnKaleidoscopeUpdateHandler);
 
