@@ -692,6 +692,7 @@ void RandomizerOnDialogMessageHandler() {
                 }
                 break;
             case TEXT_GF_HBA_SIGN:
+            case TEXT_HBA_NOT_ON_HORSE:
             case TEXT_HBA_INITIAL_EXPLAINATION:
             case TEXT_HBA_ALREADY_HAVE_1000:
                 if (ctx->GetOption(RSK_HBA_HINT)) {
@@ -715,7 +716,7 @@ void RandomizerOnDialogMessageHandler() {
                 }
                 break;
             case TEXT_GRANNYS_SHOP:
-                if (!Flags_GetRandomizerInf(RAND_INF_MERCHANTS_GRANNYS_SHOP) && revealMerchant && nonBeanMerchants &&
+                if (revealMerchant && nonBeanMerchants &&
                   (ctx->GetOption(RSK_SHUFFLE_ADULT_TRADE) || INV_CONTENT(ITEM_CLAIM_CHECK) == ITEM_CLAIM_CHECK)) {
                      reveal = RC_KAK_GRANNYS_SHOP;
                  }
@@ -726,8 +727,7 @@ void RandomizerOnDialogMessageHandler() {
                 }
                 break;
             case TEXT_CARPET_SALESMAN_1:
-                if (!Flags_GetRandomizerInf(RAND_INF_MERCHANTS_CARPET_SALESMAN) && revealMerchant && nonBeanMerchants &&
-                  !ctx->GetOption(RSK_MERCHANT_TEXT_HINT).GetSelectedOptionIndex() != RO_GENERIC_OFF) {
+                if (revealMerchant && nonBeanMerchants) {
                     reveal = RC_WASTELAND_BOMBCHU_SALESMAN;
                 }
                 break;
@@ -748,6 +748,17 @@ void RandomizerOnDialogMessageHandler() {
                         itemoot_loc->SetCheckStatus(RCSHOW_IDENTIFIED);
                     }
                     reveal = RC_SONG_FROM_OCARINA_OF_TIME;
+                }
+                break;
+            case TEXT_FISHING_CLOUDY:
+            case TEXT_FISHING_TRY_ANOTHER_LURE:
+            case TEXT_FISHING_SECRETS:
+            case TEXT_FISHING_GOOD_FISHERMAN:
+            case TEXT_FISHING_DIFFERENT_POND:
+            case TEXT_FISHING_SCRATCHING:
+            case TEXT_FISHING_TRY_ANOTHER_LURE_WITH_SINKING_LURE:
+                if (ctx->GetOption(RSK_LOACH_HINT)) {
+                    reveal = RC_LH_HYRULE_LOACH;
                 }
                 break;
         }
