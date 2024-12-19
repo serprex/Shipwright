@@ -464,6 +464,7 @@ void PlaceJunkInExcludedLocation(const RandomizerCheck il) {
   for (size_t i = 0; i < ItemPool.size(); i++) {
     if (!Rando::StaticData::RetrieveItem(ItemPool[i]).IsAdvancement()) {
       ctx->PlaceItemInLocation(il, ItemPool[i]);
+      ctx->GetItemLocation(il)->SetIsSkipped(true);
       ItemPool.erase(ItemPool.begin() + i);
       return;
     }
