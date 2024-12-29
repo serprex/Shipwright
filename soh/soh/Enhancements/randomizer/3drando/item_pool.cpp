@@ -863,13 +863,11 @@ void GenerateItemPool() {
           // Check if current pot's dungeon is vanilla or MQ, and only add if quest corresponds to it.
           SceneID potScene = Rando::StaticData::GetLocation(loc)->GetScene();
 
-          for (uint8_t i = SCENE_DEKU_TREE; i <= SCENE_GERUDO_TRAINING_GROUND; i++) {
-            if (i == potScene) {
-              bool isMQ = ctx->GetDungeon(SCENE_DEKU_TREE)->IsMQ();
+          if (potScene >= SCENE_DEKU_TREE && potScene <= SCENE_GERUDO_TRAINING_GROUND) {
+            bool isMQ = ctx->GetDungeon(potScene)->IsMQ();
 
-              if ((isMQ && currentQuest == RCQUEST_MQ) || (!isMQ && currentQuest == RCQUEST_VANILLA)) {
-                AddItemToMainPool(Rando::StaticData::GetLocation(loc)->GetVanillaItem());
-              }
+            if ((isMQ && currentQuest == RCQUEST_MQ) || (!isMQ && currentQuest == RCQUEST_VANILLA)) {
+              AddItemToMainPool(Rando::StaticData::GetLocation(loc)->GetVanillaItem());
             }
           }
         }
