@@ -625,38 +625,36 @@ static void PlaceVanillaOverworldFish() {
 }
 
 static void PlaceItemsForType(RandomizerCheckType rctype, bool overworldActive, bool dungeonActive, bool placeVanilla) {
-  if (overworldActive || dungeonActive) {
-    for (RandomizerCheck rc : ctx->GetLocations(ctx->allLocations, rctype)) {
-      auto loc = Rando::StaticData::GetLocation(rc);
+  for (RandomizerCheck rc : ctx->GetLocations(ctx->allLocations, rctype)) {
+    auto loc = Rando::StaticData::GetLocation(rc);
 
-      // If item is in the overworld and shuffled, add its item to the pool
-      if (loc->IsOverworld()) {
-        if (overworldActive) {
+    // If item is in the overworld and shuffled, add its item to the pool
+    if (loc->IsOverworld()) {
+      if (overworldActive) {
+        AddItemToMainPool(loc->GetVanillaItem());
+      } else if (placeVanilla) {
+        ctx->PlaceItemInLocation(rc, loc->GetVanillaItem(), false, true);
+      }
+    } else {
+      if (dungeonActive) {
+        // If the same in MQ and vanilla, add.
+        RandomizerCheckQuest currentQuest = loc->GetQuest();
+        if (currentQuest == RCQUEST_BOTH) {
           AddItemToMainPool(loc->GetVanillaItem());
-        } else if (placeVanilla) {
-          ctx->PlaceItemInLocation(rc, loc->GetVanillaItem(), false, true);
-        }
-      } else {
-        if (dungeonActive) {
-          // If the same in MQ and vanilla, add.
-          RandomizerCheckQuest currentQuest = loc->GetQuest();
-          if (currentQuest == RCQUEST_BOTH) {
-            AddItemToMainPool(loc->GetVanillaItem());
-          } else {
-            // Check if current item's dungeon is vanilla or MQ, and only add if quest corresponds to it.
-            SceneID itemScene = loc->GetScene();
+        } else {
+          // Check if current item's dungeon is vanilla or MQ, and only add if quest corresponds to it.
+          SceneID itemScene = loc->GetScene();
 
-            if (itemScene >= SCENE_DEKU_TREE && itemScene <= SCENE_GERUDO_TRAINING_GROUND) {
-              bool isMQ = ctx->GetDungeon(itemScene)->IsMQ();
+          if (itemScene >= SCENE_DEKU_TREE && itemScene <= SCENE_GERUDO_TRAINING_GROUND) {
+            bool isMQ = ctx->GetDungeon(itemScene)->IsMQ();
 
-              if ((isMQ && currentQuest == RCQUEST_MQ) || (!isMQ && currentQuest == RCQUEST_VANILLA)) {
-                AddItemToMainPool(loc->GetVanillaItem());
-              }
+            if ((isMQ && currentQuest == RCQUEST_MQ) || (!isMQ && currentQuest == RCQUEST_VANILLA)) {
+              AddItemToMainPool(loc->GetVanillaItem());
             }
           }
-        } else if (placeVanilla) {
-          ctx->PlaceItemInLocation(rc, loc->GetVanillaItem(), false, true);
         }
+      } else if (placeVanilla) {
+        ctx->PlaceItemInLocation(rc, loc->GetVanillaItem(), false, true);
       }
     }
   }
@@ -859,7 +857,9 @@ void GenerateItemPool() {
                              ctx->GetOption(RSK_SHUFFLE_POTS).Is(RO_SHUFFLE_POTS_ALL);
   bool dungeonPotsActive = ctx->GetOption(RSK_SHUFFLE_POTS).Is(RO_SHUFFLE_POTS_DUNGEONS) ||
                            ctx->GetOption(RSK_SHUFFLE_POTS).Is(RO_SHUFFLE_POTS_ALL);
-  PlaceItemsForType(RCTYPE_POT, overworldPotsActive, dungeonPotsActive, false);
+  if (overworldPotsActive || dungeonPotsActive) {
+    PlaceItemsForType(RCTYPE_POT, overworldPotsActive, dungeonPotsActive, false);
+  }
   
   auto fsMode = ctx->GetOption(RSK_FISHSANITY);
   if (fsMode.IsNot(RO_FISHSANITY_OFF)) {
@@ -1267,7 +1267,9 @@ void GenerateItemPool() {
                              ctx->GetOption(RSK_SHUFFLE_FREESTANDING).Is(RO_FREESTANDING_ALL);
   bool dungeonFreeStandingActive = ctx->GetOption(RSK_SHUFFLE_FREESTANDING).Is(RO_FREESTANDING_DUNGEONS) ||
                            ctx->GetOption(RSK_SHUFFLE_FREESTANDING).Is(RO_FREESTANDING_ALL);
-  PlaceItemsForType(RCTYPE_FREESTANDING, overworldFreeStandingActive, dungeonFreeStandingActive, true);
+  if (overworldFreeStandingActive || dungeonFreeStandingActive) {
+    PlaceItemsForType(RCTYPE_FREESTANDING, overworldFreeStandingActive, dungeonFreeStandingActive, true);
+  }
 
   AddItemsToPool(ItemPool, alwaysItems);
   AddItemsToPool(ItemPool, dungeonRewards);
