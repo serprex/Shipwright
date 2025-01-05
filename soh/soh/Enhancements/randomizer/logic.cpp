@@ -341,7 +341,7 @@ namespace Rando {
                 return BugShrub || WanderingBugs || BugRock || GetInLogic(LOGIC_BUGS_ACCESS);
             case RG_BOTTLE_WITH_FISH:
                 return LoneFish || FishGroup || GetInLogic(LOGIC_FISH_ACCESS); //is there any need to care about lone vs group?
-            case RG_BOTTLE_WITH_BLUE_FIRE: //RANDOTODO should probably be better named to 
+            case RG_BOTTLE_WITH_BLUE_FIRE: //RANDOTODO should probably be better named
                 return BlueFireAccess || GetInLogic(LOGIC_BLUE_FIRE_ACCESS);
             case RG_BOTTLE_WITH_FAIRY:
                 return FairyPot || GossipStoneFairy || BeanPlantFairy || ButterflyFairy || FreeFairies || FairyPond || GetInLogic(LOGIC_FAIRY_ACCESS);
@@ -820,8 +820,7 @@ namespace Rando {
     }
 
     bool Logic::CanBreakMudWalls() {
-        //RANDOTODO blue fire tricks
-        return BlastOrSmash();
+        return BlastOrSmash() || (ctx->GetTrickOption(RT_BLUE_FIRE_MUD_WALLS) && BlueFire());
     }
 
     bool Logic::CanGetDekuBabaSticks() {
@@ -1148,7 +1147,7 @@ namespace Rando {
     }
 
     bool Logic::CanUseProjectile(){
-        return  HasExplosives() || CanUse(RG_FAIRY_BOW) || CanUse(RG_HOOKSHOT) || CanUse(RG_FAIRY_SLINGSHOT) || CanUse(RG_BOOMERANG);
+        return HasExplosives() || CanUse(RG_FAIRY_BOW) || CanUse(RG_HOOKSHOT) || CanUse(RG_FAIRY_SLINGSHOT) || CanUse(RG_BOOMERANG);
     }
 
     bool Logic::CanBuildRainbowBridge(){
