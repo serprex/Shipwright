@@ -5801,7 +5801,7 @@ typedef enum {
     RE_WHITE_WOLFOS,
     RE_STINGER,
     RE_BIG_OCTO,
-    RE_GERUDO,
+    RE_GERUDO_WARRIOR,
     RE_GIBDO,
     RE_GANONDORF,
     RE_GANON,
