@@ -916,7 +916,7 @@ static void RandomizeDungeonRewards() {
   int baseOffset = Rando::StaticData::RetrieveItem(RG_KOKIRI_EMERALD).GetItemID();
 
   //End of Dungeons includes Link's Pocket
-  if (ctx->GetOption(RSK_SHUFFLE_DUNGEON_REWARDS).Is(RO_DUNGEON_REWARDS_END_OF_DUNGEON)) {
+  if (ctx->GetOption(RSK_SHUFFLE_DUNGEON_REWARDS).Is(RO_DUNGEON_REWARDS_END_OF_DUNGEON) || ctx->GetOption(RSK_SHUFFLE_DUNGEON_REWARDS).Is(RO_DUNGEON_REWARDS_VANILLA)) {
     //get stones and medallions
     std::vector<RandomizerGet> rewards = FilterAndEraseFromPool(ItemPool, [](const auto i) {return Rando::StaticData::RetrieveItem(i).GetItemType() == ITEMTYPE_DUNGEONREWARD;});
 
@@ -926,11 +926,11 @@ static void RandomizeDungeonRewards() {
       ctx->PlaceItemInLocation(RC_LINKS_POCKET, RG_GREEN_RUPEE);
     }
 
-    if (ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_VANILLA)) { //Place dungeon rewards in vanilla locations
+    if (ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_VANILLA) || ctx->GetOption(RSK_SHUFFLE_DUNGEON_REWARDS).Is(RO_DUNGEON_REWARDS_VANILLA)) { // Place dungeon rewards in vanilla locations
       for (RandomizerCheck loc : Rando::StaticData::dungeonRewardLocations) {
         ctx->GetItemLocation(loc)->PlaceVanillaItem();
       }
-    } else { //Randomize dungeon rewards with assumed fill
+    } else { // Randomize dungeon rewards with assumed fill
       AssumedFill(rewards, Rando::StaticData::dungeonRewardLocations);
     }
 
