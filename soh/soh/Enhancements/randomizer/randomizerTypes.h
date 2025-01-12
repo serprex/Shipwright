@@ -2839,6 +2839,7 @@ typedef enum {
     RT_HOVER_BOOST_SIMPLE,
     RT_BOMBCHU_BEEHIVES,
     RT_BLUE_FIRE_MUD_WALLS,
+    RT_OPEN_UNDERWATER_CHEST,
     RT_KF_ADULT_GS,                            // -- location tricks
     RT_LW_BRIDGE,
     RT_LW_MIDO_BACKFLIP,

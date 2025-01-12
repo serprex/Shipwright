@@ -382,6 +382,10 @@ namespace Rando {
         }
     }
 
+    bool Logic::CanOpenUnderwaterChest() {
+        return ctx->GetTrickOption(RT_OPEN_UNDERWATER_CHEST) && CanUse(RG_IRON_BOOTS) && CanUse(RG_HOOKSHOT);
+    }
+
     uint8_t GetDifficultyValueFromString(Rando::Option& glitchOption) {
         return 0;
     }
