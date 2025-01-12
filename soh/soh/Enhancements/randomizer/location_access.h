@@ -19,7 +19,7 @@ class Region;
 
 class EventAccess {
     public:
-        explicit EventAccess(bool* event_, ConditionFn condition_function_) : event(event_), condition_function(condition_function_) {}
+        explicit EventAccess(bool* event_, ConditionFn condition_function_, bool force_logic_ = false) : event(event_), condition_function(condition_function_), force_logic(force_logic_) {}
 
         bool ConditionsMet() const {
             auto ctx = Rando::Context::GetInstance();
@@ -27,9 +27,10 @@ class EventAccess {
                 return true;
             } else if (ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_GLITCHLESS)) {
                 return condition_function();
-            } else if (ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_GLITCHED)) {
-                return condition_function();
+            } else if (ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_NEARLY_NO_LOGIC)) {
+                return !force_logic || condition_function();
             }
+            assert(false);
             return false;
         }
 
@@ -56,18 +57,20 @@ class EventAccess {
     private:
         bool* event;
         ConditionFn condition_function;
+        bool force_logic;
 };
 
 std::string CleanCheckConditionString(std::string condition);
 
-#define LOCATION(check, condition) LocationAccess(check, []{return condition;}, CleanCheckConditionString(#condition))
+#define LOCATION(check, condition) LocationAccess(check, []{return condition;}, false, CleanCheckConditionString(#condition))
+#define LOCATION_NNL(check, condition) LocationAccess(check, []{return condition;}, true, CleanCheckConditionString(#condition))
 
 //this class is meant to hold an item location with a boolean function to determine its accessibility from a specific area
 class LocationAccess {
     public:
-        explicit LocationAccess(RandomizerCheck location_, ConditionFn condition_function_) : location(location_), condition_function(condition_function_), condition_str("") {}
+        explicit LocationAccess(RandomizerCheck location_, ConditionFn condition_function_) : location(location_), condition_function(condition_function_), force_logic(false), condition_str("") {}
 
-        explicit LocationAccess(RandomizerCheck location_, ConditionFn condition_function_, std::string condition_str_) : location(location_), condition_function(condition_function_), condition_str(condition_str_) {}
+        explicit LocationAccess(RandomizerCheck location_, ConditionFn condition_function_, bool force_logic_, std::string condition_str_) : location(location_), condition_function(condition_function_), force_logic(force_logic_), condition_str(condition_str_) {}
 
         bool GetConditionsMet() const {
             auto ctx = Rando::Context::GetInstance();
@@ -75,9 +78,10 @@ class LocationAccess {
                 return true;
             } else if (ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_GLITCHLESS)) {
                 return condition_function();
-            } else if (ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_GLITCHED)) {
-                return condition_function();
+            } else if (ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_NEARLY_NO_LOGIC)) {
+                return !force_logic || condition_function();
             }
+            assert(false);
             return false;
         }
 
@@ -96,6 +100,7 @@ class LocationAccess {
     protected:
         RandomizerCheck location;
         ConditionFn condition_function;
+        bool force_logic;
         std::string condition_str;
 
         //Makes sure shop locations are buyable
