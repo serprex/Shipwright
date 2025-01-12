@@ -106,6 +106,7 @@ class Logic {
     // Other
     bool AtDay = false;
     bool AtNight = false;
+    bool CanSetupOneSixteenthHealth = false;
 
     // Events
     bool ShowedMidoSwordAndShield = false;
@@ -225,8 +226,8 @@ class Logic {
     uint8_t StoneCount();
     uint8_t MedallionCount();
     uint8_t DungeonCount();
-    uint8_t FireTimer();
-    uint8_t WaterTimer();
+    bool FireTimer(uint8_t threshold, bool needToTakeDamage = false);
+    bool WaterTimer(uint8_t threshold, bool needToTakeDamage = false);
     bool TakeDamage();
     bool CanOpenBombGrotto();
     bool CanOpenStormsGrotto();

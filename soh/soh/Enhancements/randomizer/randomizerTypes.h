@@ -2832,6 +2832,7 @@ typedef enum {
     RT_VISIBLE_COLLISION,                          // -- general tricks
     RT_GROTTOS_WITHOUT_AGONY,
     RT_FEWER_TUNIC_REQUIREMENTS,
+    RT_ONE_SIXTEENTH_TUNIC,
     RT_RUSTED_SWITCHES,
     RT_FLAMING_CHESTS,
     RT_BUNNY_HOOD_JUMPS,

@@ -6,7 +6,9 @@ using namespace Rando;
 
 void RegionTable_Init_FireTemple() {
     // Vanilla/MQ Decider
-    areaTable[RR_FIRE_TEMPLE_ENTRYWAY] = Region("Fire Temple Entryway", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
+    areaTable[RR_FIRE_TEMPLE_ENTRYWAY] = Region("Fire Temple Entryway", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
+        EventAccess(&logic->CanSetupOneSixteenthHealth, []{return true;}),
+    }, {}, {
         //Exits
         Entrance(RR_FIRE_TEMPLE_FIRST_ROOM,          []{return ctx->GetDungeon(FIRE_TEMPLE)->IsVanilla();}),
         Entrance(RR_FIRE_TEMPLE_MQ_FIRST_ROOM_LOWER, []{return ctx->GetDungeon(FIRE_TEMPLE)->IsMQ();}),
@@ -18,10 +20,10 @@ void RegionTable_Init_FireTemple() {
     areaTable[RR_FIRE_TEMPLE_FIRST_ROOM] = Region("Fire Temple First Room", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
         //Exits
         Entrance(RR_FIRE_TEMPLE_ENTRYWAY,       []{return true;}),
-        Entrance(RR_FIRE_TEMPLE_NEAR_BOSS_ROOM, []{return logic->FireTimer() >= 24;}),
+        Entrance(RR_FIRE_TEMPLE_NEAR_BOSS_ROOM, []{return logic->FireTimer(24);}),
         Entrance(RR_FIRE_TEMPLE_LOOP_ENEMIES,   []{return Here(RR_FIRE_TEMPLE_FIRST_ROOM, []{return logic->CanUse(RG_MEGATON_HAMMER);}) && (logic->SmallKeys(RR_FIRE_TEMPLE, 8) || !logic->IsKeysanity);}),
         Entrance(RR_FIRE_TEMPLE_LOOP_EXIT,      []{return true;}),
-        Entrance(RR_FIRE_TEMPLE_BIG_LAVA_ROOM,  []{return logic->SmallKeys(RR_FIRE_TEMPLE, 2) && logic->FireTimer() >= 24;}),
+        Entrance(RR_FIRE_TEMPLE_BIG_LAVA_ROOM,  []{return logic->SmallKeys(RR_FIRE_TEMPLE, 2) && logic->FireTimer(24);}),
     });
 
     areaTable[RR_FIRE_TEMPLE_NEAR_BOSS_ROOM] = Region("Fire Temple Near Boss Room", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
@@ -129,13 +131,13 @@ void RegionTable_Init_FireTemple() {
 
     areaTable[RR_FIRE_TEMPLE_FIRE_PILLAR_ROOM] = Region("Fire Temple Fire Pillar Room", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
-        LOCATION(RC_FIRE_TEMPLE_FIRE_PILLAR_LEFT_HEART,  logic->FireTimer() >= 56),
-        LOCATION(RC_FIRE_TEMPLE_FIRE_PILLAR_RIGHT_HEART, logic->FireTimer() >= 56),
-        LOCATION(RC_FIRE_TEMPLE_FIRE_PILLAR_BACK_HEART,  logic->FireTimer() >= 56),
+        LOCATION(RC_FIRE_TEMPLE_FIRE_PILLAR_LEFT_HEART,  logic->FireTimer(56)),
+        LOCATION(RC_FIRE_TEMPLE_FIRE_PILLAR_RIGHT_HEART, logic->FireTimer(56)),
+        LOCATION(RC_FIRE_TEMPLE_FIRE_PILLAR_BACK_HEART,  logic->FireTimer(56)),
     }, {
         //Exits
         Entrance(RR_FIRE_TEMPLE_BIG_LAVA_ROOM, []{return logic->SmallKeys(RR_FIRE_TEMPLE, 3);}),
-        Entrance(RR_FIRE_TEMPLE_SHORTCUT_ROOM, []{return logic->FireTimer() >= 56 && logic->SmallKeys(RR_FIRE_TEMPLE, 4);}),
+        Entrance(RR_FIRE_TEMPLE_SHORTCUT_ROOM, []{return logic->FireTimer(56) && logic->SmallKeys(RR_FIRE_TEMPLE, 4);}),
     });
 
     areaTable[RR_FIRE_TEMPLE_SHORTCUT_ROOM] = Region("Fire Temple Shortcut Room", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
@@ -189,15 +191,15 @@ void RegionTable_Init_FireTemple() {
 
     areaTable[RR_FIRE_TEMPLE_FIRE_WALL_CHASE] = Region("Fire Temple Fire Wall Chase", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
-        LOCATION(RC_FIRE_TEMPLE_FIRE_WALL_EAST_HEART, logic->FireTimer() >= 24 && (logic->IsAdult || logic->CanUse(RG_BOOMERANG))),
-        LOCATION(RC_FIRE_TEMPLE_FIRE_WALL_WEST_HEART, logic->FireTimer() >= 24 && (logic->IsAdult || logic->CanUse(RG_BOOMERANG))),
-        LOCATION(RC_FIRE_TEMPLE_FIRE_WALL_EXIT_HEART, logic->FireTimer() >= 24),
+        LOCATION(RC_FIRE_TEMPLE_FIRE_WALL_EAST_HEART, logic->FireTimer(24) && (logic->IsAdult || logic->CanUse(RG_BOOMERANG))),
+        LOCATION(RC_FIRE_TEMPLE_FIRE_WALL_WEST_HEART, logic->FireTimer(24) && (logic->IsAdult || logic->CanUse(RG_BOOMERANG))),
+        LOCATION(RC_FIRE_TEMPLE_FIRE_WALL_EXIT_HEART, logic->FireTimer(24)),
     }, {
         //Exits
-        Entrance(RR_FIRE_TEMPLE_EAST_CENTRAL_ROOM,  []{return logic->FireTimer() >= 24 && logic->SmallKeys(RR_FIRE_TEMPLE, 6, 8);}),
+        Entrance(RR_FIRE_TEMPLE_EAST_CENTRAL_ROOM,  []{return logic->FireTimer(24) && logic->SmallKeys(RR_FIRE_TEMPLE, 6, 8);}),
         Entrance(RR_FIRE_TEMPLE_MAP_AREA,           []{return logic->IsAdult;}),
-        Entrance(RR_FIRE_TEMPLE_BOULDER_MAZE_UPPER, []{return logic->FireTimer() >= 24 && logic->IsAdult;}),
-        Entrance(RR_FIRE_TEMPLE_CORRIDOR,           []{return logic->FireTimer() >= 24 && logic->IsAdult && logic->SmallKeys(RR_FIRE_TEMPLE, 7);}),
+        Entrance(RR_FIRE_TEMPLE_BOULDER_MAZE_UPPER, []{return logic->FireTimer(24) && logic->IsAdult;}),
+        Entrance(RR_FIRE_TEMPLE_CORRIDOR,           []{return logic->FireTimer(24) && logic->IsAdult && logic->SmallKeys(RR_FIRE_TEMPLE, 7);}),
     });
 
     areaTable[RR_FIRE_TEMPLE_MAP_AREA] = Region("Fire Temple Map Region", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
@@ -429,13 +431,13 @@ void RegionTable_Init_FireTemple() {
     areaTable[RR_FIRE_TEMPLE_MQ_NEAR_BOSS_ROOM] = Region("Fire Temple MQ Near Boss Room", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
         //If we're using the south torch as the initial torch, or using FAs, we either have to cross to the north to remove the crate, or use a trick to ignore it
-        LOCATION(RC_FIRE_TEMPLE_MQ_NEAR_BOSS_CHEST, logic->FireTimer() > 25 && ctx->GetTrickOption(RT_FIRE_MQ_NEAR_BOSS) && (logic->CanUse(RG_FIRE_ARROWS) || (logic->IsAdult && logic->CanUse(RG_DINS_FIRE) && logic->CanUse(RG_FAIRY_BOW))))
+        LOCATION(RC_FIRE_TEMPLE_MQ_NEAR_BOSS_CHEST, logic->FireTimer(24) && ctx->GetTrickOption(RT_FIRE_MQ_NEAR_BOSS) && (logic->CanUse(RG_FIRE_ARROWS) || (logic->IsAdult && logic->CanUse(RG_DINS_FIRE) && logic->CanUse(RG_FAIRY_BOW))))
     }, {
         //Exits
         Entrance(RR_FIRE_TEMPLE_MQ_FIRST_ROOM_UPPER,     []{return true;}),
         //Child cannot make it to the north side torches without a hook without specifically bunny hood speed + hover boots
-        Entrance(RR_FIRE_TEMPLE_MQ_NEAR_BOSS_ROOM_NORTH, []{return logic->FireTimer() > 32 && (logic->CanUse(RG_HOOKSHOT) || (logic->IsAdult && logic->CanUse(RG_HOVER_BOOTS)));}),
-        Entrance(RR_FIRE_TEMPLE_BOSS_ENTRYWAY,           []{return logic->HasItem(RG_FIRE_TEMPLE_BOSS_KEY) && logic->FireTimer() >= 15 && ((logic->IsAdult && (ctx->GetTrickOption(RT_FIRE_BOSS_DOOR_JUMP) || logic->CanUse(RG_HOVER_BOOTS))) || (logic->IsAdult && logic->HitFireTemplePlatform) || (logic->HitFireTemplePlatform && logic->CanUse(RG_HOVER_BOOTS)));}),
+        Entrance(RR_FIRE_TEMPLE_MQ_NEAR_BOSS_ROOM_NORTH, []{return logic->FireTimer(32) && (logic->CanUse(RG_HOOKSHOT) || (logic->IsAdult && logic->CanUse(RG_HOVER_BOOTS)));}),
+        Entrance(RR_FIRE_TEMPLE_BOSS_ENTRYWAY,           []{return logic->HasItem(RG_FIRE_TEMPLE_BOSS_KEY) && logic->FireTimer(16) && ((logic->IsAdult && (ctx->GetTrickOption(RT_FIRE_BOSS_DOOR_JUMP) || logic->CanUse(RG_HOVER_BOOTS))) || (logic->IsAdult && logic->HitFireTemplePlatform) || (logic->HitFireTemplePlatform && logic->CanUse(RG_HOVER_BOOTS)));}),
     });
 
     //This room assumes tunic logic is handled on entry.
@@ -460,18 +462,18 @@ void RegionTable_Init_FireTemple() {
     areaTable[RR_FIRE_TEMPLE_MQ_BIG_LAVA_ROOM] = Region("Fire Temple MQ Big Lava Room", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
         //I'm currently assuming the oversight version of RT_FIRE_MQ_BK_CHEST for the fire timer logic
-        LOCATION(RC_FIRE_TEMPLE_MQ_BIG_LAVA_ROOM_BLOCKED_DOOR_CHEST, logic->FireTimer() >= 40 && logic->HasFireSource() && logic->HasExplosives() && (logic->CanUse(RG_HOOKSHOT) || (logic->IsAdult && ctx->GetTrickOption(RT_FIRE_MQ_BLOCKED_CHEST)))),
+        LOCATION(RC_FIRE_TEMPLE_MQ_BIG_LAVA_ROOM_BLOCKED_DOOR_CHEST, logic->FireTimer(40) && logic->HasFireSource() && logic->HasExplosives() && (logic->CanUse(RG_HOOKSHOT) || (logic->IsAdult && ctx->GetTrickOption(RT_FIRE_MQ_BLOCKED_CHEST)))),
         //implies CanGetEnemyDrop(RE_GOLD_SKULLTULA)
-        LOCATION(RC_FIRE_TEMPLE_MQ_GS_BIG_LAVA_ROOM_OPEN_DOOR,       logic->FireTimer() >= 20 && logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_FIRE_TEMPLE_MQ_GS_BIG_LAVA_ROOM_OPEN_DOOR,       logic->FireTimer(20) && logic->CanUse(RG_MEGATON_HAMMER)),
         LOCATION(RC_FIRE_TEMPLE_MQ_LAVA_ROOM_NORTH_POT,              logic->CanBreakPots()),
         LOCATION(RC_FIRE_TEMPLE_MQ_LAVA_ROOM_HIGH_POT,               logic->CanBreakPots()),
-        LOCATION(RC_FIRE_TEMPLE_MQ_LAVA_ROOM_SOUTH_POT,              logic->FireTimer() >= 40 && (logic->CanUse(RG_HOOKSHOT) || (ctx->GetTrickOption(RT_FIRE_MQ_BLOCKED_CHEST) && ((logic->IsAdult && logic->CanBreakPots()) || logic->CanUse(RG_BOOMERANG))))),
+        LOCATION(RC_FIRE_TEMPLE_MQ_LAVA_ROOM_SOUTH_POT,              logic->FireTimer(40) && (logic->CanUse(RG_HOOKSHOT) || (ctx->GetTrickOption(RT_FIRE_MQ_BLOCKED_CHEST) && ((logic->IsAdult && logic->CanBreakPots()) || logic->CanUse(RG_BOOMERANG))))),
     }, {
         //Exits
         // Fewer tunic requirements ends here
-        Entrance(RR_FIRE_TEMPLE_MQ_FIRST_ROOM_UPPER,    []{return logic->FireTimer() >= 20;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_FIRST_ROOM_UPPER,    []{return logic->FireTimer(20);}),
         Entrance(RR_FIRE_TEMPLE_MQ_ELEVATOR_ROOM,       []{return logic->CanUse(RG_GORON_TUNIC) && logic->SmallKeys(RR_FIRE_TEMPLE, 2);}),
-        Entrance(RR_FIRE_TEMPLE_MQ_TORCH_FIREWALL_ROOM, []{return logic->HasFireSource() && ((logic->CanUse(RG_FAIRY_BOW) && logic->FireTimer() >= 25) || (ctx->GetTrickOption(RT_FIRE_MQ_BK_CHEST) && logic->FireTimer() >= 50)) && (logic->CanUse(RG_HOOKSHOT) || (logic->IsAdult && ctx->GetTrickOption(RT_FIRE_SOT)));}),
+        Entrance(RR_FIRE_TEMPLE_MQ_TORCH_FIREWALL_ROOM, []{return logic->HasFireSource() && ((logic->CanUse(RG_FAIRY_BOW) && logic->FireTimer(32)) || (ctx->GetTrickOption(RT_FIRE_MQ_BK_CHEST) && logic->FireTimer(50))) && (logic->CanUse(RG_HOOKSHOT) || (logic->IsAdult && ctx->GetTrickOption(RT_FIRE_SOT)));}),
     });
 
     areaTable[RR_FIRE_TEMPLE_MQ_TORCH_FIREWALL_ROOM] = Region("Fire Temple MQ Torch Firewall Room", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
@@ -705,7 +707,7 @@ void RegionTable_Init_FireTemple() {
 
     areaTable[RR_FIRE_TEMPLE_BOSS_ROOM] = Region("Fire Temple Boss Room", "Fire Temple", {}, NO_DAY_NIGHT_CYCLE, {
         // Events
-        EventAccess(&logic->FireTempleClear, []{return logic->FireTempleClear || (logic->HasBossSoul(RG_VOLVAGIA_SOUL) && (logic->FireTimer() >= 64 && logic->CanUse(RG_MEGATON_HAMMER)));}),
+        EventAccess(&logic->FireTempleClear, []{return logic->FireTempleClear || (logic->HasBossSoul(RG_VOLVAGIA_SOUL) && (logic->FireTimer(64) && logic->CanUse(RG_MEGATON_HAMMER)));}),
     }, {
         // Locations
         LOCATION(RC_FIRE_TEMPLE_VOLVAGIA_HEART, logic->FireTempleClear),

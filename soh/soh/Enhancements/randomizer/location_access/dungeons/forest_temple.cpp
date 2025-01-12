@@ -147,8 +147,8 @@ void RegionTable_Init_ForestTemple() {
     areaTable[RR_FOREST_TEMPLE_SEWER] = Region("Forest Temple Sewer", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
         LOCATION(RC_FOREST_TEMPLE_WELL_CHEST,      HasAccessTo(RR_FOREST_TEMPLE_NE_OUTDOORS_UPPER)),
-        LOCATION(RC_FOREST_TEMPLE_WELL_WEST_HEART, HasAccessTo(RR_FOREST_TEMPLE_NE_OUTDOORS_UPPER) || (logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8)),
-        LOCATION(RC_FOREST_TEMPLE_WELL_EAST_HEART, HasAccessTo(RR_FOREST_TEMPLE_NE_OUTDOORS_UPPER) || (logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8)),
+        LOCATION(RC_FOREST_TEMPLE_WELL_WEST_HEART, HasAccessTo(RR_FOREST_TEMPLE_NE_OUTDOORS_UPPER) || (logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer(8))),
+        LOCATION(RC_FOREST_TEMPLE_WELL_EAST_HEART, HasAccessTo(RR_FOREST_TEMPLE_NE_OUTDOORS_UPPER) || (logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer(8))),
     }, {
         //Exits
         Entrance(RR_FOREST_TEMPLE_NW_OUTDOORS_LOWER, []{return true;}),
@@ -423,16 +423,16 @@ void RegionTable_Init_ForestTemple() {
         //Locations
         LOCATION(RC_FOREST_TEMPLE_MQ_GS_LEVEL_ISLAND_COURTYARD, logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA)),
         //the well checks are considered from both areas instead of being a region because the draining is a temp flag and the skull (as well as the chest with hook glitch) has different breath timers from each side
-        LOCATION(RC_FOREST_TEMPLE_MQ_GS_WELL,                   (logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8 && logic->CanUse(RG_HOOKSHOT))),
+        LOCATION(RC_FOREST_TEMPLE_MQ_GS_WELL,                   (logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer(8) && logic->CanUse(RG_HOOKSHOT))),
         LOCATION(RC_FOREST_TEMPLE_MQ_COURTYARD_RIGHT_HEART,     logic->CanUse(RG_BOOMERANG) && ctx->GetTrickOption(RT_FOREST_OUTDOORS_HEARTS_BOOMERANG)),
         LOCATION(RC_FOREST_TEMPLE_MQ_COURTYARD_MIDDLE_HEART,    logic->CanUse(RG_BOOMERANG) && ctx->GetTrickOption(RT_FOREST_OUTDOORS_HEARTS_BOOMERANG)),
         LOCATION(RC_FOREST_TEMPLE_MQ_COURTYARD_LEFT_HEART,      logic->CanUse(RG_BOOMERANG) && ctx->GetTrickOption(RT_FOREST_OUTDOORS_HEARTS_BOOMERANG)),
-        LOCATION(RC_FOREST_TEMPLE_MQ_WELL_WEST_HEART,           logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8),
-        LOCATION(RC_FOREST_TEMPLE_MQ_WELL_MIDDLE_HEART,         logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8),
-        LOCATION(RC_FOREST_TEMPLE_MQ_WELL_EAST_HEART,           logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8),
+        LOCATION(RC_FOREST_TEMPLE_MQ_WELL_WEST_HEART,           logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer(8)),
+        LOCATION(RC_FOREST_TEMPLE_MQ_WELL_MIDDLE_HEART,         logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer(8)),
+        LOCATION(RC_FOREST_TEMPLE_MQ_WELL_EAST_HEART,           logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer(8)),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_MQ_NE_OUTDOORS,         []{return (((logic->CanUse(RG_IRON_BOOTS) || logic->CanUse(RG_LONGSHOT) || (ctx->GetTrickOption(RT_FOREST_MQ_WELL_SWIM) && logic->CanUse(RG_HOOKSHOT))) && logic->HasItem(RG_BRONZE_SCALE)) || logic->HasItem(RG_GOLDEN_SCALE)) && logic->WaterTimer() >= 16;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NE_OUTDOORS,         []{return (((logic->CanUse(RG_IRON_BOOTS) || logic->CanUse(RG_LONGSHOT) || (ctx->GetTrickOption(RT_FOREST_MQ_WELL_SWIM) && logic->CanUse(RG_HOOKSHOT))) && logic->HasItem(RG_BRONZE_SCALE)) || logic->HasItem(RG_GOLDEN_SCALE)) && logic->WaterTimer(16);}),
         Entrance(RR_FOREST_TEMPLE_MQ_OUTDOORS_TOP_LEDGES, []{return logic->CanUse(RG_FIRE_ARROWS);}),
     });
 
@@ -447,12 +447,12 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_MQ_GS_RAISED_ISLAND_COURTYARD, logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA)),
         //implies logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA)
         LOCATION(RC_FOREST_TEMPLE_MQ_GS_WELL,                    logic->CanHitEyeTargets() || (logic->CanUse(RG_IRON_BOOTS) && logic->CanUse(RG_HOOKSHOT))),
-        LOCATION(RC_FOREST_TEMPLE_MQ_WELL_WEST_HEART,            (logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8) || logic->CanHitEyeTargets()),
-        LOCATION(RC_FOREST_TEMPLE_MQ_WELL_MIDDLE_HEART,          (logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8) || logic->CanHitEyeTargets()),
-        LOCATION(RC_FOREST_TEMPLE_MQ_WELL_EAST_HEART,            (logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8) || logic->CanHitEyeTargets()),
+        LOCATION(RC_FOREST_TEMPLE_MQ_WELL_WEST_HEART,            (logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer(8)) || logic->CanHitEyeTargets()),
+        LOCATION(RC_FOREST_TEMPLE_MQ_WELL_MIDDLE_HEART,          (logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer(8)) || logic->CanHitEyeTargets()),
+        LOCATION(RC_FOREST_TEMPLE_MQ_WELL_EAST_HEART,            (logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer(8)) || logic->CanHitEyeTargets()),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_MQ_NW_OUTDOORS,         []{return (((logic->CanUse(RG_IRON_BOOTS) || logic->CanUse(RG_LONGSHOT)) && logic->HasItem(RG_BRONZE_SCALE)) || logic->HasItem(RG_GOLDEN_SCALE)) && logic->WaterTimer() >= 16;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NW_OUTDOORS,         []{return (((logic->CanUse(RG_IRON_BOOTS) || logic->CanUse(RG_LONGSHOT)) && logic->HasItem(RG_BRONZE_SCALE)) || logic->HasItem(RG_GOLDEN_SCALE)) && logic->WaterTimer(16);}),
         Entrance(RR_FOREST_TEMPLE_MQ_OUTDOORS_TOP_LEDGES, []{return logic->CanUse(RG_LONGSHOT) || (logic->CanUse(RG_HOOKSHOT) && ((logic->IsAdult && logic->CanUse(RG_HOVER_BOOTS)) || logic->CanUse(RG_SONG_OF_TIME)));}),
         Entrance(RR_FOREST_TEMPLE_MQ_NE_OUTDOORS_LEDGE,   []{return logic->CanUse(RG_LONGSHOT);}),
     });
