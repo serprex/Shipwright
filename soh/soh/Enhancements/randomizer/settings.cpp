@@ -356,6 +356,7 @@ void Settings::CreateOptions() {
     mTrickOptions[RT_LW_MIDO_BACKFLIP] = TrickOption::LogicTrick(RCQUEST_BOTH, RA_THE_LOST_WOODS, {Tricks::Tag::NOVICE}, "Backflip over Mido as Adult", "With a specific position and angle, you can backflip over Mido.");
     mTrickOptions[RT_LW_GS_BEAN] = TrickOption::LogicTrick(RCQUEST_BOTH, RA_THE_LOST_WOODS, {Tricks::Tag::INTERMEDIATE}, "Lost Woods Adult GS without Bean", "You can collect the token with a precise Hookshot use, as long as you can kill the Skulltula somehow first. It can be killed using Longshot, Bow, Bombchus or Din's Fire.");
     mTrickOptions[RT_HC_STORMS_GS] = TrickOption::LogicTrick(RCQUEST_BOTH, RA_HYRULE_CASTLE, {Tricks::Tag::INTERMEDIATE}, "Hyrule Castle Storms Grotto GS with Just Boomerang", "With precise throws, the Boomerang alone can kill the Skulltula and collect the token, without first needing to blow up the wall.");
+    mTrickOptions[RT_HF_BIG_POE_WITHOUT_EPONA] = TrickOption::LogicTrick(RCQUEST_BOTH, RA_HYRULE_FIELD, {Tricks::Tag::INTERMEDIATE}, "Big Poe without Epona", "Big Poes have a chance of appearing without Epona, you can shoot them quickly with only bow.");
     mTrickOptions[RT_KAK_MAN_ON_ROOF] = TrickOption::LogicTrick(RCQUEST_BOTH, RA_KAKARIKO_VILLAGE, {Tricks::Tag::NOVICE}, "Man on Roof without Hookshot", "Can be reached by side-hopping off the watchtower as either age, or by jumping onto the potion shop's roof from the ledge as adult.");
     mTrickOptions[RT_KAK_TOWER_GS] = TrickOption::LogicTrick(RCQUEST_BOTH, RA_KAKARIKO_VILLAGE, {Tricks::Tag::INTERMEDIATE}, "Kakariko Tower GS with Jump Slash", "Climb the tower as high as you can without touching the Gold Skulltula, then let go and jump slash immediately. By jump-slashing from as low on the ladder as possible to still hit the Skulltula, this trick can be done without taking fall damage.");
     mTrickOptions[RT_KAK_ADULT_WINDMILL_POH] = TrickOption::LogicTrick(RCQUEST_BOTH, RA_KAKARIKO_VILLAGE, {Tricks::Tag::NOVICE}, "Windmill PoH as Adult with Nothing", "Can jump up to the spinning platform from below as adult.");
@@ -420,6 +421,7 @@ void Settings::CreateOptions() {
     mTrickOptions[RT_DC_MQ_CHILD_BOMBS] = TrickOption::LogicTrick(RCQUEST_MQ, RA_DODONGOS_CAVERN, {Tricks::Tag::ADVANCED}, "Dodongo\'s Cavern MQ Early Bomb Bag Area as Child", "With a precise jump slash from above, you can reach the Bomb Bag area as only child without needing a Slingshot. You will take fall damage.");
     mTrickOptions[RT_DC_MQ_CHILD_EYES] = TrickOption::LogicTrick(RCQUEST_MQ, RA_DODONGOS_CAVERN, {Tricks::Tag::EXPERT}, "Dodongo\'s Cavern MQ Light the Eyes with Strength as Child", "If you move very quickly, it is possible to use the bomb flower at the top of the room to light the eyes. To perform this trick as child is significantly more difficult than adult. The player is also expected to complete the DC back area without explosives, including getting past the Armos wall to the switch for the boss door.");
     mTrickOptions[RT_DC_MQ_ADULT_EYES] = TrickOption::LogicTrick(RCQUEST_MQ, RA_DODONGOS_CAVERN, {Tricks::Tag::ADVANCED}, "Dodongo\'s Cavern MQ Light the Eyes with Strength as Adult", "If you move very quickly, it is possible to use the bomb flower at the top of the room to light the eyes.");
+    mTrickOptions[RT_DC_DODONGO_CHU] = TrickOption::LogicTrick(RCQUEST_BOTH, RA_DODONGOS_CAVERN, {Tricks::Tag::ADVANCED}, "Dodongo\'s Cavern Dodongo without Bombchus", "With precise timing you can feed King Dodongo a bombchu during a backflip");
     mTrickOptions[RT_JABU_ALCOVE_JUMP_DIVE] = TrickOption::LogicTrick(RCQUEST_BOTH, RA_JABU_JABUS_BELLY, {Tricks::Tag::NOVICE}, "Jabu Underwater Alcove as Adult with Jump Dive", "Standing above the underwater tunnel leading to the scrub, jump down and swim through the tunnel. This allows adult to access the alcove with no Scale or Iron Boots. In vanilla Jabu, this alcove has a business scrub. In MQ Jabu, it has the compass chest and a door switch for the main floor.");
     mTrickOptions[RT_JABU_BOSS_HOVER] = TrickOption::LogicTrick(RCQUEST_VANILLA, RA_JABU_JABUS_BELLY, {Tricks::Tag::INTERMEDIATE}, "Jabu Near Boss Room with Hover Boots", "A box for the blue switch can be carried over by backwalking with one while the elevator is at its peak. Alternatively, you can skip transporting a box by quickly rolling from the switch and opening the door before it closes. However, the timing for this is very tight.");
     mTrickOptions[RT_JABU_NEAR_BOSS_RANGED] = TrickOption::LogicTrick(RCQUEST_BOTH, RA_JABU_JABUS_BELLY, {Tricks::Tag::NOVICE}, "Jabu Near Boss Ceiling Switch/GS without Boomerang or Explosives", "Vanilla Jabu: From near the entrance into the room, you can hit the switch that opens the door to the boss room using a precisely-aimed use of the Slingshot, Bow, or Longshot. As well, if you climb to the top of the vines you can stand on the right edge of the platform and shoot around the glass. From this distance, even the Hookshot can reach the switch. This trick is only relevant if \"Shuffle Boss Entrances\" is enabled. MQ Jabu: A Gold Skulltula Token can be collected with the Hookshot or Longshot using the same methods as hitting the switch in vanilla. This MQ trick is not currently relevant in logic.");
@@ -478,6 +480,7 @@ void Settings::CreateOptions() {
     mTrickOptions[RT_WATER_CHILD_DRAGON] = TrickOption::LogicTrick(RCQUEST_VANILLA, RA_WATER_TEMPLE, {Tricks::Tag::ADVANCED}, "Water Temple Dragon Statue Switch from Above the Water as Child", "It is possible for child to hit the switch from dry land using one of Bombchus, Slingshot or Boomerang. Then, to get to the chest, child can dive through the tunnel using at least the Silver Scale. The timing and positioning of this dive needs to be perfect to actually make it under the gate, and it all needs to be done very quickly to be able to get through before the gate closes. Be sure to enable \"Water Temple Dragon Statue Switch from Above the Water as Adult\" for adult's variant of this trick.");
     mTrickOptions[RT_WATER_MQ_CENTRAL_PILLAR] = TrickOption::LogicTrick(RCQUEST_MQ, RA_WATER_TEMPLE, {Tricks::Tag::NOVICE}, "Water Temple MQ Central Pillar with Fire Arrows", "Slanted torches have misleading hitboxes. Whenever you see a slanted torch jutting out of the wall, you can expect most or all of its hitbox is actually on the other side that wall. This can make slanted torches very finicky to light when using arrows. The torches in the central pillar of MQ Water Temple are a particularly egregious example. Logic normally expects Din's Fire and Song of Time.");
     mTrickOptions[RT_WATER_MQ_LOCKED_GS] = TrickOption::LogicTrick(RCQUEST_MQ, RA_WATER_TEMPLE, {Tricks::Tag::NOVICE}, "Water Temple MQ North Basement GS without Small Key", "There is an invisible Hookshot target that can be used to get over the gate that blocks you from going to this Skulltula early, skipping a small key as well as needing Hovers or Scarecrow to reach the locked door.");
+    mTrickOptions[RT_WATER_MORPHA_WITHOUT_HOOKSHOT] = TrickOption::LogicTrick(RCQUEST_BOTH, RA_WATER_TEMPLE, {Tricks::Tag::EXTREME}, "Water Temple Morpha without Hookshot", "It is possible to slash at Morpha without hookshot.");
     mTrickOptions[RT_LENS_SHADOW] = TrickOption::LogicTrick(RCQUEST_VANILLA, RA_SHADOW_TEMPLE, {Tricks::Tag::NOVICE}, "Shadow Temple Stationary Objects without Lens of Truth", "Removes the requirements for the Lens of Truth in Shadow Temple for most areas in the dungeon except for crossing the moving platform in the huge pit room and for fighting Bongo Bongo.");
     mTrickOptions[RT_LENS_SHADOW_PLATFORM] = TrickOption::LogicTrick(RCQUEST_VANILLA, RA_SHADOW_TEMPLE, {Tricks::Tag::NOVICE}, "Shadow Temple Invisible Moving Platform without Lens of Truth", "Removes the requirements for the Lens of Truth in Shadow Temple to cross the invisible moving platform in the huge pit room in either direction.");
     mTrickOptions[RT_LENS_BONGO] = TrickOption::LogicTrick(RCQUEST_BOTH, RA_SHADOW_TEMPLE, {Tricks::Tag::NOVICE}, "Shadow Temple Bongo Bongo without Lens of Truth", "Bongo Bongo can be defeated without the use of Lens of Truth, as the hands give a pretty good idea of where the eye is.");
@@ -513,11 +516,12 @@ void Settings::CreateOptions() {
     mTrickOptions[RT_ICE_MQ_RED_ICE_GS] = TrickOption::LogicTrick(RCQUEST_MQ, RA_ICE_CAVERN, {Tricks::Tag::INTERMEDIATE}, "Ice Cavern MQ Red Ice GS without Song of Time", "If you side-hop into the perfect position, you can briefly stand on the platform with the red ice just long enough to dump some blue fire.");
     mTrickOptions[RT_ICE_MQ_SCARECROW] = TrickOption::LogicTrick(RCQUEST_MQ, RA_ICE_CAVERN, {Tricks::Tag::INTERMEDIATE}, "Ice Cavern MQ Scarecrow GS with No Additional Items", "As adult a precise jump can be used to reach this alcove.");
     mTrickOptions[RT_LENS_GTG] = TrickOption::LogicTrick(RCQUEST_VANILLA, RA_GERUDO_TRAINING_GROUND, {Tricks::Tag::NOVICE}, "Gerudo Training Ground without Lens of Truth", "Removes the requirements for the Lens of Truth in Gerudo Training Ground.");
+    mTrickOptions[RT_GTG_UNDERWATER_WITHOUT_HOOKSHOT] = TrickOption::LogicTrick(RCQUEST_BOTH, RA_GERUDO_TRAINING_GROUND, {Tricks::Tag::NOVICE}, "Gerudo Training Ground Underwater Silver Rupees without Hookshot", "Instead of using hookshot to collect the silver rupees, you can toggle iron boots");
     mTrickOptions[RT_GTG_WITHOUT_HOOKSHOT] = TrickOption::LogicTrick(RCQUEST_VANILLA, RA_GERUDO_TRAINING_GROUND, {Tricks::Tag::INTERMEDIATE}, "Gerudo Training Ground Left Side Silver Rupees without Hookshot", "After collecting the rest of the silver rupees in the room, you can reach the final silver rupee on the ceiling by being pulled up into it after getting grabbed by the Wallmaster. Then, you must also reach the exit of the room without the use of the Hookshot. If you move quickly you can sneak past the edge of a flame wall before it can rise up to block you. To do so without taking damage is more precise.");
     mTrickOptions[RT_GTG_FAKE_WALL] = TrickOption::LogicTrick(RCQUEST_BOTH, RA_GERUDO_TRAINING_GROUND, {Tricks::Tag::NOVICE}, "Reach Gerudo Training Ground Fake Wall Ledge with Hover Boots", "A precise Hover Boots use from the top of the chest can allow you to grab the ledge without needing the usual requirements. In Master Quest, this always skips a Song of Time requirement. In Vanilla, this skips a Hookshot requirement, but is only relevant if \"Gerudo Training Ground Left Side Silver Rupees without Hookshot\" is enabled.");
     mTrickOptions[RT_LENS_GTG_MQ] = TrickOption::LogicTrick(RCQUEST_MQ, RA_GERUDO_TRAINING_GROUND, {Tricks::Tag::NOVICE}, "Gerudo Training Ground MQ without Lens of Truth", "Removes the requirements for the Lens of Truth in Gerudo Training Ground MQ.");
     mTrickOptions[RT_GTG_MQ_WITH_HOOKSHOT] = TrickOption::LogicTrick(RCQUEST_MQ, RA_GERUDO_TRAINING_GROUND, {Tricks::Tag::NOVICE}, "Gerudo Training Ground MQ Left Side Silver Rupees with Hookshot", "The highest silver rupee can be obtained by hookshotting the target and then immediately jump slashing toward the rupee.");
-    mTrickOptions[RT_GTG_MQ_WIHTOUT_HOOKSHOT] = TrickOption::LogicTrick(RCQUEST_MQ, RA_GERUDO_TRAINING_GROUND, {Tricks::Tag::INTERMEDIATE}, "Gerudo Training Ground MQ Left Side Silver Rupees without Hookshot", "After collecting the rest of the silver rupees in the room, you can reach the final silver rupee on the ceiling by being pulled up into it after getting grabbed by the Wallmaster. The Wallmaster will not track you to directly underneath the rupee. You should take the last step to be under the rupee after the Wallmaster has begun its attempt to grab you. Also included with this trick is that fact that the switch that unbars the door to the final chest of GTG can be hit without a projectile, using a precise jump slash. This trick supersedes \"Gerudo Training Ground MQ Left Side Silver Rupees with Hookshot\".");
+    mTrickOptions[RT_GTG_MQ_WITHOUT_HOOKSHOT] = TrickOption::LogicTrick(RCQUEST_MQ, RA_GERUDO_TRAINING_GROUND, {Tricks::Tag::INTERMEDIATE}, "Gerudo Training Ground MQ Left Side Silver Rupees without Hookshot", "After collecting the rest of the silver rupees in the room, you can reach the final silver rupee on the ceiling by being pulled up into it after getting grabbed by the Wallmaster. The Wallmaster will not track you to directly underneath the rupee. You should take the last step to be under the rupee after the Wallmaster has begun its attempt to grab you. Also included with this trick is that fact that the switch that unbars the door to the final chest of GTG can be hit without a projectile, using a precise jump slash. This trick supersedes \"Gerudo Training Ground MQ Left Side Silver Rupees with Hookshot\".");
     mTrickOptions[RT_LENS_GANON] = TrickOption::LogicTrick(RCQUEST_VANILLA, RA_GANONS_CASTLE, {Tricks::Tag::NOVICE}, "Ganon\'s Castle without Lens of Truth", "Removes the requirements for the Lens of Truth in Ganon's Castle.");
     mTrickOptions[RT_GANON_SPIRIT_TRIAL_HOOKSHOT] = TrickOption::LogicTrick(RCQUEST_VANILLA, RA_GANONS_CASTLE, {Tricks::Tag::NOVICE}, "Spirit Trial without Hookshot", "The highest rupee can be obtained as either age by performing a precise jump and a well-timed jumpslash off of an Armos.");
     mTrickOptions[RT_LENS_GANON_MQ] = TrickOption::LogicTrick(RCQUEST_MQ, RA_GANONS_CASTLE, {Tricks::Tag::NOVICE}, "Ganon\'s Castle MQ without Lens of Truth", "Removes the requirements for the Lens of Truth in Ganon's Castle MQ.");
@@ -531,190 +535,17 @@ void Settings::CreateOptions() {
         &mOptions[RSK_SKULLS_SUNS_SONG],
     });
     // TODO: Exclude Locations Menus
-    mOptionGroups[RSG_TRICKS] = OptionGroup::SubGroup("Logical Tricks", {
-        &mTrickOptions[RT_VISIBLE_COLLISION],
-        &mTrickOptions[RT_GROTTOS_WITHOUT_AGONY],
-        &mTrickOptions[RT_FEWER_TUNIC_REQUIREMENTS],
-        &mTrickOptions[RT_RUSTED_SWITCHES],
-        &mTrickOptions[RT_FLAMING_CHESTS],
-        &mTrickOptions[RT_BUNNY_HOOD_JUMPS],
-        &mTrickOptions[RT_DAMAGE_BOOST_SIMPLE],
-        &mTrickOptions[RT_HOVER_BOOST_SIMPLE],
-        &mTrickOptions[RT_KF_ADULT_GS],
-        &mTrickOptions[RT_LW_BRIDGE],
-        &mTrickOptions[RT_LW_MIDO_BACKFLIP],
-        &mTrickOptions[RT_LW_GS_BEAN],
-        &mTrickOptions[RT_HC_STORMS_GS],
-        &mTrickOptions[RT_KAK_MAN_ON_ROOF],
-        &mTrickOptions[RT_KAK_TOWER_GS],
-        &mTrickOptions[RT_KAK_ADULT_WINDMILL_POH],
-        &mTrickOptions[RT_KAK_CHILD_WINDMILL_POH],
-        &mTrickOptions[RT_KAK_ROOFTOP_GS],
-        &mTrickOptions[RT_GY_POH],
-        &mTrickOptions[RT_GY_CHILD_DAMPE_RACE_POH],
-        &mTrickOptions[RT_GY_SHADOW_FIRE_ARROWS],
-        &mTrickOptions[RT_DMT_SOIL_GS],
-        &mTrickOptions[RT_DMT_BOMBABLE],
-        &mTrickOptions[RT_DMT_HOOKSHOT_LOWER_GS],
-        &mTrickOptions[RT_DMT_HOVERS_LOWER_GS],
-        &mTrickOptions[RT_DMT_BEAN_LOWER_GS],
-        &mTrickOptions[RT_DMT_JS_LOWER_GS],
-        &mTrickOptions[RT_DMT_CLIMB_HOVERS],
-        &mTrickOptions[RT_DMT_UPPER_GS],
-        &mTrickOptions[RT_DMT_BOLERO_BIGGORON],
-        &mTrickOptions[RT_GC_POT],
-        &mTrickOptions[RT_GC_POT_STRENGTH],
-        &mTrickOptions[RT_GC_ROLLING_STRENGTH],
-        &mTrickOptions[RT_GC_LEFTMOST],
-        &mTrickOptions[RT_GC_GROTTO],
-        &mTrickOptions[RT_GC_LINK_GORON_DINS],
-        &mTrickOptions[RT_DMC_HOVER_BEAN_POH],
-        &mTrickOptions[RT_DMC_BOLERO_JUMP],
-        &mTrickOptions[RT_DMC_BOULDER_JS],
-        &mTrickOptions[RT_DMC_BOULDER_SKIP],
-        &mTrickOptions[RT_ZR_LOWER],
-        &mTrickOptions[RT_ZR_UPPER],
-        &mTrickOptions[RT_ZR_HOVERS],
-        &mTrickOptions[RT_ZR_CUCCO],
-        &mTrickOptions[RT_ZD_KING_ZORA_SKIP],
-        &mTrickOptions[RT_ZD_GS],
-        &mTrickOptions[RT_ZF_GREAT_FAIRY_WITHOUT_EXPLOSIVES],
-        &mTrickOptions[RT_LH_LAB_WALL_GS],
-        &mTrickOptions[RT_LH_LAB_DIVING],
-        &mTrickOptions[RT_LH_WATER_HOOKSHOT],
-        &mTrickOptions[RT_GV_CRATE_HOVERS],
-        &mTrickOptions[RT_GF_KITCHEN],
-        &mTrickOptions[RT_GF_JUMP],
-        &mTrickOptions[RT_HW_BUNNY_CROSSING],
-        &mTrickOptions[RT_HW_CROSSING],
-        &mTrickOptions[RT_LENS_HW],
-        &mTrickOptions[RT_HW_REVERSE],
-        &mTrickOptions[RT_COLOSSUS_GS],
-        &mTrickOptions[RT_DEKU_BASEMENT_GS],
-        &mTrickOptions[RT_DEKU_B1_SKIP],
-        &mTrickOptions[RT_DEKU_B1_BOW_WEBS],
-        &mTrickOptions[RT_DEKU_B1_BACKFLIP_OVER_SPIKED_LOG],
-        &mTrickOptions[RT_DEKU_MQ_COMPASS_GS],
-        &mTrickOptions[RT_DEKU_MQ_LOG],
-        &mTrickOptions[RT_DC_SCARECROW_GS],
-        &mTrickOptions[RT_DC_VINES_GS],
-        &mTrickOptions[RT_DC_STAIRCASE],
-        &mTrickOptions[RT_DC_SLINGSHOT_SKIP],
-        &mTrickOptions[RT_DC_SCRUB_ROOM],
-        &mTrickOptions[RT_DC_JUMP],
-        &mTrickOptions[RT_DC_HAMMER_FLOOR],
-        &mTrickOptions[RT_DC_MQ_CHILD_BOMBS],
-        &mTrickOptions[RT_DC_MQ_CHILD_EYES],
-        &mTrickOptions[RT_DC_MQ_ADULT_EYES],
-        &mTrickOptions[RT_JABU_ALCOVE_JUMP_DIVE],
-        &mTrickOptions[RT_JABU_BOSS_HOVER],
-        &mTrickOptions[RT_JABU_NEAR_BOSS_RANGED],
-        &mTrickOptions[RT_JABU_NEAR_BOSS_EXPLOSIVES],
-        &mTrickOptions[RT_LENS_JABU_MQ],
-        &mTrickOptions[RT_JABU_MQ_RANG_JUMP],
-        &mTrickOptions[RT_JABU_MQ_SOT_GS],
-        &mTrickOptions[RT_LENS_BOTW],
-        &mTrickOptions[RT_BOTW_CHILD_DEADHAND],
-        &mTrickOptions[RT_BOTW_BASEMENT],
-        &mTrickOptions[RT_BOTW_MQ_PITS],
-        &mTrickOptions[RT_BOTW_MQ_DEADHAND_KEY],
-        &mTrickOptions[RT_FOREST_FIRST_GS],
-        &mTrickOptions[RT_FOREST_OUTDOORS_EAST_GS],
-        &mTrickOptions[RT_FOREST_VINES],
-        &mTrickOptions[RT_FOREST_OUTDOORS_LEDGE],
-        &mTrickOptions[RT_FOREST_DOORFRAME],
-        &mTrickOptions[RT_FOREST_OUTSIDE_BACKDOOR],
-        &mTrickOptions[RT_FOREST_OUTDOORS_HEARTS_BOOMERANG],
-        &mTrickOptions[RT_FOREST_MQ_WELL_SWIM],
-        &mTrickOptions[RT_FOREST_MQ_BLOCK_PUZZLE],
-        &mTrickOptions[RT_FOREST_MQ_JS_HALLWAY_SWITCH],
-        &mTrickOptions[RT_FOREST_MQ_HOOKSHOT_HALLWAY_SWITCH],
-        &mTrickOptions[RT_FOREST_MQ_RANG_HALLWAY_SWITCH],
-        &mTrickOptions[RT_FIRE_BOSS_DOOR_JUMP],
-        &mTrickOptions[RT_FIRE_SOT],
-        &mTrickOptions[RT_FIRE_STRENGTH],
-        &mTrickOptions[RT_FIRE_SCARECROW],
-        &mTrickOptions[RT_FIRE_FLAME_MAZE],
-        &mTrickOptions[RT_FIRE_MQ_NEAR_BOSS],
-        &mTrickOptions[RT_FIRE_MQ_BLOCKED_CHEST],
-        &mTrickOptions[RT_FIRE_MQ_BK_CHEST],
-        &mTrickOptions[RT_FIRE_MQ_CLIMB],
-        &mTrickOptions[RT_FIRE_MQ_MAZE_SIDE_ROOM],
-        &mTrickOptions[RT_FIRE_MQ_MAZE_HOVERS],
-        &mTrickOptions[RT_FIRE_MQ_MAZE_JUMP],
-        &mTrickOptions[RT_FIRE_MQ_ABOVE_MAZE_GS],
-        &mTrickOptions[RT_FIRE_MQ_FLAME_MAZE],
-        &mTrickOptions[RT_WATER_LONGSHOT_TORCH],
-        &mTrickOptions[RT_WATER_CRACKED_WALL_HOVERS],
-        &mTrickOptions[RT_WATER_CRACKED_WALL],
-        &mTrickOptions[RT_WATER_BK_REGION],
-        &mTrickOptions[RT_WATER_NORTH_BASEMENT_LEDGE_JUMP],
-        &mTrickOptions[RT_WATER_BK_JUMP_DIVE],
-        &mTrickOptions[RT_WATER_FW_CENTRAL_GS],
-        &mTrickOptions[RT_WATER_IRONS_CENTRAL_GS],
-        &mTrickOptions[RT_WATER_CENTRAL_BOW],
-        &mTrickOptions[RT_WATER_HOOKSHOT_FALLING_PLATFORM_GS],
-        &mTrickOptions[RT_WATER_RANG_FALLING_PLATFORM_GS],
-        &mTrickOptions[RT_WATER_RIVER_GS],
-        &mTrickOptions[RT_WATER_DRAGON_JUMP_DIVE],
-        &mTrickOptions[RT_WATER_ADULT_DRAGON],
-        &mTrickOptions[RT_WATER_CHILD_DRAGON],
-        &mTrickOptions[RT_WATER_MQ_CENTRAL_PILLAR],
-        &mTrickOptions[RT_WATER_MQ_LOCKED_GS],
-        &mTrickOptions[RT_LENS_SHADOW],
-        &mTrickOptions[RT_LENS_SHADOW_PLATFORM],
-        &mTrickOptions[RT_LENS_BONGO],
-        &mTrickOptions[RT_SHADOW_UMBRELLA],
-        &mTrickOptions[RT_SHADOW_UMBRELLA_GS],
-        &mTrickOptions[RT_SHADOW_FREESTANDING_KEY],
-        &mTrickOptions[RT_SHADOW_STATUE],
-        &mTrickOptions[RT_SHADOW_BONGO],
-        &mTrickOptions[RT_LENS_SHADOW_MQ],
-        &mTrickOptions[RT_LENS_SHADOW_MQ_INVISIBLE_BLADES],
-        &mTrickOptions[RT_LENS_SHADOW_MQ_PLATFORM],
-        &mTrickOptions[RT_LENS_SHADOW_MQ_DEADHAND],
-        &mTrickOptions[RT_SHADOW_MQ_GAP],
-        &mTrickOptions[RT_SHADOW_MQ_INVISIBLE_BLADES],
-        &mTrickOptions[RT_SHADOW_MQ_HUGE_PIT],
-        &mTrickOptions[RT_SHADOW_MQ_WINDY_WALKWAY],
-        &mTrickOptions[RT_LENS_SPIRIT],
-        &mTrickOptions[RT_SPIRIT_CHILD_CHU],
-        &mTrickOptions[RT_SPIRIT_LOBBY_GS],
-        &mTrickOptions[RT_SPIRIT_LOWER_ADULT_SWITCH],
-        &mTrickOptions[RT_SPIRIT_LOBBY_JUMP],
-        &mTrickOptions[RT_SPIRIT_PLATFORM_HOOKSHOT],
-        &mTrickOptions[RT_SPIRIT_MAP_CHEST],
-        &mTrickOptions[RT_SPIRIT_SUN_CHEST],
-        &mTrickOptions[RT_SPIRIT_WALL],
-        &mTrickOptions[RT_LENS_SPIRIT_MQ],
-        &mTrickOptions[RT_SPIRIT_MQ_SUN_BLOCK_SOT],
-        &mTrickOptions[RT_SPIRIT_MQ_SUN_BLOCK_GS],
-        &mTrickOptions[RT_SPIRIT_MQ_LOWER_ADULT],
-        &mTrickOptions[RT_SPIRIT_MQ_FROZEN_EYE],
-        &mTrickOptions[RT_ICE_BLOCK_GS],
-        &mTrickOptions[RT_ICE_MQ_RED_ICE_GS],
-        &mTrickOptions[RT_ICE_MQ_SCARECROW],
-        &mTrickOptions[RT_LENS_GTG],
-        &mTrickOptions[RT_GTG_WITHOUT_HOOKSHOT],
-        &mTrickOptions[RT_GTG_FAKE_WALL],
-        &mTrickOptions[RT_LENS_GTG_MQ],
-        &mTrickOptions[RT_GTG_MQ_WITH_HOOKSHOT],
-        &mTrickOptions[RT_GTG_MQ_WIHTOUT_HOOKSHOT],
-        &mTrickOptions[RT_LENS_GANON],
-        &mTrickOptions[RT_GANON_SPIRIT_TRIAL_HOOKSHOT],
-        &mTrickOptions[RT_LENS_GANON_MQ],
-        &mTrickOptions[RT_GANON_MQ_FIRE_TRIAL],
-        &mTrickOptions[RT_GANON_MQ_SHADOW_TRIAL],
-        &mTrickOptions[RT_GANON_MQ_LIGHT_TRIAL],
-    });
     mTricksByArea.clear();
+    std::vector<Option*> tricksOptions; // (mTrickOptions.size());
     for (int i = 0; i < RT_MAX; i++) {
-        auto& trick = mTrickOptions[i];
-        if (!trick.GetName().empty()) {
-            mTrickNameToEnum[std::string(trick.GetName())] = static_cast<RandomizerTrick>(i);
+        auto trick = &mTrickOptions[i];
+        if (!trick->GetName().empty()) {
+            tricksOptions.push_back(trick);
+            mTrickNameToEnum[std::string(trick->GetName())] = static_cast<RandomizerTrick>(i);
+            mTricksByArea[trick->GetArea()].push_back(static_cast<RandomizerTrick>(i));
         }
-        mTricksByArea[trick.GetArea()].push_back(static_cast<RandomizerTrick>(i));
     }
+    mOptionGroups[RSG_TRICKS] = OptionGroup::SubGroup("Logical Tricks", tricksOptions);
     // TODO: Glitches
     mOptionGroups[RSG_AREA_ACCESS_IMGUI] = OptionGroup::SubGroup("Area Access", {
         &mOptions[RSK_FOREST],

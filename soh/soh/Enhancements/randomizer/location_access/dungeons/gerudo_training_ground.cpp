@@ -57,7 +57,7 @@ void RegionTable_Init_GerudoTrainingGround() {
 
     areaTable[RR_GERUDO_TRAINING_GROUND_LAVA_ROOM] = Region("Gerudo Training Ground Lava Room", "Gerudo Training Ground", {RA_GERUDO_TRAINING_GROUND}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
-        LOCATION(RC_GERUDO_TRAINING_GROUND_UNDERWATER_SILVER_RUPEE_CHEST, logic->CanUse(RG_HOOKSHOT) && logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24),
+        LOCATION(RC_GERUDO_TRAINING_GROUND_UNDERWATER_SILVER_RUPEE_CHEST, (logic->CanUse(RG_HOOKSHOT) || ctx->GetTrickOption(RT_GTG_UNDERWATER_WITHOUT_HOOKSHOT)) && logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24),
     }, {
         //Exits
         Entrance(RR_GERUDO_TRAINING_GROUND_CENTRAL_MAZE_RIGHT, []{return logic->CanUse(RG_SONG_OF_TIME) || logic->IsChild;}),
@@ -168,7 +168,7 @@ void RegionTable_Init_GerudoTrainingGround() {
     areaTable[RR_GERUDO_TRAINING_GROUND_MQ_LEFT_SIDE] = Region("Gerudo Training Ground MQ Left Side", "Gerudo Training Ground", {RA_GERUDO_TRAINING_GROUND}, NO_DAY_NIGHT_CYCLE, {}, {}, {
         //Exits
         Entrance(RR_GERUDO_TRAINING_GROUND_MQ_SAND_ROOM,    []{return true;}),
-        Entrance(RR_GERUDO_TRAINING_GROUND_MQ_STALFOS_ROOM, []{return Here(RR_GERUDO_TRAINING_GROUND_MQ_LEFT_SIDE, []{return logic->CanUse(RG_LONGSHOT) || ctx->GetTrickOption(RT_GTG_MQ_WIHTOUT_HOOKSHOT) || (ctx->GetTrickOption(RT_GTG_MQ_WITH_HOOKSHOT) && logic->IsAdult && logic->CanJumpslash() && logic->CanUse(RG_HOOKSHOT));});}),
+        Entrance(RR_GERUDO_TRAINING_GROUND_MQ_STALFOS_ROOM, []{return Here(RR_GERUDO_TRAINING_GROUND_MQ_LEFT_SIDE, []{return logic->CanUse(RG_LONGSHOT) || ctx->GetTrickOption(RT_GTG_MQ_WITHOUT_HOOKSHOT) || (ctx->GetTrickOption(RT_GTG_MQ_WITH_HOOKSHOT) && logic->IsAdult && logic->CanJumpslash() && logic->CanUse(RG_HOOKSHOT));});}),
     });
 
     areaTable[RR_GERUDO_TRAINING_GROUND_MQ_STALFOS_ROOM] = Region("Gerudo Training Ground MQ Stalfos Room", "Gerudo Training Ground", {RA_GERUDO_TRAINING_GROUND}, NO_DAY_NIGHT_CYCLE, {
