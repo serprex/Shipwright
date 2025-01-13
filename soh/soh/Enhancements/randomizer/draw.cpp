@@ -375,25 +375,27 @@ extern "C" void Randomizer_DrawBossSoul(PlayState* play, GetItemEntry* getItemEn
     }
     gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gBossSoulSkullDL);
     
-    if (slot >= 0) {
-        Gfx_SetupDL_25Xlu(play->state.gfxCtx);
-        gSPSegment(POLY_XLU_DISP++, 8, (uintptr_t)Gfx_TwoTexScroll(
-            play->state.gfxCtx, 0, 0 * (play->state.frames * 0),
-            0 * (play->state.frames * 0), 16, 32, 1, 1 * (play->state.frames * 1),
-            -1 * (play->state.frames * 8), 16, 32
-        ));
-        Matrix_Push();
-        Matrix_Translate(0.0f, -70.0f, 0.0f, MTXMODE_APPLY);
-        Matrix_Scale(5.0f, 5.0f, 5.0f, MTXMODE_APPLY);
-        Matrix_ReplaceRotation(&play->billboardMtxF);
-        gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(play->state.gfxCtx, (char*)__FILE__, __LINE__),
-                  G_MTX_MODELVIEW | G_MTX_LOAD);
+    Gfx_SetupDL_25Xlu(play->state.gfxCtx);
+    gSPSegment(POLY_XLU_DISP++, 8, (uintptr_t)Gfx_TwoTexScroll(
+        play->state.gfxCtx, 0, 0 * (play->state.frames * 0),
+        0 * (play->state.frames * 0), 16, 32, 1, 1 * (play->state.frames * 1),
+        -1 * (play->state.frames * 8), 16, 32
+    ));
+    Matrix_Push();
+    Matrix_Translate(0.0f, -70.0f, 0.0f, MTXMODE_APPLY);
+    Matrix_Scale(5.0f, 5.0f, 5.0f, MTXMODE_APPLY);
+    Matrix_ReplaceRotation(&play->billboardMtxF);
+    gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(play->state.gfxCtx, (char*)__FILE__, __LINE__),
+              G_MTX_MODELVIEW | G_MTX_LOAD);
+    if (slot >= 0 && slot < 9) {
         gDPSetGrayscaleColor(POLY_XLU_DISP++, flameColors[slot][0], flameColors[slot][1], flameColors[slot][2], 255);
-        gSPGrayscale(POLY_XLU_DISP++, true);
-        gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gGiBlueFireFlameDL);
-        gSPGrayscale(POLY_XLU_DISP++, false);
-        Matrix_Pop();
+    } else {
+        gDPSetGrayscaleColor(POLY_XLU_DISP++, 255, 255, 255, 255);
     }
+    gSPGrayscale(POLY_XLU_DISP++, true);
+    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gGiBlueFireFlameDL);
+    gSPGrayscale(POLY_XLU_DISP++, false);
+    Matrix_Pop();
 
     CLOSE_DISPS(play->state.gfxCtx);
 

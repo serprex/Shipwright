@@ -1272,7 +1272,15 @@ typedef enum {
     RAND_INF_SHADOW_TEMPLE_MQ_WIND_HINT_SUN_FAIRY,
     RAND_INF_BOTTOM_OF_THE_WELL_MQ_CELL_SUN_FAIRY,
     RAND_INF_BOTTOM_OF_THE_WELL_MQ_BASEMENT_SUN_FAIRY,
-    // If you add anything to this list, you need to update the size of randomizerInf in z64save.h to be ceil(RAND_INF_MAX / 16)
+
+    RAND_INF_ANJU_SOUL,
+    RAND_INF_GREAT_FAIRY_SOUL,
+    RAND_INF_POE_COLLECTOR_SOUL,
+    RAND_INF_DAMPE_SOUL,
+    RAND_INF_WINDMILL_MAN_SOUL,
+    RAND_INF_MALON_SOUL,
+    RAND_INF_RUTO_SOUL,
+    RAND_INF_ARMS_DEALER_SOUL,
 
     RAND_INF_MAX,
 } RandomizerInf;

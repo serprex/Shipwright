@@ -3338,7 +3338,7 @@ CustomMessage Randomizer::GetGoronMessage(u16 index) {
 void Randomizer::CreateCustomMessages() {
     // RANDTODO: Translate into french and german and replace GIMESSAGE_UNTRANSLATED
     // with GIMESSAGE(getItemID, itemID, english, german, french).
-    const std::array<GetItemMessage, 85> getItemMessages = {{
+    const std::array<GetItemMessage, 86> getItemMessages = {{
         GIMESSAGE(RG_GREG_RUPEE, ITEM_MASK_GORON, 
 			"You found %gGreg%w!",
 			"%gGreg%w! Du hast ihn wirklich gefunden!",
@@ -3606,6 +3606,10 @@ void Randomizer::CreateCustomMessages() {
             "You found the soul for %cGanon%w!",
             "Vous obtenez l'âme de %cGanon%w!"),
 
+        GIMESSAGE_NO_GERMAN(RG_ANJU_SOUL, ITEM_BIG_POE,
+            "You found the soul for %bAnju%w!",
+            "Vous obtenez l'âme de %bAnju%w!"),
+
         GIMESSAGE(RG_OCARINA_A_BUTTON, ITEM_OCARINA_TIME,
             "You got the %b\x9f%r button for the&Ocarina%w! You can now use it&while playing songs!",
 			"Der %b\x9f%r Knopf%w!&Du kannst ihn nun zum Spielen&von Liedern auf der %rOkarina%w&verwenden!",
@@ -3760,6 +3764,14 @@ std::map<RandomizerGet, RandomizerInf> randomizerGetToRandInf = {
     { RG_BONGO_BONGO_SOUL,       RAND_INF_BONGO_BONGO_SOUL },
     { RG_TWINROVA_SOUL,          RAND_INF_TWINROVA_SOUL },
     { RG_GANON_SOUL,             RAND_INF_GANON_SOUL },
+    { RG_ANJU_SOUL, RAND_INF_ANJU_SOUL },
+    { RG_GREAT_FAIRY_SOUL, RAND_INF_GREAT_FAIRY_SOUL },
+    { RG_POE_COLLECTOR_SOUL, RAND_INF_POE_COLLECTOR_SOUL },
+    { RG_DAMPE_SOUL, RAND_INF_DAMPE_SOUL },
+    { RG_WINDMILL_MAN_SOUL, RAND_INF_WINDMILL_MAN_SOUL },
+    { RG_MALON_SOUL, RAND_INF_MALON_SOUL },
+    { RG_RUTO_SOUL, RAND_INF_RUTO_SOUL },
+    { RG_ARMS_DEALER_SOUL, RAND_INF_ARMS_DEALER_SOUL },
 };
 
 extern "C" u16 Randomizer_Item_Give(PlayState* play, GetItemEntry giEntry) {

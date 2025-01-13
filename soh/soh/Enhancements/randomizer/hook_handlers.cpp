@@ -2063,6 +2063,42 @@ void RandomizerOnActorInitHandler(void* actorRef) {
         }
     }
 
+    if (RAND_GET_OPTION(RSK_SHUFFLE_NPC_SOULS)) {
+        auto inf = RAND_INF_MAX;
+        switch (actor->id) {
+            case ACTOR_EN_NIW_LADY:
+                inf = RAND_INF_ANJU_SOUL;
+                break;
+            case ACTOR_BG_DY_YOSEIZO:
+                inf = RAND_INF_GREAT_FAIRY_SOUL;
+                break;
+            case ACTOR_EN_GB:
+                inf = RAND_INF_POE_COLLECTOR_SOUL;
+                break;
+            case ACTOR_EN_TK:
+            case ACTOR_EN_PO_RELAY:
+                inf = RAND_INF_DAMPE_SOUL;
+                break;
+            case ACTOR_EN_FU:
+                inf = RAND_INF_WINDMILL_MAN_SOUL;
+                break;
+            case ACTOR_EN_MA1:
+            case ACTOR_EN_MA2:
+            case ACTOR_EN_MA3:
+                inf = RAND_INF_MALON_SOUL;
+                break;
+            case ACTOR_EN_RU1:
+                inf = RAND_INF_RUTO_SOUL;
+                break;
+            case ACTOR_EN_JS:
+                inf = RAND_INF_ARMS_DEALER_SOUL;
+                break;
+        }
+        if (inf != RAND_INF_MAX && !Flags_GetRandomizerInf(inf)) {
+            Actor_Kill(actor);
+        }
+    }
+
     // In MQ Spirit, remove the large silver block in the hole as child so the chest in the silver block hallway
     // can be guaranteed accessible
     if (

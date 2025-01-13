@@ -1106,6 +1106,16 @@ void GenerateItemPool() {
     }
   }
 
+  if (ctx->GetOption(RSK_SHUFFLE_NPC_SOULS)) {
+    AddItemToMainPool(RG_ANJU_SOUL);
+    AddItemToMainPool(RG_GREAT_FAIRY_SOUL);
+    AddItemToMainPool(RG_POE_COLLECTOR_SOUL);
+    AddItemToMainPool(RG_DAMPE_SOUL);
+    AddItemToMainPool(RG_WINDMILL_MAN_SOUL);
+    AddItemToMainPool(RG_MALON_SOUL);
+    AddItemToMainPool(RG_RUTO_SOUL);
+  }
+
   if (ctx->GetOption(RSK_SHUFFLE_CHILD_WALLET)) {
     AddItemToMainPool(RG_PROGRESSIVE_WALLET);
   }

@@ -219,6 +219,7 @@ void Settings::CreateOptions() {
     mOptions[RSK_SHUFFLE_CHEST_MINIGAME] = Option::U8("Shuffle Chest Minigame", {"Off", "On (Separate)", "On (Pack)"});
     mOptions[RSK_SHUFFLE_100_GS_REWARD] = Option::Bool("Shuffle 100 GS Reward", CVAR_RANDOMIZER_SETTING("Shuffle100GSReward"), mOptionDescriptions[RSK_SHUFFLE_100_GS_REWARD], IMFLAG_SEPARATOR_BOTTOM, WidgetType::Checkbox, RO_GENERIC_OFF);
     mOptions[RSK_SHUFFLE_BOSS_SOULS] = Option::U8("Shuffle Boss Souls", {"Off", "On", "On + Ganon"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleBossSouls"), mOptionDescriptions[RSK_SHUFFLE_BOSS_SOULS], WidgetType::Combobox);
+    mOptions[RSK_SHUFFLE_NPC_SOULS] = Option::Bool("Shuffle NPC Souls", CVAR_RANDOMIZER_SETTING("ShuffleNpcSouls"), mOptionDescriptions[RSK_SHUFFLE_NPC_SOULS]);
     mOptions[RSK_SHUFFLE_DEKU_STICK_BAG] = Option::Bool("Shuffle Deku Stick Bag", CVAR_RANDOMIZER_SETTING("ShuffleDekuStickBag"), mOptionDescriptions[RSK_SHUFFLE_DEKU_STICK_BAG], IMFLAG_SEPARATOR_BOTTOM, WidgetType::Checkbox, RO_GENERIC_OFF);
     mOptions[RSK_SHUFFLE_DEKU_NUT_BAG] = Option::Bool("Shuffle Deku Nut Bag", CVAR_RANDOMIZER_SETTING("ShuffleDekuNutBag"), mOptionDescriptions[RSK_SHUFFLE_DEKU_NUT_BAG], IMFLAG_SEPARATOR_BOTTOM, WidgetType::Checkbox, RO_GENERIC_OFF);
     mOptions[RSK_SHUFFLE_FREESTANDING] = Option::U8("Shuffle Freestanding Items", {"Off", "Dungeons", "Overworld", "All Items"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleFreestanding"), mOptionDescriptions[RSK_SHUFFLE_FREESTANDING], WidgetType::Combobox, RO_SHUFFLE_FREESTANDING_OFF);
@@ -839,6 +840,7 @@ void Settings::CreateOptions() {
         &mOptions[RSK_SHUFFLE_ADULT_TRADE],
         &mOptions[RSK_SHUFFLE_100_GS_REWARD],
         &mOptions[RSK_SHUFFLE_BOSS_SOULS],
+        &mOptions[RSK_SHUFFLE_NPC_SOULS],
         &mOptions[RSK_SHUFFLE_FAIRIES],
     }, WidgetContainerType::COLUMN);
     mOptionGroups[RSG_SHUFFLE_DUNGEON_ITEMS_IMGUI] = OptionGroup::SubGroup("Shuffle Dungeon Items", {
@@ -1085,6 +1087,7 @@ void Settings::CreateOptions() {
         &mOptions[RSK_SHUFFLE_CHEST_MINIGAME],
         &mOptions[RSK_SHUFFLE_100_GS_REWARD],
         &mOptions[RSK_SHUFFLE_BOSS_SOULS],
+        &mOptions[RSK_SHUFFLE_NPC_SOULS],
         &mOptions[RSK_SHUFFLE_DEKU_STICK_BAG],
         &mOptions[RSK_SHUFFLE_DEKU_NUT_BAG],
         &mOptions[RSK_SHUFFLE_FREESTANDING],
