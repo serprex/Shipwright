@@ -638,6 +638,32 @@ namespace Rando {
             case RE_BIG_OCTO:
                 //If chasing octo is annoying but with rolls you can catch him, and you need rang to get into this room without shenanigains anyway. Bunny makes it free
                 return CanUse(RG_KOKIRI_SWORD) || CanUse(RG_STICKS) || CanUse(RG_MASTER_SWORD);
+            case RE_GOHMA:
+                return HasBossSoul(RG_GOHMA_SOUL) && CanJumpslashExceptHammer() &&
+                    (CanUse(RG_NUTS) || CanUse(RG_FAIRY_SLINGSHOT) || CanUse(RG_FAIRY_BOW) || HookshotOrBoomerang());
+            case RE_KING_DODONGO:
+                return HasBossSoul(RG_KING_DODONGO_SOUL) && CanJumpslashExceptHammer() &&
+                    (CanUse(RG_BOMB_BAG) || HasItem(RG_GORONS_BRACELET) || (ctx->GetTrickOption(RT_DC_DODONGO_CHU) && IsAdult && CanUse(RG_BOMBCHU_5)));
+            case RE_BARINADE:
+                return HasBossSoul(RG_BARINADE_SOUL) && CanJumpslashExceptHammer() && CanUse(RG_BOOMERANG);
+            case RE_PHANTOM_GANONDORF:
+                return HasBossSoul(RG_PHANTOM_GANON_SOUL) &&
+                    (CanUse(RG_KOKIRI_SWORD) || CanUse(RG_MASTER_SWORD) || CanUse(RG_BIGGORON_SWORD)) &&
+                    (CanUse(RG_HOOKSHOT) || CanUse(RG_FAIRY_BOW) || CanUse(RG_FAIRY_SLINGSHOT));
+            case RE_VOLVAGIA:
+                return HasBossSoul(RG_VOLVAGIA_SOUL) && FireTimer() >= 64 && CanUse(RG_MEGATON_HAMMER);
+            case RE_MORPHA:
+                return HasBossSoul(RG_MORPHA_SOUL) && 
+                    (CanUse(RG_HOOKSHOT) || ctx->GetTrickOption(RT_WATER_MORPHA_WITHOUT_HOOKSHOT)) &&
+                    (CanUse(RG_KOKIRI_SWORD) || CanUse(RG_MASTER_SWORD) || CanUse(RG_BIGGORON_SWORD) || CanUse(RG_MEGATON_HAMMER));
+            case RE_TWINROVA:
+                return HasBossSoul(RG_TWINROVA_SOUL) && CanUse(RG_MIRROR_SHIELD) &&
+                    (CanUse(RG_KOKIRI_SWORD) || CanUse(RG_MASTER_SWORD) || CanUse(RG_BIGGORON_SWORD));
+            case RE_BONGO_BONGO:
+                return HasBossSoul(RG_BONGO_BONGO_SOUL) &&
+                    (CanUse(RG_LENS_OF_TRUTH) || ctx->GetTrickOption(RT_LENS_BONGO)) &&
+                    (CanUse(RG_KOKIRI_SWORD) || CanUse(RG_MASTER_SWORD) || CanUse(RG_BIGGORON_SWORD)) &&
+                    (CanUse(RG_HOOKSHOT) || CanUse(RG_FAIRY_BOW) || CanUse(RG_FAIRY_SLINGSHOT) || ctx->GetTrickOption(RT_SHADOW_BONGO));
             case RE_GANONDORF:
                 // RANDOTODO: Trick to use hammer (no jumpslash) or stick (only jumpslash) instead of a sword to reflect the energy ball
                 // and either of them regardless of jumpslashing to damage and kill ganondorf

@@ -528,7 +528,10 @@ void RegionTable_Init_DodongosCavern() {
 
     areaTable[RR_DODONGOS_CAVERN_BOSS_ROOM] = Region("Dodongos Cavern Boss Room", "Dodongos Cavern", {}, NO_DAY_NIGHT_CYCLE, {
         // Events
-        EventAccess(&logic->DodongosCavernClear, []{return logic->DodongosCavernClear || (logic->HasBossSoul(RG_KING_DODONGO_SOUL) && (Here(RR_DODONGOS_CAVERN_BOSS_ROOM, []{return logic->HasExplosives() || (logic->CanUse(RG_MEGATON_HAMMER) && ctx->GetTrickOption(RT_DC_HAMMER_FLOOR));}) && (logic->CanUse(RG_BOMB_BAG) || logic->HasItem(RG_GORONS_BRACELET) || (ctx->GetTrickOption(RT_DC_DODONGO_CHU) && logic->IsAdult && logic->CanUse(RG_BOMBCHU_5))) && logic->CanJumpslashExceptHammer()));}),
+        EventAccess(&logic->DodongosCavernClear, []{return logic->DodongosCavernClear || (
+            Here(RR_DODONGOS_CAVERN_BOSS_ROOM, []{return logic->HasExplosives() || (logic->CanUse(RG_MEGATON_HAMMER) && ctx->GetTrickOption(RT_DC_HAMMER_FLOOR));}) &&
+            logic->CanKillEnemy(RE_KING_DODONGO)
+        );}),
     }, {
         // Locations
         LOCATION(RC_DODONGOS_CAVERN_BOSS_ROOM_CHEST,    true),
