@@ -213,9 +213,9 @@ namespace UIWidgets {
     }
 
     void ReEnableComponent(const char* disabledTooltipText) {
-        if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled) && strcmp(disabledTooltipText, "") != 0) {
-            ImGui::SetTooltip("%s", disabledTooltipText);
-        }
+        // if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled) && strcmp(disabledTooltipText, "") != 0) {
+        //    ImGui::SetTooltip("%s", disabledTooltipText);
+        // }
         // End of disable region of previous component
         ImGui::PopStyleVar(1);
         ImGui::PopItemFlag();
