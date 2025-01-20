@@ -2,6 +2,7 @@
 #include "global.h"
 #include "z64.h"
 #include "game-interactor/GameInteractor.h"
+#include "soh/OTRGlobals.h"
 
 static const int songMessageMap[] = { 
     TEXT_WARP_MINUET_OF_FOREST,
@@ -87,7 +88,7 @@ void PauseWarp_HandleSelection() {
         int song = gPlayState->pauseCtx.cursorPoint[PAUSE_QUEST];
         if (aButtonPressed && CHECK_QUEST_ITEM(song) && song >= QUEST_SONG_MINUET && song <= QUEST_SONG_PRELUDE &&
             gPlayState->pauseCtx.pageIndex == PAUSE_QUEST && gPlayState->pauseCtx.state == 6) {
-            if (gSaveContext.ship.quest.id == QUEST_RANDOMIZER) {
+            if (gSaveContext.ship.quest.id == QUEST_RANDOMIZER && Randomizer_GetSettingValue(RSK_SHUFFLE_OCARINA_BUTTONS)) {
                 bool canplay = false;
                 switch (song) {
                     case QUEST_SONG_MINUET:
