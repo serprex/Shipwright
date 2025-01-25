@@ -214,6 +214,8 @@ void Context::ItemReset() {
     for (const RandomizerCheck il : StaticData::dungeonRewardLocations) {
         GetItemLocation(il)->ResetVariables();
     }
+
+    GetItemLocation(RC_LINKS_POCKET)->ResetVariables();
 }
 
 void Context::LocationReset() {
