@@ -1573,7 +1573,6 @@ BeehiveIdentity Randomizer::IdentifyBeehive(s32 sceneNum, s16 xPosition, s32 res
 }
 
 Rando::Location* Randomizer::GetCheckObjectFromActor(s16 actorId, s16 sceneNum, s32 actorParams = 0x00) {
-    auto fs = OTRGlobals::Instance->gRandoContext->GetFishsanity();
     RandomizerCheck specialRc = RC_UNKNOWN_CHECK;
     // TODO: Migrate these special cases into table, or at least document why they are special
     switch(sceneNum) {
@@ -1834,6 +1833,23 @@ FishIdentity Randomizer::IdentifyFish(s32 sceneNum, s32 actorParams) {
     }
 
     return fishIdentity;
+}
+
+RockIdentity Randomizer::IdentifyRock(s32 sceneNum, s32 posX, s32 posZ) {
+    struct RockIdentity rockIdentity;
+
+    rockIdentity.randomizerInf = RAND_INF_MAX;
+    rockIdentity.randomizerCheck = RC_UNKNOWN_CHECK;
+
+    Rando::Location* location = GetCheckObjectFromActor(ACTOR_EN_ISHI, sceneNum, TWO_ACTOR_PARAMS(posX, posZ));
+    LUSLOG_DEBUG("randorock %d X:%d Z:%d", location->GetRandomizerCheck(), posX, posZ);
+
+    if (location->GetRandomizerCheck() != RC_UNKNOWN_CHECK) {
+        rockIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
+        rockIdentity.randomizerCheck = location->GetRandomizerCheck();
+    }
+
+    return rockIdentity;
 }
 
 u8 Randomizer::GetRandoSettingValue(RandomizerSettingKey randoSettingKey) {

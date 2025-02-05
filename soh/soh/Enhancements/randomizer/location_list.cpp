@@ -43,6 +43,16 @@ std::vector<RandomizerCheck> Rando::StaticData::GetOverworldPotLocations() {
     return overworldPotLocations;
 }
 
+std::vector<RandomizerCheck> Rando::StaticData::GetOverworldRockLocations() {
+    std::vector<RandomizerCheck> overworldRockLocations = {};
+    for (Location& location : locationTable) {
+        if (location.GetRCType() == RCTYPE_ROCK && location.IsOverworld() && location.GetRandomizerCheck() != RC_UNKNOWN_CHECK) {
+            overworldRockLocations.push_back(location.GetRandomizerCheck());
+        }
+    }
+    return overworldRockLocations;
+}
+
 std::vector<RandomizerCheck> Rando::StaticData::GetStaticHintLocations() {
     std::vector<RandomizerCheck> staticHintLocations = {};
     for (Location& location : locationTable) {
@@ -114,6 +124,7 @@ std::vector<RandomizerCheck> Rando::StaticData::GetOverworldLocations() {
             location.GetRandomizerCheck() != RC_TRIFORCE_COMPLETED && //not really an overworld check
             location.GetRCType() != RCTYPE_FISH && // temp fix while locations are properly sorted out
             location.GetRCType() != RCTYPE_POT &&  // Same as fish
+            location.GetRCType() != RCTYPE_ROCK &&  // Same as fish
             location.GetRCType() != RCTYPE_CHEST_GAME && //this is supposed to be excluded
             (ctx->GetOption(RSK_SHUFFLE_ADULT_TRADE) || location.GetRCType() != RCTYPE_ADULT_TRADE) && //trade is handled elsewhere in location pool
             location.GetRCType() != RCTYPE_STATIC_HINT && 
@@ -1606,6 +1617,11 @@ void Rando::StaticData::InitLocationTable() { //                                
     locationTable[RC_GERUDO_TRAINING_GROUND_MQ_LOBBY_LEFT_POT_2]    = Location::Pot(RC_GERUDO_TRAINING_GROUND_MQ_LOBBY_LEFT_POT_2,      RCQUEST_MQ, RCAREA_GERUDO_TRAINING_GROUND,	SCENE_GERUDO_TRAINING_GROUND,   TWO_ACTOR_PARAMS(-324, -177),   "MQ Lobby Left Pot 2",          "Gerudo Training Ground MQ Lobby Left Pot 2", 	    RHT_POT_GERUDO_TRAINING_GROUND,    RG_RECOVERY_HEART,   SpoilerCollectionCheck::RandomizerInf(RAND_INF_GERUDO_TRAINING_GROUND_MQ_LOBBY_LEFT_POT_2));
     locationTable[RC_GERUDO_TRAINING_GROUND_MQ_LOBBY_RIGHT_POT_1]   = Location::Pot(RC_GERUDO_TRAINING_GROUND_MQ_LOBBY_RIGHT_POT_1,     RCQUEST_MQ, RCAREA_GERUDO_TRAINING_GROUND,	SCENE_GERUDO_TRAINING_GROUND,   TWO_ACTOR_PARAMS(199, -79),     "MQ Lobby Right Pot 1",         "Gerudo Training Ground MQ Lobby Right Pot 1",      RHT_POT_GERUDO_TRAINING_GROUND,    RG_RECOVERY_HEART,   SpoilerCollectionCheck::RandomizerInf(RAND_INF_GERUDO_TRAINING_GROUND_MQ_LOBBY_RIGHT_POT_1));
     locationTable[RC_GERUDO_TRAINING_GROUND_MQ_LOBBY_RIGHT_POT_2]   = Location::Pot(RC_GERUDO_TRAINING_GROUND_MQ_LOBBY_RIGHT_POT_2,     RCQUEST_MQ, RCAREA_GERUDO_TRAINING_GROUND,	SCENE_GERUDO_TRAINING_GROUND,   TWO_ACTOR_PARAMS(197, -179),    "MQ Lobby Right Pot 2",         "Gerudo Training Ground MQ Lobby Right Pot 2",      RHT_POT_GERUDO_TRAINING_GROUND,    RG_BLUE_RUPEE,       SpoilerCollectionCheck::RandomizerInf(RAND_INF_GERUDO_TRAINING_GROUND_MQ_LOBBY_RIGHT_POT_2));
+
+    // Rocks
+    locationTable[RC_HC_ROCK_1] = Location::Rock(RC_HC_ROCK_1, RCQUEST_BOTH, RCAREA_HYRULE_CASTLE, SCENE_HYRULE_CASTLE, TWO_ACTOR_PARAMS(-216, 2977), "HC Rock 1", "HC Rock 1",  RHT_POT_GERUDO_TRAINING_GROUND,    RG_NONE,       SpoilerCollectionCheck::RandomizerInf(RAND_INF_HC_ROCK_1));
+    locationTable[RC_HC_ROCK_2] = Location::Rock(RC_HC_ROCK_2, RCQUEST_BOTH, RCAREA_HYRULE_CASTLE, SCENE_HYRULE_CASTLE, TWO_ACTOR_PARAMS(-110, 3006), "HC Rock 2", "HC Rock 2",  RHT_POT_GERUDO_TRAINING_GROUND,    RG_NONE,       SpoilerCollectionCheck::RandomizerInf(RAND_INF_HC_ROCK_2));
+    locationTable[RC_HC_ROCK_3] = Location::Rock(RC_HC_ROCK_3, RCQUEST_BOTH, RCAREA_HYRULE_CASTLE, SCENE_HYRULE_CASTLE, TWO_ACTOR_PARAMS(-129, 2897), "HC Rock 3", "HC Rock 3",  RHT_POT_GERUDO_TRAINING_GROUND,    RG_NONE,       SpoilerCollectionCheck::RandomizerInf(RAND_INF_HC_ROCK_3));
 
     // Fairies
     locationTable[RC_SFM_FAIRY_GROTTO_FAIRY_1] =                        Location::Fairy(RC_SFM_FAIRY_GROTTO_FAIRY_1,                        RCQUEST_BOTH,   RCAREA_SACRED_FOREST_MEADOW,  SCENE_FAIRYS_FOUNTAIN,              0x1800,                          "Grotto Fairy 1",                                     "SFM Grotto Fairy 1",                                 RHT_SFM_FAIRY_GROTTO_FAIRY,                          SpoilerCollectionCheck::RandomizerInf(RAND_INF_SFM_FAIRY_GROTTO_FAIRY_1));

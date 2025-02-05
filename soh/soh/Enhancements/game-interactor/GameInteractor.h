@@ -312,6 +312,8 @@ typedef enum {
     VB_DOOR_BE_LOCKED,
     // Vanilla condition: ((doorActor->params >> 7) & 7) == 3
     VB_DOOR_PLAY_SCENE_TRANSITION,
+    // Opt: *EnIshi
+    VB_ROCK_DROP_ITEM,
 
     /*** Play Cutscenes ***/
 

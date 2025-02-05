@@ -167,6 +167,10 @@ void Context::GenerateLocationPool() {
         AddLocations(StaticData::GetOverworldPotLocations());
     }
 
+    if (mOptions[RSK_SHUFFLE_ROCKS]) {
+        AddLocations(StaticData::GetOverworldRockLocations());
+    }
+
     AddLocations(StaticData::GetAllDungeonLocations());
 }
 
