@@ -52,7 +52,7 @@ void RegionTable_Init_ForestTemple() {
         Entrance(RR_FOREST_TEMPLE_WEST_CORRIDOR,     []{return logic->SmallKeys(RR_FOREST_TEMPLE, 1, 5);}),
         Entrance(RR_FOREST_TEMPLE_EAST_CORRIDOR,     []{return false;}),
         Entrance(RR_FOREST_TEMPLE_BOSS_REGION,       []{return logic->ForestTempleMeg;}),
-        Entrance(RR_FOREST_TEMPLE_BOSS_ENTRYWAY,     []{return false;}),
+        Entrance(RR_FOREST_TEMPLE_BOSS_ENTRYWAY,     []{return logic->IsAdult && ctx->GetTrickOption(RT_BOSS_KEY_SKIP);}),
     });
 
     areaTable[RR_FOREST_TEMPLE_NORTH_CORRIDOR] = Region("Forest Temple North Corridor", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
@@ -334,6 +334,7 @@ void RegionTable_Init_ForestTemple() {
         Entrance(RR_FOREST_TEMPLE_MQ_LOWER_BLOCK_PUZZLE, []{return Here(RR_FOREST_TEMPLE_MQ_CENTRAL_AREA, []{return logic->CanKillEnemy(RE_STALFOS);});}),
         //implies the other 3 poes
         Entrance(RR_FOREST_TEMPLE_MQ_BASEMENT,           []{return logic->ForestTempleMeg;}),
+        Entrance(RR_FOREST_TEMPLE_BOSS_ENTRYWAY,         []{return logic->IsAdult && ctx->GetTrickOption(RT_BOSS_KEY_SKIP);}),
     });
 
     areaTable[RR_FOREST_TEMPLE_MQ_WOLFOS_ROOM] = Region("Forest Temple MQ Wolfos Room", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {

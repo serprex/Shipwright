@@ -2864,6 +2864,7 @@ typedef enum {
     RT_BUNNY_HOOD_JUMPS,
     RT_DAMAGE_BOOST_SIMPLE,
     RT_HOVER_BOOST_SIMPLE,
+    RT_BOSS_KEY_SKIP,
     RT_BOMBCHU_BEEHIVES,
     RT_BLUE_FIRE_MUD_WALLS,
     RT_KF_ADULT_GS,                            // -- location tricks

@@ -142,7 +142,7 @@ void RegionTable_Init_SpiritTemple() {
     areaTable[RR_SPIRIT_TEMPLE_INSIDE_STATUE_HEAD] = Region("Spirit Temple Inside Statue Head", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
         // Exits
         Entrance(RR_SPIRIT_TEMPLE_CENTRAL_CHAMBER, []{return true;}),
-        Entrance(RR_SPIRIT_TEMPLE_BOSS_ENTRYWAY,   []{return logic->HasItem(RG_SPIRIT_TEMPLE_BOSS_KEY);}),
+        Entrance(RR_SPIRIT_TEMPLE_BOSS_ENTRYWAY,   []{return logic->HasItem(RG_SPIRIT_TEMPLE_BOSS_KEY) || (ctx->GetTrickOption(RT_BOSS_KEY_SKIP) && logic->HasExplosives() && logic->CanJumpslash());}),
     });
 
 #pragma endregion
@@ -529,7 +529,7 @@ void RegionTable_Init_SpiritTemple() {
     areaTable[RR_SPIRIT_TEMPLE_MQ_INSIDE_STATUE_HEAD] = Region("Spirit Temple MQ Inside Statue Head", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
         // Exits
         Entrance(RR_SPIRIT_TEMPLE_MQ_LOBBY,      []{return true;}),
-        Entrance(RR_SPIRIT_TEMPLE_BOSS_ENTRYWAY, []{return logic->HasItem(RG_SPIRIT_TEMPLE_BOSS_KEY);}),
+        Entrance(RR_SPIRIT_TEMPLE_BOSS_ENTRYWAY, []{return logic->HasItem(RG_SPIRIT_TEMPLE_BOSS_KEY) || (ctx->GetTrickOption(RT_BOSS_KEY_SKIP) && logic->HasExplosives() && logic->CanJumpslash());}),
     });
 
 #pragma endregion

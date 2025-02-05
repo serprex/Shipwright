@@ -286,7 +286,7 @@ void RegionTable_Init_FireTemple() {
 
     areaTable[RR_FIRE_TEMPLE_WEST_CENTRAL_UPPER] = Region("Fire Temple West Central Upper", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
         //Exits
-        Entrance(RR_FIRE_TEMPLE_BOSS_ENTRYWAY,      []{return false;}),
+        Entrance(RR_FIRE_TEMPLE_BOSS_ENTRYWAY,      []{return ctx->GetTrickOption(RT_BOSS_KEY_SKIP);}),
         Entrance(RR_FIRE_TEMPLE_FIRE_MAZE_UPPER,    []{return true;}),
         Entrance(RR_FIRE_TEMPLE_WEST_CENTRAL_LOWER, []{return true;}),
     });
@@ -631,6 +631,7 @@ void RegionTable_Init_FireTemple() {
     }, {}, {
         Entrance(RR_FIRE_TEMPLE_MQ_SOUTH_FIRE_MAZE, []{return true;}),
         Entrance(RR_FIRE_TEMPLE_MQ_NORTH_FIRE_MAZE, []{return logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_HOVER_BOOTS);}),
+        Entrance(RR_FIRE_TEMPLE_BOSS_ENTRYWAY,      []{return logic->IsAdult && ctx->GetTrickOption(RT_BOSS_KEY_SKIP);}),
         //trick to get to RR_FIRE_TEMPLE_MQ_WEST_FIRE_MAZE with hovers + taking damage is plausible
     });
 

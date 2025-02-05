@@ -276,7 +276,7 @@ void RegionTable_Init_WaterTemple() {
     }, {
         //Exits
         Entrance(RR_WATER_TEMPLE_LOBBY,         []{return true;}),
-        Entrance(RR_WATER_TEMPLE_BOSS_ENTRYWAY, []{return logic->HasItem(RG_WATER_TEMPLE_BOSS_KEY);}),
+        Entrance(RR_WATER_TEMPLE_BOSS_ENTRYWAY, []{return logic->HasItem(RG_WATER_TEMPLE_BOSS_KEY) || (ctx->GetTrickOption(RT_BOSS_KEY_SKIP) && logic->HasExplosives() && logic->CanJumpslash());}),
     });
 
 #pragma endregion
@@ -364,7 +364,7 @@ void RegionTable_Init_WaterTemple() {
     areaTable[RR_WATER_TEMPLE_MQ_BOSS_DOOR] = Region("Water Temple MQ Main", "Water Temple", {RA_WATER_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
         //Exits
         Entrance(RR_WATER_TEMPLE_MQ_3F_NORTH_LEDGE, []{return logic->CanUse(RG_ICE_ARROWS) || logic->TakeDamage();}),
-        Entrance(RR_WATER_TEMPLE_BOSS_ENTRYWAY,     []{return logic->HasItem(RG_WATER_TEMPLE_BOSS_KEY);}),
+        Entrance(RR_WATER_TEMPLE_BOSS_ENTRYWAY,     []{return logic->HasItem(RG_WATER_TEMPLE_BOSS_KEY) || (ctx->GetTrickOption(RT_BOSS_KEY_SKIP) && logic->HasExplosives() && logic->CanJumpslash());}),
     });
 
     areaTable[RR_WATER_TEMPLE_MQ_EAST_TOWER] = Region("Water Temple MQ East Tower", "Water Temple", {RA_WATER_TEMPLE}, NO_DAY_NIGHT_CYCLE, {

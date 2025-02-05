@@ -357,6 +357,7 @@ void Settings::CreateOptions() {
     // OPT_TRICK(RT_BUNNY_HOOD_JUMPS, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED}, "Bunny Hood Jumps", "Allows reaching locations using Bunny Hood's extended jumps.");
     OPT_TRICK(RT_DAMAGE_BOOST_SIMPLE, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL}, "Simple damage boosts", "Allows damage boosts in order to reach further locations. Can be combined with \"Simple hover boosts\" for reaching far distances.");
     OPT_TRICK(RT_HOVER_BOOST_SIMPLE, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::ADVANCED, Tricks::Tag::EXPERIMENTAL}, "Simple hover boosts", "Allows equipping of hover boots when link is moving at high speeds to extend distance covered. Can be combined with \"Simple damage boosts\" for greater uses.");
+    OPT_TRICK(RT_BOSS_KEY_SKIP, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::INTERMEDIATE, Tricks::Tag::GLITCH}, "Boss key skips", "Allows clipping past boss doors instead of unlocking them.")
     OPT_TRICK(RT_BOMBCHU_BEEHIVES, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::NOVICE}, "Bombchu Beehives", "Allows exploding beehives with bombchus.");
     OPT_TRICK(RT_BLUE_FIRE_MUD_WALLS, RCQUEST_BOTH, RA_NONE, {Tricks::Tag::NOVICE}, "Break Mud Walls with Blue Fire", "Use Blue Fire to break mud walls.");
     OPT_TRICK(RT_KF_ADULT_GS, RCQUEST_BOTH, RA_KOKIRI_FOREST, {Tricks::Tag::NOVICE}, "Adult Kokiri Forest GS with Hover Boots", "Can be obtained without Hookshot by using the Hover Boots off of one of the roots.");
