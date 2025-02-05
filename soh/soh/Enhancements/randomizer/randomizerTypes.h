@@ -294,6 +294,7 @@ typedef enum {
     RCTYPE_FISH,                       // Fishes
     RCTYPE_FREESTANDING,               // Freestanding rupees and hearts
     RCTYPE_FAIRY,                      // Fairies
+    RCTYPE_ROCK,                       // Rocks
 } RandomizerCheckType;
 
 typedef enum { RCQUEST_VANILLA, RCQUEST_MQ, RCQUEST_BOTH } RandomizerCheckQuest;
@@ -2848,6 +2849,9 @@ typedef enum {
     RC_SHADOW_TEMPLE_MQ_WIND_HINT_SUN_FAIRY,
     RC_BOTTOM_OF_THE_WELL_MQ_CELL_SUN_FAIRY,
     RC_BOTTOM_OF_THE_WELL_MQ_BASEMENT_SUN_FAIRY,
+    RC_HC_ROCK_1,
+    RC_HC_ROCK_2,
+    RC_HC_ROCK_3,
     RC_MAX
 } RandomizerCheck;
 
@@ -5221,6 +5225,7 @@ typedef enum {
     RSK_SHUFFLE_FREESTANDING,
     RSK_SHUFFLE_FAIRIES,
     RSK_LOCK_OVERWORLD_DOORS,
+    RSK_SHUFFLE_ROCKS,
     RSK_MAX
 } RandomizerSettingKey;
 
@@ -5662,6 +5667,11 @@ typedef struct FishIdentity {
     RandomizerInf randomizerInf;
     RandomizerCheck randomizerCheck;
 } FishIdentity;
+
+typedef struct RockIdentity {
+    RandomizerInf randomizerInf;
+    RandomizerCheck randomizerCheck;
+} RockIdentity;
 
 typedef enum {
     TRACKER_WINDOW_FLOATING,

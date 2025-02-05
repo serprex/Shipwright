@@ -722,6 +722,10 @@ void GenerateItemPool() {
   bool dungeonPotsActive = ctx->GetOption(RSK_SHUFFLE_POTS).Is(RO_SHUFFLE_POTS_DUNGEONS) ||
                            ctx->GetOption(RSK_SHUFFLE_POTS).Is(RO_SHUFFLE_POTS_ALL);
   PlaceItemsForType(RCTYPE_POT, overworldPotsActive, dungeonPotsActive);
+
+  if (ctx->GetOption(RSK_SHUFFLE_ROCKS).Get()) {
+    PlaceItemsForType(RCTYPE_ROCK, true, true, false);
+  }
   
   auto fsMode = ctx->GetOption(RSK_FISHSANITY);
   if (fsMode.IsNot(RO_FISHSANITY_OFF)) {

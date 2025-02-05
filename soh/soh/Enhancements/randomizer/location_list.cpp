@@ -43,6 +43,16 @@ std::vector<RandomizerCheck> Rando::StaticData::GetOverworldPotLocations() {
     return overworldPotLocations;
 }
 
+std::vector<RandomizerCheck> Rando::StaticData::GetOverworldRockLocations() {
+    std::vector<RandomizerCheck> overworldRockLocations = {};
+    for (Location& location : locationTable) {
+        if (location.GetRCType() == RCTYPE_ROCK && location.IsOverworld() && location.GetRandomizerCheck() != RC_UNKNOWN_CHECK) {
+            overworldRockLocations.push_back(location.GetRandomizerCheck());
+        }
+    }
+    return overworldRockLocations;
+}
+
 std::vector<RandomizerCheck> Rando::StaticData::GetStaticHintLocations() {
     std::vector<RandomizerCheck> staticHintLocations = {};
     for (Location& location : locationTable) {
@@ -114,6 +124,7 @@ std::vector<RandomizerCheck> Rando::StaticData::GetOverworldLocations() {
             location.GetRandomizerCheck() != RC_TRIFORCE_COMPLETED && //not really an overworld check
             location.GetRCType() != RCTYPE_FISH && // temp fix while locations are properly sorted out
             location.GetRCType() != RCTYPE_POT &&  // Same as fish
+            location.GetRCType() != RCTYPE_ROCK &&  // Same as fish
             location.GetRCType() != RCTYPE_CHEST_GAME && //this is supposed to be excluded
             (ctx->GetOption(RSK_SHUFFLE_ADULT_TRADE) || location.GetRCType() != RCTYPE_ADULT_TRADE) && //trade is handled elsewhere in location pool
             location.GetRCType() != RCTYPE_STATIC_HINT && 
@@ -997,6 +1008,11 @@ void Rando::StaticData::InitLocationTable() { //                                
     locationTable[RC_GC_SHOP_ITEM_6] =                                                 Location::Base(RC_GC_SHOP_ITEM_6,                                               RCQUEST_BOTH,    RCTYPE_SHOP,                                                             ACTOR_EN_GIRLA,       SCENE_GORON_SHOP,                   0x05,                               "Shop Item 6",                                 RHT_GC_SHOP_ITEM_6,                                              RG_BUY_HEART,         SpoilerCollectionCheck::RandomizerInf(RAND_INF_SHOP_ITEMS_GC_SHOP_ITEM_6), false, 10);
     locationTable[RC_GC_SHOP_ITEM_7] =                                                 Location::Base(RC_GC_SHOP_ITEM_7,                                               RCQUEST_BOTH,    RCTYPE_SHOP,                                                             ACTOR_EN_GIRLA,       SCENE_GORON_SHOP,                   0x06,                               "Shop Item 7",                                 RHT_GC_SHOP_ITEM_7,                                              RG_BUY_RED_POTION_40, SpoilerCollectionCheck::RandomizerInf(RAND_INF_SHOP_ITEMS_GC_SHOP_ITEM_7), false, 40);
     locationTable[RC_GC_SHOP_ITEM_8] =                                                 Location::Base(RC_GC_SHOP_ITEM_8,                                               RCQUEST_BOTH,    RCTYPE_SHOP,                                                             ACTOR_EN_GIRLA,       SCENE_GORON_SHOP,                   0x07,                               "Shop Item 8",                                 RHT_GC_SHOP_ITEM_8,                                              RG_BUY_HEART,         SpoilerCollectionCheck::RandomizerInf(RAND_INF_SHOP_ITEMS_GC_SHOP_ITEM_8), false, 10);
+
+    // Rocks
+    locationTable[RC_HC_ROCK_1] = Location::Rock(RC_HC_ROCK_1, RCQUEST_BOTH, RCAREA_HYRULE_CASTLE, SCENE_HYRULE_CASTLE, TWO_ACTOR_PARAMS(-216, 2977), "HC Rock 1", "HC Rock 1",  RHT_POT_GERUDO_TRAINING_GROUND,    RG_NONE,       SpoilerCollectionCheck::RandomizerInf(RAND_INF_HC_ROCK_1));
+    locationTable[RC_HC_ROCK_2] = Location::Rock(RC_HC_ROCK_2, RCQUEST_BOTH, RCAREA_HYRULE_CASTLE, SCENE_HYRULE_CASTLE, TWO_ACTOR_PARAMS(-110, 3006), "HC Rock 2", "HC Rock 2",  RHT_POT_GERUDO_TRAINING_GROUND,    RG_NONE,       SpoilerCollectionCheck::RandomizerInf(RAND_INF_HC_ROCK_2));
+    locationTable[RC_HC_ROCK_3] = Location::Rock(RC_HC_ROCK_3, RCQUEST_BOTH, RCAREA_HYRULE_CASTLE, SCENE_HYRULE_CASTLE, TWO_ACTOR_PARAMS(-129, 2897), "HC Rock 3", "HC Rock 3",  RHT_POT_GERUDO_TRAINING_GROUND,    RG_NONE,       SpoilerCollectionCheck::RandomizerInf(RAND_INF_HC_ROCK_3));
 
     // Gossip Stones
     locationTable[RC_DMC_GOSSIP_STONE] =                                          Location::HintStone(RC_DMC_GOSSIP_STONE,                                 RCQUEST_BOTH,                                                                      SCENE_DEATH_MOUNTAIN_CRATER,        14341,                              "Gossip Stone");
