@@ -1166,7 +1166,7 @@ extern "C" void InitOTR() {
     SohGui::SetupGuiElements();
     ShipInit::InitAll();
 
-   Rando::StaticData::InitHashMaps();
+    Rando::StaticData::InitHashMaps();
     OTRGlobals::Instance->gRandoContext->AddExcludedOptions();
     AudioCollection::Instance = new AudioCollection();
     ActorDB::Instance = new ActorDB();
