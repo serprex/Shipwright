@@ -49,7 +49,10 @@ void RegionTable_Init_LakeHylia() {
         Entrance(RR_LH_GROTTO,             []{return true;}),
     });
 
-    areaTable[RR_LH_FISHING_ISLAND] = Region("LH Fishing Island", "Lake Hylia", {RA_LAKE_HYLIA}, DAY_NIGHT_CYCLE, {}, {}, {
+    areaTable[RR_LH_FISHING_ISLAND] = Region("LH Fishing Island", "Lake Hylia", {RA_LAKE_HYLIA}, DAY_NIGHT_CYCLE, {}, {
+        //Locations
+        LOCATION(RC_LA_ROCK, true),
+    }, {
         //Exits
         Entrance(RR_LAKE_HYLIA,      []{return logic->HasItem(RG_BRONZE_SCALE);}),
         Entrance(RR_LH_FISHING_POND, []{return logic->CanOpenOverworldDoor(RG_FISHING_HOLE_KEY);}),

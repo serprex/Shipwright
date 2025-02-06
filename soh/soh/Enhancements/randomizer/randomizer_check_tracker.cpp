@@ -1235,7 +1235,7 @@ void LoadSettings() {
                 break;
         }
 
-        showRocks = OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_POTS);
+        showRocks = OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_ROCKS);
     } else { // Vanilla
         showOverworldTokens = true;
         showDungeonTokens = true;

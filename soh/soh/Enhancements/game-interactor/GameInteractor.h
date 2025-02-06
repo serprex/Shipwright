@@ -314,6 +314,10 @@ typedef enum {
     VB_DOOR_PLAY_SCENE_TRANSITION,
     // Opt: *EnIshi
     VB_ROCK_DROP_ITEM,
+    // Opt: *ObjBombiwa
+    VB_BOULDER_BREAK_FLAG,
+    // Opt: *ObjHamishi
+    VB_BRONZE_BOULDER_BREAK_FLAG,
 
     /*** Play Cutscenes ***/
 

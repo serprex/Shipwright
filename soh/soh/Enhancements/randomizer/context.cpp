@@ -182,8 +182,7 @@ void Context::AddExcludedOptions() {
     for (const RandomizerCheck rc : everyPossibleLocation) {
         bool alreadyAdded = false;
         Location* loc = StaticData::GetLocation(rc);
-        for (Option* location : Rando::Settings::GetInstance()->GetExcludeOptionsForArea(loc->GetArea()))
-        {
+        for (Option* location : Rando::Settings::GetInstance()->GetExcludeOptionsForArea(loc->GetArea())) {
             if (location->GetName() == loc->GetExcludedOption()->GetName()) {
                 alreadyAdded = true;
             }
