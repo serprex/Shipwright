@@ -38,6 +38,14 @@ void RegionTable_Init_KokiriForest() {
         LOCATION(RC_KF_SARIAS_ROOF_WEST_HEART,  logic->IsChild),
         LOCATION(RC_KF_SARIAS_ROOF_EAST_HEART,  logic->IsChild),
         LOCATION(RC_KF_SARIAS_ROOF_NORTH_HEART, logic->IsChild),
+        LOCATION(RC_KF_ROCK_CIRLCE_1,           true),
+        LOCATION(RC_KF_ROCK_CIRLCE_2,           true),
+        LOCATION(RC_KF_ROCK_CIRLCE_3,           true),
+        LOCATION(RC_KF_ROCK_CIRLCE_4,           true),
+        LOCATION(RC_KF_ROCK_CIRLCE_5,           true),
+        LOCATION(RC_KF_ROCK_CIRLCE_6,           true),
+        LOCATION(RC_KF_ROCK_CIRLCE_7,           true),
+        LOCATION(RC_KF_ROCK_CIRLCE_8,           true),
         LOCATION(RC_KF_GOSSIP_STONE,            true),
     }, {
         //Exits

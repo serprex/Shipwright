@@ -104,7 +104,7 @@ void Rock_RandomizerSpawnCollectible(Actor* actor, RockIdentity rockIdentity, Pl
     item00->randoInf = rockIdentity.randomizerInf;
     item00->itemEntry = Rando::Context::GetInstance()->GetFinalGIEntry(rockIdentity.randomizerCheck, true, GI_NONE);
     item00->actor.draw = (ActorFunc)EnItem00_DrawRandomizedItem;
-    item00->actor.velocity.y = 8.0f;
+    item00->actor.velocity.y = 9.0f;
     item00->actor.speedXZ = 2.0f;
     item00->actor.world.rot.y = Rand_CenteredFloat(65536.0f);
 }
@@ -119,7 +119,7 @@ void EnIshi_RandomizerInit(void* actorRef) {
 
     rockActor->rockIdentity = OTRGlobals::Instance->gRandomizer->IdentifyRock(
         gPlayState->sceneNum, (s16)actor->world.pos.x, (s16)actor->world.pos.z);
-    LUSLOG_INFO("ROCK ishi%d %d X:%d Z:%d", rockActor->rockIdentity.randomizerCheck, actor->params, (s16)actor->world.pos.x, (s16)actor->world.pos.z);
+    LUSLOG_INFO("ROCK ishi%d %d X:%d Z:%d", rockActor->rockIdentity.randomizerCheck, actor->params&1, (s16)actor->world.pos.x, (s16)actor->world.pos.z);
     if (Rock_RandomizerHoldsItem(rockActor->rockIdentity, gPlayState)) {
         rockActor->actor.draw = EnIshi_RandomizerDraw;
     }
