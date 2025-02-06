@@ -648,4 +648,4 @@ void Rando::StaticData::RegisterPotLocations() {
     locationTable[RC_GERUDO_TRAINING_GROUND_MQ_LOBBY_RIGHT_POT_2]   = Location::Pot(RC_GERUDO_TRAINING_GROUND_MQ_LOBBY_RIGHT_POT_2,     RCQUEST_MQ, RCAREA_GERUDO_TRAINING_GROUND,	SCENE_GERUDO_TRAINING_GROUND,   TWO_ACTOR_PARAMS(197, -179),    "MQ Lobby Right Pot 2",         "Gerudo Training Ground MQ Lobby Right Pot 2",      RHT_POT_GERUDO_TRAINING_GROUND,    RG_BLUE_RUPEE,       SpoilerCollectionCheck::RandomizerInf(RAND_INF_GERUDO_TRAINING_GROUND_MQ_LOBBY_RIGHT_POT_2));
 }
 
-static RegisterShipInitFunc initFunc(Rando::StaticData::RegisterPotLocations, { "ON_BOOT" });
+static RegisterShipInitFunc initFunc(Rando::StaticData::RegisterPotLocations);

@@ -630,4 +630,4 @@ void Rando::StaticData::RegisterFishLocations() {
     locationTable[RC_ZD_FISH_5] =                                                      Location::Fish(RC_ZD_FISH_5,                                                    RCQUEST_BOTH,                                                                             ACTOR_EN_FISH,        SCENE_ZORAS_DOMAIN,                 -1 ^ 4,   RAND_INF_ZD_FISH_5,                            "Fish 5",                      RHT_ZD_FISH,                       RG_FISH);
 }
 
-static RegisterShipInitFunc initFunc(Rando::StaticData::RegisterFishLocations, { "ON_BOOT" });
+static RegisterShipInitFunc initFunc(Rando::StaticData::RegisterFishLocations);

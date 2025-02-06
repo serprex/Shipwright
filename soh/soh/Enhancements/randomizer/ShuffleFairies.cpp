@@ -404,4 +404,4 @@ void Rando::StaticData::RegisterFairyLocations() {
     locationTable[RC_BOTTOM_OF_THE_WELL_MQ_BASEMENT_SUN_FAIRY] =        Location::Fairy(RC_BOTTOM_OF_THE_WELL_MQ_BASEMENT_SUN_FAIRY,        RCQUEST_MQ,     RCAREA_BOTTOM_OF_THE_WELL,    SCENE_BOTTOM_OF_THE_WELL,           TWO_ACTOR_PARAMS(0x1000, -1458), "MQ Basement Sun's Song Fairy",                       "MQ Basement Sun's Song Fairy",                       RHT_BOTTOM_OF_THE_WELL_MQ_BASEMENT_SUN_FAIRY,        SpoilerCollectionCheck::RandomizerInf(RAND_INF_BOTTOM_OF_THE_WELL_MQ_BASEMENT_SUN_FAIRY));
 }
 
-static RegisterShipInitFunc initFunc(Rando::StaticData::RegisterFairyLocations, { "ON_BOOT" });
+static RegisterShipInitFunc initFunc(Rando::StaticData::RegisterFairyLocations);
