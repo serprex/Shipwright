@@ -119,7 +119,7 @@ void EnIshi_RandomizerInit(void* actorRef) {
 
     rockActor->rockIdentity = OTRGlobals::Instance->gRandomizer->IdentifyRock(
         gPlayState->sceneNum, (s16)actor->world.pos.x, (s16)actor->world.pos.z);
-    LUSLOG_INFO("ROCK ishi%d %d X:%d Z:%d", rockActor->rockIdentity.randomizerCheck, actor->params&1, (s16)actor->world.pos.x, (s16)actor->world.pos.z);
+    LUSLOG_INFO("ROCK ishi%d %d\t:\t%d, %d", rockActor->rockIdentity.randomizerCheck, actor->params&1, (s16)actor->world.pos.x, (s16)actor->world.pos.z);
     if (Rock_RandomizerHoldsItem(rockActor->rockIdentity, gPlayState)) {
         rockActor->actor.draw = EnIshi_RandomizerDraw;
     }
@@ -135,7 +135,7 @@ void ObjBombiwa_RandomizerInit(void* actorRef) {
 
     rockActor->rockIdentity = OTRGlobals::Instance->gRandomizer->IdentifyRock(
         gPlayState->sceneNum, (s16)actor->world.pos.x, (s16)actor->world.pos.z);
-    LUSLOG_INFO("ROCK bombiwa%d X:%d Z:%d", rockActor->rockIdentity.randomizerCheck, (s16)actor->world.pos.x, (s16)actor->world.pos.z);
+    LUSLOG_INFO("ROCK bombiwa%d\t:\t%d, %d", rockActor->rockIdentity.randomizerCheck, (s16)actor->world.pos.x, (s16)actor->world.pos.z);
     if (Rock_RandomizerHoldsItem(rockActor->rockIdentity, gPlayState)) {
         rockActor->actor.draw = ObjBombiwa_RandomizerDraw;
     }
@@ -151,7 +151,7 @@ void ObjHamishi_RandomizerInit(void* actorRef) {
 
     rockActor->rockIdentity = OTRGlobals::Instance->gRandomizer->IdentifyRock(
         gPlayState->sceneNum, (s16)actor->world.pos.x, (s16)actor->world.pos.z);
-    LUSLOG_INFO("ROCK hamishi%d X:%d Z:%d", rockActor->rockIdentity.randomizerCheck, (s16)actor->world.pos.x, (s16)actor->world.pos.z);
+    LUSLOG_INFO("ROCK hamishi%d\t:\t%d, %d", rockActor->rockIdentity.randomizerCheck, (s16)actor->world.pos.x, (s16)actor->world.pos.z);
     if (Rock_RandomizerHoldsItem(rockActor->rockIdentity, gPlayState)) {
         rockActor->actor.draw = ObjHamishi_RandomizerDraw;
     }
