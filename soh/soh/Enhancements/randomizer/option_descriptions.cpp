@@ -450,7 +450,7 @@ void Settings::CreateOptionDescriptions() {
     mOptionDescriptions[RSK_SHUFFLE_FAIRIES] =
         "Shuffle fairy locations.";
     mOptionDescriptions[RSK_SHUFFLE_ROCKS] =
-        "Shuffle rock locations. NOT BOULDERS.";
+        "Shuffle rock locations.";
     mOptionDescriptions[RSK_SHUFFLE_DUNGEON_REWARDS] =
         "Shuffles the location of Spiritual Stones and medallions.\n"
         "Vanilla - Spiritual Stones and medallions will be given from their respective boss.\n"

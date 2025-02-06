@@ -12,6 +12,15 @@ void RegionTable_Init_HyruleField() {
         LOCATION(RC_HF_OCARINA_OF_TIME_ITEM,   logic->IsChild && logic->StoneCount() == 3 && logic->HasItem(RG_BRONZE_SCALE)),
         LOCATION(RC_SONG_FROM_OCARINA_OF_TIME, logic->IsChild && logic->StoneCount() == 3 && logic->HasItem(RG_BRONZE_SCALE)),
         LOCATION(RC_HF_POND_STORMS_FAIRY,      logic->CanUse(RG_SONG_OF_STORMS)),
+        LOCATION(RC_HF_SILVER_BOULDER,         logic->CanUse(RG_SILVER_GAUNTLETS)),
+        LOCATION(RC_HF_ROCK_1,                 true),
+        LOCATION(RC_HF_ROCK_2,                 true),
+        LOCATION(RC_HF_ROCK_3,                 true),
+        LOCATION(RC_HF_ROCK_4,                 true),
+        LOCATION(RC_HF_ROCK_5,                 true),
+        LOCATION(RC_HF_ROCK_6,                 true),
+        LOCATION(RC_HF_ROCK_7,                 true),
+        LOCATION(RC_HF_ROCK_8,                 true),
     }, {
         //Exits
         Entrance(RR_LW_BRIDGE,              []{return true;}),

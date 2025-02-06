@@ -9,7 +9,13 @@ void RegionTable_Init_GerudoValley() {
         EventAccess(&logic->BugRock, []{return logic->BugRock || logic->IsChild;}),
     }, {
         //Locations
-        LOCATION(RC_GV_GS_SMALL_BRIDGE, logic->IsChild && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
+        LOCATION(RC_GV_GS_SMALL_BRIDGE,   logic->IsChild && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
+        LOCATION(RC_GV_ROCK_1,            true),
+        LOCATION(RC_GV_ROCK_2,            true),
+        LOCATION(RC_GV_ROCK_3,            true),
+        LOCATION(RC_GV_UNDERWATER_ROCK_1, logic->IsAdult || logic->CanUse(RG_BOMBCHU_5)),
+        LOCATION(RC_GV_UNDERWATER_ROCK_2, logic->IsAdult || logic->CanUse(RG_BOMBCHU_5)),
+        LOCATION(RC_GV_UNDERWATER_ROCK_3, logic->IsAdult || logic->CanUse(RG_BOMBCHU_5)),
     }, {
         //Exits
         Entrance(RR_HYRULE_FIELD,     []{return true;}),
@@ -44,7 +50,10 @@ void RegionTable_Init_GerudoValley() {
         Entrance(RR_LAKE_HYLIA, []{return logic->IsChild || logic->HasItem(RG_BRONZE_SCALE);}),//can use cucco as child
     });
 
-    areaTable[RR_GV_GROTTO_LEDGE] = Region("GV Grotto Ledge", "Gerudo Valley", {RA_GERUDO_VALLEY}, DAY_NIGHT_CYCLE, {}, {}, {
+    areaTable[RR_GV_GROTTO_LEDGE] = Region("GV Grotto Ledge", "Gerudo Valley", {RA_GERUDO_VALLEY}, DAY_NIGHT_CYCLE, {}, {
+        //Locations
+        LOCATION(RC_GV_SILVER_BOULDER, logic->CanUse(RG_SILVER_GAUNTLETS)),
+    }, {
         //Exits
         Entrance(RR_GV_LOWER_STREAM,   []{return true;}),
         Entrance(RR_GV_OCTOROK_GROTTO, []{return logic->CanUse(RG_SILVER_GAUNTLETS);}),

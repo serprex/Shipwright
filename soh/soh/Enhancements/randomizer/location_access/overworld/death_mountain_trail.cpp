@@ -20,6 +20,19 @@ void RegionTable_Init_DeathMountainTrail() {
         LOCATION(RC_DMT_BEAN_SPROUT_FAIRY_2,      logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS) && (logic->HasExplosives() || logic->HasItem(RG_GORONS_BRACELET))),
         LOCATION(RC_DMT_BEAN_SPROUT_FAIRY_3,      logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS) && (logic->HasExplosives() || logic->HasItem(RG_GORONS_BRACELET))),
         LOCATION(RC_DMT_FLAG_SUN_FAIRY,           logic->CanUse(RG_SUNS_SONG)),
+        LOCATION(RC_DMT_ROCK_1,                   true),
+        LOCATION(RC_DMT_ROCK_2,                   true),
+        LOCATION(RC_DMT_ROCK_3,                   true),
+        LOCATION(RC_DMT_ROCK_4,                   true),
+        LOCATION(RC_DMT_ROCK_5,                   true),
+        LOCATION(RC_DMT_ROCK_7,                   true),
+        LOCATION(RC_DMT_ROCK_8,                   true),
+        LOCATION(RC_DMT_ROCK_9,                   true),
+        LOCATION(RC_DMT_ROCK_10,                  true),
+        LOCATION(RC_DMT_ROCK_11,                  true),
+        LOCATION(RC_DMT_ROCK_12,                  true),
+        LOCATION(RC_DMT_ROCK_13,                  true),
+        LOCATION(RC_DMT_ROCK_14,                  true),
     }, {
         //Exits
         Entrance(RR_KAK_BEHIND_GATE,          []{return true;}),
@@ -32,7 +45,7 @@ void RegionTable_Init_DeathMountainTrail() {
     areaTable[RR_DEATH_MOUNTAIN_SUMMIT] = Region("Death Mountain Summit", "Death Mountain", {RA_DEATH_MOUNTAIN_TRAIL}, DAY_NIGHT_CYCLE, {
         //Events
         EventAccess(&logic->GossipStoneFairy, []{return logic->CallGossipFairy();}),
-        EventAccess(&logic->BugRock,          []{return logic->BugRock            || logic->IsChild;}),
+        EventAccess(&logic->BugRock,          []{return logic->BugRock || logic->IsChild;}),
     }, {
         //Locations
         LOCATION(RC_DMT_TRADE_BROKEN_SWORD,     logic->IsAdult && logic->CanUse(RG_BROKEN_SWORD)),
@@ -41,6 +54,7 @@ void RegionTable_Init_DeathMountainTrail() {
         LOCATION(RC_DMT_GS_FALLING_ROCKS_PATH,  logic->IsAdult && logic->AtNight && (logic->CanUse(RG_MEGATON_HAMMER) || ctx->GetTrickOption(RT_DMT_UPPER_GS)) && logic->CanGetNightTimeGS()),
         LOCATION(RC_DMT_GOSSIP_STONE_FAIRY,     logic->CallGossipFairy()),
         LOCATION(RC_DMT_GOSSIP_STONE_FAIRY_BIG, logic->CanUse(RG_SONG_OF_STORMS)),
+        LOCATION(RC_DMT_ROCK_6,                 logic->IsChild),
         LOCATION(RC_DMT_GOSSIP_STONE,           true),
     }, {
         //Exits

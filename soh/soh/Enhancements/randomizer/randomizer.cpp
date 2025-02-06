@@ -1842,7 +1842,6 @@ RockIdentity Randomizer::IdentifyRock(s32 sceneNum, s32 posX, s32 posZ) {
     rockIdentity.randomizerCheck = RC_UNKNOWN_CHECK;
 
     Rando::Location* location = GetCheckObjectFromActor(ACTOR_EN_ISHI, sceneNum, TWO_ACTOR_PARAMS(posX, posZ));
-    LUSLOG_INFO("randorock %d X:%d Z:%d", location->GetRandomizerCheck(), posX, posZ);
 
     if (location->GetRandomizerCheck() != RC_UNKNOWN_CHECK) {
         rockIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
