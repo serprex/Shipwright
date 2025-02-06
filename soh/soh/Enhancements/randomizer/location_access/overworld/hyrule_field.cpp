@@ -21,6 +21,13 @@ void RegionTable_Init_HyruleField() {
         LOCATION(RC_HF_ROCK_6,                 true),
         LOCATION(RC_HF_ROCK_7,                 true),
         LOCATION(RC_HF_ROCK_8,                 true),
+        LOCATION(RC_HF_BOULDER_1,              logic->BlastOrSmash()),
+        LOCATION(RC_HF_BOULDER_2,              logic->BlastOrSmash()),
+        LOCATION(RC_HF_BOULDER_3,              logic->BlastOrSmash()),
+        LOCATION(RC_HF_BRONZE_BOULDER_1,       logic->IsAdult && logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_HF_BRONZE_BOULDER_2,       logic->IsAdult && logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_HF_BRONZE_BOULDER_3,       logic->IsAdult && logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_HF_BRONZE_BOULDER_4,       logic->IsAdult && logic->CanUse(RG_MEGATON_HAMMER)),
     }, {
         //Exits
         Entrance(RR_LW_BRIDGE,              []{return true;}),

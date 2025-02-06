@@ -90,7 +90,14 @@ void RegionTable_Init_CastleGrounds() {
         EventAccess(&logic->BuiltRainbowBridge, []{return logic->CanBuildRainbowBridge();}),
     }, {
         //Locations
-        LOCATION(RC_OGC_GS, logic->CanJumpslashExceptHammer() || logic->CanUseProjectile() || (logic->CanShield() && logic->CanUse(RG_MEGATON_HAMMER)) || logic->CanUse(RG_DINS_FIRE)),
+        LOCATION(RC_OGC_GS,               logic->CanJumpslashExceptHammer() || logic->CanUseProjectile() || (logic->CanShield() && logic->CanUse(RG_MEGATON_HAMMER)) || logic->CanUse(RG_DINS_FIRE)),
+        LOCATION(RC_OGC_BRONZE_BOULDER_1, logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_OGC_BRONZE_BOULDER_2, logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_OGC_BRONZE_BOULDER_3, logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_OGC_SILVER_BOULDER_1, logic->CanUse(RG_SILVER_GAUNTLETS)),
+        LOCATION(RC_OGC_SILVER_BOULDER_2, logic->CanUse(RG_SILVER_GAUNTLETS)),
+        LOCATION(RC_OGC_SILVER_BOULDER_3, logic->CanUse(RG_SILVER_GAUNTLETS)),
+        LOCATION(RC_OGC_SILVER_BOULDER_4, logic->CanUse(RG_SILVER_GAUNTLETS)),
     }, {
         //Exits
         Entrance(RR_CASTLE_GROUNDS,           []{return logic->AtNight;}),
