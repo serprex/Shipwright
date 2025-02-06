@@ -29,6 +29,7 @@ void RegionTable_Init_CastleGrounds() {
         LOCATION(RC_HC_ROCK_1,                           true),
         LOCATION(RC_HC_ROCK_2,                           true),
         LOCATION(RC_HC_ROCK_3,                           true),
+        LOCATION(RC_HC_BOULDER,                          logic->BlastOrSmash()),
         LOCATION(RC_HC_MALON_GOSSIP_STONE,               true),
         LOCATION(RC_HC_ROCK_WALL_GOSSIP_STONE,           true),
     }, {
