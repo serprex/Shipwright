@@ -4,7 +4,21 @@
 using namespace Rando;
 
 void RegionTable_Init_DeathMountainCrater() {
-    areaTable[RR_DMC_UPPER_NEARBY] = Region("DMC Upper Nearby", "Death Mountain Crater", {RA_DEATH_MOUNTAIN_CRATER}, NO_DAY_NIGHT_CYCLE, {}, {}, {
+    areaTable[RR_DMC_UPPER_NEARBY] = Region("DMC Upper Nearby", "Death Mountain Crater", {RA_DEATH_MOUNTAIN_CRATER}, NO_DAY_NIGHT_CYCLE, {}, {
+        LOCATION(RC_DMC_ROCK_1, true),
+        LOCATION(RC_DMC_ROCK_2, true),
+        LOCATION(RC_DMC_ROCK_3, true),
+        LOCATION(RC_DMC_ROCK_4, true),
+        LOCATION(RC_DMC_ROCK_5, true),
+        LOCATION(RC_DMC_ROCK_6, true),
+        LOCATION(RC_DMC_ROCK_7, true),
+        LOCATION(RC_DMC_ROCK_8, true),
+        LOCATION(RC_DMC_ROCK_9, true),
+        LOCATION(RC_DMC_ROCK_10, true),
+        LOCATION(RC_DMC_ROCK_11, true),
+        LOCATION(RC_DMC_ROCK_12, true),
+        LOCATION(RC_DMC_ROCK_13, true),
+    }, {
         //Exits
         Entrance(RR_DMC_UPPER_LOCAL,       []{return logic->FireTimer() >= 48;}),
         Entrance(RR_DEATH_MOUNTAIN_SUMMIT, []{return true;}),

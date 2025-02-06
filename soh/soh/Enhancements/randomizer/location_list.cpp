@@ -1010,9 +1010,23 @@ void Rando::StaticData::InitLocationTable() { //                                
     locationTable[RC_GC_SHOP_ITEM_8] =                                                 Location::Base(RC_GC_SHOP_ITEM_8,                                               RCQUEST_BOTH,    RCTYPE_SHOP,                                                             ACTOR_EN_GIRLA,       SCENE_GORON_SHOP,                   0x07,                               "Shop Item 8",                                 RHT_GC_SHOP_ITEM_8,                                              RG_BUY_HEART,         SpoilerCollectionCheck::RandomizerInf(RAND_INF_SHOP_ITEMS_GC_SHOP_ITEM_8), false, 10);
 
     // Rocks
+#define ROCKLOC(id, area, scene, x, z) (locationTable[RC_ ## id] = Location::Rock(RC_ ## id, RCQUEST_BOTH, area, scene, TWO_ACTOR_PARAMS(x, z), #id, #id, RHT_POT_GERUDO_TRAINING_GROUND,    RG_NONE,       SpoilerCollectionCheck::RandomizerInf(RAND_INF_ ## id)))
     locationTable[RC_HC_ROCK_1] = Location::Rock(RC_HC_ROCK_1, RCQUEST_BOTH, RCAREA_HYRULE_CASTLE, SCENE_HYRULE_CASTLE, TWO_ACTOR_PARAMS(-216, 2977), "HC Rock 1", "HC Rock 1",  RHT_POT_GERUDO_TRAINING_GROUND,    RG_NONE,       SpoilerCollectionCheck::RandomizerInf(RAND_INF_HC_ROCK_1));
     locationTable[RC_HC_ROCK_2] = Location::Rock(RC_HC_ROCK_2, RCQUEST_BOTH, RCAREA_HYRULE_CASTLE, SCENE_HYRULE_CASTLE, TWO_ACTOR_PARAMS(-110, 3006), "HC Rock 2", "HC Rock 2",  RHT_POT_GERUDO_TRAINING_GROUND,    RG_NONE,       SpoilerCollectionCheck::RandomizerInf(RAND_INF_HC_ROCK_2));
     locationTable[RC_HC_ROCK_3] = Location::Rock(RC_HC_ROCK_3, RCQUEST_BOTH, RCAREA_HYRULE_CASTLE, SCENE_HYRULE_CASTLE, TWO_ACTOR_PARAMS(-129, 2897), "HC Rock 3", "HC Rock 3",  RHT_POT_GERUDO_TRAINING_GROUND,    RG_NONE,       SpoilerCollectionCheck::RandomizerInf(RAND_INF_HC_ROCK_3));
+    ROCKLOC(DMC_ROCK_1, RCAREA_DEATH_MOUNTAIN_CRATER, SCENE_DEATH_MOUNTAIN_CRATER, -50, -714);
+    ROCKLOC(DMC_ROCK_2, RCAREA_DEATH_MOUNTAIN_CRATER, SCENE_DEATH_MOUNTAIN_CRATER, -26, -807);
+    ROCKLOC(DMC_ROCK_3, RCAREA_DEATH_MOUNTAIN_CRATER, SCENE_DEATH_MOUNTAIN_CRATER, 61, -763);
+    ROCKLOC(DMC_ROCK_4, RCAREA_DEATH_MOUNTAIN_CRATER, SCENE_DEATH_MOUNTAIN_CRATER, 71, -610);
+    ROCKLOC(DMC_ROCK_5, RCAREA_DEATH_MOUNTAIN_CRATER, SCENE_DEATH_MOUNTAIN_CRATER, 79, -700);
+    ROCKLOC(DMC_ROCK_6, RCAREA_DEATH_MOUNTAIN_CRATER, SCENE_DEATH_MOUNTAIN_CRATER, 40, 1850);
+    ROCKLOC(DMC_ROCK_7, RCAREA_DEATH_MOUNTAIN_CRATER, SCENE_DEATH_MOUNTAIN_CRATER, 96, 1826);
+    ROCKLOC(DMC_ROCK_8, RCAREA_DEATH_MOUNTAIN_CRATER, SCENE_DEATH_MOUNTAIN_CRATER, 120, 1770);
+    ROCKLOC(DMC_ROCK_9, RCAREA_DEATH_MOUNTAIN_CRATER, SCENE_DEATH_MOUNTAIN_CRATER, 96, 1713);
+    ROCKLOC(DMC_ROCK_10,RCAREA_DEATH_MOUNTAIN_CRATER, SCENE_DEATH_MOUNTAIN_CRATER,  40, 1690);
+    ROCKLOC(DMC_ROCK_11,RCAREA_DEATH_MOUNTAIN_CRATER, SCENE_DEATH_MOUNTAIN_CRATER,  -16, 1713);
+    ROCKLOC(DMC_ROCK_12,RCAREA_DEATH_MOUNTAIN_CRATER, SCENE_DEATH_MOUNTAIN_CRATER,  -40, 1770);
+    ROCKLOC(DMC_ROCK_13,RCAREA_DEATH_MOUNTAIN_CRATER, SCENE_DEATH_MOUNTAIN_CRATER,  -16, 1826);
 
     // Gossip Stones
     locationTable[RC_DMC_GOSSIP_STONE] =                                          Location::HintStone(RC_DMC_GOSSIP_STONE,                                 RCQUEST_BOTH,                                                                      SCENE_DEATH_MOUNTAIN_CRATER,        14341,                              "Gossip Stone");

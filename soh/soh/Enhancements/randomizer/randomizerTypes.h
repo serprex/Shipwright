@@ -2852,6 +2852,20 @@ typedef enum {
     RC_HC_ROCK_1,
     RC_HC_ROCK_2,
     RC_HC_ROCK_3,
+    RC_DMC_ROCK_1,
+    RC_DMC_ROCK_2,
+    RC_DMC_ROCK_3,
+    RC_DMC_ROCK_4,
+    RC_DMC_ROCK_5,
+    RC_DMC_ROCK_6,
+    RC_DMC_ROCK_7,
+    RC_DMC_ROCK_8,
+    RC_DMC_ROCK_9,
+    RC_DMC_ROCK_10,
+    RC_DMC_ROCK_11,
+    RC_DMC_ROCK_12,
+    RC_DMC_ROCK_13,
+
     RC_MAX
 } RandomizerCheck;
 
