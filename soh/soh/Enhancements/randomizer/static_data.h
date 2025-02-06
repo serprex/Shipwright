@@ -48,6 +48,7 @@ class StaticData {
       static std::vector<RandomizerCheck> GetOverworldFishLocations();
       static std::vector<RandomizerCheck> GetOverworldPotLocations();
       static std::vector<RandomizerCheck> GetOverworldFairyLocations();
+      static void RegisterFishLocations();
       static void RegisterFairyLocations();
       static void RegisterPotLocations();
       static void RegisterFreestandingLocations();
