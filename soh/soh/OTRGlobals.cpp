@@ -345,6 +345,8 @@ OTRGlobals::OTRGlobals() {
     context->InitCrashHandler();
     context->InitConsole();
 
+    Ship::Context::GetInstance()->GetLogger()->set_level(spdlog::level::info);
+
     auto sohInputEditorWindow = std::make_shared<SohInputEditorWindow>(CVAR_WINDOW("ControllerConfiguration"), "Controller Configuration");
     auto sohFast3dWindow = std::make_shared<Fast::Fast3dWindow>(std::vector<std::shared_ptr<Ship::GuiWindow>>({sohInputEditorWindow}));
     context->InitWindow(sohFast3dWindow);
