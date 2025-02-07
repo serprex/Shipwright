@@ -5,19 +5,17 @@ using namespace Rando;
 
 void RegionTable_Init_DeathMountainCrater() {
     areaTable[RR_DMC_UPPER_NEARBY] = Region("DMC Upper Nearby", "Death Mountain Crater", {RA_DEATH_MOUNTAIN_CRATER}, NO_DAY_NIGHT_CYCLE, {}, {
-        LOCATION(RC_DMC_ROCK_1, true),
-        LOCATION(RC_DMC_ROCK_2, true),
-        LOCATION(RC_DMC_ROCK_3, true),
-        LOCATION(RC_DMC_ROCK_4, true),
-        LOCATION(RC_DMC_ROCK_5, true),
-        LOCATION(RC_DMC_ROCK_6, true),
-        LOCATION(RC_DMC_ROCK_7, true),
-        LOCATION(RC_DMC_ROCK_8, true),
-        LOCATION(RC_DMC_ROCK_9, true),
-        LOCATION(RC_DMC_ROCK_10, true),
-        LOCATION(RC_DMC_ROCK_11, true),
-        LOCATION(RC_DMC_ROCK_12, true),
-        LOCATION(RC_DMC_ROCK_13, true),
+        LOCATION(RC_DMC_CIRCLE_ROCK_1, true),
+        LOCATION(RC_DMC_CIRCLE_ROCK_2, true),
+        LOCATION(RC_DMC_CIRCLE_ROCK_3, true),
+        LOCATION(RC_DMC_CIRCLE_ROCK_4, true),
+        LOCATION(RC_DMC_CIRCLE_ROCK_5, true),
+        LOCATION(RC_DMC_CIRCLE_ROCK_6, true),
+        LOCATION(RC_DMC_CIRCLE_ROCK_7, true),
+        LOCATION(RC_DMC_CIRCLE_ROCK_8, true),
+        LOCATION(RC_DMC_BOULDER_1,     logic->BlastOrSmash()),
+        LOCATION(RC_DMC_BOULDER_2,     logic->BlastOrSmash()),
+        LOCATION(RC_DMC_BOULDER_3,     logic->BlastOrSmash()),
     }, {
         //Exits
         Entrance(RR_DMC_UPPER_LOCAL,       []{return logic->FireTimer() >= 48;}),
@@ -55,10 +53,14 @@ void RegionTable_Init_DeathMountainCrater() {
 
     areaTable[RR_DMC_LOWER_NEARBY] = Region("DMC Lower Nearby", "Death Mountain Crater", {RA_DEATH_MOUNTAIN_CRATER}, NO_DAY_NIGHT_CYCLE, {}, {
         // Locations
-        LOCATION(RC_DMC_NEAR_GC_POT_1, logic->CanBreakPots()),
-        LOCATION(RC_DMC_NEAR_GC_POT_2, logic->CanBreakPots()),
-        LOCATION(RC_DMC_NEAR_GC_POT_3, logic->CanBreakPots()),
-        LOCATION(RC_DMC_NEAR_GC_POT_4, logic->CanBreakPots()),
+        LOCATION(RC_DMC_NEAR_GC_POT_1,    logic->CanBreakPots()),
+        LOCATION(RC_DMC_NEAR_GC_POT_2,    logic->CanBreakPots()),
+        LOCATION(RC_DMC_NEAR_GC_POT_3,    logic->CanBreakPots()),
+        LOCATION(RC_DMC_NEAR_GC_POT_4,    logic->CanBreakPots()),
+        LOCATION(RC_DMC_BRONZE_BOULDER_1, logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_DMC_BRONZE_BOULDER_2, logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_DMC_BRONZE_BOULDER_3, logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_DMC_BRONZE_BOULDER_4, logic->CanUse(RG_MEGATON_HAMMER)),
     }, {
         //Exits
         Entrance(RR_DMC_LOWER_LOCAL,          []{return logic->FireTimer() >= 48;}),
@@ -101,6 +103,11 @@ void RegionTable_Init_DeathMountainCrater() {
         LOCATION(RC_DMC_BEAN_SPROUT_FAIRY_1,          logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS) && (logic->FireTimer() >= 8 || logic->Hearts() >= 3)),
         LOCATION(RC_DMC_BEAN_SPROUT_FAIRY_2,          logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS) && (logic->FireTimer() >= 8 || logic->Hearts() >= 3)),
         LOCATION(RC_DMC_BEAN_SPROUT_FAIRY_3,          logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS) && (logic->FireTimer() >= 8 || logic->Hearts() >= 3)),
+        LOCATION(RC_DMC_ROCK_BY_FIRE_TEMPLE_1,        logic->IsAdult),
+        LOCATION(RC_DMC_ROCK_BY_FIRE_TEMPLE_2,        logic->IsAdult),
+        LOCATION(RC_DMC_ROCK_BY_FIRE_TEMPLE_3,        logic->IsAdult),
+        LOCATION(RC_DMC_ROCK_BY_FIRE_TEMPLE_4,        logic->IsAdult),
+        LOCATION(RC_DMC_ROCK_BY_FIRE_TEMPLE_5,        logic->IsAdult),
     }, {
         //Exits
         Entrance(RR_DMC_CENTRAL_NEARBY,   []{return true;}),

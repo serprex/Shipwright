@@ -602,7 +602,7 @@ void ValidateEntrances(bool checkPoeCollectorAccess, bool checkOtherEntranceAcce
           auto message = "Location " +
                          Rando::StaticData::GetLocation(ctx->GetItemLocation(loc)->GetRandomizerCheck())->GetName() +
                          " not reachable\n";
-          SPDLOG_DEBUG(message);
+          SPDLOG_INFO(message);
         #ifndef ENABLE_DEBUG
           break;
         #endif
@@ -1362,7 +1362,7 @@ int Fill() {
     }
     //Unsuccessful placement
     if(retries < 4) {
-      SPDLOG_DEBUG("Failed to generate a beatable seed. Retrying...");
+      SPDLOG_INFO("Failed to generate a beatable seed. Retrying...");
       Regions::ResetAllLocations();
       logic->Reset();
       ClearProgress();
