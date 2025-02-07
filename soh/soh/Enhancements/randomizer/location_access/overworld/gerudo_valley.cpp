@@ -16,6 +16,10 @@ void RegionTable_Init_GerudoValley() {
         LOCATION(RC_GV_UNDERWATER_ROCK_1, logic->IsAdult || logic->CanUse(RG_BOMBCHU_5)),
         LOCATION(RC_GV_UNDERWATER_ROCK_2, logic->IsAdult || logic->CanUse(RG_BOMBCHU_5)),
         LOCATION(RC_GV_UNDERWATER_ROCK_3, logic->IsAdult || logic->CanUse(RG_BOMBCHU_5)),
+        LOCATION(RC_GV_BOULDER_1,         logic->IsAdult && logic->BlastOrSmash()),
+        LOCATION(RC_GV_BOULDER_2,         logic->IsAdult && logic->BlastOrSmash()),
+        LOCATION(RC_GV_BRONZE_BOULDER_1,  logic->IsAdult && logic->CanUse(RG_SILVER_GAUNTLETS)),
+        LOCATION(RC_GV_BRONZE_BOULDER_2,  logic->IsAdult && logic->CanUse(RG_SILVER_GAUNTLETS)),
     }, {
         //Exits
         Entrance(RR_HYRULE_FIELD,     []{return true;}),
@@ -71,10 +75,21 @@ void RegionTable_Init_GerudoValley() {
 
     areaTable[RR_GV_FORTRESS_SIDE] = Region("GV Fortress Side", "Gerudo Valley", {RA_GERUDO_VALLEY}, DAY_NIGHT_CYCLE, {}, {
         //Locations
-        LOCATION(RC_GV_CHEST,          logic->IsAdult && logic->CanUse(RG_MEGATON_HAMMER)),
-        LOCATION(RC_GV_TRADE_SAW,      logic->IsAdult && logic->CanUse(RG_POACHERS_SAW)),
-        LOCATION(RC_GV_GS_BEHIND_TENT, logic->IsAdult && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
-        LOCATION(RC_GV_GS_PILLAR,      logic->IsAdult && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
+        LOCATION(RC_GV_CHEST,                logic->IsAdult && logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_GV_TRADE_SAW,            logic->IsAdult && logic->CanUse(RG_POACHERS_SAW)),
+        LOCATION(RC_GV_GS_BEHIND_TENT,       logic->IsAdult && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
+        LOCATION(RC_GV_GS_PILLAR,            logic->IsAdult && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
+        LOCATION(RC_GV_ROCK_ACROSS_BRIDGE_1, logic->IsAdult),
+        LOCATION(RC_GV_ROCK_ACROSS_BRIDGE_2, logic->IsAdult),
+        LOCATION(RC_GV_ROCK_ACROSS_BRIDGE_3, logic->IsAdult),
+        LOCATION(RC_GV_ROCK_ACROSS_BRIDGE_4, logic->IsAdult),
+        LOCATION(RC_GV_BOULDER_ACROSS_BRIDGE, logic->IsAdult && logic->BlastOrSmash()),
+        LOCATION(RC_GV_BRONZE_BOULDER_ACROSS_BRIDGE_1, logic->IsAdult && logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_GV_BRONZE_BOULDER_ACROSS_BRIDGE_2, logic->IsAdult && logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_GV_BRONZE_BOULDER_ACROSS_BRIDGE_3, logic->IsAdult && logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_GV_BRONZE_BOULDER_ACROSS_BRIDGE_4, logic->IsAdult && logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_GV_BRONZE_BOULDER_ACROSS_BRIDGE_5, logic->IsAdult && logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_GV_BRONZE_BOULDER_ACROSS_BRIDGE_6, logic->IsAdult && logic->CanUse(RG_MEGATON_HAMMER)),
     }, {
         //Exits
         Entrance(RR_GERUDO_FORTRESS,   []{return true;}),
