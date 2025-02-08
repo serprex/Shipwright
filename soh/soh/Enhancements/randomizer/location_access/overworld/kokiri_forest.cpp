@@ -46,6 +46,7 @@ void RegionTable_Init_KokiriForest() {
         LOCATION(RC_KF_CIRCLE_ROCK_6,           true),
         LOCATION(RC_KF_CIRCLE_ROCK_7,           true),
         LOCATION(RC_KF_CIRCLE_ROCK_8,           true),
+        LOCATION(RC_KF_ROCK,                    logic->IsChild),
         LOCATION(RC_KF_GOSSIP_STONE,            true),
     }, {
         //Exits

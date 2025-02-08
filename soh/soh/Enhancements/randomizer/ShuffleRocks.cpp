@@ -170,12 +170,44 @@ void ObjHamishi_RandomizerInit(void* actorRef) {
     }
 }
 
+void ObjBombiwa_RandomizerKill(void* actorRef) {
+    Actor* actor = static_cast<Actor*>(actorRef);
+
+    if (actor->id != ACTOR_OBJ_BOMBIWA)
+        return;
+
+    ObjBombiwa* rockActor = static_cast<ObjBombiwa*>(actorRef);
+
+    if (Rock_RandomizerHoldsItem(rockActor->rockIdentity, gPlayState)) {
+        Rock_RandomizerSpawnCollectible(&rockActor->actor, rockActor->rockIdentity, gPlayState);
+        rockActor->rockIdentity.randomizerCheck = RC_MAX;
+        rockActor->rockIdentity.randomizerInf = RAND_INF_MAX;
+    }
+}
+
+void ObjHamishi_RandomizerKill(void* actorRef) {
+    Actor* actor = static_cast<Actor*>(actorRef);
+
+    if (actor->id != ACTOR_OBJ_HAMISHI)
+        return;
+
+    ObjHamishi* rockActor = static_cast<ObjHamishi*>(actorRef);
+
+    if (Rock_RandomizerHoldsItem(rockActor->rockIdentity, gPlayState)) {
+        Rock_RandomizerSpawnCollectible(&rockActor->actor, rockActor->rockIdentity, gPlayState);
+        rockActor->rockIdentity.randomizerCheck = RC_MAX;
+        rockActor->rockIdentity.randomizerInf = RAND_INF_MAX;
+    }
+}
+
 void RegisterShuffleRock() {
     bool shouldRegister = IS_RANDO && RAND_GET_OPTION(RSK_SHUFFLE_ROCKS);
 
     COND_ID_HOOK(OnActorInit, ACTOR_EN_ISHI, shouldRegister, EnIshi_RandomizerInit);
     COND_ID_HOOK(OnActorInit, ACTOR_OBJ_BOMBIWA, shouldRegister, ObjBombiwa_RandomizerInit);
     COND_ID_HOOK(OnActorInit, ACTOR_OBJ_HAMISHI, shouldRegister, ObjHamishi_RandomizerInit);
+    COND_ID_HOOK(OnActorKill, ACTOR_OBJ_BOMBIWA, shouldRegister, ObjBombiwa_RandomizerKill);
+    COND_ID_HOOK(OnActorKill, ACTOR_OBJ_HAMISHI, shouldRegister, ObjHamishi_RandomizerKill);
 
     COND_VB_SHOULD(VB_ROCK_DROP_ITEM, shouldRegister, {
         EnIshi* rockActor = va_arg(args, EnIshi*);
@@ -184,27 +216,25 @@ void RegisterShuffleRock() {
             rockActor->rockIdentity.randomizerCheck = RC_MAX;
             rockActor->rockIdentity.randomizerInf = RAND_INF_MAX;
             *should = false;
-        } else {
-            *should = true;
         }
     });
 
     COND_VB_SHOULD(VB_BOULDER_BREAK_FLAG, shouldRegister, {
         ObjBombiwa* rockActor = va_arg(args, ObjBombiwa*);
-        if (Rock_RandomizerHoldsItem(rockActor->rockIdentity, gPlayState)) {
-            Rock_RandomizerSpawnCollectible(&rockActor->actor, rockActor->rockIdentity, gPlayState);
-            rockActor->rockIdentity.randomizerCheck = RC_MAX;
-            rockActor->rockIdentity.randomizerInf = RAND_INF_MAX;
+        auto rockIdentity = OTRGlobals::Instance->gRandomizer->IdentifyRock(
+            gPlayState->sceneNum, (s16)rockActor->actor.world.pos.x, (s16)rockActor->actor.world.pos.z);
+        if (Rock_RandomizerHoldsItem(rockIdentity, gPlayState)) {
+            Flags_UnsetSwitch(gPlayState, rockActor->actor.params & 0x3F);
             *should = false;
         }
     });
 
     COND_VB_SHOULD(VB_BRONZE_BOULDER_BREAK_FLAG, shouldRegister, {
         ObjHamishi* rockActor = va_arg(args, ObjHamishi*);
-        if (Rock_RandomizerHoldsItem(rockActor->rockIdentity, gPlayState)) {
-            Rock_RandomizerSpawnCollectible(&rockActor->actor, rockActor->rockIdentity, gPlayState);
-            rockActor->rockIdentity.randomizerCheck = RC_MAX;
-            rockActor->rockIdentity.randomizerInf = RAND_INF_MAX;
+        auto rockIdentity = OTRGlobals::Instance->gRandomizer->IdentifyRock(
+            gPlayState->sceneNum, (s16)rockActor->actor.world.pos.x, (s16)rockActor->actor.world.pos.z);
+        if (Rock_RandomizerHoldsItem(rockIdentity, gPlayState)) {
+            Flags_UnsetSwitch(gPlayState, rockActor->actor.params & 0x3F);
             *should = false;
         }
     });
@@ -222,6 +252,7 @@ void Rando::StaticData::RegisterRockLocations() {
     ROCKLOC(KF_CIRCLE_ROCK_6, RCAREA_KOKIRI_FOREST, SCENE_KOKIRI_FOREST, -348, -486);
     ROCKLOC(KF_CIRCLE_ROCK_7, RCAREA_KOKIRI_FOREST, SCENE_KOKIRI_FOREST, -372, -430);
     ROCKLOC(KF_CIRCLE_ROCK_8, RCAREA_KOKIRI_FOREST, SCENE_KOKIRI_FOREST, -348, -373);
+    ROCKLOC(KF_ROCK, RCAREA_KOKIRI_FOREST, SCENE_KOKIRI_FOREST, -672, -623);
     ROCKLOC(LW_BOULDER_1, RCAREA_LOST_WOODS, SCENE_LOST_WOODS, 670, -2520);
     ROCKLOC(LW_BOULDER_2, RCAREA_LOST_WOODS, SCENE_LOST_WOODS, 915,-925);
     ROCKLOC(LW_RUPEE_BOULDER, RCAREA_LOST_WOODS, SCENE_LOST_WOODS, 1720, -2510);
