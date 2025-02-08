@@ -131,6 +131,12 @@ void RegionTable_Init_BottomOfTheWell() {
     areaTable[RR_BOTTOM_OF_THE_WELL_BASEMENT] = Region("Bottom of the Well Basement", "Bottom of the Well", {RA_BOTTOM_OF_THE_WELL}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
         LOCATION(RC_BOTTOM_OF_THE_WELL_MAP_CHEST,          logic->BlastOrSmash()),
+        LOCATION(RC_BOTW_BOULDER_1,                        logic->BlastOrSmash()),
+        LOCATION(RC_BOTW_BOULDER_2,                        logic->BlastOrSmash()),
+        LOCATION(RC_BOTW_BOULDER_3,                        logic->BlastOrSmash()),
+        LOCATION(RC_BOTW_BOULDER_4,                        logic->BlastOrSmash()),
+        LOCATION(RC_BOTW_BOULDER_5,                        logic->BlastOrSmash()),
+        LOCATION(RC_BOTW_BOULDER_6,                        logic->BlastOrSmash()),
         LOCATION(RC_BOTTOM_OF_THE_WELL_BASEMENT_POT_1,     logic->CanBreakPots()),
         LOCATION(RC_BOTTOM_OF_THE_WELL_BASEMENT_POT_2,     logic->CanBreakPots()),
         LOCATION(RC_BOTTOM_OF_THE_WELL_BASEMENT_POT_3,     logic->CanBreakPots()),
@@ -156,6 +162,12 @@ void RegionTable_Init_BottomOfTheWell() {
         //Locations
         //Assumes RR_BOTTOM_OF_THE_WELL_BASEMENT access
         LOCATION(RC_BOTTOM_OF_THE_WELL_MAP_CHEST, logic->HasItem(RG_GORONS_BRACELET)),
+        LOCATION(RC_BOTW_BOULDER_1,               logic->HasItem(RG_GORONS_BRACELET)),
+        LOCATION(RC_BOTW_BOULDER_2,               logic->HasItem(RG_GORONS_BRACELET)),
+        LOCATION(RC_BOTW_BOULDER_3,               logic->HasItem(RG_GORONS_BRACELET)),
+        LOCATION(RC_BOTW_BOULDER_4,               logic->HasItem(RG_GORONS_BRACELET)),
+        LOCATION(RC_BOTW_BOULDER_5,               logic->HasItem(RG_GORONS_BRACELET)),
+        LOCATION(RC_BOTW_BOULDER_6,               logic->HasItem(RG_GORONS_BRACELET)),
     }, {
         //Exits
         Entrance(RR_BOTTOM_OF_THE_WELL_BASEMENT, []{return logic->CanDetonateUprightBombFlower();}),

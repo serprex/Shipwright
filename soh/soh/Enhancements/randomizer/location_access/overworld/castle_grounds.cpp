@@ -81,6 +81,14 @@ void RegionTable_Init_CastleGrounds() {
         LOCATION(RC_HC_STORMS_GROTTO_POT_2,                  logic->CanBreakPots()),
         LOCATION(RC_HC_STORMS_GROTTO_POT_3,                  logic->CanBreakPots()),
         LOCATION(RC_HC_STORMS_GROTTO_POT_4,                  logic->CanBreakPots()),
+        LOCATION(RC_HC_STORMS_GROTTO_ROCK_1,                 true),
+        LOCATION(RC_HC_STORMS_GROTTO_ROCK_2,                 true),
+        LOCATION(RC_HC_STORMS_GROTTO_ROCK_3,                 true),
+        LOCATION(RC_HC_STORMS_GROTTO_ROCK_4,                 true),
+        LOCATION(RC_HC_STORMS_GROTTO_ROCK_5,                 true),
+        LOCATION(RC_HC_STORMS_GROTTO_ROCK_6,                 true),
+        LOCATION(RC_HC_STORMS_GROTTO_ROCK_7,                 true),
+        LOCATION(RC_HC_STORMS_GROTTO_ROCK_8,                 true),
     }, {
         //Exits
         Entrance(RR_CASTLE_GROUNDS, []{return true;}),
