@@ -401,6 +401,18 @@ void RegionTable_Init_DodongosCavern() {
         LOCATION(RC_DODONGOS_CAVERN_MQ_UPPER_LIZALFOS_POT_3, logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_UPPER_LIZALFOS_POT_4, logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_HEART,  logic->BlastOrSmash()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_1, logic->BlastOrSmash() && logic->TakeDamage()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_2, logic->BlastOrSmash() && logic->TakeDamage()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_3, logic->BlastOrSmash() && logic->TakeDamage()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_4, logic->BlastOrSmash() && logic->TakeDamage()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_5, logic->BlastOrSmash()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_6, logic->BlastOrSmash()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_7, logic->BlastOrSmash() && logic->TakeDamage()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_8, logic->BlastOrSmash() && logic->TakeDamage()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_9, logic->BlastOrSmash() && logic->TakeDamage()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_10, logic->BlastOrSmash() && logic->TakeDamage()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_11, logic->BlastOrSmash() && logic->TakeDamage()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_12, logic->BlastOrSmash() && logic->TakeDamage()),
     }, {
         //Exits
         //Falling down gets you stuck with nothing there, not a useful exit for logic
@@ -440,6 +452,8 @@ void RegionTable_Init_DodongosCavern() {
         LOCATION(RC_DODONGOS_CAVERN_MQ_RIGHT_SIDE_POT_2,                         logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_RIGHT_SIDE_POT_3,                         logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_RIGHT_SIDE_POT_4,                         logic->CanBreakPots()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_RIGHT_SIDE_BOULDER_1,                     logic->BlastOrSmash() || logic->HasItem(RG_GORONS_BRACELET) || logic->CanUse(RG_DINS_FIRE)),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_RIGHT_SIDE_BOULDER_2,                     logic->CanDetonateBombFlowers() || logic->HasItem(RG_GORONS_BRACELET)),
     }, {
         //Exits
         Entrance(RR_DODONGOS_CAVERN_MQ_LOBBY,          []{return true;}),
