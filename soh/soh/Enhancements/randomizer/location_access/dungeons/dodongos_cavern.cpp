@@ -258,6 +258,8 @@ void RegionTable_Init_DodongosCavern() {
         LOCATION(RC_DODONGOS_CAVERN_MQ_MAP_CHEST,              logic->CanBreakMudWalls() || logic->HasItem(RG_GORONS_BRACELET)),
         LOCATION(RC_DODONGOS_CAVERN_MQ_DEKU_SCRUB_LOBBY_REAR,  logic->CanStunDeku()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_DEKU_SCRUB_LOBBY_FRONT, logic->CanStunDeku()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LOBBY_BOULDER_1,        logic->BlastOrSmash() || logic->HasItem(RG_GORONS_BRACELET)),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LOBBY_BOULDER_2,        logic->BlastOrSmash() || logic->HasItem(RG_GORONS_BRACELET)),
     }, {
         //Exits
         Entrance(RR_DODONGOS_CAVERN_MQ_GOSSIP_STONE,      []{return Here(RR_DODONGOS_CAVERN_MQ_LOBBY, []{return logic->CanBreakMudWalls() || logic->HasItem(RG_GORONS_BRACELET);});}),
@@ -284,7 +286,12 @@ void RegionTable_Init_DodongosCavern() {
     areaTable[RR_DODONGOS_CAVERN_MQ_MOUTH_SIDE_BRIDGE] = Region("Dodongos Cavern MQ Mouth Side Bridge", "Dodongos Cavern", {RA_DODONGOS_CAVERN}, NO_DAY_NIGHT_CYCLE, {
         //Events
         EventAccess(&logic->ClearMQDCUpperLobbyRocks, []{return logic->BlastOrSmash() || logic->CanUse(RG_DINS_FIRE);}),
-    }, {}, {
+    }, {
+        //Locations
+        LOCATION(RC_DODONGOS_CAVERN_MQ_MOUTH_SIDE_BRIDGE_BOULDER_1, logic->ClearMQDCUpperLobbyRocks),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_MOUTH_SIDE_BRIDGE_BOULDER_2, logic->ClearMQDCUpperLobbyRocks),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_MOUTH_SIDE_BRIDGE_BOULDER_3, logic->ClearMQDCUpperLobbyRocks),
+    }, {
         //Exits
         Entrance(RR_DODONGOS_CAVERN_MQ_LOBBY,              []{return true;}),
         Entrance(RR_DODONGOS_CAVERN_MQ_TORCH_PUZZLE_UPPER, []{return logic->ClearMQDCUpperLobbyRocks;}),
