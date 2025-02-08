@@ -49,6 +49,17 @@ void RegionTable_Init_DeathMountainCrater() {
         LOCATION(RC_DMC_WALL_FREESTANDING_POH,    logic->FireTimer() >= 8 || logic->Hearts() >= 2),
         LOCATION(RC_DMC_VOLCANO_FREESTANDING_POH, ((logic->FireTimer() >= 24 || logic->Hearts() >= 5) && ctx->GetTrickOption(RT_DMC_HOVER_BEAN_POH) && logic->CanUse(RG_HOVER_BOOTS)) ||
                                                   (logic->IsAdult && (logic->FireTimer() >= 64 || logic->Hearts() >= 12) && logic->DMCPotsToPad() && logic->DMCUpperToPots() && CanPlantBean(RR_DMC_CENTRAL, RG_DEATH_MOUNTAIN_CRATER_BEAN_SOUL))),
+        LOCATION(RC_DMC_CIRCLE_ROCK_1, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
+        LOCATION(RC_DMC_CIRCLE_ROCK_2, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
+        LOCATION(RC_DMC_CIRCLE_ROCK_3, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
+        LOCATION(RC_DMC_CIRCLE_ROCK_4, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
+        LOCATION(RC_DMC_CIRCLE_ROCK_5, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
+        LOCATION(RC_DMC_CIRCLE_ROCK_6, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
+        LOCATION(RC_DMC_CIRCLE_ROCK_7, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
+        LOCATION(RC_DMC_CIRCLE_ROCK_8, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
+        LOCATION(RC_DMC_BOULDER_1,     logic->FireTimer() >= 8 && logic->BlastOrSmash()),
+        LOCATION(RC_DMC_BOULDER_2,     logic->FireTimer() >= 8 && logic->BlastOrSmash()),
+        LOCATION(RC_DMC_BOULDER_3,     logic->FireTimer() >= 8 && logic->BlastOrSmash()),
     }, {
         //Exits
         ENTRANCE(RR_DMC_CRATE,           logic->FireTimer() >= 8 || logic->Hearts() >= 2),
@@ -260,7 +271,9 @@ void RegionTable_Init_DeathMountainCrater() {
         //Locations
         LOCATION(RC_DMC_GOSSIP_STONE_FAIRY,     logic->CallGossipFairyExceptSuns() && logic->HasExplosives()),
         LOCATION(RC_DMC_GOSSIP_STONE_FAIRY_BIG, logic->CanUse(RG_SONG_OF_STORMS) && logic->HasExplosives()),
-        LOCATION(RC_DMC_GOSSIP_STONE,           true && logic->HasExplosives()),
+        LOCATION(RC_DMC_GOSSIP_ROCK_1,          logic->IsChild),
+        LOCATION(RC_DMC_GOSSIP_ROCK_2,          logic->IsChild),
+        LOCATION(RC_DMC_GOSSIP_STONE,           logic->HasExplosives()),
     }, {});
 
     areaTable[RR_DMC_SCRUB] = Region("DMC Scrub", SCENE_DEATH_MOUNTAIN_CRATER, {
@@ -286,6 +299,10 @@ void RegionTable_Init_DeathMountainCrater() {
         LOCATION(RC_DMC_NEAR_GC_POT_2,          logic->CanBreakPots()),
         LOCATION(RC_DMC_NEAR_GC_POT_3,          logic->CanBreakPots()),
         LOCATION(RC_DMC_NEAR_GC_POT_4,          logic->CanBreakPots()),
+        LOCATION(RC_DMC_BRONZE_BOULDER_1,       logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_DMC_BRONZE_BOULDER_2,       logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_DMC_BRONZE_BOULDER_3,       logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_DMC_BRONZE_BOULDER_4,       logic->CanUse(RG_MEGATON_HAMMER)),
         LOCATION(RC_DMC_BRIDGE_EXIT_ARROW_SIGN, logic->CanRead()),
     }, {
         //Exits
@@ -316,9 +333,13 @@ void RegionTable_Init_DeathMountainCrater() {
         LOCATION(RC_DMC_BEAN_SPROUT_FAIRY_1,            logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->HasItem(RG_DEATH_MOUNTAIN_CRATER_BEAN_SOUL) && logic->CanUse(RG_SONG_OF_STORMS)),
         LOCATION(RC_DMC_BEAN_SPROUT_FAIRY_2,            logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->HasItem(RG_DEATH_MOUNTAIN_CRATER_BEAN_SOUL) && logic->CanUse(RG_SONG_OF_STORMS)),
         LOCATION(RC_DMC_BEAN_SPROUT_FAIRY_3,            logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->HasItem(RG_DEATH_MOUNTAIN_CRATER_BEAN_SOUL) && logic->CanUse(RG_SONG_OF_STORMS)),
+        LOCATION(RC_DMC_ROCK_BY_FIRE_TEMPLE_1,          logic->IsAdult),
+        LOCATION(RC_DMC_ROCK_BY_FIRE_TEMPLE_2,          logic->IsAdult),
+        LOCATION(RC_DMC_ROCK_BY_FIRE_TEMPLE_3,          logic->IsAdult),
+        LOCATION(RC_DMC_ROCK_BY_FIRE_TEMPLE_4,          logic->IsAdult),
+        LOCATION(RC_DMC_ROCK_BY_FIRE_TEMPLE_5,          logic->IsAdult),
         // RANDOTODO: A number of tricks to reach this: sidehop jumpslash or hookshot + jumpslash from bridge platform, chu+shield damage boost
         LOCATION(RC_DMC_WONDER_BENEATH_BRIDGE_PLATFORM, logic->IsAdult && (logic->CanUse(RG_LONGSHOT) || logic->CanUse(RG_HOVER_BOOTS))),
-
     }, {});
 
 

@@ -567,6 +567,10 @@ void RegionTable_Init_SpiritTemple() {
         LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_POT_2,             logic->CanBreakPots()),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_POT_3,             logic->CanBreakPots()),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_POT_4,             logic->CanBreakPots()),
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_BOULDER_1,         logic->BlastOrSmash()),
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_BOULDER_2,         logic->BlastOrSmash()),
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_BOULDER_3,         logic->BlastOrSmash()),
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_CEILING_BOULDER,   logic->CanUse(RG_BOMBCHU_5)),
         LOCATION(RC_SPIRIT_TEMPLE_LEFT_SNAKE_STATUE,             logic->CanRead()),
         LOCATION(RC_SPIRIT_TEMPLE_RIGHT_SNAKE_STATUE,            logic->CanRead()),
     }, {
@@ -589,6 +593,7 @@ void RegionTable_Init_SpiritTemple() {
                                                                 (ctx->GetTrickOption(RT_FIRE_RINGS) && ctx->GetTrickOption(RT_VISIBLE_COLLISION) && logic->TakeDamage() && logic->CanJumpslash())),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_CHILD_RIGHT_HEART,         logic->CanHitEyeTargets() || logic->CanUse(RG_BOOMERANG) || 
                                                                 (ctx->GetTrickOption(RT_FIRE_RINGS) && ctx->GetTrickOption(RT_VISIBLE_COLLISION) && logic->TakeDamage() && logic->CanJumpslash())),
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_CHILD_HAMMER_SWITCH_CHEST, logic->Get(LOGIC_SPIRIT_MQ_TIME_TRAVEL_CHEST)),
     }, {
         //Exits
         //Nabooru's legs are technically visible one way collision here, but I'm not sure if this counts
@@ -918,6 +923,7 @@ void RegionTable_Init_SpiritTemple() {
         //Locations
         LOCATION(RC_SPIRIT_TEMPLE_MQ_EARLY_ADULT_POT_1, logic->CanBreakPots()),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_EARLY_ADULT_POT_2, logic->CanBreakPots()),
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_EARLY_ADULT_BOULDER, logic->BlastOrSmash()),
     }, {
         //Exits
         ENTRANCE(RR_SPIRIT_TEMPLE_MQ_FOYER,               logic->CanUse(RG_MEGATON_HAMMER) || (ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanStandingShield() && (logic->CanUseSword() || logic->CanUse(RG_STICKS)))),
