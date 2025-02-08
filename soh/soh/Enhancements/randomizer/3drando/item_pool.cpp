@@ -471,72 +471,6 @@ void PlaceJunkInExcludedLocation(const RandomizerCheck il) {
   SPDLOG_ERROR("ERROR: No Junk to Place!!!");
 }
 
-static void PlaceVanillaDekuScrubItems(bool junkOneTimeScrubs) {
-    auto ctx = Rando::Context::GetInstance();
-    if (junkOneTimeScrubs){
-      ctx->PlaceItemInLocation(RC_LW_DEKU_SCRUB_GROTTO_FRONT,          RG_BLUE_RUPEE, false, true);
-      ctx->PlaceItemInLocation(RC_LW_DEKU_SCRUB_NEAR_BRIDGE,           RG_BLUE_RUPEE, false, true);
-      ctx->PlaceItemInLocation(RC_HF_DEKU_SCRUB_GROTTO,                RG_BLUE_RUPEE, false, true);
-    }
-
-    ctx->PlaceItemInLocation(RC_ZR_DEKU_SCRUB_GROTTO_REAR,             RG_RED_POTION_REFILL, false, true);
-    ctx->PlaceItemInLocation(RC_ZR_DEKU_SCRUB_GROTTO_FRONT,            RG_GREEN_POTION_REFILL, false, true);
-    ctx->PlaceItemInLocation(RC_SFM_DEKU_SCRUB_GROTTO_REAR,            RG_RED_POTION_REFILL, false, true);
-    ctx->PlaceItemInLocation(RC_SFM_DEKU_SCRUB_GROTTO_FRONT,           RG_GREEN_POTION_REFILL, false, true);
-    ctx->PlaceItemInLocation(RC_LH_DEKU_SCRUB_GROTTO_LEFT,             RG_BUY_DEKU_NUTS_5, false, true);
-    ctx->PlaceItemInLocation(RC_LH_DEKU_SCRUB_GROTTO_RIGHT,            RG_BUY_BOMBS_535, false, true);
-    ctx->PlaceItemInLocation(RC_LH_DEKU_SCRUB_GROTTO_CENTER,           RG_BUY_DEKU_SEEDS_30, false, true);
-    ctx->PlaceItemInLocation(RC_GV_DEKU_SCRUB_GROTTO_REAR,             RG_RED_POTION_REFILL, false, true);
-    ctx->PlaceItemInLocation(RC_GV_DEKU_SCRUB_GROTTO_FRONT,            RG_GREEN_POTION_REFILL, false, true);
-    ctx->PlaceItemInLocation(RC_LW_DEKU_SCRUB_NEAR_DEKU_THEATER_RIGHT, RG_BUY_DEKU_NUTS_5, false, true);
-    ctx->PlaceItemInLocation(RC_LW_DEKU_SCRUB_NEAR_DEKU_THEATER_LEFT,  RG_BUY_DEKU_STICK_1, false, true);
-    ctx->PlaceItemInLocation(RC_LW_DEKU_SCRUB_GROTTO_REAR,             RG_BUY_DEKU_SEEDS_30, false, true);
-    ctx->PlaceItemInLocation(RC_COLOSSUS_DEKU_SCRUB_GROTTO_REAR,       RG_RED_POTION_REFILL, false, true);
-    ctx->PlaceItemInLocation(RC_COLOSSUS_DEKU_SCRUB_GROTTO_FRONT,      RG_GREEN_POTION_REFILL, false, true);
-    ctx->PlaceItemInLocation(RC_DMC_DEKU_SCRUB,                        RG_BUY_BOMBS_535, false, true);
-    ctx->PlaceItemInLocation(RC_DMC_DEKU_SCRUB_GROTTO_LEFT,            RG_BUY_DEKU_NUTS_5, false, true);
-    ctx->PlaceItemInLocation(RC_DMC_DEKU_SCRUB_GROTTO_RIGHT,           RG_BUY_BOMBS_535, false, true);
-    ctx->PlaceItemInLocation(RC_DMC_DEKU_SCRUB_GROTTO_CENTER,          RG_BUY_DEKU_SEEDS_30, false, true);
-    ctx->PlaceItemInLocation(RC_GC_DEKU_SCRUB_GROTTO_LEFT,             RG_BUY_DEKU_NUTS_5, false, true);
-    ctx->PlaceItemInLocation(RC_GC_DEKU_SCRUB_GROTTO_RIGHT,            RG_BUY_BOMBS_535, false, true);
-    ctx->PlaceItemInLocation(RC_GC_DEKU_SCRUB_GROTTO_CENTER,           RG_BUY_DEKU_SEEDS_30, false, true);
-    ctx->PlaceItemInLocation(RC_LLR_DEKU_SCRUB_GROTTO_LEFT,            RG_BUY_DEKU_NUTS_5, false, true);
-    ctx->PlaceItemInLocation(RC_LLR_DEKU_SCRUB_GROTTO_RIGHT,           RG_BUY_BOMBS_535, false, true);
-    ctx->PlaceItemInLocation(RC_LLR_DEKU_SCRUB_GROTTO_CENTER,          RG_BUY_DEKU_SEEDS_30, false, true);
-
-    //Dungeon Scrubs
-    if (ctx->GetDungeon(Rando::DEKU_TREE)->IsMQ()) {
-        ctx->PlaceItemInLocation(RC_DEKU_TREE_MQ_DEKU_SCRUB, RG_BUY_DEKU_SHIELD, false, true);
-    }
-    if (ctx->GetDungeon(Rando::DODONGOS_CAVERN)->IsMQ()) {
-        ctx->PlaceItemInLocation(RC_DODONGOS_CAVERN_MQ_DEKU_SCRUB_LOBBY_REAR, RG_BUY_DEKU_STICK_1, false, true);
-        ctx->PlaceItemInLocation(RC_DODONGOS_CAVERN_MQ_DEKU_SCRUB_LOBBY_FRONT, RG_BUY_DEKU_SEEDS_30, false, true);
-        ctx->PlaceItemInLocation(RC_DODONGOS_CAVERN_MQ_DEKU_SCRUB_STAIRCASE, RG_BUY_DEKU_SHIELD, false, true);
-        ctx->PlaceItemInLocation(RC_DODONGOS_CAVERN_MQ_DEKU_SCRUB_SIDE_ROOM_NEAR_LOWER_LIZALFOS, RG_RED_POTION_REFILL,
-                                 false, true);
-    } else {
-      ctx->PlaceItemInLocation(RC_DODONGOS_CAVERN_DEKU_SCRUB_NEAR_BOMB_BAG_LEFT,      RG_BUY_DEKU_NUTS_5, false, true);
-      ctx->PlaceItemInLocation(RC_DODONGOS_CAVERN_DEKU_SCRUB_SIDE_ROOM_NEAR_DODONGOS, RG_BUY_DEKU_STICK_1, false, true);
-      ctx->PlaceItemInLocation(RC_DODONGOS_CAVERN_DEKU_SCRUB_NEAR_BOMB_BAG_RIGHT,     RG_BUY_DEKU_SEEDS_30, false, true);
-      ctx->PlaceItemInLocation(RC_DODONGOS_CAVERN_DEKU_SCRUB_LOBBY,                   RG_BUY_DEKU_SHIELD, false, true);
-    }
-    if (ctx->GetDungeon(Rando::JABU_JABUS_BELLY)->IsVanilla()) {
-        ctx->PlaceItemInLocation(RC_JABU_JABUS_BELLY_DEKU_SCRUB, RG_BUY_DEKU_NUTS_5, false, true);
-    }
-    if (ctx->GetDungeon(Rando::GANONS_CASTLE)->IsMQ()) {
-      ctx->PlaceItemInLocation(RC_GANONS_CASTLE_MQ_DEKU_SCRUB_LEFT,         RG_GREEN_POTION_REFILL, false, true);
-      ctx->PlaceItemInLocation(RC_GANONS_CASTLE_MQ_DEKU_SCRUB_CENTER_LEFT,  RG_BUY_BOMBS_535, false, true);
-      ctx->PlaceItemInLocation(RC_GANONS_CASTLE_MQ_DEKU_SCRUB_CENTER,       RG_BUY_ARROWS_30, false, true);
-      ctx->PlaceItemInLocation(RC_GANONS_CASTLE_MQ_DEKU_SCRUB_CENTER_RIGHT, RG_RED_POTION_REFILL, false, true);
-      ctx->PlaceItemInLocation(RC_GANONS_CASTLE_MQ_DEKU_SCRUB_RIGHT,        RG_BUY_DEKU_NUTS_5, false, true);
-    } else {
-      ctx->PlaceItemInLocation(RC_GANONS_CASTLE_DEKU_SCRUB_CENTER_LEFT,  RG_BUY_BOMBS_535, false, true);
-      ctx->PlaceItemInLocation(RC_GANONS_CASTLE_DEKU_SCRUB_CENTER_RIGHT, RG_BUY_DEKU_SEEDS_30, false, true);
-      ctx->PlaceItemInLocation(RC_GANONS_CASTLE_DEKU_SCRUB_RIGHT,        RG_RED_POTION_REFILL, false, true);
-      ctx->PlaceItemInLocation(RC_GANONS_CASTLE_DEKU_SCRUB_LEFT,         RG_GREEN_POTION_REFILL, false, true);
-    }
-}
-
 static void PlaceVanillaMapsAndCompasses() {
   auto ctx = Rando::Context::GetInstance();
   for (auto dungeon : ctx->GetDungeons()->GetDungeonList()) {
@@ -1231,8 +1165,6 @@ void GenerateItemPool() {
         AddItemToMainPool(RG_DEKU_SEEDS_30);
       }
     }
-  } else {
-    PlaceVanillaDekuScrubItems(ctx->GetOption(RSK_SHUFFLE_SCRUBS).Is(RO_SCRUBS_OFF));
   }
 
   // RANDOTODO: Don't add freestanding locations to the seed at all in the first place so this check

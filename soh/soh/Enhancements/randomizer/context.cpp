@@ -168,6 +168,12 @@ void Context::GenerateLocationPool() {
             location.GetRCType() == RCTYPE_CHEST_GAME ||              // not supported yet
             location.GetRCType() == RCTYPE_STATIC_HINT ||             // can't have items
             location.GetRCType() == RCTYPE_GOSSIP_STONE ||            // can't have items
+            (location.GetRCType() == RCTYPE_SCRUB && mOptions[RSK_SHUFFLE_SCRUBS].Is(RO_SCRUBS_OFF)) ||
+            (location.GetRCType() == RCTYPE_SCRUB && mOptions[RSK_SHUFFLE_SCRUBS].Is(RO_SCRUBS_ONE_TIME_ONLY) && !(
+                location.GetRandomizerCheck() == RC_LW_DEKU_SCRUB_GROTTO_FRONT ||
+                location.GetRandomizerCheck() == RC_LW_DEKU_SCRUB_NEAR_BRIDGE ||
+                location.GetRandomizerCheck() == RC_HF_DEKU_SCRUB_GROTTO
+            )) ||
             (location.GetRCType() == RCTYPE_COW && mOptions[RSK_SHUFFLE_COWS].Is(RO_GENERIC_OFF)) ||
             (location.GetRCType() == RCTYPE_FISH && mOptions[RSK_FISHSANITY].Is(RO_FISHSANITY_OFF)) ||
             (location.GetRCType() == RCTYPE_POT && mOptions[RSK_SHUFFLE_POTS].Is(RO_SHUFFLE_POTS_OFF)) ||
