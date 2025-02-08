@@ -53,6 +53,16 @@ std::vector<RandomizerCheck> Rando::StaticData::GetOverworldRockLocations() {
     return overworldRockLocations;
 }
 
+std::vector<RandomizerCheck> Rando::StaticData::GetOverworldBoulderLocations() {
+    std::vector<RandomizerCheck> overworldBoulderLocations = {};
+    for (Location& location : locationTable) {
+        if (location.GetRCType() == RCTYPE_BOULDER && location.IsOverworld() && location.GetRandomizerCheck() != RC_UNKNOWN_CHECK) {
+            overworldBoulderLocations.push_back(location.GetRandomizerCheck());
+        }
+    }
+    return overworldBoulderLocations;
+}
+
 std::vector<RandomizerCheck> Rando::StaticData::GetStaticHintLocations() {
     std::vector<RandomizerCheck> staticHintLocations = {};
     for (Location& location : locationTable) {
@@ -125,6 +135,7 @@ std::vector<RandomizerCheck> Rando::StaticData::GetOverworldLocations() {
             location.GetRCType() != RCTYPE_FISH && // temp fix while locations are properly sorted out
             location.GetRCType() != RCTYPE_POT &&  // Same as fish
             location.GetRCType() != RCTYPE_ROCK && // Same as fish
+            location.GetRCType() != RCTYPE_BOULDER && // Same as fish
             location.GetRCType() != RCTYPE_CHEST_GAME && //this is supposed to be excluded
             (ctx->GetOption(RSK_SHUFFLE_ADULT_TRADE) || location.GetRCType() != RCTYPE_ADULT_TRADE) && //trade is handled elsewhere in location pool
             location.GetRCType() != RCTYPE_STATIC_HINT && 
@@ -154,6 +165,16 @@ std::vector<RandomizerCheck> Rando::StaticData::GetOverworldFairyLocations() {
         }
     }
     return fairyLocations;
+}
+
+std::vector<RandomizerCheck> Rando::StaticData::FilterChecks(RandomizerCheckType rctype, RandomizerCheckQuest quest, RandomizerCheckArea area) {
+    std::vector<RandomizerCheck> locations = {};
+    for (Location& location : locationTable) {
+        if (location.GetRCType() == rctype && location.GetArea() == area && location.GetQuest() == quest) {
+            locations.push_back(location.GetRandomizerCheck());
+        }
+    }
+    return locations;
 }
 
 void Rando::StaticData::InitLocationTable() { //                                                      Randomizer Check                                                 Quest            Type                                Area                                 Actor ID              Scene ID                            Params                        Flags Short Name                                     Hint Text Key                                                    Vanilla Item                                                        Spoiler Collection Check                                                                                                      Vanilla Progression  Price

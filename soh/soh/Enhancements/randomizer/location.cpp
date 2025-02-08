@@ -391,6 +391,14 @@ Rando::Location Rando::Location::Rock(RandomizerCheck rc, RandomizerCheckQuest q
             collectionCheck };
 }
 
+Rando::Location Rando::Location::Boulder(RandomizerCheck rc, RandomizerCheckQuest quest_, RandomizerCheckArea area_,
+                                     SceneID scene_, int32_t actorParams_, std::string&& shortName_,
+                                     std::string&& spoilerName_, RandomizerHintTextKey hintKey,
+                                     SpoilerCollectionCheck collectionCheck) {
+    return {rc, quest_, RCTYPE_BOULDER, area_, ACTOR_OBJ_BOMBIWA, scene_, actorParams_, std::move(shortName_), std::move(spoilerName_), hintKey, RG_RECOVERY_HEART, false,
+            collectionCheck };
+}
+
 Rando::Location Rando::Location::HintStone(RandomizerCheck rc, RandomizerCheckQuest quest_, RandomizerCheckArea area_, SceneID scene_, int32_t actorParams_, std::string&& shortName_) {
     return { rc, quest_, RCTYPE_GOSSIP_STONE, area_, ACTOR_EN_GS, scene_, actorParams_, std::move(shortName_), RHT_NONE, RG_NONE, false };
 }

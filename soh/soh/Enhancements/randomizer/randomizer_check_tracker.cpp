@@ -59,6 +59,8 @@ bool showGerudoCard;
 bool showOverworldPots;
 bool showDungeonPots;
 bool showRocks;
+bool showOverworldBoulders;
+bool showDungeonBoulders;
 bool showFrogSongRupees;
 bool showFairies;
 bool showStartingMapsCompasses;
@@ -1236,12 +1238,33 @@ void LoadSettings() {
         }
 
         showRocks = OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_ROCKS);
+
+        switch (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_BOULDERS)) {
+            case RO_SHUFFLE_BOULDERS_ALL:
+                showOverworldBoulders = true;
+                showDungeonBoulders = true;
+                break;
+            case RO_SHUFFLE_BOULDERS_OVERWORLD:
+                showOverworldBoulders = true;
+                showDungeonBoulders = false;
+                break;
+            case RO_SHUFFLE_BOULDERS_DUNGEONS:
+                showOverworldBoulders = false;
+                showDungeonBoulders = true;
+                break;
+            default:
+                showOverworldBoulders = false;
+                showDungeonBoulders = false;
+                break;
+        }
     } else { // Vanilla
         showOverworldTokens = true;
         showDungeonTokens = true;
         showOverworldPots = false;
         showDungeonPots = false;
         showRocks = false;
+        showOverworldBoulders = false;
+        showDungeonBoulders = false;
     }
 
     fortressFast = false;
@@ -1322,6 +1345,9 @@ bool IsCheckShuffled(RandomizerCheck rc) {
                 (showOverworldPots && RandomizerCheckObjects::AreaIsOverworld(loc->GetArea())) ||
                 (showDungeonPots && RandomizerCheckObjects::AreaIsDungeon(loc->GetArea()))) &&
             (loc->GetRCType() != RCTYPE_ROCK || showRocks) &&
+            (loc->GetRCType() != RCTYPE_BOULDER ||
+                (showOverworldBoulders && RandomizerCheckObjects::AreaIsOverworld(loc->GetArea())) ||
+                (showDungeonBoulders && RandomizerCheckObjects::AreaIsDungeon(loc->GetArea()))) &&
             (loc->GetRCType() != RCTYPE_COW || showCows) &&
             (loc->GetRCType() != RCTYPE_FISH || OTRGlobals::Instance->gRandoContext->GetFishsanity()->GetFishLocationIncluded(loc)) &&
             (loc->GetRCType() != RCTYPE_FREESTANDING ||

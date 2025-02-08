@@ -295,6 +295,7 @@ typedef enum {
     RCTYPE_FREESTANDING,               // Freestanding rupees and hearts
     RCTYPE_FAIRY,                      // Fairies
     RCTYPE_ROCK,                       // Rocks
+    RCTYPE_BOULDER,                    // Boulders
 } RandomizerCheckType;
 
 typedef enum { RCQUEST_VANILLA, RCQUEST_MQ, RCQUEST_BOTH } RandomizerCheckQuest;
@@ -5483,6 +5484,7 @@ typedef enum {
     RSK_SHUFFLE_FAIRIES,
     RSK_LOCK_OVERWORLD_DOORS,
     RSK_SHUFFLE_ROCKS,
+    RSK_SHUFFLE_BOULDERS,
     RSK_MAX
 } RandomizerSettingKey;
 
@@ -5829,6 +5831,14 @@ typedef enum {
     RO_SHUFFLE_POTS_OVERWORLD,
     RO_SHUFFLE_POTS_ALL,
 } RandoOptionShufflePots;
+
+// Shuffle Boulder settings (off, dungeons, overworld, all)
+typedef enum {
+    RO_SHUFFLE_BOULDERS_OFF,
+    RO_SHUFFLE_BOULDERS_DUNGEONS,
+    RO_SHUFFLE_BOULDERS_OVERWORLD,
+    RO_SHUFFLE_BOULDERS_ALL,
+} RandoOptionShuffleBoulders;
 
 //Link's Pocket Settings (dungeon reward, advancement, anything, nothing)
 typedef enum {
