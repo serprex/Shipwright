@@ -23,6 +23,9 @@ void RegionTable_Init_ZorasFountain() {
         LOCATION(RC_ZF_NEAR_JABU_POT_2,              logic->IsChild && logic->CanBreakPots()),
         LOCATION(RC_ZF_NEAR_JABU_POT_3,              logic->IsChild && logic->CanBreakPots()),
         LOCATION(RC_ZF_NEAR_JABU_POT_4,              logic->IsChild && logic->CanBreakPots()),
+        LOCATION(RC_ZF_BOULDER,                      logic->BlastOrSmash()),
+        LOCATION(RC_ZF_SILVER_BOULDER,               logic->CanUse(RG_SILVER_GAUNTLETS)),
+        LOCATION(RC_ZF_UNDERGROUND_BOULDER,          logic->CanUse(RG_SILVER_GAUNTLETS) && logic->BlastOrSmash()),
     }, {
         //Exits
         Entrance(RR_ZD_BEHIND_KING_ZORA,       []{return true;}),
