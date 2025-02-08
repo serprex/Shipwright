@@ -846,6 +846,8 @@ void Settings::CreateOptions() {
     OPT_U8(RSK_SHUFFLE_POTS, "Shuffle Pots", {"Off", "Dungeons", "Overworld", "All Pots"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShufflePots"), mOptionDescriptions[RSK_SHUFFLE_POTS], WIDGET_CVAR_COMBOBOX, RO_SHUFFLE_POTS_OFF);
     OPT_U8(RSK_SHUFFLE_GRASS, "Shuffle Grass", {"Off", "Dungeons", "Overworld", "All Grass"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleGrass"), mOptionDescriptions[RSK_SHUFFLE_GRASS], WIDGET_CVAR_COMBOBOX, RO_SHUFFLE_GRASS_OFF);
     OPT_U8(RSK_SHUFFLE_CRATES, "Shuffle Crates", {"Off", "Dungeons", "Overworld", "All Crates"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleCrates"), mOptionDescriptions[RSK_SHUFFLE_CRATES], WIDGET_CVAR_COMBOBOX, RO_SHUFFLE_CRATES_OFF);
+    OPT_BOOL(RSK_SHUFFLE_ROCKS, "Shuffle Rocks", CVAR_RANDOMIZER_SETTING("ShuffleRocks"), mOptionDescriptions[RSK_SHUFFLE_ROCKS]);
+    OPT_U8(RSK_SHUFFLE_BOULDERS, "Shuffle Boulders", {"Off", "Dungeons", "Overworld", "All Boulders"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleBoulders"), mOptionDescriptions[RSK_SHUFFLE_BOULDERS], WIDGET_CVAR_COMBOBOX, RO_SHUFFLE_BOULDERS_OFF);
     OPT_BOOL(RSK_SHUFFLE_TREES, "Shuffle Trees", CVAR_RANDOMIZER_SETTING("ShuffleTrees"), mOptionDescriptions[RSK_SHUFFLE_TREES]);
     OPT_BOOL(RSK_SHUFFLE_BUSHES, "Shuffle Bushes", CVAR_RANDOMIZER_SETTING("ShuffleBushes"), mOptionDescriptions[RSK_SHUFFLE_BUSHES]);
     OPT_BOOL(RSK_SHUFFLE_ICICLES, "Shuffle Icicles", CVAR_RANDOMIZER_SETTING("ShuffleIcicles"), mOptionDescriptions[RSK_SHUFFLE_ICICLES]);
@@ -1869,6 +1871,8 @@ void Settings::CreateOptions() {
                                   &mOptions[RSK_SHUFFLE_POTS],
                                   &mOptions[RSK_SHUFFLE_GRASS],
                                   &mOptions[RSK_SHUFFLE_CRATES],
+                                  &mOptions[RSK_SHUFFLE_BOULDERS],
+                                  &mOptions[RSK_SHUFFLE_ROCKS],
                                   &mOptions[RSK_SHUFFLE_TREES],
                                   &mOptions[RSK_SHUFFLE_BUSHES],
                                   &mOptions[RSK_SHUFFLE_ICICLES],
@@ -2154,6 +2158,8 @@ void Settings::CreateOptions() {
                                             &mOptions[RSK_SHUFFLE_POTS],
                                             &mOptions[RSK_SHUFFLE_GRASS],
                                             &mOptions[RSK_SHUFFLE_CRATES],
+                                            &mOptions[RSK_SHUFFLE_BOULDERS],
+                                            &mOptions[RSK_SHUFFLE_ROCKS],
                                             &mOptions[RSK_SHUFFLE_TREES],
                                             &mOptions[RSK_SHUFFLE_BUSHES],
                                             &mOptions[RSK_SHUFFLE_ICICLES],
