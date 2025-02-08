@@ -13,6 +13,8 @@ void RegionTable_Init_DeathMountainCrater() {
         LOCATION(RC_DMC_CIRCLE_ROCK_6, true),
         LOCATION(RC_DMC_CIRCLE_ROCK_7, true),
         LOCATION(RC_DMC_CIRCLE_ROCK_8, true),
+        LOCATION(RC_DMC_GOSSIP_ROCK_1, true),
+        LOCATION(RC_DMC_GOSSIP_ROCK_2, true),
         LOCATION(RC_DMC_BOULDER_1,     logic->BlastOrSmash()),
         LOCATION(RC_DMC_BOULDER_2,     logic->BlastOrSmash()),
         LOCATION(RC_DMC_BOULDER_3,     logic->BlastOrSmash()),
