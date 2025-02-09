@@ -812,8 +812,8 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
                 break;
             }
 
-                // if this is a treasure chest game chest then set the appropriate rando inf
-                RandomizerSetChestGameRandomizerInf(rc);
+            // if this is a treasure chest game chest then set the appropriate rando inf
+            RandomizerSetChestGameRandomizerInf(rc);
 
             Player* player = GET_PLAYER(gPlayState);
             Player_SetupWaitForPutAway(gPlayState, player, func_8083A434_override);
