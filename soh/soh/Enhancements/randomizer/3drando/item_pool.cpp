@@ -494,6 +494,9 @@ static void PlaceVanillaBossKeys() {
 }
 
 static void PlaceItemsForType(RandomizerCheckType rctype, bool overworldActive, bool dungeonActive) {
+  if (!(overworldActive || dungeonActive)) {
+    return;
+  }
   for (RandomizerCheck rc : ctx->GetLocations(ctx->allLocations, rctype)) {
     auto loc = Rando::StaticData::GetLocation(rc);
 
