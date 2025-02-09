@@ -493,7 +493,7 @@ static void PlaceVanillaBossKeys() {
   }
 }
 
-static void PlaceItemsForType(RandomizerCheckType rctype, bool overworldActive, bool dungeonActive, bool placeVanilla) {
+static void PlaceItemsForType(RandomizerCheckType rctype, bool overworldActive, bool dungeonActive) {
   for (RandomizerCheck rc : ctx->GetLocations(ctx->allLocations, rctype)) {
     auto loc = Rando::StaticData::GetLocation(rc);
 
@@ -501,8 +501,6 @@ static void PlaceItemsForType(RandomizerCheckType rctype, bool overworldActive, 
     if (loc->IsOverworld()) {
       if (overworldActive) {
         AddItemToMainPool(loc->GetVanillaItem());
-      } else if (placeVanilla) {
-        ctx->PlaceItemInLocation(rc, loc->GetVanillaItem(), false, true);
       }
     } else {
       if (dungeonActive) {
@@ -522,8 +520,6 @@ static void PlaceItemsForType(RandomizerCheckType rctype, bool overworldActive, 
             }
           }
         }
-      } else if (placeVanilla) {
-        ctx->PlaceItemInLocation(rc, loc->GetVanillaItem(), false, true);
       }
     }
   }
@@ -722,9 +718,7 @@ void GenerateItemPool() {
                              ctx->GetOption(RSK_SHUFFLE_POTS).Is(RO_SHUFFLE_POTS_ALL);
   bool dungeonPotsActive = ctx->GetOption(RSK_SHUFFLE_POTS).Is(RO_SHUFFLE_POTS_DUNGEONS) ||
                            ctx->GetOption(RSK_SHUFFLE_POTS).Is(RO_SHUFFLE_POTS_ALL);
-  if (overworldPotsActive || dungeonPotsActive) {
-    PlaceItemsForType(RCTYPE_POT, overworldPotsActive, dungeonPotsActive, false);
-  }
+  PlaceItemsForType(RCTYPE_POT, overworldPotsActive, dungeonPotsActive);
   
   auto fsMode = ctx->GetOption(RSK_FISHSANITY);
   if (fsMode.IsNot(RO_FISHSANITY_OFF)) {
@@ -1167,13 +1161,11 @@ void GenerateItemPool() {
     }
   }
 
-  // RANDOTODO: Don't add freestanding locations to the seed at all in the first place so this check
-  // can be put back in place, and not place the vanilla items in PlaceItemsForType.
   bool overworldFreeStandingActive = ctx->GetOption(RSK_SHUFFLE_FREESTANDING).Is(RO_SHUFFLE_FREESTANDING_OVERWORLD) ||
                              ctx->GetOption(RSK_SHUFFLE_FREESTANDING).Is(RO_SHUFFLE_FREESTANDING_ALL);
   bool dungeonFreeStandingActive = ctx->GetOption(RSK_SHUFFLE_FREESTANDING).Is(RO_SHUFFLE_FREESTANDING_DUNGEONS) ||
                            ctx->GetOption(RSK_SHUFFLE_FREESTANDING).Is(RO_SHUFFLE_FREESTANDING_ALL);
-  PlaceItemsForType(RCTYPE_FREESTANDING, overworldFreeStandingActive, dungeonFreeStandingActive, false);
+  PlaceItemsForType(RCTYPE_FREESTANDING, overworldFreeStandingActive, dungeonFreeStandingActive);
 
   AddItemsToPool(ItemPool, alwaysItems);
   AddItemsToPool(ItemPool, dungeonRewards);
