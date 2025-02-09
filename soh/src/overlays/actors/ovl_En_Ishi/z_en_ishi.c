@@ -252,7 +252,7 @@ void EnIshi_SpawnDustLarge(EnIshi* this, PlayState* play) {
 void EnIshi_DropCollectible(EnIshi* this, PlayState* play) {
     s16 dropParams;
 
-    if (!GameInteractor_Should(VB_ROCK_DROP_ITEM, false, this)) {
+    if (!GameInteractor_Should(VB_ROCK_DROP_ITEM, true, this)) {
         return;
     }
 
