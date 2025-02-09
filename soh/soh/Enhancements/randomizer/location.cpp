@@ -395,7 +395,7 @@ Rando::Location Rando::Location::Boulder(RandomizerCheck rc, RandomizerCheckQues
                                      SceneID scene_, int32_t actorParams_, std::string&& shortName_,
                                      std::string&& spoilerName_, RandomizerHintTextKey hintKey,
                                      SpoilerCollectionCheck collectionCheck) {
-    return {rc, quest_, RCTYPE_BOULDER, area_, ACTOR_OBJ_BOMBIWA, scene_, actorParams_, std::move(shortName_), std::move(spoilerName_), hintKey, RG_RECOVERY_HEART, false,
+    return {rc, quest_, RCTYPE_BOULDER, area_, ACTOR_EN_ISHI, scene_, actorParams_, std::move(shortName_), std::move(spoilerName_), hintKey, RG_RECOVERY_HEART, false,
             collectionCheck };
 }
 

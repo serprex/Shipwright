@@ -45,6 +45,8 @@ Context::Context() {
         &mOptions[RSK_SHUFFLE_BEEHIVES],
         &mOptions[RSK_SHUFFLE_COWS],
         &mOptions[RSK_SHUFFLE_POTS],
+        &mOptions[RSK_SHUFFLE_ROCKS],
+        &mOptions[RSK_SHUFFLE_BOULDERS],
         &mOptions[RSK_SHUFFLE_FREESTANDING],
         &mOptions[RSK_SHUFFLE_MERCHANTS],
         &mOptions[RSK_SHUFFLE_FROG_SONG_RUPEES],
@@ -177,6 +179,8 @@ void Context::GenerateLocationPool() {
             (location.GetRCType() == RCTYPE_COW && mOptions[RSK_SHUFFLE_COWS].Is(RO_GENERIC_OFF)) ||
             (location.GetRCType() == RCTYPE_FISH && mOptions[RSK_FISHSANITY].Is(RO_FISHSANITY_OFF)) ||
             (location.GetRCType() == RCTYPE_POT && mOptions[RSK_SHUFFLE_POTS].Is(RO_SHUFFLE_POTS_OFF)) ||
+            (location.GetRCType() == RCTYPE_ROCK && !mOptions[RSK_SHUFFLE_ROCKS]) ||
+            (location.GetRCType() == RCTYPE_BOULDER && mOptions[RSK_SHUFFLE_BOULDERS].Is(RO_SHUFFLE_BOULDERS_OFF)) ||
             (location.GetRCType() == RCTYPE_FAIRY && !mOptions[RSK_SHUFFLE_FAIRIES]) ||
             (location.GetRCType() == RCTYPE_FREESTANDING &&
              mOptions[RSK_SHUFFLE_FREESTANDING].Is(RO_SHUFFLE_FREESTANDING_OFF)) ||
@@ -187,7 +191,8 @@ void Context::GenerateLocationPool() {
             // Skip stuff that is shuffled to dungeon only, i.e. tokens, pots, etc., or other checks that
             // should not have a shuffled item.
             if ((location.GetRCType() == RCTYPE_FREESTANDING && mOptions[RSK_SHUFFLE_FREESTANDING].Is(RO_SHUFFLE_FREESTANDING_DUNGEONS)) ||
-                (location.GetRCType() == RCTYPE_POT && mOptions[RSK_SHUFFLE_POTS].Is(RO_SHUFFLE_POTS_DUNGEONS))) {
+                (location.GetRCType() == RCTYPE_POT && mOptions[RSK_SHUFFLE_POTS].Is(RO_SHUFFLE_POTS_DUNGEONS)) ||
+                (location.GetRCType() == RCTYPE_BOULDER && mOptions[RSK_SHUFFLE_BOULDERS].Is(RO_SHUFFLE_BOULDERS_DUNGEONS))) {
                 continue;
             }
             // If we've gotten past all the conditions where an overworld location should not be

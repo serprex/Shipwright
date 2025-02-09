@@ -152,7 +152,7 @@ void ObjHamishi_Init(Actor* thisx, PlayState* play) {
     CollisionCheck_SetInfo(&this->actor.colChkInfo, NULL, &sColChkInfoInit);
 
     if (GameInteractor_Should(
-        VB_BRONZE_BOULDER_BREAK_FLAG,
+        VB_BOULDER_BREAK_FLAG,
         Flags_GetSwitch(play, this->actor.params & 0x3F),
         this
     )) {

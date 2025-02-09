@@ -203,6 +203,9 @@ void RegionTable_Init_BottomOfTheWell() {
         LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_OUTER_LOBBY_POT,  Here(RR_BOTTOM_OF_THE_WELL_MQ_PERIMETER, []{return logic->BlastOrSmash();}) && logic->CanHitEyeTargets()),
         LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_BOMB_LEFT_HEART,  logic->HasExplosives()),
         LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_BOMB_RIGHT_HEART, logic->HasExplosives()),
+        LOCATION(RC_BOTW_MQ_BOULDER_1, logic->BlastOrSmash()),
+        LOCATION(RC_BOTW_MQ_BOULDER_2, logic->BlastOrSmash()),
+        LOCATION(RC_BOTW_MQ_BOULDER_3, logic->BlastOrSmash()),
     }, {
         //Exits
         Entrance(RR_BOTTOM_OF_THE_WELL_ENTRYWAY,            []{return logic->IsChild;}),
