@@ -161,7 +161,7 @@ void Context::GenerateLocationPool() {
         AddLocation(RC_TRIFORCE_COMPLETED);
     }
     for (Location& location : StaticData::GetLocationTable()) {
-        // skip RCs that shouldn't be in the pool for any reason (i.e. settings, unsupported check type, )
+        // skip RCs that shouldn't be in the pool for any reason (i.e. settings, unsupported check type, etc.)
         // TODO: Exclude checks for some of the older shuffles from the pool too i.e. Frog Songs, Scrubs, etc.)
         if (location.GetRandomizerCheck() == RC_UNKNOWN_CHECK ||
             location.GetRandomizerCheck() == RC_TRIFORCE_COMPLETED || // already in pool
