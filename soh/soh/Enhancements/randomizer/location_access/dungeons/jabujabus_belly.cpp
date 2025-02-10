@@ -224,9 +224,9 @@ void RegionTable_Init_JabuJabusBelly() {
         LOCATION(RC_JABU_JABUS_BELLY_MQ_BASEMENT_NEAR_SWITCHES_CHEST, logic->CanUse(RG_FAIRY_SLINGSHOT)),
         LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_ROOM_BOULDER_1, logic->BlastOrSmash()),
         LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_ROOM_BOULDER_2, logic->BlastOrSmash()),
-        LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_ROOM_WALL_BOULDER_1, logic->HasExplosive()),
-        LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_ROOM_WALL_BOULDER_2, logic->HasExplosive()),
-        LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_ROOM_WALL_BOULDER_3, logic->HasExplosive()),
+        LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_ROOM_WALL_BOULDER_1, logic->HasExplosives()),
+        LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_ROOM_WALL_BOULDER_2, logic->HasExplosives()),
+        LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_ROOM_WALL_BOULDER_3, logic->HasExplosives()),
     }, {
         //Exits
         Entrance(RR_JABU_JABUS_BELLY_MQ_LIFT_ROOM,            []{return true;}),
