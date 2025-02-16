@@ -1694,8 +1694,8 @@ namespace Rando {
                 if (BottleRandomizerGetToItemID.contains(randoGet)) {
                     itemId = BottleRandomizerGetToItemID[randoGet];
                 }
-                if (randoGet == RG_BOTTLE_WITH_BIG_POE && !ctx->GetOption(RSK_BIG_POE_COUNT).Get()) {
-                    BigPoeKill = true;
+                if (randoGet == RG_BOTTLE_WITH_BIG_POE) {
+                    BigPoes++;
                 }
                 mSaveContext->inventory.items[slot] = itemId;
             }   break;
@@ -2258,7 +2258,8 @@ namespace Rando {
         IsChild          = false;
         IsAdult          = false;
         //CanPlantBean        = false;
-        BigPoeKill            = false;
+        BigPoeKill       = false;
+        BigPoes          = 0;
 
         BaseHearts      = ctx->GetOption(RSK_STARTING_HEARTS).Get() + 1;
         
