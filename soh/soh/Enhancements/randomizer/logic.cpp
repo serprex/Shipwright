@@ -1694,6 +1694,9 @@ namespace Rando {
                 if (BottleRandomizerGetToItemID.contains(randoGet)) {
                     itemId = BottleRandomizerGetToItemID[randoGet];
                 }
+                if (randoGet == RG_BOTTLE_WITH_BIG_POE && !ctx->GetOption(RSK_BIG_POE_COUNT).Get()) {
+                    BigPoeKill = true;
+                }
                 mSaveContext->inventory.items[slot] = itemId;
             }   break;
             case RG_RUTOS_LETTER:
