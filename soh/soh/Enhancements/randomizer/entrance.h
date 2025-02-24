@@ -35,6 +35,19 @@ enum class EntranceType {
     GrottoGrave,
     GrottoGraveReverse,
     Overworld,
+    DoorDekuTree,
+    DoorDodongosCavern,
+    DoorJabuJabu,
+    DoorForest,
+    DoorFire,
+    DoorWater,
+    DoorShadow,
+    DoorSpirit,
+    DoorBottomOfTheWell,
+    DoorIceCavern,
+    DoorGerudoTrainingGround,
+    DoorGanonsCastle,
+    DoorGanonsTower,
     Extra,
     Mixed,
     All,
@@ -135,6 +148,7 @@ class EntranceShuffler {
     void SetNoRandomEntrances(bool noRandomEntrances);
     int ShuffleAllEntrances();
     void CreateEntranceOverrides();
+    const Door* MapDoor(s16 scene, s8 srcRoom, s8 dstRoom, s16 linkX, s16 linkY, s16 linkZ);
     void UnshuffleAllEntrances();
     void ParseJson(nlohmann::json spoilerFileJson);
     void ApplyEntranceOverrides();
@@ -151,19 +165,21 @@ class EntranceShuffler {
                                      EntrancePools oneWayEntrancePools, EntrancePools oneWayTargetEntrancePools);
     bool ReplaceEntrance(Entrance* entrance, Entrance* target, std::vector<EntrancePair>& rollbacks);
     void ShuffleEntrancePool(std::vector<Entrance*>& entrancePool, std::vector<Entrance*>& targetEntrances,
-                             int retryCount = 20);
+                             int retryCount = 50);
     bool ShuffleEntrances(std::vector<Entrance*>& entrances, std::vector<Entrance*>& targetEntrances,
                           std::vector<EntrancePair>& rollbacks);
     bool mNoRandomEntrances;
     int mTotalRandomizableEntrances = 0;
     int mCurNumRandomizedEntrances = 0;
     bool mEntranceShuffleFailure = false;
+    std::vector<int16_t> mDoorTable;
 };
 } // namespace Rando
 
 extern "C" {
 #endif
 EntranceOverride* Randomizer_GetEntranceOverrides();
+void Randomizer_SetDoorOverride(int, int);
 #ifdef __cplusplus
 }
 #endif

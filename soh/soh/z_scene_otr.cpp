@@ -1,4 +1,6 @@
+#include "OTRGlobals.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
+#include "soh/Enhancements/randomizer/ShuffleDoors.h"
 #include "ResourceManagerHelpers.h"
 #include <libultraship/libultraship.h>
 #include "soh/resource/type/Scene.h"
@@ -35,10 +37,16 @@
 #include "soh/resource/type/scenecommand/SetEchoSettings.h"
 #include "soh/resource/type/scenecommand/SetAlternateHeaders.h"
 
+extern "C" {
+#include "overlays/actors/ovl_En_Ru1/z_en_ru1.h"
+#include "assets/objects/object_ru1/object_ru1.h"
+}
+
 extern Ship::IResource* OTRPlay_LoadFile(PlayState* play, const char* fileName);
 extern "C" s32 Object_Spawn(ObjectContext* objectCtx, s16 objectId);
 extern "C" RomFile sNaviMsgFiles[];
 s32 OTRScene_ExecuteCommands(PlayState* play, SOH::Scene* scene);
+extern "C" void func_8083C0E8(Player*, PlayState*); // used by doorsanity to prevent cutscene softlock
 
 bool Scene_CommandSpawnList(PlayState* play, SOH::ISceneCommand* cmd) {
     // SOH::SetStartPositionList* cmdStartPos = std::static_pointer_cast<SOH::SetStartPositionList>(cmd);
@@ -488,7 +496,114 @@ extern "C" s32 OTRfunc_800973FC(PlayState* play, RoomContext* roomCtx) {
 }
 
 extern "C" s32 OTRfunc_8009728C(PlayState* play, RoomContext* roomCtx, s32 roomNum) {
-    u32 size;
+    if (play->sceneNum >= SCENE_DEKU_TREE && play->sceneNum <= SCENE_INSIDE_GANONS_CASTLE && play->state.frames != 0) {
+        Player* player = GET_PLAYER(play);
+        if (player != NULL) {
+            SPDLOG_WARN("DOOR {}\t{}\t({},{},{},{})", roomCtx->curRoom.num, roomNum, (s32)player->actor.world.pos.x,
+                        (s32)player->actor.world.pos.y, (s32)player->actor.world.pos.z, (s32)player->actor.world.rot.y);
+            if (IS_RANDO && OTRGlobals::Instance->gRandoContext->GetOption(RSK_SHUFFLE_DUNGEON_DOORS)) {
+                const Door* newDoor = OTRGlobals::Instance->gRandoContext->MapDoor(
+                    play->sceneNum, roomCtx->curRoom.num, roomNum, (s32)player->actor.world.pos.x,
+                    (s32)player->actor.world.pos.y, (s32)player->actor.world.pos.z);
+                if (newDoor != NULL) {
+                    roomNum = newDoor->srcRoom;
+                    player->actor.world.pos.x = newDoor->linkX;
+                    player->actor.world.pos.y = newDoor->linkY;
+                    player->actor.world.pos.z = newDoor->linkZ;
+                    player->actor.world.rot.y = newDoor->rotY;
+                    player->actor.shape.rot.y = newDoor->rotY;
+                    player->skelAnime.movementFlags = 0;
+                    player->skelAnime.endFrame = 0;
+                    player->doorTimer = 0;
+                    player->linearVelocity = 0;
+                    player->unk_450 = player->actor.world.pos;
+                    player->unk_45C = player->actor.world.pos;
+                    Camera_InitPlayerSettings(&play->mainCamera, player);
+                    func_8083C0E8(player, play); // prevent cutscene softlock
+                    if (play->sceneNum != newDoor->scene) {
+                        gSaveContext.respawnFlag = 1;
+                        gSaveContext.subTimerSeconds = 1;
+                        switch (newDoor->scene) {
+                            case SCENE_DEKU_TREE:
+                                play->nextEntranceIndex = ENTR_DEKU_TREE_ENTRANCE;
+                                break;
+                            case SCENE_DODONGOS_CAVERN:
+                                play->nextEntranceIndex = ENTR_DODONGOS_CAVERN_ENTRANCE;
+                                break;
+                            case SCENE_JABU_JABU:
+                                play->nextEntranceIndex = ENTR_JABU_JABU_ENTRANCE;
+                                break;
+                            case SCENE_FOREST_TEMPLE:
+                                play->nextEntranceIndex = ENTR_FOREST_TEMPLE_ENTRANCE;
+                                break;
+                            case SCENE_FIRE_TEMPLE:
+                                play->nextEntranceIndex = ENTR_FIRE_TEMPLE_ENTRANCE;
+                                break;
+                            case SCENE_WATER_TEMPLE:
+                                play->nextEntranceIndex = ENTR_WATER_TEMPLE_ENTRANCE;
+                                break;
+                            case SCENE_SHADOW_TEMPLE:
+                                play->nextEntranceIndex = ENTR_SHADOW_TEMPLE_ENTRANCE;
+                                break;
+                            case SCENE_SPIRIT_TEMPLE:
+                                play->nextEntranceIndex = ENTR_SPIRIT_TEMPLE_ENTRANCE;
+                                break;
+                            case SCENE_BOTTOM_OF_THE_WELL:
+                                play->nextEntranceIndex = ENTR_BOTTOM_OF_THE_WELL_ENTRANCE;
+                                break;
+                            case SCENE_ICE_CAVERN:
+                                play->nextEntranceIndex = ENTR_ICE_CAVERN_ENTRANCE;
+                                break;
+                            case SCENE_GERUDO_TRAINING_GROUND:
+                                play->nextEntranceIndex = ENTR_GERUDO_TRAINING_GROUND_ENTRANCE;
+                                break;
+                            case SCENE_INSIDE_GANONS_CASTLE:
+                                play->nextEntranceIndex = ENTR_INSIDE_GANONS_CASTLE_ENTRANCE;
+                                break;
+                            case SCENE_GANONS_TOWER:
+                                play->nextEntranceIndex = ENTR_GANONS_TOWER_0;
+                                break;
+                        }
+                        gSaveContext.respawn[RESPAWN_MODE_DOWN].entranceIndex = play->nextEntranceIndex;
+                        gSaveContext.respawn[RESPAWN_MODE_DOWN].roomIndex = roomNum;
+                        gSaveContext.respawn[RESPAWN_MODE_DOWN].pos = player->actor.world.pos;
+                        gSaveContext.respawn[RESPAWN_MODE_DOWN].yaw = player->actor.world.rot.y;
+                        gSaveContext.respawn[RESPAWN_MODE_DOWN].playerParams = 0xDFF;
+                        gSaveContext.nextTransitionType = TRANS_TYPE_INSTANT;
+                        play->transitionTrigger = TRANS_TRIGGER_START;
+                        play->transitionType = TRANS_TYPE_INSTANT;
+                        static HOOK_ID hookId;
+                        static bool hasRuto;
+                        // TODO hasRuto = player->heldActor != NULL && player->heldActor->id == ACTOR_EN_RU1;
+                        hookId = REGISTER_VB_SHOULD(VB_INFLICT_VOID_DAMAGE, {
+                            *should = false;
+                            if (hasRuto) {
+                                Player* player = GET_PLAYER(gPlayState);
+                                EnRu1* ruto = (EnRu1*)Actor_SpawnAsChild(
+                                    &gPlayState->actorCtx, &player->actor, gPlayState, ACTOR_EN_RU1,
+                                    player->actor.world.pos.x, player->actor.world.pos.y, player->actor.world.pos.z, 0,
+                                    0, 0, 0x203);
+                                ruto->carryIdleTimer = 0;
+                                Animation_Change(&ruto->skelAnime, (AnimationHeader*)&gRutoChildSittingAnim, 1.0f, 0,
+                                                 Animation_GetLastFrame((void*)&gRutoChildSittingAnim), ANIMMODE_LOOP,
+                                                 -8.0f);
+                                ruto->action = 0;
+                                ruto->roomNum3 = gPlayState->roomCtx.curRoom.num;
+                                ruto->drawConfig = 1;
+                                player->stateFlags1 |= PLAYER_STATE1_CARRYING_ACTOR;
+                                player->heldActor = &ruto->actor;
+                            }
+                            GameInteractor::Instance->UnregisterGameHookForID<GameInteractor::OnVanillaBehavior>(
+                                hookId);
+                        });
+                        return 0;
+                    } else if (play->interfaceCtx.mapRoomNum != roomNum) {
+                        Map_InitRoomData(play, roomNum);
+                    }
+                }
+            }
+        }
+    }
 
     if (roomCtx->status == 0) {
         roomCtx->prevRoom = roomCtx->curRoom;
@@ -501,7 +616,7 @@ extern "C" s32 OTRfunc_8009728C(PlayState* play, RoomContext* roomCtx, s32 roomN
         if (roomNum >= play->numRooms)
             return 0; // UH OH
 
-        size = play->roomList[roomNum].vromEnd - play->roomList[roomNum].vromStart;
+        u32 size = play->roomList[roomNum].vromEnd - play->roomList[roomNum].vromStart;
         roomCtx->unk_34 =
             (void*)ALIGN16((uintptr_t)roomCtx->bufPtrs[roomCtx->unk_30] - ((size + 8) * roomCtx->unk_30 + 7));
 

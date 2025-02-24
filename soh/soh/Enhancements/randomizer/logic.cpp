@@ -1574,6 +1574,12 @@ bool Logic::SmallKeys(s16 scene, uint8_t requiredAmount) {
     if (HasItem(RG_SKELETON_KEY)) {
         return true;
     }
+    if (ctx->GetOption(RSK_SHUFFLE_DUNGEON_DOORS)) {
+        DungeonInfo* dungeon = ctx->GetDungeons()->GetDungeonFromScene(scene);
+        if (dungeon != nullptr) {
+            return GetSmallKeyCount(scene) >= dungeon->GetSmallKeyCount();
+        }
+    }
     return GetSmallKeyCount(scene) >= requiredAmount;
 }
 

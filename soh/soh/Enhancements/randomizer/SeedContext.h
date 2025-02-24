@@ -8,6 +8,7 @@
 #include "hint.h"
 #include "fishsanity.h"
 #include "trial.h"
+#include "ShuffleDoors.h"
 
 #include <memory>
 #include <array>
@@ -40,6 +41,8 @@ class Context {
     static std::shared_ptr<Context> CreateInstance();
     static std::shared_ptr<Context> GetInstance();
     void InitStaticData();
+    const Door* MapDoor(s16 scene, s8 srcRoom, s8 dstRoom, s16 linkX, s16 linkY, s16 linkZ);
+    void ShuffleDoors();
     Hint* GetHint(RandomizerHint hintKey);
     void AddHint(const RandomizerHint hintId, const Hint hint);
     ItemLocation* GetItemLocation(RandomizerCheck locKey);

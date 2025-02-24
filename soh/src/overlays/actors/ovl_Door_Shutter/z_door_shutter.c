@@ -558,7 +558,8 @@ void func_80997220(DoorShutter* this, PlayState* play) {
         Vec3f vec;
 
         Actor_WorldToActorCoords(&this->dyna.actor, &vec, &player->actor.world.pos);
-        this->dyna.actor.room =
+        this->dyna.actor.room = play->roomCtx.curRoom.num;
+        /*
             play->transiActorCtx.list[(u16)this->dyna.actor.params >> 0xA].sides[(vec.z < 0.0f) ? 0 : 1].room;
         if (room != this->dyna.actor.room) {
             Room tempRoom = play->roomCtx.curRoom;
@@ -567,14 +568,17 @@ void func_80997220(DoorShutter* this, PlayState* play) {
             play->roomCtx.prevRoom = tempRoom;
             play->roomCtx.unk_30 ^= 1;
         }
+            */
         func_80097534(play, &play->roomCtx);
         Play_SetupRespawnPoint(play, RESPAWN_MODE_DOWN, 0x0EFF);
     }
     this->unk_164 = 0;
     this->dyna.actor.velocity.y = 0.0f;
     if (DoorShutter_SetupDoor(this, play) && !(player->stateFlags1 & PLAYER_STATE1_CARRYING_ACTOR)) {
-        DoorShutter_SetupAction(this, func_80997568);
-        Player_SetCsActionWithHaltedActors(play, NULL, 2);
+        // DoorShutter_SetupAction(this, func_80997568);
+        // Player_SetCsActionWithHaltedActors(play, NULL, 2);
+        Player_SetCsActionWithHaltedActors(play, NULL, 7);
+        DoorShutter_SetupDoor(this, play);
     }
 }
 
