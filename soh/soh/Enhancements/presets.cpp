@@ -69,6 +69,9 @@ void DrawPresetSelector(PresetType presetTypeId) {
 
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(6.0f, 4.0f));
     if (ImGui::Button(("Apply Preset##" + presetTypeCvar).c_str())) {
+        for(const char* block : presetTypeDef.blocksToClear) {
+            CVarClearBlock(block);
+        }
         clearCvars(presetTypeDef.cvarsToClear);
         if (selectedPresetId != 0) {
             applyPreset(selectedPresetDef.entries);

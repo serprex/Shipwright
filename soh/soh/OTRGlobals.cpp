@@ -2437,9 +2437,17 @@ void SoH_ProcessDroppedFiles(std::string filePath) {
             return;
         }
 
+        CVarClearBlock(CVAR_PREFIX_SETTING);
+        CVarClearBlock(CVAR_PREFIX_CHEAT);
+        CVarClearBlock(CVAR_PREFIX_RANDOMIZER_SETTING);
+        CVarClearBlock(CVAR_PREFIX_RANDOMIZER_ENHANCEMENT);
+        CVarClearBlock(CVAR_PREFIX_COSMETIC);
+        CVarClearBlock(CVAR_PREFIX_TRACKER);
+        CVarClearBlock(CVAR_PREFIX_GENERAL);
+        CVarClearBlock(CVAR_PREFIX_REMOTE);
+        CVarClearBlock(CVAR_PREFIX_DEVELOPER_TOOLS);
         clearCvars(enhancementsCvars);
         clearCvars(cheatCvars);
-        clearCvars(randomizerCvars);
 
         // Flatten everything under CVars into a single array
         auto cvars = configJson["CVars"].flatten();
