@@ -76,6 +76,7 @@ void DrawPresetSelector(PresetType presetTypeId) {
         if (selectedPresetId != 0) {
             applyPreset(selectedPresetDef.entries);
         }
+        CVarSetInteger(presetTypeCvar.c_str(), selectedPresetId);
         Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
         if (presetTypeId == PRESET_TYPE_RANDOMIZER){
             Rando::Settings::GetInstance()->ReloadOptions();
