@@ -6,12 +6,6 @@
 #include "soh/SohGui/UIWidgets.hpp"
 #include <libultraship/libultraship.h>
 
-void clearCvars(std::vector<const char*> cvarsToClear) {
-    for(const char* cvar : cvarsToClear) {
-        CVarClear(cvar);
-    }
-}
-
 std::string FormatLocations(std::vector<RandomizerCheck> locs) {
     std::string locString = "";
     for (auto loc: locs) {
@@ -72,7 +66,6 @@ void DrawPresetSelector(PresetType presetTypeId) {
         for(const char* block : presetTypeDef.blocksToClear) {
             CVarClearBlock(block);
         }
-        clearCvars(presetTypeDef.cvarsToClear);
         if (selectedPresetId != 0) {
             applyPreset(selectedPresetDef.entries);
         }

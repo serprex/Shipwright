@@ -61,35 +61,6 @@ void applyPreset(std::vector<PresetEntry> entries);
 
 // TODO: Ideally everything below this point will come from one/many JSON files
 
-const std::vector<const char*> enhancementsCvars = {
-    CVAR_SETTING("DPadOnPause"),
-    CVAR_SETTING("DpadInText"),
-    CVAR_SETTING("OcarinaControl.Dpad"),
-    CVAR_SETTING("OcarinaControl.RStick"),
-    CVAR_SETTING("FreeLook.InvertXAxis"),
-    CVAR_SETTING("FreeLook.InvertYAxis"),
-    CVAR_SETTING("Controls.RightStickAim"),
-    CVAR_SETTING("DisableFirstPersonAutoCenterView"),
-    CVAR_LOW_RES_MODE,
-    CVAR_Z_FIGHTING_MODE,
-};
-
-const std::vector<const char*> cheatCvars = {
-    CVAR_CONSOLE_WINDOW_OPEN,
-    CVAR_WINDOW("ActorViewer"),
-    CVAR_WINDOW("CollisionViewer"),
-    CVAR_WINDOW("DLViewer"),
-    CVAR_WINDOW("SaveEditor"),
-    CVAR_SETTING("WalkModifier.Enabled"),
-    CVAR_SETTING("WalkModifier.SpeedToggle"),
-    CVAR_SETTING("WalkModifier.Mapping1"),
-    CVAR_SETTING("WalkModifier.Mapping2"),
-    CVAR_SETTING("WalkModifier.SwimMapping1"),
-    CVAR_SETTING("WalkModifier.SwimMapping2"),
-    CVAR_SETTING("WalkModifier.DoesntChangeJump"),
-    CVAR_STATS_WINDOW_OPEN,
-};
-
 const std::vector<PresetEntry> vanillaPlusPresetEntries = {
     // D-pad Support in text and file select
     PRESET_ENTRY_S32(CVAR_SETTING("DpadInText"), 1),
@@ -861,13 +832,12 @@ typedef struct PresetDefinition {
 } PresetDefinition;
 
 typedef struct PresetTypeDefinition {
-    std::vector<const char*> cvarsToClear;
     std::vector<const char*> blocksToClear;
     std::map<uint16_t, PresetDefinition> presets;
 } PresetTypeDefinition;
 
 const std::map<PresetType, PresetTypeDefinition> presetTypes = {
-    { PRESET_TYPE_ENHANCEMENTS, { enhancementsCvars, { CVAR_PREFIX_ENHANCEMENT, CVAR_PREFIX_CHEAT }, {
+    { PRESET_TYPE_ENHANCEMENTS, { { CVAR_PREFIX_ENHANCEMENT, CVAR_PREFIX_CHEAT }, {
         { ENHANCEMENT_PRESET_DEFAULT, {
             "Default",
             "Reset all options to their default values.",
@@ -889,7 +859,7 @@ const std::map<PresetType, PresetTypeDefinition> presetTypes = {
             randomizerPresetEntries
         } },
     } } },
-    { PRESET_TYPE_RANDOMIZER, { {}, { CVAR_PREFIX_RANDOMIZER_SETTING, CVAR_PREFIX_RANDOMIZER_ENHANCEMENT }, {
+    { PRESET_TYPE_RANDOMIZER, { { CVAR_PREFIX_RANDOMIZER_SETTING, CVAR_PREFIX_RANDOMIZER_ENHANCEMENT }, {
         { RANDOMIZER_PRESET_DEFAULT, {
             "Default",
             "Reset all options to their default values.",
