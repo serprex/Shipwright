@@ -532,13 +532,13 @@ void Menu::DrawElement() {
         ImGui::End();
         return;
     }
-    ImGui::PushFont(OTRGlobals::Instance->fontStandardLargest);
     ImGuiContext& g = *GImGui;
     ImGuiWindow* window = g.CurrentWindow;
     ImGuiStyle& style = ImGui::GetStyle();
     windowHeight = window->WorkRect.GetHeight();
     windowWidth = window->WorkRect.GetWidth();
 
+    ImGui::PushFont(OTRGlobals::Instance->fontStandardLargest);
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(10.0f, 8.0f));
     const char* headerCvar = CVAR_SETTING("Menu.ActiveHeader");
     std::string headerIndex = CVarGetString(headerCvar, "Settings");
@@ -561,12 +561,13 @@ void Menu::DrawElement() {
 
     // Full screen menu with widths below 1280, heights below 800.
     // 5% of screen width/height padding on both sides above those resolutions.
-    ImVec2 menuSize = { std::fminf(1280, windowWidth), std::fminf(800, windowHeight) };
+    // Menu width will never exceed a 16:9 aspect ratio.
+    ImVec2 menuSize = { windowWidth, windowHeight };
     if (windowWidth > 1280) {
-        menuSize.x = floor(windowWidth * 0.9);
+        menuSize.x = std::fminf(windowWidth * 0.9f, (windowHeight * 1.77f));
     }
     if (windowHeight > 800) {
-        menuSize.y = floor(windowHeight * 0.9);
+        menuSize.y = windowHeight * 0.9f;
     }
     
     pos += window->WorkRect.GetSize() / 2 - menuSize / 2;
@@ -583,22 +584,6 @@ void Menu::DrawElement() {
         headerHeight += style.ScrollbarSize;
         scrollbar = true;
     }
-    UIWidgets::ButtonOptions options = {};
-    options.size = UIWidgets::Sizes::Inline;
-    options.tooltip = "Close Menu (Esc)";
-    if (UIWidgets::Button(ICON_FA_TIMES_CIRCLE, options)) {
-        ToggleVisibility();
-
-        // Update gamepad navigation after close based on if other menus are still visible
-        auto mImGuiIo = &ImGui::GetIO();
-        if (CVarGetInteger(CVAR_IMGUI_CONTROLLER_NAV, 0) &&
-            Ship::Context::GetInstance()->GetWindow()->GetGui()->GetMenuOrMenubarVisible()) {
-            mImGuiIo->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
-        } else {
-            mImGuiIo->ConfigFlags &= ~ImGuiConfigFlags_NavEnableGamepad;
-        }
-    }
-    ImGui::SameLine();
     ImGui::SetNextWindowSizeConstraints({ 0, headerHeight }, { headerWidth, headerHeight });
     ImVec2 headerSelSize = { menuSize.x - buttonSize.x * 3 - style.ItemSpacing.x * 3, headerHeight };
     if (scrollbar) {
@@ -659,7 +644,19 @@ void Menu::DrawElement() {
         ImGui::PopStyleColor();
     }
     ImGui::EndChild();
-    ImGui::SameLine(menuSize.x - (buttonSize.x * 2) - style.ItemSpacing.x);
+    ImGui::SameLine(menuSize.x - (buttonSize.x * 3) - (style.ItemSpacing.x * 2));
+    UIWidgets::ButtonOptions options3 = {};
+    options3.color = UIWidgets::Colors::Red;
+    options3.size = UIWidgets::Sizes::Inline;
+    options3.tooltip = "Quit SoH";
+    if (UIWidgets::Button(ICON_FA_POWER_OFF, options3)) {
+        if (!popped) {
+            ToggleVisibility();
+        }
+        Ship::Context::GetInstance()->GetWindow()->Close();
+    }
+    ImGui::PopStyleVar();
+    ImGui::SameLine();
     UIWidgets::ButtonOptions options2 = {};
     options2.color = UIWidgets::Colors::Red;
     options2.size = UIWidgets::Sizes::Inline;
@@ -678,17 +675,21 @@ void Menu::DrawElement() {
             ->Dispatch("reset");
     }
     ImGui::SameLine();
-    UIWidgets::ButtonOptions options3 = {};
-    options3.color = UIWidgets::Colors::Red;
-    options3.size = UIWidgets::Sizes::Inline;
-    options3.tooltip = "Quit SoH";
-    if (UIWidgets::Button(ICON_FA_POWER_OFF, options3)) {
-        if (!popped) {
-            ToggleVisibility();
+    UIWidgets::ButtonOptions options = {};
+    options.size = UIWidgets::Sizes::Inline;
+    options.tooltip = "Close Menu (Esc)";
+    if (UIWidgets::Button(ICON_FA_TIMES_CIRCLE, options)) {
+        ToggleVisibility();
+
+        // Update gamepad navigation after close based on if other menus are still visible
+        auto mImGuiIo = &ImGui::GetIO();
+        if (CVarGetInteger(CVAR_IMGUI_CONTROLLER_NAV, 0) &&
+            Ship::Context::GetInstance()->GetWindow()->GetGui()->GetMenuOrMenubarVisible()) {
+            mImGuiIo->ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
+        } else {
+            mImGuiIo->ConfigFlags &= ~ImGuiConfigFlags_NavEnableGamepad;
         }
-        Ship::Context::GetInstance()->GetWindow()->Close();
     }
-    ImGui::PopStyleVar();
 
     pos.y += headerHeight + style.ItemSpacing.y;
     pos.x = centerX - menuSize.x / 2 + (style.ItemSpacing.x * (menuEntries.size() + 1));
@@ -698,7 +699,12 @@ void Menu::DrawElement() {
     float sectionHeight = menuSize.y - headerHeight - 4 - style.ItemSpacing.y * 2;
     float columnHeight = sectionHeight - style.ItemSpacing.y * 4;
     ImGui::SetNextWindowPos(pos + style.ItemSpacing * 2);
+
+    // Increase sidebar width on larger screens to accomodate people scaling their menus.
     float sidebarWidth = 200 - style.ItemSpacing.x;
+    if (menuSize.x > 1600) {
+        sidebarWidth = menuSize.x * 0.15f;
+    }
 
     const char* sidebarCvar = menuEntries.at(headerIndex).sidebarCvar;
 
@@ -734,8 +740,8 @@ void Menu::DrawElement() {
         }
     }
     ImGui::EndChild();
+    ImGui::PopFont();
 
-    ImGui::PushFont(OTRGlobals::Instance->fontMonoLarger);
     pos = ImVec2{ sectionCenterX + (sidebarWidth / 2), topY } + style.ItemSpacing * 2;
     window->DrawList->AddRectFilled(pos, pos + ImVec2{ 4, sectionHeight - style.FramePadding.y * 2 },
                                     ImGui::GetColorU32({ 255, 255, 255, 255 }), true, style.WindowRounding);
@@ -804,8 +810,6 @@ void Menu::DrawElement() {
     if (!useColumns || menuSearchText.length() > 0) {
         ImGui::EndChild();
     }
-    ImGui::PopFont();
-    ImGui::PopFont();
 
     if (!popout) {
         ImGui::PopStyleVar();
