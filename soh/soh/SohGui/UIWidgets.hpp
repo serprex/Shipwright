@@ -122,7 +122,12 @@ namespace UIWidgets {
         const char* tooltip = "";
         bool disabled = false;
         const char* disabledTooltip = "";
+        Colors color = Colors::NoColor;
 
+        WidgetOptions& Color(Colors color_) {
+            color = color = color_;
+            return *this;
+        }
         WidgetOptions& Tooltip(const char* tooltip_) {
             tooltip = tooltip_;
             return *this;
@@ -133,15 +138,6 @@ namespace UIWidgets {
         }
         WidgetOptions& DisabledTooltip(const char* disabledTooltip_) {
             disabledTooltip = disabledTooltip_;
-            return *this;
-        }
-    };
-
-    struct TextOptions : WidgetOptions {
-        Colors color = Colors::NoColor;
-
-        TextOptions& Color(Colors color_) {
-            color = color_;
             return *this;
         }
     };
@@ -164,7 +160,7 @@ namespace UIWidgets {
             return *this;
         }
         ButtonOptions& Color(Colors color_) {
-            color = color_;
+            WidgetOptions::color = color = color_;
             return *this;
         }
     };
@@ -189,7 +185,7 @@ namespace UIWidgets {
             return *this;
         }
         WindowButtonOptions& Color(Colors color_) {
-            color = color_;
+            WidgetOptions::color = color = color_;
             return *this;
         }
         WindowButtonOptions& ShowButton(bool showButton_) {
@@ -206,7 +202,7 @@ namespace UIWidgets {
         bool defaultValue = false; // Only applicable to CVarCheckbox
         ComponentAlignments alignment = ComponentAlignments::Left;
         LabelPositions labelPosition = LabelPositions::Near;
-        Colors color = Colors::LightBlue;
+        Colors color = WidgetOptions::color = Colors::LightBlue;
 
         CheckboxOptions& DefaultValue(bool defaultValue_) {
             defaultValue = defaultValue_;
@@ -225,7 +221,7 @@ namespace UIWidgets {
             return *this;
         }
         CheckboxOptions& Color(Colors color_) {
-            color = color_;
+            WidgetOptions::color = color = color_;
             return *this;
         }
         CheckboxOptions& DisabledTooltip(const char* disabledTooltip_) {
@@ -263,7 +259,7 @@ namespace UIWidgets {
             return *this;
         }
         ComboboxOptions& Color(Colors color_) {
-            color = color_;
+            WidgetOptions::color = color = color_;
             return *this;
         }
     };
@@ -319,7 +315,7 @@ namespace UIWidgets {
             return *this;
         }
         IntSliderOptions& Color(Colors color_) {
-            color = color_;
+            WidgetOptions::color = color = color_;
             return *this;
         }
         IntSliderOptions& Size(ImVec2 size_) {
@@ -391,7 +387,7 @@ namespace UIWidgets {
             return *this;
         }
         FloatSliderOptions& Color(Colors color_) {
-            color = color_;
+            WidgetOptions::color = color = color_;
             return *this;
         }
         FloatSliderOptions& Size(ImVec2 size_) {
@@ -406,7 +402,6 @@ namespace UIWidgets {
 
     struct RadioButtonsOptions : WidgetOptions {
         std::unordered_map<int32_t, const char*> buttonMap;
-        Colors color = Colors::LightBlue;
         
         RadioButtonsOptions& ButtonMap(std::unordered_map<int32_t, const char*> buttonMap_) {
             buttonMap = buttonMap_;
@@ -417,7 +412,7 @@ namespace UIWidgets {
             return *this;
         }
         RadioButtonsOptions& Color(Colors color_) {
-            color = color_;
+            WidgetOptions::color = color = color_;
             return *this;
         }
     };
@@ -438,7 +433,7 @@ namespace UIWidgets {
             return *this;
         }
         InputOptions& Color(Colors color_) {
-            color = color_;
+            WidgetOptions::color = color = color_;
             return *this;
         }
         InputOptions& Size(ImVec2 size_) {

@@ -303,23 +303,21 @@ void Menu::MenuDrawItem(WidgetInfo& widget, uint32_t width, UIWidgets::Colors me
                 ImGui::Separator();
             } break;
             case WIDGET_SEPARATOR_TEXT: {
-                auto options = std::static_pointer_cast<UIWidgets::TextOptions>(widget.options);
-                if (options->color != UIWidgets::Colors::NoColor) {
-                    ImGui::PushStyleColor(ImGuiCol_Text, UIWidgets::ColorValues.at(options->color));
+                if (widget.options->color != UIWidgets::Colors::NoColor) {
+                    ImGui::PushStyleColor(ImGuiCol_Text, UIWidgets::ColorValues.at(widget.options->color));
                 }
                 ImGui::SeparatorText(widget.name.c_str());
-                if (options->color != UIWidgets::Colors::NoColor) {
+                if (widget.options->color != UIWidgets::Colors::NoColor) {
                     ImGui::PopStyleColor();
                 }
             } break;
             case WIDGET_TEXT: {
-                auto options = std::static_pointer_cast<UIWidgets::TextOptions>(widget.options);
-                if (options->color != UIWidgets::Colors::NoColor) {
-                    ImGui::PushStyleColor(ImGuiCol_Text, UIWidgets::ColorValues.at(options->color));
+                if (widget.options->color != UIWidgets::Colors::NoColor) {
+                    ImGui::PushStyleColor(ImGuiCol_Text, UIWidgets::ColorValues.at(widget.options->color));
                 }
                 ImGui::AlignTextToFramePadding();
                 ImGui::TextWrapped("%s", widget.name.c_str());
-                if (options->color != UIWidgets::Colors::NoColor) {
+                if (widget.options->color != UIWidgets::Colors::NoColor) {
                     ImGui::PopStyleColor();
                 }
             } break;
