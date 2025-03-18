@@ -547,7 +547,7 @@ namespace UIWidgets {
         ImGui::AlignTextToFramePadding();
         if (options.labelPosition != LabelPositions::None) {
             if (options.alignment == ComponentAlignments::Right) {
-                ImGui::Text(label);
+                ImGui::Text("%s", label);
                 if (options.labelPosition == LabelPositions::Above) {
                     ImGui::NewLine();
                     ImGui::SameLine(ImGui::GetContentRegionAvail().x - comboWidth);
@@ -558,7 +558,7 @@ namespace UIWidgets {
                 }
             } else if (options.alignment == ComponentAlignments::Left) {
                 if (options.labelPosition == LabelPositions::Above) {
-                    ImGui::Text(label);
+                    ImGui::Text("%s", label);
                 }
             }
         }
