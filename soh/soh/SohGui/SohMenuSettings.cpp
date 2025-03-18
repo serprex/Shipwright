@@ -106,7 +106,7 @@ void SohMenu::AddMenuSettings() {
         .CVar(CVAR_SETTING("TitleScreenTranslation"));
     AddWidget(path, "Menu Language", WIDGET_CVAR_COMBOBOX)
         .CVar(CVAR_SETTING("Languages"))
-        .Options(ComboboxOptions().LabelPosition(LabelPosition::Far).ComponentAlignment(ComponentAlignment::Right).ComboMap(languages).DefaultIndex(LANGUAGE_ENG));
+        .Options(ComboboxOptions().LabelPosition(LabelPositions::Far).ComponentAlignment(ComponentAlignments::Right).ComboMap(languages).DefaultIndex(LANGUAGE_ENG));
     AddWidget(path, "Accessibility", WIDGET_SEPARATOR_TEXT);
     #if defined(_WIN32) || defined(__APPLE__)
     AddWidget(path, "Text to Speech", WIDGET_CVAR_CHECKBOX)
@@ -117,11 +117,11 @@ void SohMenu::AddMenuSettings() {
         .CVar(CVAR_SETTING("A11yDisableIdleCam"))
         .Options(CheckboxOptions().Tooltip("Disables the automatic re-centering of the camera when idle."));
     AddWidget(path, "EXPERIMENTAL", WIDGET_SEPARATOR_TEXT)
-        .Options(WidgetOptions().Color(Colors::Orange));
+        .Options(TextOptions().Color(Colors::Orange));
     AddWidget(path, "ImGui Menu Scaling", WIDGET_CVAR_COMBOBOX)
         .CVar(CVAR_SETTING("ImGuiScale"))
         .Options(ComboboxOptions().ComboMap(imguiScaleOptions).Tooltip("Changes the scaling of the ImGui menu elements.").DefaultIndex(1)
-            .ComponentAlignment(ComponentAlignment::Right).LabelPosition(LabelPosition::Far))
+            .ComponentAlignment(ComponentAlignments::Right).LabelPosition(LabelPositions::Far))
         .Callback([](WidgetInfo& info) {
             OTRGlobals::Instance->ScaleImGui();
         });
