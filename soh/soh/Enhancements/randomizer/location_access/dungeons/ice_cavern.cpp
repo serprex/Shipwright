@@ -21,7 +21,7 @@ void RegionTable_Init_IceCavern() {
     }, {
         //Exits
         Entrance(RR_ICE_CAVERN_ENTRYWAY, []{return true;}),
-        Entrance(RR_ICE_CAVERN_MAIN,     []{return Here(RR_ICE_CAVERN_BEGINNING, []{return logic->CanKillEnemy(RE_FREEZARD, ED_CLOSE, true, 3);});}),
+        Entrance(RR_ICE_CAVERN_MAIN,     []{return Here(RR_ICE_CAVERN_BEGINNING, []{return logic->CanKillEnemy(RE_FREEZARD, ED_CLOSE, true, 4);});}),
     });
 
     areaTable[RR_ICE_CAVERN_MAIN] = Region("Ice Cavern", "Ice Cavern", {RA_ICE_CAVERN}, NO_DAY_NIGHT_CYCLE, {
@@ -125,7 +125,7 @@ void RegionTable_Init_IceCavern() {
         LOCATION(RC_SHEIK_IN_ICE_CAVERN,            logic->CanKillEnemy(RE_STALFOS)),
     }, {
         //Exits
-        Entrance(RR_ICE_CAVERN_MQ_WEST_CORRIDOR, []{return logic->BlueFire() && Here(RR_ICE_CAVERN_MQ_STALFOS_ROOM, []{return logic->CanKillEnemy(RE_STALFOS);});}),
+        Entrance(RR_ICE_CAVERN_MQ_WEST_CORRIDOR, []{return Here(RR_ICE_CAVERN_MQ_STALFOS_ROOM, []{return logic->CanKillEnemy(RE_STALFOS);});}),
         Entrance(RR_ICE_CAVERN_MQ_BEGINNING,     []{return logic->CanUse(RG_IRON_BOOTS) && Here(RR_ICE_CAVERN_MQ_STALFOS_ROOM, []{return logic->CanKillEnemy(RE_STALFOS);});}),
     });
 
