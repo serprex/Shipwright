@@ -102,6 +102,20 @@ void SohMenu::AddMenuSettings() {
             SDL_OpenURL(std::string("file:///" + std::filesystem::absolute(filesPath).string()).c_str());
         })
         .Options(ButtonOptions().Tooltip("Opens the folder that contains the save and mods folders, etc."));
+
+    AddWidget(path, "Boot", WIDGET_SEPARATOR_TEXT);
+    AddWidget(path, "Boot Sequence", WIDGET_CVAR_COMBOBOX)
+        .CVar(CVAR_ENHANCEMENT("BootSequence"))
+        .Options(ComboboxOptions()
+                     .DefaultIndex(BOOTSEQUENCE_DEFAULT)
+                     .LabelPosition(LabelPositions::Far)
+                     .ComponentAlignment(ComponentAlignments::Right)
+                     .ComboMap(bootSequenceLabels)
+                     .Tooltip("Configure what happens when starting or resetting the game.\n\n"
+                              "Default: LUS logo -> N64 logo\n"
+                              "Authentic: N64 logo only\n"
+                              "File Select: Skip to file select menu"));
+
     AddWidget(path, "Languages", WIDGET_SEPARATOR_TEXT);
     AddWidget(path, "Translate Title Screen", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_SETTING("TitleScreenTranslation"));
@@ -118,7 +132,7 @@ void SohMenu::AddMenuSettings() {
         .CVar(CVAR_SETTING("A11yDisableIdleCam"))
         .Options(CheckboxOptions().Tooltip("Disables the automatic re-centering of the camera when idle."));
     AddWidget(path, "EXPERIMENTAL", WIDGET_SEPARATOR_TEXT)
-        .Options(WidgetOptions().Color(Colors::Orange));
+        .Options(TextOptions().Color(Colors::Orange));
     AddWidget(path, "ImGui Menu Scaling", WIDGET_CVAR_COMBOBOX)
         .CVar(CVAR_SETTING("ImGuiScale"))
         .Options(ComboboxOptions().ComboMap(imguiScaleOptions).Tooltip("Changes the scaling of the ImGui menu elements.").DefaultIndex(1)
