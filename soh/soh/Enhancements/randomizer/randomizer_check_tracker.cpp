@@ -481,10 +481,9 @@ void CheckTrackerLoadGame(int32_t fileNum) {
         }
     }
     for (int i = RCAREA_KOKIRI_FOREST; i < RCAREA_INVALID; i++) {
-        if (!IsAreaSpoiled(static_cast<RandomizerCheckArea>(i)) &&(RandomizerCheckObjects::AreaIsOverworld(static_cast<RandomizerCheckArea>(i)) || !IS_RANDO ||
-                OTRGlobals::Instance->gRandomizer->AreQuestsKnown()
-        )) {
-            SetAreaSpoiled(static_cast<RandomizerCheckArea>(i));
+        auto area = static_cast<RandomizerCheckArea>(i);
+        if (!IsAreaSpoiled(area) && (RandomizerCheckObjects::AreaIsOverworld(area) || !IS_RANDO || OTRGlobals::Instance->gRandomizer->IsQuestKnown(area))) {
+            SetAreaSpoiled(area);
         }
     }
     if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_LINKS_POCKET) != RO_LINKS_POCKET_NOTHING && IS_RANDO) {

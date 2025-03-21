@@ -2697,14 +2697,35 @@ CustomMessage Randomizer::GetMerchantMessage(RandomizerCheck rc, TextIDs textId,
     return messageEntry;
 }
 
-bool Randomizer::AreQuestsKnown() {
-    for (int i = (int)RSK_MQ_DEKU_TREE; i <= (int)RSK_MQ_GANONS_CASTLE; i++) {
-        u8 value = GetRandoSettingValue((RandomizerSettingKey)i);
-        if (value == (u8)RO_MQ_SET_RANDOM) {
-            return false;
-        }
+bool Randomizer::IsQuestKnown(RandomizerCheckArea area) {
+    switch (area) {
+        case RCAREA_DEKU_TREE:
+            return GetRandoSettingValue(RSK_MQ_DEKU_TREE) != RO_MQ_SET_RANDOM;
+        case RCAREA_DODONGOS_CAVERN:
+            return GetRandoSettingValue(RSK_MQ_DODONGOS_CAVERN) != RO_MQ_SET_RANDOM;
+        case RCAREA_JABU_JABUS_BELLY:
+            return GetRandoSettingValue(RSK_MQ_JABU_JABU) != RO_MQ_SET_RANDOM;
+        case RCAREA_FOREST_TEMPLE:
+            return GetRandoSettingValue(RSK_MQ_FOREST_TEMPLE) != RO_MQ_SET_RANDOM;
+        case RCAREA_FIRE_TEMPLE:
+            return GetRandoSettingValue(RSK_MQ_FIRE_TEMPLE) != RO_MQ_SET_RANDOM;
+        case RCAREA_WATER_TEMPLE:
+            return GetRandoSettingValue(RSK_MQ_WATER_TEMPLE) != RO_MQ_SET_RANDOM;
+        case RCAREA_SPIRIT_TEMPLE:
+            return GetRandoSettingValue(RSK_MQ_SPIRIT_TEMPLE) != RO_MQ_SET_RANDOM;
+        case RCAREA_SHADOW_TEMPLE:
+            return GetRandoSettingValue(RSK_MQ_SHADOW_TEMPLE) != RO_MQ_SET_RANDOM;
+        case RCAREA_BOTTOM_OF_THE_WELL:
+            return GetRandoSettingValue(RSK_MQ_BOTTOM_OF_THE_WELL) != RO_MQ_SET_RANDOM;
+        case RCAREA_ICE_CAVERN:
+            return GetRandoSettingValue(RSK_MQ_ICE_CAVERN) != RO_MQ_SET_RANDOM;
+        case RCAREA_GERUDO_TRAINING_GROUND:
+            return GetRandoSettingValue(RSK_MQ_GTG) != RO_MQ_SET_RANDOM;
+        case RCAREA_GANONS_CASTLE:
+            return GetRandoSettingValue(RSK_MQ_GANONS_CASTLE) != RO_MQ_SET_RANDOM;
+        default:
+            return true;
     }
-    return true;
 }
 
 bool Randomizer::AreQuestsVaried() {
@@ -2718,62 +2739,63 @@ bool Randomizer::AreQuestsVaried() {
     return false;
 }
 
-bool Randomizer::AnyQuestMaybeVanilla() {
-    for (int i = (int)RSK_MQ_DEKU_TREE; i <= (int)RSK_MQ_GANONS_CASTLE; i++) {
-        u8 value = GetRandoSettingValue((RandomizerSettingKey)i);
-        if (value == (u8)RO_MQ_SET_RANDOM || value == (u8)RO_MQ_SET_VANILLA) {
-            return true;
-        }
+bool Randomizer::QuestCompatible(RandomizerCheckQuest quest, RandomizerCheckArea area) {
+    if (quest == RCQUEST_BOTH) {
+        return true;
     }
-    return false;
-}
 
-bool Randomizer::AnyQuestMaybeMQ() {
-    for (int i = (int)RSK_MQ_DEKU_TREE; i <= (int)RSK_MQ_GANONS_CASTLE; i++) {
-        u8 value = GetRandoSettingValue((RandomizerSettingKey)i);
-        if (value == (u8)RO_MQ_SET_RANDOM || value == (u8)RO_MQ_SET_MQ) {
-            return true;
-        }
-    }
+    RandoOptionMQSet mqSet = (RandoOptionMQSet)GetRandoSettingValue(RSK_MQ_DEKU_TREE);
+    return mqSet == RO_MQ_SET_RANDOM || ((mqSet == RO_MQ_SET_VANILLA) == (quest == RCQUEST_VANILLA));
 }
 
 CustomMessage Randomizer::GetMapGetItemMessageWithHint(GetItemEntry itemEntry) {
     CustomMessage messageEntry = CustomMessageManager::Instance->RetrieveMessage(Randomizer::getItemMessageTableID, itemEntry.getItemId);
     int sceneNum;
+    RandomizerCheckArea area;
     switch (itemEntry.getItemId) {
         case RG_DEKU_TREE_MAP:
             sceneNum = SCENE_DEKU_TREE;
+            area = RCAREA_DEKU_TREE;
             break;
         case RG_DODONGOS_CAVERN_MAP:
             sceneNum = SCENE_DODONGOS_CAVERN;
+            area = RCAREA_DODONGOS_CAVERN;
             break;
         case RG_JABU_JABUS_BELLY_MAP:
             sceneNum = SCENE_JABU_JABU;
+            area = RCAREA_JABU_JABUS_BELLY;
             break;
         case RG_FOREST_TEMPLE_MAP:
             sceneNum = SCENE_FOREST_TEMPLE;
+            area = RCAREA_FOREST_TEMPLE;
             break;
         case RG_FIRE_TEMPLE_MAP:
             sceneNum = SCENE_FIRE_TEMPLE;
+            area = RCAREA_FIRE_TEMPLE;
             break;
         case RG_WATER_TEMPLE_MAP:
             sceneNum = SCENE_WATER_TEMPLE;
+            area = RCAREA_WATER_TEMPLE;
             break;
         case RG_SPIRIT_TEMPLE_MAP:
             sceneNum = SCENE_SPIRIT_TEMPLE;
+            area = RCAREA_SPIRIT_TEMPLE;
             break;
         case RG_SHADOW_TEMPLE_MAP:
             sceneNum = SCENE_SHADOW_TEMPLE;
+            area = RCAREA_SHADOW_TEMPLE;
             break;
         case RG_BOTTOM_OF_THE_WELL_MAP:
             sceneNum = SCENE_BOTTOM_OF_THE_WELL;
+            area = RCAREA_BOTTOM_OF_THE_WELL;
             break;
         case RG_ICE_CAVERN_MAP:
             sceneNum = SCENE_ICE_CAVERN;
+            area = RCAREA_ICE_CAVERN;
             break;
     }
 
-    if (AreQuestsKnown()) {
+    if (IsQuestKnown(area)) {
         messageEntry.Replace("[[typeHint]]", "");
     } else if (ResourceMgr_IsSceneMasterQuest(sceneNum)) {
         messageEntry.Replace("[[typeHint]]", Rando::StaticData::hintTextTable[RHT_DUNGEON_MASTERFUL].GetHintMessage());

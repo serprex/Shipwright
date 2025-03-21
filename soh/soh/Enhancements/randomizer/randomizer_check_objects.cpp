@@ -111,9 +111,7 @@ void RandomizerCheckObjects::UpdateImGuiVisibility() {
         auto itemLoc = ctx->GetItemLocation(location.GetRandomizerCheck());
         itemLoc->SetVisible(
             (location.GetRandomizerCheck() != RC_UNKNOWN_CHECK) &&
-            (location.GetQuest() == RCQUEST_BOTH ||
-             location.GetQuest() == RCQUEST_MQ && OTRGlobals::Instance->gRandomizer->AnyQuestMaybeMQ() ||
-             location.GetQuest() == RCQUEST_VANILLA && OTRGlobals::Instance->gRandomizer->AnyQuestMaybeVanilla()) &&
+            OTRGlobals::Instance->gRandomizer->QuestCompatible(location.GetQuest(), location.GetArea()) &&
             (
                 location.GetRCType() != RCTYPE_SHOP ||
                 !(

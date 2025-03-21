@@ -63,9 +63,9 @@ class Randomizer {
     CustomMessage GetMerchantMessage(RandomizerCheck rc, TextIDs textId, TextIDs freeTextId = TEXT_NONE, bool mysterious = false);
     RandomizerCheck GetCheckFromActor(s16 actorId, s16 sceneNum, s16 actorParams);
     CustomMessage GetGoronMessage(u16 index);
-    bool AreQuestsKnown();
+    bool IsQuestKnown(RandomizerCheckArea area);
     bool AreQuestsVaried();
-    bool AnyQuestMaybeVanilla();
+    bool QuestCompatible(RandomizerCheckQuest quest, RandomizerCheckArea area);
     bool AnyQuestMaybeMQ();
     CustomMessage GetMapGetItemMessageWithHint(GetItemEntry itemEntry);
     static void CreateCustomMessages();
