@@ -2697,6 +2697,46 @@ CustomMessage Randomizer::GetMerchantMessage(RandomizerCheck rc, TextIDs textId,
     return messageEntry;
 }
 
+bool Randomizer::AreQuestsKnown() {
+    for (int i = (int)RSK_MQ_DEKU_TREE; i <= (int)RSK_MQ_GANONS_CASTLE; i++) {
+        u8 value = GetRandoSettingValue((RandomizerSettingKey)i);
+        if (value == (u8)RO_MQ_SET_RANDOM) {
+            return false;
+        }
+    }
+    return true;
+}
+
+bool Randomizer::AreQuestsVaried() {
+    u8 dekuValue = GetRandoSettingValue(RSK_MQ_DEKU_TREE);
+    for (int i = (int)RSK_MQ_DEKU_TREE; i <= (int)RSK_MQ_GANONS_CASTLE; i++) {
+        u8 value = GetRandoSettingValue((RandomizerSettingKey)i);
+        if (value == (u8)RO_MQ_SET_RANDOM || dekuValue != value) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Randomizer::AnyQuestMaybeVanilla() {
+    for (int i = (int)RSK_MQ_DEKU_TREE; i <= (int)RSK_MQ_GANONS_CASTLE; i++) {
+        u8 value = GetRandoSettingValue((RandomizerSettingKey)i);
+        if (value == (u8)RO_MQ_SET_RANDOM || value == (u8)RO_MQ_SET_VANILLA) {
+            return true;
+        }
+    }
+    return false;
+}
+
+bool Randomizer::AnyQuestMaybeMQ() {
+    for (int i = (int)RSK_MQ_DEKU_TREE; i <= (int)RSK_MQ_GANONS_CASTLE; i++) {
+        u8 value = GetRandoSettingValue((RandomizerSettingKey)i);
+        if (value == (u8)RO_MQ_SET_RANDOM || value == (u8)RO_MQ_SET_MQ) {
+            return true;
+        }
+    }
+}
+
 CustomMessage Randomizer::GetMapGetItemMessageWithHint(GetItemEntry itemEntry) {
     CustomMessage messageEntry = CustomMessageManager::Instance->RetrieveMessage(Randomizer::getItemMessageTableID, itemEntry.getItemId);
     int sceneNum;
@@ -2733,10 +2773,7 @@ CustomMessage Randomizer::GetMapGetItemMessageWithHint(GetItemEntry itemEntry) {
             break;
     }
 
-    if (GetRandoSettingValue(RSK_MQ_DUNGEON_RANDOM) == RO_MQ_DUNGEONS_NONE ||
-        (GetRandoSettingValue(RSK_MQ_DUNGEON_RANDOM) == RO_MQ_DUNGEONS_SET_NUMBER &&
-         GetRandoSettingValue(RSK_MQ_DUNGEON_COUNT) == 12)
-       ) {
+    if (AreQuestsKnown()) {
         messageEntry.Replace("[[typeHint]]", "");
     } else if (ResourceMgr_IsSceneMasterQuest(sceneNum)) {
         messageEntry.Replace("[[typeHint]]", Rando::StaticData::hintTextTable[RHT_DUNGEON_MASTERFUL].GetHintMessage());

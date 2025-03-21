@@ -481,11 +481,9 @@ void CheckTrackerLoadGame(int32_t fileNum) {
         }
     }
     for (int i = RCAREA_KOKIRI_FOREST; i < RCAREA_INVALID; i++) {
-        if (!IsAreaSpoiled(static_cast<RandomizerCheckArea>(i)) && (RandomizerCheckObjects::AreaIsOverworld(static_cast<RandomizerCheckArea>(i)) || !IS_RANDO ||
-            OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_MQ_DUNGEON_RANDOM) == RO_MQ_DUNGEONS_NONE ||
-            OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_MQ_DUNGEON_RANDOM) == RO_MQ_DUNGEONS_SELECTION ||
-            (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_MQ_DUNGEON_RANDOM) == RO_MQ_DUNGEONS_SET_NUMBER &&
-            OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_MQ_DUNGEON_COUNT) == 12))) {
+        if (!IsAreaSpoiled(static_cast<RandomizerCheckArea>(i)) &&(RandomizerCheckObjects::AreaIsOverworld(static_cast<RandomizerCheckArea>(i)) || !IS_RANDO ||
+                OTRGlobals::Instance->gRandomizer->AreQuestsKnown()
+        )) {
             SetAreaSpoiled(static_cast<RandomizerCheckArea>(i));
         }
     }
@@ -509,9 +507,7 @@ void CheckTrackerLoadGame(int32_t fileNum) {
         areaCheckTotals[startingArea]++;
     }
 
-    showVOrMQ = (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_MQ_DUNGEON_RANDOM) == RO_MQ_DUNGEONS_RANDOM_NUMBER ||
-                (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_MQ_DUNGEON_RANDOM) == RO_MQ_DUNGEONS_SET_NUMBER &&
-                OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_MQ_DUNGEON_COUNT) < 12));
+    showVOrMQ = OTRGlobals::Instance->gRandomizer->AreQuestsVaried();
     initialized = true;
     UpdateAllOrdering();
     UpdateInventoryChecks();

@@ -98,26 +98,6 @@ void Settings::CreateOptionDescriptions() {
         "\n"
         "Random Number - A random number and set of trials will be required.";
     mOptionDescriptions[RSK_TRIAL_COUNT] = "Set the number of trials required to enter Ganon's Tower.";
-    mOptionDescriptions[RSK_MQ_DUNGEON_RANDOM] =
-        "Sets the number of Master Quest Dungeons that are shuffled into the pool.\n"
-        "\n"
-        "None - All Dungeons will be their Vanilla versions.\n"
-        "\n"
-        "Set Number - Select a number of dungeons that will be their Master Quest versions "
-        "using the slider below. Which dungeons are set to be the Master Quest variety will be random.\n"
-        "\n"
-        "Random Number - A random number and set of dungeons will be their Master Quest varieties.\n"
-        "\n"
-        "Selection Only - Specify which dungeons are Vanilla, Master Quest or a 50/50 between the two.\n"
-        "Differs from Random Number in that they are rolled individually, making the exact total a bell curve.";
-    mOptionDescriptions[RSK_MQ_DUNGEON_SET] =
-                "Choose specific Dungeons to be Master Quest or Vanilla.\n"
-                "\n"
-                "If Master Quest Dungeons is set to Set Number or Random, the dungeons chosen "
-                "to be Master Quest here will count towards that total. Any Dungeons set to Vanilla "
-                "here will be guaranteed to be Vanilla. If Set Number is higher than the amount of dungeons "
-                "set to either MQ or Random here, you will have fewer MQ Dungeons than the number you "
-                "set.";
     mOptionDescriptions[RSK_TRIFORCE_HUNT] =
         "Pieces of the Triforce of Courage have been scattered across the world. Find them all to finish the game!\n\n"
         "When the required amount of pieces have been found, the game is saved and Ganon's Boss key is given "

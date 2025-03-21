@@ -5153,9 +5153,6 @@ typedef enum {
     RSK_ENABLE_BOMBCHU_DROPS,
     RSK_BOMBCHU_BAG,
     RSK_LINKS_POCKET,
-    RSK_MQ_DUNGEON_RANDOM,
-    RSK_MQ_DUNGEON_COUNT,
-    RSK_MQ_DUNGEON_SET,
     RSK_MQ_DEKU_TREE,
     RSK_MQ_DODONGOS_CAVERN,
     RSK_MQ_JABU_JABU,
@@ -5594,13 +5591,6 @@ typedef enum {
 } RandoOptionDamageMultiplier;
 
 // MQ Dungeons
-typedef enum {
-    RO_MQ_DUNGEONS_NONE,
-    RO_MQ_DUNGEONS_SET_NUMBER,
-    RO_MQ_DUNGEONS_RANDOM_NUMBER,
-    RO_MQ_DUNGEONS_SELECTION,
-} RandoOptionMQDungeons;
-
 typedef enum {
     RO_LOCATION_INCLUDE,
     RO_LOCATION_EXCLUDE,
