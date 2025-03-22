@@ -81,7 +81,7 @@ void RegionTable_Init_SpiritTemple() {
 
     areaTable[RR_SPIRIT_TEMPLE_RUPEE_BRIDGE_NORTH] = Region("Spirit Temple Rupee Bridge North", SCENE_SPIRIT_TEMPLE, {
         //Events
-        EventAccess(LOGIC_SPIRIT_SILVER_RUPEE_BRIDGE, []{return true/*CanClimb()*/;}),
+        EventAccess(LOGIC_SPIRIT_SILVER_RUPEE_BRIDGE, []{return logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT);}),
     }, {
         //Locations
         // these assume SpiritRupeeBridge, silver rupee shuffle & shuffle climb will want to adjust
@@ -121,7 +121,7 @@ void RegionTable_Init_SpiritTemple() {
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_CHILD_BOXES,     []{return logic->SmallKeys(SCENE_SPIRIT_TEMPLE, 5);}),
-        Entrance(RR_SPIRIT_TEMPLE_SUN_ON_FLOOR_2F, []{return true/*CanClimbHigh()*/;}),
+        Entrance(RR_SPIRIT_TEMPLE_SUN_ON_FLOOR_2F, []{return logic->HasItem(RG_CLIMB) || logic->CanUse(RG_LONGSHOT);}),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_SUN_ON_FLOOR_2F] = Region("Spirit Temple Sun On Floor 2F", SCENE_SPIRIT_TEMPLE, {}, {
@@ -133,7 +133,6 @@ void RegionTable_Init_SpiritTemple() {
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_SUN_ON_FLOOR_1F, []{return true;}),
-        ///*CanClimbHigh() &&*/ (HasExplosives() || (ctx->GetOption(RSK_SUNLIGHT_ARROWS) && CanUse(RG_LIGHT_ARROWS)))
         Entrance(RR_SPIRIT_TEMPLE_STATUE_ROOM,     []{return logic->SpiritSunOnFloorToStatue();}),
     });
 
