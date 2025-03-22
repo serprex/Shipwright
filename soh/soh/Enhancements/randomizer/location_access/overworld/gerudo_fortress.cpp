@@ -9,7 +9,7 @@ void RegionTable_Init_GerudoFortress() {
 
     areaTable[RR_GF_OUTSKIRTS] = Region("Gerudo Fortress Outskirts", SCENE_GERUDOS_FORTRESS, {
         //Events
-        EventAccess(&logic->GF_GateOpen,  []{return logic->IsAdult && logic->HasItem(RG_GERUDO_MEMBERSHIP_CARD);}), //needs climb
+        EventAccess(&logic->GF_GateOpen,  []{return logic->IsAdult && logic->HasItem(RG_GERUDO_MEMBERSHIP_CARD) && logic->CanUse(RG_CLIMB);}),
     }, {
         //Locations
         LOCATION(RC_GF_OUTSKIRTS_NE_CRATE, (logic->IsChild || logic->CanPassEnemy(RE_GERUDO_GUARD)) && logic->CanBreakCrates()),
@@ -81,7 +81,7 @@ void RegionTable_Init_GerudoFortress() {
         //Exits
         Entrance(RR_TH_STEEP_SLOPE_CELL,   []{return true;}),
         Entrance(RR_GF_NEAR_GROTTO,        []{return true;}),
-        Entrance(RR_GF_TOP_OF_LOWER_VINES, []{return true /* logic->CanClimb() */;}),
+        Entrance(RR_GF_TOP_OF_LOWER_VINES, []{return logic->CanUse(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT);}),
         Entrance(RR_GF_ABOVE_GTG,          []{return true;}),
     });
 
@@ -122,7 +122,7 @@ void RegionTable_Init_GerudoFortress() {
         Entrance(RR_GF_OUTSIDE_GTG,        []{return true;}),
         Entrance(RR_GF_TOP_OF_LOWER_VINES, []{return true;}),
         Entrance(RR_GF_SLOPED_ROOF,        []{return logic->IsAdult && logic->CanUse(RG_HOVER_BOOTS);}),
-        Entrance(RR_GF_TOP_OF_UPPER_VINES, []{return true /* logic->CanClimb() */;}),
+        Entrance(RR_GF_TOP_OF_UPPER_VINES, []{return logic->CanUse(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT);}),
     });
 
     areaTable[RR_GF_TOP_OF_UPPER_VINES] = Region("GF Top of Upper Vines", SCENE_GERUDOS_FORTRESS, {}, {
