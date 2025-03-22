@@ -38,7 +38,7 @@ void RegionTable_Init_DeathMountainCrater() {
         LOCATION(RC_DMC_DEKU_SCRUB, logic->IsChild && logic->CanStunDeku() && GetCheckPrice() <= GetWalletCapacity()),
     }, {
         //Exits
-        Entrance(RR_DMC_UPPER_NEARBY, []{return logic->Hearts() >= 3;}),
+        Entrance(RR_DMC_UPPER_NEARBY, []{return (logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT)) && logic->Hearts() >= 3;}),
         Entrance(RR_DMC_LOWER_NEARBY, []{return logic->Hearts() >= 3 && (logic->CanUse(RG_HOVER_BOOTS) || (ctx->GetTrickOption(RT_DMC_BOULDER_JS) && logic->IsAdult && logic->CanUse(RG_MEGATON_HAMMER)) || (ctx->GetTrickOption(RT_DMC_BOULDER_SKIP) && logic->IsAdult));}),
     });
 
@@ -148,6 +148,12 @@ void RegionTable_Init_DeathMountainCrater() {
     }, {
         //Exits
         Entrance(RR_DMC_CENTRAL_LOCAL, []{return logic->FireTimer() >= 48 && logic->IsAdult && logic->ReachDistantScarecrow();}),
+    });
+
+    areaTable[RR_DMC_OUTSIDE_FIRE_TEMPLE] = Region("DMC Outside Fire Temple", SCENE_DEATH_MOUNTAIN_CRATER, {}, {}, {
+        //Exits
+        Entrance(RR_FIRE_TEMPLE_ENTRYWAY, []{return true;}),
+        Entrance(RR_DMC_CENTRAL_LOCAL,    []{return logic->FireTimer() >= 48 && logic->HasItem(RG_CLIMB);}),
     });
 
     // clang-format on
