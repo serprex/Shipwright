@@ -6,9 +6,14 @@ using namespace Rando;
 void RegionTable_Init_SacredForestMeadow() {
     areaTable[RR_SFM_ENTRYWAY] = Region("SFM Entryway", "Sacred Forest Meadow", {RA_SACRED_FOREST_MEADOW}, NO_DAY_NIGHT_CYCLE, {}, {}, {
         //Exits
-        Entrance(RR_LW_BEYOND_MIDO,       []{return true;}),
-        Entrance(RR_SACRED_FOREST_MEADOW, []{return logic->CanJumpslash() || logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_DINS_FIRE);}),
-        Entrance(RR_SFM_WOLFOS_GROTTO,    []{return logic->CanOpenBombGrotto();}),
+        Entrance(RR_LW_BEYOND_MIDO,    []{return true;}),
+        Entrance(RR_SFM_MAZE,          []{return logic->IsAdult || logic->CanKillEnemy(RE_WOLFOS);}),
+        Entrance(RR_SFM_WOLFOS_GROTTO, []{return logic->CanOpenBombGrotto();}),
+    });
+
+    areaTable[RR_SFM_MAZE] = Region("SFM Maze", "Sacred Forest Meadow", {RA_SACRED_FOREST_MEADOW}, NO_DAY_NIGHT_CYCLE, {}, {}, {
+        Entrance(RR_SFM_ENTRYWAY,         []{return true;}),
+        Entrance(RR_SACRED_FOREST_MEADOW, []{return logic->IsChild || logic->GetTrickOption(RT_SFM_JUMP_ABOVE_MAZE) || logic->CanKillEnemy(RE_MOBLIN);}),
     });
 
     areaTable[RR_SACRED_FOREST_MEADOW] = Region("Sacred Forest Meadow", "Sacred Forest Meadow", {RA_SACRED_FOREST_MEADOW}, NO_DAY_NIGHT_CYCLE, {
@@ -31,6 +36,7 @@ void RegionTable_Init_SacredForestMeadow() {
     }, {
         //Exits
         Entrance(RR_SFM_ENTRYWAY,           []{return true;}),
+        Entrance(RR_SFM_MAZE,               []{return true;}),
         Entrance(RR_FOREST_TEMPLE_ENTRYWAY, []{return logic->CanUse(RG_HOOKSHOT);}),
         Entrance(RR_SFM_FAIRY_GROTTO,       []{return true;}),
         Entrance(RR_SFM_STORMS_GROTTO,      []{return logic->CanOpenStormsGrotto();}),
