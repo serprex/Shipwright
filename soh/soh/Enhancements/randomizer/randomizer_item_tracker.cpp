@@ -949,12 +949,12 @@ void DrawItem(ItemTrackerItem item) {
     if (GameInteractor::IsSaveLoaded() && (hasItem && item.id != actualItemId && actualItemTrackerItemMap.find(actualItemId) != actualItemTrackerItemMap.end())) {
         item = actualItemTrackerItemMap[actualItemId];
     }
-    
+
     ImGui::BeginGroup();
 
     ImGui::Image(Ship::Context::GetInstance()->GetWindow()->GetGui()->GetTextureByName(hasItem && IsValidSaveFile() ? item.name : item.nameFaded),
                  ImVec2(iconSize, iconSize), ImVec2(0, 0), ImVec2(1, 1));
-    
+
     DrawItemCount(item, false);
 
     if (item.id >= RG_GOHMA_SOUL && item.id <= RG_GANON_SOUL) {
@@ -1626,7 +1626,7 @@ void ItemTrackerSettingsWindow::DrawElement() {
     CVarSliderInt("Icon size : %dpx", CVAR_TRACKER_ITEM("IconSize"), IntSliderOptions().Min(25).Max(128).DefaultValue(36).Color(THEME_COLOR));
     CVarSliderInt("Icon margins : %dpx", CVAR_TRACKER_ITEM("IconSpacing"), IntSliderOptions().Min(-5).Max(50).DefaultValue(12).Color(THEME_COLOR));
     CVarSliderInt("Text size : %dpx", CVAR_TRACKER_ITEM("TextSize"), IntSliderOptions().Min(1).Max(30).DefaultValue(13).Color(THEME_COLOR));
-    
+
     ImGui::NewLine();
     CVarCombobox("Ammo/Capacity Tracking", CVAR_TRACKER_ITEM("ItemCountType"), itemTrackerCapacityTrackOptions, ComboboxOptions()
             .DefaultIndex(ITEM_TRACKER_NUMBER_CURRENT_CAPACITY_ONLY).ComponentAlignment(ComponentAlignments::Left)

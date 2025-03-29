@@ -493,7 +493,7 @@ void AudioEditor::DrawElement() {
 
     UIWidgets::PushStyleTabs(THEME_COLOR);
     if (ImGui::BeginTabBar("SfxContextTabBar", ImGuiTabBarFlags_NoCloseWithMiddleMouseButton)) {
-        
+
         static ImVec2 cellPadding(8.0f, 8.0f);
         if (ImGui::BeginTabItem("Audio Options")) {
             ImGui::PushStyleVar(ImGuiStyleVar_CellPadding, cellPadding);

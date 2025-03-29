@@ -86,12 +86,12 @@ class Fishsanity {
      * @brief Get fishsanity fishing pond options from the requested source
     */
     FishsanityPondOptions GetOptions(FishsanityOptionsSource optionsSource = FSO_SOURCE_RANDO);
-    
+
     /**
      * @brief Updates current pond fish according to save data
     */
     void UpdateCurrentPondFish();
-    
+
     /**
      * @brief Initializes internal state from save
     */
@@ -160,7 +160,7 @@ class Fishsanity {
      * @brief Initialize helper statics if they have not been initialized yet
     */
     void InitializeHelpers();
-    
+
     /**
      * @brief Resolves a pond fish's FishIdentity directly from params & pond age
      * 
@@ -174,7 +174,7 @@ class Fishsanity {
      * @brief Current pond fish when all pond fish are not randomized
     */
     std::pair<FishIdentity, FishIdentity> mCurrPondFish;
-    
+
     /**
      * @brief True if fishsanity helpers have been initialized
     */

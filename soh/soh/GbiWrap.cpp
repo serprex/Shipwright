@@ -70,7 +70,7 @@ extern "C" void gSPDisplayList(Gfx* pkt, Gfx* dl) {
     char* imgData = (char*)dl;
 
     if (ResourceMgr_OTRSigCheck(imgData) == 1) {
-        
+
         //ResourceMgr_PushCurrentDirectory(imgData);
         //gsSPPushCD(pkt++, imgData);
         dl = ResourceMgr_LoadGfxByName(imgData);
@@ -99,7 +99,7 @@ extern "C" void gSPVertex(Gfx* pkt, uintptr_t v, int n, int v0) {
 extern "C" void gSPInvalidateTexCache(Gfx* pkt, uintptr_t texAddr)
 {
     char* imgData = (char*)texAddr;
-    
+
     if (texAddr != 0 && ResourceMgr_OTRSigCheck(imgData)) {
         // Temporary solution to the mq/nonmq issue, this will be
         // handled better with LUS 1.0

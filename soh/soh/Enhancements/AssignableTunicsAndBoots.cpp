@@ -103,7 +103,7 @@ void RegisterAssignableTunicsBoots() {
                 break;
             }
         }
-    
+
         if (item >= ITEM_TUNIC_KOKIRI && item <= ITEM_BOOTS_HOVER) {
             *should = false;
         }

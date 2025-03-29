@@ -34,7 +34,7 @@ RUN apt-get update && \
 	apt-get upgrade -y && \
 	update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-${GCCVER} 10 && \
 	update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-${GCCVER} 10 
-	
+
 RUN git clone https://github.com/Perlmint/glew-cmake.git && \
 	cmake glew-cmake && \
 	make -j$(nproc) && \

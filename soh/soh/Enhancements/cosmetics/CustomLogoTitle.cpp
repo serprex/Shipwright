@@ -86,7 +86,7 @@ extern "C" void CustomLogoTitle_Draw(TitleContext* titleContext, uint8_t logoToD
         gDPLoadMultiTile(POLY_OPA_DISP++, (logoToDraw == LOGO_TO_DRAW_N64) ? nintendo_rogo_static_Tex_000000 : nintendo_rogo_static_Tex_LUS_000000, 0, G_TX_RENDERTILE, G_IM_FMT_I, G_IM_SIZ_8b, 192, 32,
                          0, idx * 2, 192 - 1, (idx + 1) * 2 - 1, 0, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK,
                          G_TX_NOMASK, G_TX_NOLOD, G_TX_NOLOD);
-        
+
         gDPSetTileSize(POLY_OPA_DISP++, 0, 0, 0, (192 - 1) << G_TEXTURE_IMAGE_FRAC,
                        (2 - 1) << G_TEXTURE_IMAGE_FRAC);
 
@@ -150,7 +150,7 @@ extern "C" void CustomLogoTitle_Main(TitleContext* titleContext) {
         gSaveContext.natureAmbienceId = 0xFF;
         gSaveContext.gameMode = GAMEMODE_TITLE_SCREEN;
         titleContext->state.running = false;
-        
+
         logosSeen++;
 
         if (CVAR_BOOTSEQUENCE_VALUE == BOOTSEQUENCE_DEFAULT && logosSeen == 1) {

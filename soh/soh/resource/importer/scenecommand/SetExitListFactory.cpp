@@ -9,7 +9,7 @@ SetExitListFactory::ReadResource(std::shared_ptr<Ship::ResourceInitData> initDat
     auto setExitList = std::make_shared<SetExitList>( initData);
 
     ReadCommandId(setExitList, reader);
-	
+
     setExitList->numExits = reader->ReadUInt32();
     setExitList->exits.reserve(setExitList->numExits);
     for (uint32_t i = 0; i < setExitList->numExits; i++) {

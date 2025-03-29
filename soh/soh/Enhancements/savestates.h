@@ -41,7 +41,7 @@ class SaveStateMgr {
     std::unordered_map<unsigned int, std::shared_ptr<SaveState>> states;
     std::queue <SaveStateRequest> requests;
     std::mutex mutex;
-    
+
   public:
 
     SaveStateReturn AddRequest(const SaveStateRequest request);
@@ -50,12 +50,12 @@ class SaveStateMgr {
 
     void SetCurrentSlot(unsigned int slot);
     unsigned int GetCurrentSlot(void);
-    
+
     SaveStateMgr& operator=(const SaveStateMgr& rhs) = delete;
     SaveStateMgr(const SaveStateMgr& rhs) = delete;
 
     void ProcessSaveStateRequests(void);
-    
+
 };
 extern std::shared_ptr<SaveStateMgr> gSaveStateMgr;
 

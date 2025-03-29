@@ -80,7 +80,7 @@ void RegisterNoMasterSword() {
             *should = false;
         }
     });
-    
+
     // skip post pedestal animation when we don't have a master sword
     COND_VB_SHOULD(VB_EXECUTE_PLAYER_STARTMODE_FUNC, IS_RANDO && MASTER_SWORD_SHUFFLED, {
         int32_t startMode = va_arg(args, int32_t);
@@ -89,11 +89,11 @@ void RegisterNoMasterSword() {
         if (startMode == PLAYER_START_MODE_TIME_TRAVEL && !CHECK_OWNED_EQUIP(EQUIP_TYPE_SWORD, EQUIP_INV_SWORD_MASTER)) {
             // don't run the vanilla startMode func
             *should = false;
-            
+
             // position link correctly
             Math_Vec3f_Copy(&player->actor.world.pos, &D_808546F4);
             player->yaw = player->actor.shape.rot.y = -0x8000;
-            
+
             // execute the idle startMode func
             Player_StartMode_Idle(gPlayState, player);
         }

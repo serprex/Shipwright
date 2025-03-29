@@ -9,7 +9,7 @@ std::shared_ptr<Ship::IResource> SetCameraSettingsFactory::ReadResource(std::sha
     auto setCameraSettings = std::make_shared<SetCameraSettings>(initData);
 
     ReadCommandId(setCameraSettings, reader);
-	
+
     setCameraSettings->settings.cameraMovement = reader->ReadInt8();
     setCameraSettings->settings.worldMapArea = reader->ReadInt32();
 

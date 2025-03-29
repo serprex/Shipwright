@@ -118,7 +118,7 @@ std::shared_ptr<Ship::IResource> ResourceFactoryXMLSkeletonV0::ReadResource(std:
 
         child = child->NextSiblingElement();
     }
-    
+
     skel->skeletonData.flexSkeletonHeader.sh.limbCount = skel->limbCount;
     skel->skeletonData.flexSkeletonHeader.sh.segment = (void**)skel->skeletonHeaderSegments.data();
     skel->skeletonData.flexSkeletonHeader.dListCount = skel->dListCount;

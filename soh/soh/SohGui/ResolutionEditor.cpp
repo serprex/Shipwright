@@ -100,11 +100,11 @@ void ResolutionCustomWidget(WidgetInfo& info) {
                             IM_ARRAYSIZE(pixelCountPresetLabels)) &&
             item_pixelCount != default_pixelCount) { // don't change anything if "Custom" is selected.
             verticalPixelCount = pixelCountPresets[item_pixelCount];
-    
+
             if (showHorizontalResField) {
                 horizontalPixelCount = (verticalPixelCount / aspectRatioY) * aspectRatioX;
             }
-    
+
             CVarSetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".VerticalPixelCount", verticalPixelCount);
             CVarSetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".UIComboItem.PixelCount", item_pixelCount);
         Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
@@ -147,7 +147,7 @@ void ResolutionCustomWidget(WidgetInfo& info) {
         if (ImGui::InputInt("Vertical Pixel Count", &verticalPixelCount, 8, 240)) {
             item_pixelCount = default_pixelCount;
             update[UPDATE_verticalPixelCount] = true;
-    
+
             // Account for the natural instinct to enter horizontal first.
             // Ignore vertical resolutions that are below the lower clamp constant.
             if (showHorizontalResField && !(verticalPixelCount < minVerticalPixelCount)) {
@@ -160,7 +160,7 @@ void ResolutionCustomWidget(WidgetInfo& info) {
         }
         ImGui::EndDisabled();
         UIWidgets::PopStyleInput();
-    
+
         // Integer scaling settings group (Pixel Perfect Mode)
         static const ImGuiTreeNodeFlags IntegerScalingResolvedImGuiFlag =
             CVarGetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".PixelPerfectMode", 0) ? ImGuiTreeNodeFlags_DefaultOpen
@@ -177,7 +177,7 @@ void ResolutionCustomWidget(WidgetInfo& info) {
                 CVarSetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".PixelPerfectMode", 0);
                 Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
             }
-    
+
             // Integer Scaling
             UIWidgets::CVarSliderInt(fmt::format("Integer scale factor: {}", max_integerScaleFactor).c_str(), CVAR_PREFIX_ADVANCED_RESOLUTION ".IntegerScale.Factor",
                 UIWidgets::IntSliderOptions({ {.disabled = disabled_pixelPerfectMode || CVarGetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".IntegerScale.FitAutomatically", 0)} })
@@ -190,7 +190,7 @@ void ResolutionCustomWidget(WidgetInfo& info) {
                 ImGui::SameLine();
                 ImGui::TextColored(messageColor[MESSAGE_WARNING], ICON_FA_EXCLAMATION_TRIANGLE " Window exceeded.");
             }
-    
+
             UIWidgets::CVarCheckbox("Automatically scale image to fit viewport", CVAR_PREFIX_ADVANCED_RESOLUTION ".IntegerScale.FitAutomatically",
                 UIWidgets::CheckboxOptions({ {.disabled = disabled_pixelPerfectMode} }).DefaultValue(true).Color(THEME_COLOR)
                             .Tooltip("Automatically sets scale factor to fit window. Only available in Pixel Perfect Mode."));
@@ -202,7 +202,7 @@ void ResolutionCustomWidget(WidgetInfo& info) {
             }
         } // End of integer scaling settings
         UIWidgets::PopStyleHeader();
-    
+
         // Collapsible panel for additional settings
         UIWidgets::PushStyleHeader(THEME_COLOR);
         if (ImGui::CollapsingHeader("Additional Settings")) {
@@ -230,7 +230,7 @@ void ResolutionCustomWidget(WidgetInfo& info) {
                 UIWidgets::Spacer(2);
             }
     #endif
-    
+
             // A requested addition; an alternative way of displaying the resolution field.
             if (UIWidgets::Checkbox("Show a horizontal resolution field, instead of aspect ratio.",
             &showHorizontalResField, UIWidgets::CheckboxOptions().Color(THEME_COLOR))) {
@@ -248,11 +248,11 @@ void ResolutionCustomWidget(WidgetInfo& info) {
                 }
                 update[UPDATE_aspectRatioX] = true;
             }
-    
+
             // Beginning of Integer Scaling additional settings.
             {
                 // UIWidgets::PaddedSeparator(true, true, 3.0f, 3.0f);
-    
+
                 // Integer Scaling - Never Exceed Bounds.
                 const bool disabled_neverExceedBounds =
                     !CVarGetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".PixelPerfectMode", 0) ||
@@ -267,30 +267,30 @@ void ResolutionCustomWidget(WidgetInfo& info) {
                             "Disabled: Will allow scaling to exceed screen bounds, for users who want to crop overscan.\n\n"
                             " " ICON_FA_INFO_CIRCLE
                             " Please note that exceeding screen bounds may show a scroll bar on-screen.").Color(THEME_COLOR).DefaultValue(true))) {
-                    
+
                     // Initialise the (currently unused) "Exceed Bounds By" cvar if it's been changed.
                     if (CVarGetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".IntegerScale.ExceedBoundsBy", 0)) {
                         CVarSetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".IntegerScale.ExceedBoundsBy", 0);
                         Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
                     }
                 }
-    
+
                 // Integer Scaling - Exceed Bounds By 1x/Offset.
                 // A popular feature in some retro frontends/upscalers, sometimes called "crop overscan" or "1080p 5x".
                 UIWidgets::CVarCheckbox("Allow integer scale factor to go +1 above maximum screen bounds.",
                     CVAR_PREFIX_ADVANCED_RESOLUTION ".IntegerScale.ExceedBoundsBy",
                     UIWidgets::CheckboxOptions({{ .disabled = !CVarGetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".PixelPerfectMode", 0) || disabled_everything }}).Color(THEME_COLOR));
-                
+
                 // It does actually function as expected, but exceeding the bottom of the screen shows a scroll bar.
                 // I've ended up commenting this one out because of the scroll bar, and for simplicity.
-    
+
                 // Display an info message about the scroll bar.
                 if (!CVarGetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".IntegerScale.NeverExceedBounds", 1) ||
                     CVarGetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".IntegerScale.ExceedBoundsBy", 0)) {
                     ImGui::TextColored(messageColor[MESSAGE_INFO],
                                         " " ICON_FA_INFO_CIRCLE
                                         " A scroll bar may become visible if screen bounds are exceeded.");
-    
+
                     // Another support helper button, to disable the unused "Exceed Bounds By" cvar.
                     // (Remove this button if uncommenting the checkbox.)
                     if (CVarGetInteger(CVAR_PREFIX_ADVANCED_RESOLUTION ".IntegerScale.ExceedBoundsBy", 0)) {
@@ -303,10 +303,10 @@ void ResolutionCustomWidget(WidgetInfo& info) {
                     ImGui::Text(" ");
                 }
             } // End of Integer Scaling additional settings.
-    
+
         } // End of additional settings
         UIWidgets::PopStyleHeader();
-    
+
         // Clamp and update the cvars that don't use UIWidgets
         if (update[UPDATE_aspectRatioX] || update[UPDATE_aspectRatioY] || update[UPDATE_verticalPixelCount]) {
             if (update[UPDATE_aspectRatioX]) {

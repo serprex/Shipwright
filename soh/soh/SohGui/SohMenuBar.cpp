@@ -88,7 +88,7 @@ void DrawSettingsMenu() {
 }
 
 void SohMenuBar::InitElement() {
-    
+
 }
 
 void SohMenuBar::DrawElement() {

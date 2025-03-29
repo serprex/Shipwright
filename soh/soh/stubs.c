@@ -253,7 +253,7 @@ void __osSpSetStatus(u32 status)
 
 OSPiHandle* osDriveRomInit()
 {
-	
+
 }
 
 void __osInitialize_common(void)

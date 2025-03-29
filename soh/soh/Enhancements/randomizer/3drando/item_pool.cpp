@@ -725,7 +725,7 @@ void GenerateItemPool() {
   PlaceItemsForType(RCTYPE_CRATE, overworldCratesActive, dungeonCratesActive);
   PlaceItemsForType(RCTYPE_NLCRATE, overworldNLCratesActive, dungeonCratesActive);
   PlaceItemsForType(RCTYPE_SMALL_CRATE, overworldCratesActive, dungeonCratesActive);
-  
+
   auto fsMode = ctx->GetOption(RSK_FISHSANITY);
   if (fsMode.IsNot(RO_FISHSANITY_OFF)) {
     if (fsMode.Is(RO_FISHSANITY_POND) || fsMode.Is(RO_FISHSANITY_BOTH)) {

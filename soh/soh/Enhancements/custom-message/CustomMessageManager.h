@@ -179,13 +179,13 @@ class CustomMessage {
      * . i.e. special characters, colors, newlines, wait for input, etc.
      */
     void FormatString(std::string& str) const;
-    
+
     /**
      * @brief finds NEWLINEs in a string, while filtering
      * /x01's that are used as opperands
      */
     size_t FindNEWLINE(std::string& str, size_t lastNewline) const;
-    
+
     /**
      * @brief formats the string specifically to fit in OoT's 
      * textboxes, and use it's formatting.

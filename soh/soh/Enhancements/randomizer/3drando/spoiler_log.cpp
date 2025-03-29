@@ -278,7 +278,7 @@ static void WriteAllLocations() {
         // just add the name of the item and move on
         if (!location->HasCustomPrice() &&
             location->GetPlacedRandomizerGet() != RG_ICE_TRAP) {
-            
+
             jsonData["locations"][Rando::StaticData::GetLocation(location->GetRandomizerCheck())->GetName()] = placedItemName;
             continue;
         }

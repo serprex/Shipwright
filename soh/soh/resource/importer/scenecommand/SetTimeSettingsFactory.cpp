@@ -9,7 +9,7 @@ SetTimeSettingsFactory::ReadResource(std::shared_ptr<Ship::ResourceInitData> ini
     auto setTimeSettings = std::make_shared<SetTimeSettings>(initData);
 
     ReadCommandId(setTimeSettings, reader);
-    
+
     setTimeSettings->settings.hour = reader->ReadInt8();
     setTimeSettings->settings.minute = reader->ReadInt8();
     setTimeSettings->settings.timeIncrement = reader->ReadInt8();

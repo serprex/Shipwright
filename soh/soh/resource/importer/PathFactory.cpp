@@ -29,7 +29,7 @@ std::shared_ptr<Ship::IResource> ResourceFactoryBinaryPathV0::ReadResource(std::
 
         PathData pathDataEntry;
         pathDataEntry.count = pointCount;
-        
+
         path->paths.push_back(points);
         pathDataEntry.points = path->paths.back().data();
 

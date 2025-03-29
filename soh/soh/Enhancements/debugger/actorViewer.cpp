@@ -250,7 +250,7 @@ void CreateActorSpecificData() {
         if (!isFlower) {
             ImGui::InputScalar("Shots Per Round", ImGuiDataType_S16, &shotsPerRound);
         }
-        
+
         return isFlower ? DEKUNUTS_FLOWER : (shotsPerRound << 8);
     };
 
@@ -264,7 +264,7 @@ void CreateActorSpecificData() {
         if (ImGui::Combo("Type", &selectedItem, items, IM_ARRAYSIZE(items))) {
             return selectedItem - 2;
         }
-        
+
         return params;
     };
 
@@ -274,7 +274,7 @@ void CreateActorSpecificData() {
         if (ImGui::Combo("Type", &selectedItem, items, IM_ARRAYSIZE(items))) {
             return selectedItem;
         }
-        
+
         return params;
     };
 
@@ -284,7 +284,7 @@ void CreateActorSpecificData() {
         if (ImGui::Combo("Type", &selectedItem, items, IM_ARRAYSIZE(items))) {
             return selectedItem;
         }
-        
+
         return params;
     };
 
@@ -294,7 +294,7 @@ void CreateActorSpecificData() {
         if (ImGui::Combo("Type", &selectedItem, items, IM_ARRAYSIZE(items))) {
             return selectedItem;
         }
-        
+
         return params;
     };
 
@@ -304,7 +304,7 @@ void CreateActorSpecificData() {
         if (ImGui::Combo("Type", &selectedItem, items, IM_ARRAYSIZE(items))) {
             return selectedItem;
         }
-        
+
         return params;
     };
 
@@ -314,7 +314,7 @@ void CreateActorSpecificData() {
         if (ImGui::Combo("Type", &selectedItem, items, IM_ARRAYSIZE(items))) {
             return selectedItem;
         }
-        
+
         return params;
     };
 
@@ -324,7 +324,7 @@ void CreateActorSpecificData() {
         if (ImGui::Combo("Type", &selectedItem, items, IM_ARRAYSIZE(items))) {
             return selectedItem;
         }
-        
+
         return params;
     };
 
@@ -338,7 +338,7 @@ void CreateActorSpecificData() {
         if (ImGui::Combo("Type", &selectedItem, items, IM_ARRAYSIZE(items))) {
             return selectedItem + 0x40;
         }
-        
+
         return params;
     };
 
@@ -348,21 +348,21 @@ void CreateActorSpecificData() {
         if (ImGui::Combo("Type", &selectedItem, items, IM_ARRAYSIZE(items))) {
             return selectedItem;
         }
-        
+
         return params;
     };
 
     actorSpecificData[ACTOR_EN_REEBA] = [](s16 params) -> s16 {
         bool isBig = params != 0;
         ImGui::Checkbox("Big", &isBig);
-        
+
         return isBig;
     };
 
     actorSpecificData[ACTOR_EN_TK] = [](s16 params) -> s16 {
         bool canTurn = params >= 0;
         ImGui::Checkbox("Can Turn", &canTurn);
-        
+
         return canTurn ? 0 : -1;
     };
 
@@ -374,7 +374,7 @@ void CreateActorSpecificData() {
         if (collectibleFlag > 0x3F) {
             collectibleFlag = 0x3F;
         }
-        
+
         static const char* items[] = {
             "Green Rupee",
             "Blue Rupee",
@@ -452,18 +452,18 @@ void CreateActorSpecificData() {
                 collectibleFlag = 0x3F;
             }
         }
-        
+
         return (collectibleFlag << 8) + selectedItem;
     };
 
     actorSpecificData[ACTOR_EN_GM] = [](s16 params) -> s16 {
         u8 switchFlag = (params & 0x3F00) >> 8;
-        
+
         ImGui::InputScalar("Switch Flag", ImGuiDataType_U8, &switchFlag);
         if (switchFlag > 0x3F) {
             switchFlag = 0x3F;
         }
-        
+
         return switchFlag << 8;
     };
 
@@ -525,7 +525,7 @@ void CreateActorSpecificData() {
         if (ImGui::Combo("Type", &selectedItem, items, IM_ARRAYSIZE(items))) {
             return selectedItem;
         }
-        
+
         return params;
     };
 
@@ -543,7 +543,7 @@ void CreateActorSpecificData() {
         if (ImGui::Combo("Type", &selectedItem, items, IM_ARRAYSIZE(items))) {
             return selectedItem > 3 ? selectedItem + 1 : selectedItem;
         }
-        
+
         return params;
     };
 
@@ -574,7 +574,7 @@ void CreateActorSpecificData() {
         if (ImGui::Combo("Type", &selectedItem, items, IM_ARRAYSIZE(items))) {
             return selectedItem;
         }
-        
+
         return params;
     };
 
@@ -593,7 +593,7 @@ void CreateActorSpecificData() {
         if (ImGui::Combo("Type", &selectedItem, items, IM_ARRAYSIZE(items))) {
             return selectedItem;
         }
-        
+
         return params;
     };
 
@@ -607,7 +607,7 @@ void CreateActorSpecificData() {
         if (ImGui::Combo("Type", &selectedItem, items, IM_ARRAYSIZE(items))) {
             return selectedItem == 2 ? 100 : selectedItem;
         }
-        
+
         return params;
     };
 
@@ -618,18 +618,18 @@ void CreateActorSpecificData() {
         if (ImGui::Combo("Type", &selectedItem, items, IM_ARRAYSIZE(items))) {
             return selectedItem - 1;
         }
-        
+
         return params;
     };
 
     actorSpecificData[ACTOR_EN_BOM] = [](s16 params) -> s16 {
         static const char* items[] = { "Body", "Explosion" };
-        
+
         int selectedItem = params;
         if (ImGui::Combo("Type", &selectedItem, items, IM_ARRAYSIZE(items))) {
             return selectedItem;
         }
-        
+
         return params;
     };
 
@@ -653,34 +653,34 @@ void CreateActorSpecificData() {
         if (ImGui::Combo("Type", &selectedItem, items, IM_ARRAYSIZE(items))) {
             return selectedItem - 2;
         }
-        
+
         return params;
     };
 
     actorSpecificData[ACTOR_EN_DY_EXTRA] = [](s16 params) -> s16 {
         static const char* items[] = { "Orange", "Green" };
-        
+
         int selectedItem = params;
         if (ImGui::Combo("Color", &selectedItem, items, IM_ARRAYSIZE(items))) {
             return selectedItem;
         }
-        
+
         return params;
     };
 
     actorSpecificData[ACTOR_EN_SKB] = [](s16 params) -> s16 {
         u8 size = params;
         ImGui::InputScalar("Size", ImGuiDataType_U8, &size);
-        
+
         return size;
     };
 
     actorSpecificData[ACTOR_EN_WF] = [](s16 params) -> s16 {
         static const char* items[] = { "Normal", "White" };
-        
+
         int selectedItem = params;
         ImGui::Combo("Type", &selectedItem, items, IM_ARRAYSIZE(items));
-        
+
         u8 switchFlag = (params & 0x3F00) >> 8;
         ImGui::InputScalar("Switch Flag", ImGuiDataType_U8, &switchFlag);
         return (switchFlag << 8) + selectedItem;
@@ -703,7 +703,7 @@ void CreateActorSpecificData() {
         if (itemId > 0x7F) {
             itemId = 0x7F;
         }
-        
+
         static const char* items[] = {
             "Big (Default)",
             "Room Clear Big",
@@ -751,7 +751,7 @@ void CreateActorSpecificData() {
         if (transitionIndex > 0x3F) {
             transitionIndex = 0x3F;
         }
-        
+
         static const char* items[] = {
             "Room Load",     // loads rooms
             "Locked",        // small key locked door
@@ -792,9 +792,9 @@ void CreateActorSpecificData() {
 
     actorSpecificData[ACTOR_EN_PO_DESERT] = [](s16 params) -> s16 {
         u8 switchFlag = params >> 8;
-        
+
         ImGui::InputScalar("Path", ImGuiDataType_U8, &switchFlag);
-        
+
         return switchFlag << 8;
     };
 
@@ -807,14 +807,14 @@ void CreateActorSpecificData() {
         if (ImGui::Checkbox("Fishing Sign", &fishingSign)) {
             piece = false;
         }
-        
+
         u8 textId = params;
         if (!piece && !fishingSign) {
             if (ImGui::InputScalar("Text ID", ImGuiDataType_U8, &textId)) {
                 textId |= 0x300;
             }
         }
-        
+
         return piece ? (s16)0xFFDD : (fishingSign ? 0x300 : textId);
     };
 
@@ -830,7 +830,7 @@ void CreateActorSpecificData() {
 
         bool bugs = ((params >> 4) & 1) != 0;
         ImGui::Checkbox("Bugs", &bugs);
-        
+
         u8 drop = (params >> 8) & 0xF;
         if (type == 2) {
             ImGui::InputScalar("Random Drop Params", ImGuiDataType_U8, &drop);
@@ -855,7 +855,7 @@ void CreateActorSpecificData() {
         if (ImGui::Combo("Controller Port", &selectedItem, items, IM_ARRAYSIZE(items))) {
             return selectedItem;
         }
-        
+
         return params;
     };
 }
@@ -948,7 +948,7 @@ void ActorViewerWindow::DrawElement() {
             actors.clear();
         }
         lastSceneId = gPlayState->sceneNum;
-        
+
         PushStyleCombobox(THEME_COLOR);
         if (ImGui::BeginCombo("Actor Type", acMapping[category])) {
             for (int i = 0; i < acMapping.size(); i++) {

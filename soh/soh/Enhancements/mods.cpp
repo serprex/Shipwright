@@ -137,11 +137,11 @@ void RegisterRupeeDash() {
         if (!CVarGetInteger(CVAR_ENHANCEMENT("RupeeDash"), 0)) {
             return;
         }
-        
+
         // Initialize Timer
         static uint16_t rupeeDashTimer = 0;
         uint16_t rdmTime = CVarGetInteger(CVAR_ENHANCEMENT("RupeeDashInterval"), 5) * 20;
-        
+
         // Did time change by DashInterval?
         if (rupeeDashTimer >= rdmTime) {
             rupeeDashTimer = 0;
@@ -415,7 +415,7 @@ void RegisterBonkDamage() {
             default:
                 break;
         }
-        
+
         Health_ChangeBy(gPlayState, -bonkDamage);
         // Set invincibility to make Link flash red as a visual damage indicator.
         Player* player = GET_PLAYER(gPlayState);

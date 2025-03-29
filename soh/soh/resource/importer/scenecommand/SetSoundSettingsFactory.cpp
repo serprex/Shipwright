@@ -9,7 +9,7 @@ std::shared_ptr<Ship::IResource> SetSoundSettingsFactory::ReadResource(std::shar
     auto setSoundSettings = std::make_shared<SetSoundSettings>(initData);
 
     ReadCommandId(setSoundSettings, reader);
-	
+
     setSoundSettings->settings.reverb = reader->ReadInt8();
     setSoundSettings->settings.natureAmbienceId = reader->ReadInt8();
     setSoundSettings->settings.seqId = reader->ReadInt8();

@@ -287,9 +287,9 @@ void DrawInfoTab() {
     PopStyleInput();
 
     Combobox("Audio", &gSaveContext.audioSetting, audioMap, comboboxOptionsBase.Tooltip("Sound setting"));
-    
+
     Checkbox("64 DD file?", (bool*) &gSaveContext.n64ddFlag, checkboxOptionsBase.Tooltip("WARNING! If you save, your file may be locked! Use caution!"));
-    
+
     Combobox("Z Target Mode", &gSaveContext.zTargetSetting, zTargetMap, comboboxOptionsBase.Tooltip("Z-Targeting behavior"));
 
     if (IS_RANDO && OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT)) {
@@ -307,7 +307,7 @@ void DrawInfoTab() {
         "Running Man Race",
         "?",
         "Dampe's Race" };
-    
+
     if (ImGui::TreeNode("Minigames")) {
         for (int i = 0; i < 7; i++) {
             if(i == 2 && ImGui::TreeNode("Fishing") ){ //fishing has a few more flags to it
@@ -373,11 +373,11 @@ void DrawInfoTab() {
                 }
                 Tooltip("Determines weather and school size during dawn/dusk.");
                 PopStyleInput();
-                
+
                 ImGui::TreePop();
                 continue;
             }
-            
+
             if (i == 5 || i == 2) { //HS_UNK_05 is unused
                 continue;
             }
@@ -386,10 +386,10 @@ void DrawInfoTab() {
             ImGui::InputScalar(minigameLbl.c_str(), ImGuiDataType_S32, &gSaveContext.highScores[i], &one, NULL);
             PopStyleInput();
         }
-        
+
         ImGui::TreePop();
     }
-    
+
     ImGui::PopItemWidth();
 }
 
@@ -511,7 +511,7 @@ void DrawInventoryTab() {
             ImGui::PopID();
         }
     }
-    
+
     // Trade quest flags are only used when shuffling the trade sequence, so
     // don't show this if it isn't needed.
     if (IS_RANDO && OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_ADULT_TRADE)
@@ -576,9 +576,9 @@ void DrawFlagsTab() {
                 ImGui::Text("stateFlags3");
                 DrawFlagArray8("stateFlags3", player->stateFlags3, THEME_COLOR);
             }, "stateFlags3");
-            
+
             ImGui::SameLine();
-            
+
             DrawGroupWithBorder([&]() {
                 ImGui::Text("unk_6AE_rotFlags");
                 DrawFlagArray16("unk_6AE_rotFlags", player->unk_6AE_rotFlags, THEME_COLOR);
@@ -703,7 +703,7 @@ void DrawFlagsTab() {
                 gSaveContext.sceneFlags[gPlayState->sceneNum].collect = act->flags.collect;
                 gSaveContext.sceneFlags[gPlayState->sceneNum].chest = act->flags.chest;
             }
-            
+
             if (Button("Clear Flags", buttonOptionsBase.Tooltip("Clear current scene flags. Reload scene to see changes"))) {
                 act->flags.swch = 0;
                 act->flags.clear = 0;
@@ -935,7 +935,7 @@ void DrawUpgradeIcon(const std::string& categoryName, int32_t categoryId, const 
     static const char* upgradePopupPicker = "upgradePopupPicker";
 
     ImGui::PushID(categoryName.c_str());
-    
+
         PushStyleButton(Colors::DarkGray);
     uint8_t item = items[CUR_UPG_VALUE(categoryId)];
     if (item != ITEM_NONE) {
@@ -957,7 +957,7 @@ void DrawUpgradeIcon(const std::string& categoryName, int32_t categoryId, const 
             if ((pickerIndex % 8) != 0) {
                 ImGui::SameLine();
             }
-            
+
             PushStyleButton(Colors::DarkGray);
             if (items[pickerIndex] == ITEM_NONE) {
                 if (ImGui::Button("##upgradePopupPicker", ImVec2(IMAGE_SIZE, IMAGE_SIZE) + ImGui::GetStyle().FramePadding * 2)) {
@@ -1385,7 +1385,7 @@ void DrawPlayerTab() {
         InsertHelpHoverText("This will change Link's age when you load a map");
         PopStyleCombobox();
         ImGui::Separator();
-        
+
         DrawGroupWithBorder([&]() {
             PushStyleCombobox(THEME_COLOR);
             ImGui::Text("Link's Current Equipment");
@@ -1500,7 +1500,7 @@ void DrawPlayerTab() {
             PopStyleInput();
             ImGui::PopItemWidth();
         }, "Current Items");
-        
+
         if (CVarGetInteger(CVAR_ENHANCEMENT("DpadEquips"), 0)) {
             ImGui::SameLine();
             DrawGroupWithBorder([&]() {

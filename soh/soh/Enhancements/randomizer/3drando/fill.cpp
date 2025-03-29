@@ -34,7 +34,7 @@ PriceSettingsStruct shopsanityPrices = {RSK_SHOPSANITY_PRICES,
                                         RSK_SHOPSANITY_PRICES_GIANT_WALLET_WEIGHT,
                                         RSK_SHOPSANITY_PRICES_TYCOON_WALLET_WEIGHT,
                                         RSK_SHOPSANITY_PRICES_AFFORDABLE};
-  
+
 PriceSettingsStruct scrubPrices = {RSK_SCRUBS_PRICES, 
                                    RSK_SCRUBS_PRICES_FIXED_PRICE,
                                    RSK_SCRUBS_PRICES_RANGE_1,
@@ -441,7 +441,7 @@ bool AddCheckToLogic(LocationAccess& locPair, GetAccessibleLocationsStruct& gals
 
 void ProcessRegion(Region* region, GetAccessibleLocationsStruct& gals, RandomizerGet ignore, 
                    bool stopOnBeatable, bool addToPlaythrough){
-  
+
   if (gals.haveTimeAccess) {
     region->ApplyTimePass();
   } else {
@@ -479,9 +479,9 @@ void ProcessRegion(Region* region, GetAccessibleLocationsStruct& gals, Randomize
       gals.resetSphere = true;
     }
   }
-  
+
   ProcessExits(region, gals, ignore, stopOnBeatable, addToPlaythrough);
-  
+
   PropagateTimeTravel(gals, ignore, stopOnBeatable, addToPlaythrough);
   for (size_t k = 0; k < region->locations.size(); k++) {
     if(AddCheckToLogic(region->locations[k], gals, ignore, stopOnBeatable, region, addToPlaythrough)){

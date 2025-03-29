@@ -10,7 +10,7 @@ std::shared_ptr<Ship::IResource> SetAlternateHeadersFactory::ReadResource(std::s
     auto setAlternateHeaders = std::make_shared<SetAlternateHeaders>(initData);
 
     ReadCommandId(setAlternateHeaders, reader);
-	
+
     setAlternateHeaders->numHeaders = reader->ReadUInt32();
     setAlternateHeaders->headers.reserve(setAlternateHeaders->numHeaders);
     for (uint32_t i = 0; i < setAlternateHeaders->numHeaders; i++) {
@@ -42,12 +42,12 @@ std::shared_ptr<Ship::IResource> SetAlternateHeadersFactoryXML::ReadResource(std
         std::string childName = child->Name();
         if (childName == "AlternateHeader") {
             for (uint32_t i = 0; i < setAlternateHeaders->numHeaders; i++) {
-	            auto headerName = std::string(child->Attribute("Path"));
-	            if (!headerName.empty()) {
-	            	setAlternateHeaders->headers.push_back(std::static_pointer_cast<Scene>(Ship::Context::GetInstance()->GetResourceManager()->LoadResourceProcess(headerName.c_str())));
-	            } else {
-	            	setAlternateHeaders->headers.push_back(nullptr);
-	            }
+                auto headerName = std::string(child->Attribute("Path"));
+                if (!headerName.empty()) {
+                    setAlternateHeaders->headers.push_back(std::static_pointer_cast<Scene>(Ship::Context::GetInstance()->GetResourceManager()->LoadResourceProcess(headerName.c_str())));
+                } else {
+                    setAlternateHeaders->headers.push_back(nullptr);
+                }
             }
         }
 

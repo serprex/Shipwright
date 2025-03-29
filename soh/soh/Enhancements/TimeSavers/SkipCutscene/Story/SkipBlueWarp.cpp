@@ -24,7 +24,7 @@ void SkipBlueWarp_ShouldPlayTransitionCS(GIVanillaBehavior _, bool* should, va_l
     if (IS_BOSS_RUSH) {
         return;
     }
-    
+
     bool overrideBlueWarpDestinations =
         IS_RANDO && (RAND_GET_OPTION(RSK_SHUFFLE_DUNGEON_ENTRANCES) != RO_DUNGEON_ENTRANCE_SHUFFLE_OFF ||
                      RAND_GET_OPTION(RSK_SHUFFLE_BOSS_ENTRANCES) != RO_BOSS_ROOM_ENTRANCE_SHUFFLE_OFF);

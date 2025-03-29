@@ -69,7 +69,7 @@ namespace Rando {
     }
 
     Fishsanity::~Fishsanity() {
-    
+
     }
 
     bool Fishsanity::GetFishLocationIncluded(Rando::Location* loc,

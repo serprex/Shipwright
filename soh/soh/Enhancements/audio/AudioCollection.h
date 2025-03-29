@@ -34,7 +34,7 @@ class AudioCollection {
     private:
         // All Loaded Audio
         std::map<uint16_t, SequenceInfo> sequenceMap;
-        
+
         // Sequences/SFX to include in/exclude from shuffle pool
         struct compareSequenceLabel {
             bool operator() (SequenceInfo* a, SequenceInfo* b) const {

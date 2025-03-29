@@ -528,7 +528,7 @@ void SaveManager::SaveRandomizer(SaveContext* saveContext, int sectionID, bool f
 
                 SaveManager::Instance->SaveData("distribution", hint->GetDistribution());
                 SaveManager::Instance->SaveData("type", Rando::StaticData::hintTypeNames[hint->GetHintType()].GetEnglish(MF_CLEAN));
-                
+
                 std::vector<RandomizerHintTextKey> hintKeys = hint->GetHintTextKeys();
                 SaveManager::Instance->SaveArray("hintKeys", hintKeys.size(), [&](size_t i) {
                     SaveManager::Instance->SaveData("", hintKeys[i]);
@@ -543,12 +543,12 @@ void SaveManager::SaveRandomizer(SaveContext* saveContext, int sectionID, bool f
                 SaveManager::Instance->SaveArray("items", items.size(), [&](size_t i) {
                     SaveManager::Instance->SaveData("", Rando::StaticData::GetItemTable()[items[i]].GetName().GetEnglish());
                 });
-                
+
                 std::vector<uint8_t> itemNamesChosen = hint->GetItemNamesChosen();
                 SaveManager::Instance->SaveArray("itemNamesChosen", itemNamesChosen.size(), [&](size_t i) {
                     SaveManager::Instance->SaveData("", itemNamesChosen[i]);
                 });
-                
+
                 std::vector<uint8_t> hintTextsChosen = hint->GetHintTextsChosen();
                 SaveManager::Instance->SaveArray("hintTextsChosen", hintTextsChosen.size(), [&](size_t i) {
                     SaveManager::Instance->SaveData("", hintTextsChosen[i]);
@@ -558,12 +558,12 @@ void SaveManager::SaveRandomizer(SaveContext* saveContext, int sectionID, bool f
                 SaveManager::Instance->SaveArray("areaTextsChosen", areaTextsChosen.size(), [&](size_t i) {
                     SaveManager::Instance->SaveData("", areaTextsChosen[i]);
                 });
-                
+
                 std::vector<RandomizerArea> areas = hint->GetHintedAreas();
                 SaveManager::Instance->SaveArray("areas", areas.size(), [&](size_t i) {
                     SaveManager::Instance->SaveData("", Rando::StaticData::hintTextTable[Rando::StaticData::areaNames[areas[i]]].GetClear().GetForCurrentLanguage(MF_CLEAN));
                 });
-                
+
                 std::vector<TrialKey> trials = hint->GetHintedTrials();
                 SaveManager::Instance->SaveArray("trials", trials.size(), [&](size_t i) {
                     SaveManager::Instance->SaveData("", randoContext->GetTrial(trials[i])->GetName().GetForCurrentLanguage(MF_CLEAN));
@@ -1267,7 +1267,7 @@ void SaveManager::LoadFile(int fileNum) {
     InitFile(false);
 
     std::ifstream input(fileName);
-    
+
     try {
         saveBlock = nlohmann::json::object();
         input >> saveBlock;
@@ -1321,7 +1321,7 @@ void SaveManager::LoadFile(int fileNum) {
 #else
         std::filesystem::copy_file(fileName, newFile);
 #endif
-    
+
         std::filesystem::remove(fileName);
         SohGui::RegisterPopup("Error loading save file", "A problem occurred loading the save in slot " + std::to_string(fileNum + 1) + ".\nSave file corruption is suspected.\n" +
             "The file has been renamed to prevent further issues.");

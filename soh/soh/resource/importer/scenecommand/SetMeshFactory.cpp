@@ -10,7 +10,7 @@ SetMeshFactory::ReadResource(std::shared_ptr<Ship::ResourceInitData> initData, s
     auto setMesh = std::make_shared<SetMesh>(initData);
 
     ReadCommandId(setMesh, reader);
-    
+
     setMesh->data = reader->ReadInt8();
 
     setMesh->meshHeader.base.type = reader->ReadInt8();

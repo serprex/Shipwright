@@ -337,7 +337,7 @@ void GameInteractor::RawAction::UpdateActor(void* refActor) {
     // Update actor again outside of their normal update cycle.
 
     Actor* actor = static_cast<Actor*>(refActor);
-    
+
     // Sometimes the actor is destroyed in the previous Update, so check if the update function still exists.
     if (actor->update != NULL) {
         // Fix for enemies sometimes taking a "fake" hit, where their invincibility timer is
@@ -386,7 +386,7 @@ void GameInteractor::RawAction::SetTimeOfDay(uint32_t time) {
 void GameInteractor::RawAction::SetCollisionViewer(bool active) {
     CVarSetInteger(CVAR_DEVELOPER_TOOLS("ColViewer.Enabled"), active);
     CVarSetInteger(CVAR_DEVELOPER_TOOLS("ColViewer.Decal"), active);
-    
+
     if (active) {
         CVarSetInteger(CVAR_DEVELOPER_TOOLS("ColViewer.Scene"), COLVIEW_TRANSPARENT);
         CVarSetInteger(CVAR_DEVELOPER_TOOLS("ColViewer.BGActors"), COLVIEW_TRANSPARENT);
@@ -406,7 +406,7 @@ void GameInteractor::RawAction::SetCosmeticsColor(uint8_t cosmeticCategory, uint
     newColor.g = 255;
     newColor.b = 255;
     newColor.a = 255;
-    
+
     switch (colorValue) { 
         case GI_COLOR_RED:
             newColor.r = 200;
@@ -704,5 +704,5 @@ GameInteractionEffectQueryResult GameInteractor::RawAction::SpawnActor(uint32_t 
     }
 
     return GameInteractionEffectQueryResult::TemporarilyNotPossible;
-    
+
 }

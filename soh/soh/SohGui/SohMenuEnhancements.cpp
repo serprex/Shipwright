@@ -438,7 +438,7 @@ void SohMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCEMENT("TextSpacing"))
         .Options(IntSliderOptions().Min(4).Max(6).DefaultValue(6).Tooltip(
             "Space between text characters (useful for HD font textures)."));
-    
+
     AddWidget(path, "Models & Textures", WIDGET_SEPARATOR_TEXT);
     AddWidget(path, "Disable LOD", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("DisableLOD"))
@@ -487,7 +487,7 @@ void SohMenu::AddMenuEnhancements() {
         .Options(CheckboxOptions().Tooltip(
             "When Medallions are collected, the Medallion imprints around the Master Sword Pedestal in the Temple "
             "of Time will become colored-in."));
-    
+
     path.column = SECTION_COLUMN_2;
     AddWidget(path, "UI", WIDGET_SEPARATOR_TEXT);
     AddWidget(path, "Minimal UI", WIDGET_CVAR_CHECKBOX)
@@ -893,7 +893,7 @@ void SohMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCEMENT("FixHangingLedgeSwingRate"))
         .Options(CheckboxOptions().Tooltip(
             "Fixes camera swing rate when the player falls off a ledge and the camera swings around. May impact certain glitches."));
-    
+
     path.column = SECTION_COLUMN_2;
     AddWidget(path, "Graphical Fixes", WIDGET_SEPARATOR_TEXT);
     AddWidget(path, "Fix L&R Pause Menu", WIDGET_CVAR_CHECKBOX)
@@ -1015,7 +1015,7 @@ void SohMenu::AddMenuEnhancements() {
     path.sidebarName = "Difficulty";
     AddSidebarEntry("Enhancements", path.sidebarName, 3);
     path.column = SECTION_COLUMN_1;
-    
+
     AddWidget(path, "Health", WIDGET_SEPARATOR_TEXT);
     AddWidget(path, "Permanent Heart Loss", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("PermanentHeartLoss"))
@@ -1091,7 +1091,7 @@ void SohMenu::AddMenuEnhancements() {
             "Disables Heart Drops, but not Heart Placements, like from a Deku Scrub running off.\n"
             "This simulates Hero Mode from other games in the series."
         ));
-    
+
     path.column = SECTION_COLUMN_2;
     AddWidget(path, "Drops", WIDGET_SEPARATOR_TEXT);
     AddWidget(path, "No Random Drops", WIDGET_CVAR_CHECKBOX)
@@ -1172,7 +1172,7 @@ void SohMenu::AddMenuEnhancements() {
                      .DefaultValue(0)
                      .Format("%d seconds")
                      .Tooltip("The time between groups of Leevers spawning."));
-    
+
     // Minigames
     path.sidebarName = "Minigames";
     AddSidebarEntry("Enhancements", path.sidebarName, 3);

@@ -177,7 +177,7 @@ extern "C"
 	extern f32 iceTrapScale;
 	extern f32 triforcePieceScale;
 	extern f32 mysteryItemScale;
-	
+
 	extern const s16 D_8014A6C0[];
 #define gTatumsPerBeat (D_8014A6C0[1])
 	extern const AudioContextInitSizes D_8014A6C4;

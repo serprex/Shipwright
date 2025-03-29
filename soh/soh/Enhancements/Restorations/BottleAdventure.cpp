@@ -98,7 +98,7 @@ void HandleBAInventoryQuestItems() {
 
 void HandleRBAInventoryQuestItems(uint8_t itemToPutInBottle) {
     auto itemOnCRight = gSaveContext.equips.buttonItems[3];
-    
+
     if (itemOnCRight == ITEM_ODD_MUSHROOM) {
         gSaveContext.inventory.questItems = (itemToPutInBottle << 24) | (gSaveContext.inventory.questItems & 0x00FFFFFF);
     } else if (itemOnCRight == ITEM_ODD_POTION) {
@@ -119,7 +119,7 @@ void HandleBAInventoryDungeonItems() {
 
 void HandleRBAInventoryDungeonItems(uint8_t itemToPutInBottle) {
     auto itemOnCRight = gSaveContext.equips.buttonItems[3];
-    
+
     gSaveContext.inventory.dungeonItems[itemOnCRight - ITEM_PRESCRIPTION] = itemToPutInBottle;
 }
 
@@ -132,7 +132,7 @@ void HandleBAInventoryDungeonKeys() {
 
 void HandleRBAInventoryDungeonKeys(uint8_t itemToPutInBottle) {
     auto itemOnCRight = gSaveContext.equips.buttonItems[3];
-    
+
     gSaveContext.inventory.dungeonKeys[itemOnCRight - ITEM_BULLET_BAG_40] = itemToPutInBottle;
 }
 

@@ -335,7 +335,7 @@ void Randomizer::LoadMerchantMessages() {
             "\x08#[[1]]#  #[[2]]_Rubine#\x09\x1B#Kaufen&Nicht kaufen#\x09\x02",
             "\x08#[[1]]#  #[[2]]_Rubis#\x09\x1B#Acheter&Ne pas acheter#\x09\x02",
             {QM_GREEN, QM_YELLOW, QM_GREEN}));
-                      
+
     CustomMessageManager::Instance->CreateMessage(
         Randomizer::merchantMessageTableID, TEXT_BEAN_SALESMAN_BUY_FOR_10,
         CustomMessage("I tried to be a #magic bean# salesman, but it turns out my marketing skills weren't worth "
@@ -365,7 +365,7 @@ void Randomizer::LoadMerchantMessages() {
                                               "aller Welt für jedermann. Das heutige Angebot bleibt...^",
                                    /*french*/ "Bienvenue!^Je vends des objets rares et merveilleux du monde entier. En spécial aujourd'hui...^");
                                /*spanish*/ // ¡Acércate!^Vendo productos extraños y difíciles de encontrar... De todo el mundo a todo el mundo. La oferta de hoy es...^#¡
-    
+
     CustomMessageManager::Instance->CreateMessage(
         Randomizer::merchantMessageTableID, TEXT_CARPET_SALESMAN_MYSTERIOUS,
         firstCarpet +
@@ -1357,7 +1357,7 @@ std::map<RandomizerCheck, RandomizerInf> rcToRandomizerInf = {
     { RC_DEKU_TREE_QUEEN_GOHMA_GRASS_7,                    RAND_INF_DEKU_TREE_QUEEN_GOHMA_GRASS_7 },
     { RC_DEKU_TREE_QUEEN_GOHMA_GRASS_8,                    RAND_INF_DEKU_TREE_QUEEN_GOHMA_GRASS_8 },
     // End Grass 
-    
+
     { RC_KF_LINKS_HOUSE_POT,                                            RAND_INF_KF_LINKS_HOUSE_POT },
     { RC_KF_TWINS_HOUSE_POT_1,                                          RAND_INF_KF_TWINS_HOUSE_POT_1 },
     { RC_KF_TWINS_HOUSE_POT_2,                                          RAND_INF_KF_TWINS_HOUSE_POT_2 },
@@ -2501,7 +2501,7 @@ GrassIdentity Randomizer::IdentifyGrass(s32 sceneNum, s32 posX, s32 posZ, s32 re
     }
 
     return grassIdentity;
-	
+
 }
 
 CrateIdentity Randomizer::IdentifyCrate(s32 sceneNum, s32 posX, s32 posZ) {
@@ -2575,7 +2575,7 @@ RandomizerInf Randomizer::GetRandomizerInfFromCheck(RandomizerCheck rc) {
     auto rcIt = rcToRandomizerInf.find(rc);
     if (rcIt == rcToRandomizerInf.end())
         return RAND_INF_MAX;
-    
+
     return rcIt->second;
 }
 
@@ -2595,7 +2595,7 @@ void GenerateRandomizerImgui(std::string seed = "") {
     auto ctx = Rando::Context::GetInstance();
     //RANDOTODO proper UI for selecting if a spoiler loaded should be used for settings
     Rando::Settings::GetInstance()->SetAllToContext();
-    
+
     // todo: this efficently when we build out cvar array support
     std::set<RandomizerCheck> excludedLocations;
     std::stringstream excludedLocationStringStream(CVarGetString(CVAR_RANDOMIZER_SETTING("ExcludedLocations"), ""));
@@ -2605,14 +2605,14 @@ void GenerateRandomizerImgui(std::string seed = "") {
     }
 
     // todo: better way to sort out linking tricks rather than name
-    
+
     std::set<RandomizerTrick> enabledTricks;
     std::stringstream enabledTrickStringStream(CVarGetString(CVAR_RANDOMIZER_SETTING("EnabledTricks"), ""));
     std::string enabledTrickString;
     while (getline(enabledTrickStringStream, enabledTrickString, ',')) {
         enabledTricks.insert((RandomizerTrick)std::stoi(enabledTrickString));
     }
-    
+
 
     // Update the visibilitiy before removing conflicting excludes (in case the locations tab wasn't viewed)
     RandomizerCheckObjects::UpdateImGuiVisibility();
@@ -3355,7 +3355,7 @@ CustomMessage Randomizer::GetSheikMessage(s16 scene, u16 originalTextId) {
                 messageEntry = CustomMessage(
                     "You may have what you need to defeat %rthe Evil King%w, but the %cbarrier%w still stands.^Complete the remaining %gtrials%w to destroy it.",
                     "Du magst das haben, was Du brauchst um %rden bösen König%w zu besiegen, aber die %cBarriere%w steht noch.^Absolviere die verbleibenden %gPrüfungen%w um sie zu zerstören.",
-		            "@, tu as peut-être ce qu'il te faut pour vaincre %rle Malin%w, mais les barrières sont toujours actives.^Termine les épreuves restantes pour les détruire.");
+                    "@, tu as peut-être ce qu'il te faut pour vaincre %rle Malin%w, mais les barrières sont toujours actives.^Termine les épreuves restantes pour les détruire.");
             } else {
                 messageEntry = CustomMessage(
                     "If you're ready, then proceed.^Good luck.",
@@ -3410,7 +3410,7 @@ CustomMessage Randomizer::GetMerchantMessage(RandomizerCheck rc, TextIDs textId,
         auto shopItem = Rando::StaticData::RetrieveItem(shopItemGet);
         shopItemName = {shopItem.GetName()};
     }
-    
+
     if (freeTextId != TEXT_NONE && shopItemPrice == 0) {
         messageEntry = CustomMessageManager::Instance->RetrieveMessage(Randomizer::merchantMessageTableID, freeTextId, MF_RAW);
     } else {
@@ -4450,39 +4450,39 @@ void Randomizer::CreateCustomMessages() {
 
         GIMESSAGE(RG_GOHMA_SOUL, ITEM_BIG_POE,
             "You found the soul for %gGohma%w!",
-	    "Du hast die Seele von %gGohma%w gefunden!",
+            "Du hast die Seele von %gGohma%w gefunden!",
             "Vous obtenez l'âme de %gGohma%w!"),
         GIMESSAGE(RG_KING_DODONGO_SOUL, ITEM_BIG_POE,
             "You found the soul for %rKing&Dodongo%w!",
-	    "Du hast die Seele von %rKönig&Dodongo%w gefunden!",
+            "Du hast die Seele von %rKönig&Dodongo%w gefunden!",
             "Vous obtenez l'âme du %rRoi Dodongo%w!"),
         GIMESSAGE(RG_BARINADE_SOUL, ITEM_BIG_POE,
             "You found the soul for %bBarinade%w!",
-	    "Du hast die Seele von %bBarinade%w gefunden!",
+            "Du hast die Seele von %bBarinade%w gefunden!",
             "Vous obtenez l'âme de %bBarinade%w!"),
         GIMESSAGE(RG_PHANTOM_GANON_SOUL, ITEM_BIG_POE,
             "You found the soul for %gPhantom&Ganon%w!",
-	    "Du hast die Seele von %gPhantom-&Ganon%w gefunden!",
+            "Du hast die Seele von %gPhantom-&Ganon%w gefunden!",
             "Vous obtenez l'âme de %gGanon&Spectral%w!"),
         GIMESSAGE(RG_VOLVAGIA_SOUL, ITEM_BIG_POE,
             "You found the soul for %rVolvagia%w!",
-	    "Du hast die Seele von %rVolvagia%w gefunden!",
+            "Du hast die Seele von %rVolvagia%w gefunden!",
             "Vous obtenez l'âme de %rVolcania%w!"),
         GIMESSAGE(RG_MORPHA_SOUL, ITEM_BIG_POE,
             "You found the soul for %bMorpha%w!",
-	    "Du hast die Seele von %bMorpha%w gefunden!",
+            "Du hast die Seele von %bMorpha%w gefunden!",
             "Vous obtenez l'âme de %bMorpha%w!"),
         GIMESSAGE(RG_BONGO_BONGO_SOUL, ITEM_BIG_POE,
             "You found the soul for %pBongo&Bongo%w!",
-	    "Du hast die Seele von %pBongo&Bongo%w gefunden!",
+            "Du hast die Seele von %pBongo&Bongo%w gefunden!",
             "Vous obtenez l'âme de %pBongo&Bongo%w!"),
         GIMESSAGE(RG_TWINROVA_SOUL, ITEM_BIG_POE,
             "You found the soul for %yTwinrova%w!",
-	    "Du hast die Seele von %yTwinrova%w gefunden!",
+            "Du hast die Seele von %yTwinrova%w gefunden!",
             "Vous obtenez l'âme du %yDuo&Maléfique%w!"),
         GIMESSAGE(RG_GANON_SOUL, ITEM_BIG_POE,
             "You found the soul for %cGanon%w!",
-	    "Du hast die Seele von %cGanon%w gefunden!",
+            "Du hast die Seele von %cGanon%w gefunden!",
             "Vous obtenez l'âme de %cGanon%w!"),
 
         GIMESSAGE(RG_OCARINA_A_BUTTON, ITEM_OCARINA_TIME,
@@ -4505,62 +4505,62 @@ void Randomizer::CreateCustomMessages() {
             "You got the %y\xa6%r button for the&Ocarina%w! You can now use it&while playing songs!",
 			"Der %y\xa6%r Knopf%w!&Du kannst ihn nun zum Spielen&von Liedern auf der %rOkarina%w&verwenden!",
 			"Vous obtenez la %rtouche %y\xa6%r de&l'Ocarina%w! Vous pouvez&maintenant l'utiliser lorsque&vous en jouez!"),
-        
+
         GIMESSAGE(RG_BRONZE_SCALE, ITEM_SCALE_SILVER,
             "You got the %rBronze Scale%w!&The power of buoyancy is yours!",
-	    "Du hast die %rBronzene Schuppe%w erhalten!&Die Macht der Schwungkraft ist dein!",
+            "Du hast die %rBronzene Schuppe%w erhalten!&Die Macht der Schwungkraft ist dein!",
             "Vous obtenez l'%rÉcaille de Bronze%w!&Le pouvoir de la flottabilité est&à vous!"),
         GIMESSAGE(RG_FISHING_POLE, ITEM_FISHING_POLE,
             "You found a lost %rFishing Pole%w!&Time to hit the pond!",
-	    "Du hast eine verlorene %rAngelrute%w gefunden!&Zeit, im Teich zu angeln!",
+            "Du hast eine verlorene %rAngelrute%w gefunden!&Zeit, im Teich zu angeln!",
             "Vous obtenez une %rCanne à pêche%w&perdue!&Il est temps d'aller à %gl'étang%w!"),
         GIMESSAGE(RG_BOMBCHU_BAG, ITEM_BOMBCHU,
             "You found the %rBombchu Bag%w!",
-	    "Du hast die %rKrabbelminentasche%w&gefunden!",
+            "Du hast die %rKrabbelminentasche%w&gefunden!",
             "Vous obtenez un %rSac de Missiles&Teigneux%w!"),
         GIMESSAGE(RG_BOMB_BAG_INF, ITEM_BOMB_BAG_40,
             "You got an %rInfinite Bomb Bag%w!&Now you have %yinfinite bombs%w!",
-	    "Du hast eine %runendliche Bombentasche%w&gefunden! Nun hast Du &%yunendliche Bomben%w!",
+            "Du hast eine %runendliche Bombentasche%w&gefunden! Nun hast Du &%yunendliche Bomben%w!",
             "Vous obtenez un %rSac de Bombes&sans fond%w!&Vous avez maintenant des %ybombes&en quantité illimitée%w!"),
         GIMESSAGE(RG_QUIVER_INF, ITEM_QUIVER_50,
             "You got an %rInfinite Quiver%w!&Now you have %yinfinite arrows%w!",
-	    "Du hast einen %runendlichen Köcher%w&gefunden! Nun hast Du &%yunendliche Pfeile%w!",
+            "Du hast einen %runendlichen Köcher%w&gefunden! Nun hast Du &%yunendliche Pfeile%w!",
             "Vous obtenez un %rCarquois Infini%w!&Vous avez maintenant des %yflèches&de manière illimitée%w!"),
         GIMESSAGE(RG_BULLET_BAG_INF, ITEM_BULLET_BAG_50,
             "You got an %rInfinite Bullet Bag%w!&Now you have %yinfinite&slingshot seeds%w!",
-	    "Du hast eine %runendliche Samentasche%w&gefunden! Nun hast Du &%yunendliche Samen%w!",
+            "Du hast eine %runendliche Samentasche%w&gefunden! Nun hast Du &%yunendliche Samen%w!",
             "Vous obtenez un %rSac de Graines&sans fond%w!&Vous avez maintenant des %ygraines&de lance-pierres à l'infini%w!"),
         GIMESSAGE(RG_STICK_UPGRADE_INF, ITEM_STICK,
             "You now have %yinfinite%w %rDeku Sticks%w!",
-	    "Du hast nun %yrunendliche%w %rDeku-Stäbe%w!",
+            "Du hast nun %yrunendliche%w %rDeku-Stäbe%w!",
             "Vous avez maintenant des %yBâtons&Mojo de manière illimitée%w!"),
         GIMESSAGE(RG_NUT_UPGRADE_INF, ITEM_NUT,
             "You now have %yinfinite%w %rDeku Nuts%w!",
-	    "Du hast nun %yunendliche%w %rDeku-Nüsse%w!",
+            "Du hast nun %yunendliche%w %rDeku-Nüsse%w!",
             "Vous avez maintenant des %yNoix&Mojo de manière illimitée%w!"),
         GIMESSAGE(RG_MAGIC_INF, ITEM_MAGIC_LARGE,
             "You now have %yinfinite%w %rMagic%w!",
-	    "Du hast nun %yunendliche%w %rMagiew!",
+            "Du hast nun %yunendliche%w %rMagiew!",
             "Vous avez maintenant une quantité&de %ymagie illimitée%w!"),
         GIMESSAGE(RG_BOMBCHU_INF, ITEM_BOMBCHU,
             "You now have %yinfinite%w %rBombchus%w!",
-	    "Du hast nun %yunendliche%w %rKrabbelminen%w!",
+            "Du hast nun %yunendliche%w %rKrabbelminen%w!",
             "Vous avez maintenant des %yMissiles&Teigneux en quantité illimités%w!"),
         GIMESSAGE(RG_WALLET_INF, ITEM_WALLET_GIANT,
             "You now have %yinfinite%w %rmoney%w!",
-	    "Du hast nun %yunendliche%w %rRubinew!",
+            "Du hast nun %yunendliche%w %rRubinew!",
             "Vous avez maintenant des %yRubis en& quantité illimitée%w!"),
         GIMESSAGE(RG_SKELETON_KEY, ITEM_KEY_SMALL,
             "You found the %rSkeleton Key%w!",
-	    "Du hast den %rSkelettschlüssel%w gefunden!",
+            "Du hast den %rSkelettschlüssel%w gefunden!",
             "Vous avez trouvé la %rClé Squelette%w!"),
         GIMESSAGE(RG_DEKU_STICK_BAG, ITEM_STICK,
             "You found the %rDeku Stick Bag%w!&You can now hold Deku Sticks!",
-	    "Du hast eine %rDeku-Stab-Tasche%w&gefunden! Nun kannst Du &%yDeku-Stäbe%w halten!",
+            "Du hast eine %rDeku-Stab-Tasche%w&gefunden! Nun kannst Du &%yDeku-Stäbe%w halten!",
             "Vous avez trouvé le %rSac de Bâtons&Mojo%w!&Vous pouvez maintenant porter des&Bâtons Mojo!"),
         GIMESSAGE(RG_DEKU_NUT_BAG, ITEM_NUT,
             "You found the %rDeku Nut Bag%w!&You can now hold Deku Nuts!",
-	    "Du hast eine %rDeku-Nuß-Tasche%w&gefunden! Nun kannst Du &%yDeku-Nüsse%w halten!",
+            "Du hast eine %rDeku-Nuß-Tasche%w&gefunden! Nun kannst Du &%yDeku-Nüsse%w halten!",
             "Vous avez trouvé le %rSac de Noix& Mojo%w!&Vous pouvez maintenant porter des&Noix Mojo!"),
     }};
     CreateGetItemMessages(getItemMessages);

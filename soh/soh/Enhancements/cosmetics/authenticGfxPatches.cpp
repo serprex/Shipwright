@@ -54,7 +54,7 @@ static DListPatchInfo ironKnuckleDListPatchInfos[] = {
 
     { object_ik_DL_01D2B0, 8 },
     { object_ik_DL_01D2B0, 32 },
-    
+
     { object_ik_DL_01D3F8, 15 },
     { object_ik_DL_01D3F8, 37 },
     { object_ik_DL_01D3F8, 52 },

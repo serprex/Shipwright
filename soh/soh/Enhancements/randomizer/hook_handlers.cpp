@@ -403,7 +403,7 @@ void EnExItem_WaitForObjectRandomized(EnExItem* enExItem, PlayState* play) {
     if (Object_IsLoaded(&play->objectCtx, enExItem->objectIdx)) {
         enExItem->actor.draw = (ActorFunc)EnExItem_DrawRandomizedItem;
         Actor_SetScale(&enExItem->actor, enExItem->scale);
-        
+
         // for now we're just using this to not have items float
         // below the bowling counter, but it would be nice to use
         // this to not draw gigantic skull tokens etc.
@@ -1342,7 +1342,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
 
                 // we're giving the 100 GS rando reward! set the rando inf
                 Flags_SetRandomizerInf(RAND_INF_KAK_100_GOLD_SKULLTULA_REWARD);
-                
+
                 // also set the actionfunc so this doesn't immediately get
                 // called again (and lead to a vanilla+rando item give
                 // because the flag check will pass next time)
@@ -1912,7 +1912,7 @@ void RandomizerOnActorInitHandler(void* actorRef) {
 
     if (actor->id == ACTOR_EN_EX_ITEM) {
         EnExItem* enExItem = static_cast<EnExItem*>(actorRef);
-        
+
         RandomizerCheck rc = RC_UNKNOWN_CHECK;
         switch (enExItem->type) {
             case EXITEM_BOMB_BAG_COUNTER:
@@ -2454,7 +2454,7 @@ void RandomizerRegisterHooks() {
         if (RAND_GET_OPTION(RSK_SHUFFLE_FREESTANDING) != RO_SHUFFLE_FREESTANDING_OFF) {
             shuffleFreestandingOnVanillaBehaviorHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnVanillaBehavior>(ShuffleFreestanding_OnVanillaBehaviorHandler);
         }
-        
+
         if (RAND_GET_OPTION(RSK_SHUFFLE_FAIRIES)) {
             ShuffleFairies_RegisterHooks();
         }

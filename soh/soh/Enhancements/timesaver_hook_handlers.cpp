@@ -155,7 +155,7 @@ void TimeSaverOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_li
                     }
                     *should = false;
                 }
-                
+
                 u8 meetsBurningKakRequirements = 
                     LINK_IS_ADULT &&
                     gSaveContext.entranceIndex == ENTR_KAKARIKO_VILLAGE_FRONT_GATE &&

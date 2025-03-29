@@ -9,7 +9,7 @@ SetRoomBehaviorFactory::ReadResource(std::shared_ptr<Ship::ResourceInitData> ini
     auto setRoomBehavior = std::make_shared<SetRoomBehavior>(initData);
 
     ReadCommandId(setRoomBehavior, reader);
-	
+
     setRoomBehavior->roomBehavior.gameplayFlags = reader->ReadInt8();
     setRoomBehavior->roomBehavior.gameplayFlags2 = reader->ReadInt32();
 

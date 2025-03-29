@@ -28,7 +28,7 @@ public:
 
     InputViewer();
     ~InputViewer();
- 
+
     private:
         void RenderButton(std::string btn, std::string btnOutline, int state, ImVec2 size, int outlineMode);
 };

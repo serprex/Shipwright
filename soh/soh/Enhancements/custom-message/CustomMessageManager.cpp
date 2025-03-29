@@ -744,7 +744,7 @@ CustomMessage CustomMessageManager::RetrieveMessage(std::string tableID, uint16_
     } else if (format == MF_ENCODE){
         message.Encode();
     }
-    
+
     return message;
 }
 

@@ -1000,7 +1000,7 @@ bool CVarRadioButton(const char* text, const char* cvarName, int32_t id, const R
     if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled) && !Ship_IsCStringEmpty(options.tooltip)) {
         ImGui::SetTooltip("%s", WrappedText(options.tooltip).c_str());
     }
-        
+
     return ret;
 }
 

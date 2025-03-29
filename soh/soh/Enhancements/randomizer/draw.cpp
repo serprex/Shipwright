@@ -225,7 +225,7 @@ extern "C" void Randomizer_DrawBossKey(PlayState* play, GetItemEntry* getItemEnt
     Color_RGB8 keyColor = { 255, 255, 0 };
     //Supposed to use CVAR_COSMETIC but I can't figure out the syntax
     keyColor = CVarGetColor24((CvarValue[slot] + "Body.Value").c_str(), keyColor);
-    
+
     if (isCustomKeysEnabled){
         gDPSetEnvColor(POLY_OPA_DISP++, keyColor.r, keyColor.g, keyColor.b, 255);
         gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gBossKeyCustomDL);
@@ -247,7 +247,7 @@ extern "C" void Randomizer_DrawBossKey(PlayState* play, GetItemEntry* getItemEnt
 
     Color_RGB8 gemColor = { 255, 0, 0 };
     gemColor = CVarGetColor24((CvarValue[slot] + "Gem.Value").c_str(), gemColor);
-    
+
     if (isCustomKeysEnabled){
         gDPSetEnvColor(POLY_XLU_DISP++, gemColor.r, gemColor.g, gemColor.b, 255);
         gSPDisplayList(POLY_XLU_DISP++, CustomdLists[slot]);
@@ -387,7 +387,7 @@ extern "C" void Randomizer_DrawDoubleDefense(PlayState* play, GetItemEntry* getI
     OPEN_DISPS(play->state.gfxCtx);
 
     Gfx_SetupDL_25Xlu(play->state.gfxCtx);
-   
+
     gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(play->state.gfxCtx, (char*)__FILE__, __LINE__), G_MTX_MODELVIEW | G_MTX_LOAD);
 
     gDPSetGrayscaleColor(POLY_XLU_DISP++, 255, 255, 255, 255);
@@ -419,7 +419,7 @@ extern "C" void Randomizer_DrawMasterSword(PlayState* play, GetItemEntry* getIte
               G_MTX_MODELVIEW | G_MTX_LOAD);
 
     gSPDisplayList(POLY_OPA_DISP++, (Gfx*)object_toki_objects_DL_001BD0);
-    
+
     CLOSE_DISPS(play->state.gfxCtx);
 }
 
@@ -971,7 +971,7 @@ extern "C" void Randomizer_DrawBossSoul(PlayState* play, GetItemEntry* getItemEn
     } else {
         slot = getItemEntry->drawItemId - RG_GOHMA_SOUL;
     }
-    
+
     s16 flameColors[9][3] = {
         { 0, 255, 0 },     // Gohma
         { 255, 0, 100 },   // King Dodongo

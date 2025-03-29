@@ -9,7 +9,7 @@ SetEchoSettingsFactory::ReadResource(std::shared_ptr<Ship::ResourceInitData> ini
     auto setEchoSettings = std::make_shared<SetEchoSettings>(initData);
 
     ReadCommandId(setEchoSettings, reader);
-	
+
     setEchoSettings->settings.echo = reader->ReadInt8();
 
     if (CVarGetInteger(CVAR_DEVELOPER_TOOLS("ResourceLogging"), 0)) {

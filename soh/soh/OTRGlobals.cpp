@@ -2175,7 +2175,7 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
             Actor* stone = GET_PLAYER(play)->talkActor; 
             RandomizerHint stoneHint = RH_NONE;
             s16 hintParams = stone->params & 0xFF;
-            
+
             if (Rando::StaticData::stoneParamsToHint.contains(hintParams)){
                 stoneHint = Rando::StaticData::stoneParamsToHint[hintParams];
             } else if (hintParams == 0x18){

@@ -996,7 +996,7 @@ void CheckTrackerWindow::DrawElement() {
     std::string stemp;
 
     bool shouldHideFilteredAreas = CVarGetInteger(CVAR_TRACKER_CHECK("HideFilteredAreas"), 1);
-    
+
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(4.0f, 3.0f));
     for (auto& [rcArea, checks] : checksByArea) {
         RandomizerCheckArea thisArea = currentArea;
@@ -1623,7 +1623,7 @@ void DrawLocation(RandomizerCheck rc) {
     } else {
         txt = loc->GetShortName();
     }
-    
+
     if (lastLocationChecked == loc->GetRandomizerCheck()) {
         txt = "* " + txt;
     }
@@ -1711,14 +1711,14 @@ void DrawLocation(RandomizerCheck rc) {
     if (txt == "" && skipped) {
         txt = "Skipped"; // TODO language
     }
-    
+
     if (txt != "") {
         ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(extraColor.r / 255.0f, extraColor.g / 255.0f, extraColor.b / 255.0f, extraColor.a / 255.0f));
         ImGui::SameLine();
         ImGui::Text(" (%s)", txt.c_str());
         ImGui::PopStyleColor();
     }
-    
+
     if (showLogicTooltip) {
         for (auto& locationInRegion : areaTable[itemLoc->GetParentRegionKey()].locations) {
             if (locationInRegion.GetLocation() == rc) {
@@ -1838,7 +1838,7 @@ void CheckTrackerSettingsWindow::DrawElement() {
         UIWidgets::CVarCombobox("Window Type", CVAR_TRACKER_CHECK("WindowType"), windowType,
             UIWidgets::ComboboxOptions().LabelPosition(UIWidgets::LabelPositions::Far).ComponentAlignment(UIWidgets::ComponentAlignments::Right)
             .Color(THEME_COLOR).DefaultIndex(TRACKER_WINDOW_WINDOW));
-        
+
         if (CVarGetInteger(CVAR_TRACKER_CHECK("WindowType"), TRACKER_WINDOW_WINDOW) == TRACKER_WINDOW_FLOATING) {
             UIWidgets::CVarCheckbox("Enable Dragging", CVAR_TRACKER_CHECK("Draggable"), UIWidgets::CheckboxOptions().Color(THEME_COLOR));
             UIWidgets::CVarCheckbox("Only enable while paused", CVAR_TRACKER_CHECK("ShowOnlyPaused"), UIWidgets::CheckboxOptions().Color(THEME_COLOR));

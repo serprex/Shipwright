@@ -42,10 +42,10 @@ std::string GetParameritizedText(std::string key, TextBank bank, const char* arg
         }
         case TEXT_BANK_MISC: {
             auto value = miscMap[key].get<std::string>();
-            
+
             std::string searchString = "$0";
             size_t index = value.find(searchString);
-            
+
             if (index != std::string::npos) {
                 assert(arg != nullptr);
                 value.replace(index, searchString.size(), std::string(arg));
@@ -53,15 +53,15 @@ std::string GetParameritizedText(std::string key, TextBank bank, const char* arg
             } else {
                 return value;
             }
-            
+
             break;
         }
         case TEXT_BANK_KALEIDO: {
             auto value = kaleidoMap[key].get<std::string>();
-            
+
             std::string searchString = "$0";
             size_t index = value.find(searchString);
-            
+
             if (index != std::string::npos) {
                 assert(arg != nullptr);
                 value.replace(index, searchString.size(), std::string(arg));
@@ -69,7 +69,7 @@ std::string GetParameritizedText(std::string key, TextBank bank, const char* arg
             } else {
                 return value;
             }
-            
+
             break;
         }
         case TEXT_BANK_FILECHOOSE: {
@@ -100,7 +100,7 @@ const char* GetLanguageCode() {
             return "de-DE";
             break;
     }
-    
+
     return "en-US";
 }
 
@@ -117,7 +117,7 @@ static std::string titleCardText;
 void RegisterOnSceneInitHook() {
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneInit>([](int16_t sceneNum) {
         if (!CVarGetInteger(CVAR_SETTING("A11yTTS"), 0)) return;
-        
+
         titleCardText = NameForSceneId(sceneNum);
     });
 }
@@ -125,7 +125,7 @@ void RegisterOnSceneInitHook() {
 void RegisterOnPresentTitleCardHook() {
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnPresentTitleCard>([]() {
         if (!CVarGetInteger(CVAR_SETTING("A11yTTS"), 0)) return;
-        
+
         SpeechSynthesizer::Instance->Speak(titleCardText.c_str(), GetLanguageCode());
     });
 }
@@ -135,17 +135,17 @@ void RegisterOnPresentTitleCardHook() {
 void RegisterOnInterfaceUpdateHook() {
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnInterfaceUpdate>([]() {
         if (!CVarGetInteger(CVAR_SETTING("A11yTTS"), 0)) return;
-        
+
         static uint32_t prevTimer = 0;
         static char ttsAnnounceBuf[32];
-        
+
         uint32_t timer = 0;
         if (gSaveContext.timer1State != 0) {
             timer = gSaveContext.timer1Value;
         } else if (gSaveContext.timer2State != 0) {
             timer = gSaveContext.timer2Value;
         }
-        
+
         if (timer > 0) {
             if (timer > prevTimer || (timer % 30 == 0 && prevTimer != timer)) {
                 uint32_t minutes = timer / 60;
@@ -167,25 +167,25 @@ void RegisterOnInterfaceUpdateHook() {
                 prevTimer = timer;
             }
         }
-        
+
         prevTimer = timer;
-        
+
         if (!GameInteractor::IsSaveLoaded(true)) return;
-        
+
         static int16_t lostHealth = 0;
         static int16_t prevHealth = 0;
-        
+
         if (gSaveContext.health - prevHealth < 0) {
             lostHealth += prevHealth - gSaveContext.health;
         }
-        
+
         if (gPlayState->state.frames % 7 == 0) {
             if (lostHealth >= 16) {
                 Audio_PlaySoundGeneral(NA_SE_SY_CANCEL, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
                 lostHealth -= 16;
             }
         }
-        
+
         prevHealth = gSaveContext.health;
     });
 }
@@ -369,16 +369,16 @@ void RegisterOnKaleidoscopeUpdateHook() {
                 //TODO: announce timer?
             }
         }
-        
+
         uint16_t cursorIndex = (pauseCtx->pageIndex == PAUSE_MAP && !inDungeonScene) ? PAUSE_WORLD_MAP : pauseCtx->pageIndex;
         if (prevCursorIndex == cursorIndex &&
             prevCursorSpecialPos == pauseCtx->cursorSpecialPos &&
             prevCursorPoint[cursorIndex] == pauseCtx->cursorPoint[cursorIndex]) {
             return;
         }
-        
+
         prevCursorSpecialPos = pauseCtx->cursorSpecialPos;
-        
+
         if (pauseCtx->cursorSpecialPos > 0) {
             return;
         }
@@ -393,7 +393,7 @@ void RegisterOnKaleidoscopeUpdateHook() {
             "input_d_pad_right",
         };
         int8_t assignedTo = -1;
-        
+
         switch (pauseCtx->pageIndex) {
             case PAUSE_ITEM:
             {
@@ -551,14 +551,14 @@ void RegisterOnKaleidoscopeUpdateHook() {
 void RegisterOnUpdateMainMenuSelection() {
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnPresentFileSelect>([]() {
         if (!CVarGetInteger(CVAR_SETTING("A11yTTS"), 0)) return;
-        
+
         auto translation = GetParameritizedText("file1", TEXT_BANK_FILECHOOSE, nullptr);
         SpeechSynthesizer::Instance->Speak(translation.c_str(), GetLanguageCode());
     });
-    
+
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnUpdateFileSelectSelection>([](uint16_t optionIndex) {
         if (!CVarGetInteger(CVAR_SETTING("A11yTTS"), 0)) return;
-        
+
         switch (optionIndex) {
             case FS_BTN_MAIN_FILE_1: {
                 auto translation = GetParameritizedText("file1", TEXT_BANK_FILECHOOSE, nullptr);
@@ -616,7 +616,7 @@ void RegisterOnUpdateMainMenuSelection() {
 
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnUpdateFileCopySelection>([](uint16_t optionIndex) {
         if (!CVarGetInteger(CVAR_SETTING("A11yTTS"), 0)) return;
-        
+
         switch (optionIndex) {
             case FS_BTN_COPY_FILE_1: {
                 auto translation = GetParameritizedText("file1", TEXT_BANK_FILECHOOSE, nullptr);
@@ -642,10 +642,10 @@ void RegisterOnUpdateMainMenuSelection() {
                 break;
         }
     });
-    
+
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnUpdateFileCopyConfirmationSelection>([](uint16_t optionIndex) {
         if (!CVarGetInteger(CVAR_SETTING("A11yTTS"), 0)) return;
-        
+
         switch (optionIndex) {
             case FS_BTN_CONFIRM_YES: {
                 auto translation = GetParameritizedText("confirm", TEXT_BANK_FILECHOOSE, nullptr);
@@ -661,10 +661,10 @@ void RegisterOnUpdateMainMenuSelection() {
                 break;
         }
     });
-    
+
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnUpdateFileEraseSelection>([](uint16_t optionIndex) {
         if (!CVarGetInteger(CVAR_SETTING("A11yTTS"), 0)) return;
-        
+
         switch (optionIndex) {
             case FS_BTN_ERASE_FILE_1: {
                 auto translation = GetParameritizedText("file1", TEXT_BANK_FILECHOOSE, nullptr);
@@ -690,10 +690,10 @@ void RegisterOnUpdateMainMenuSelection() {
                 break;
         }
     });
-    
+
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnUpdateFileEraseConfirmationSelection>([](uint16_t optionIndex) {
         if (!CVarGetInteger(CVAR_SETTING("A11yTTS"), 0)) return;
-        
+
         switch (optionIndex) {
             case FS_BTN_CONFIRM_YES: {
                 auto translation = GetParameritizedText("confirm", TEXT_BANK_FILECHOOSE, nullptr);
@@ -709,10 +709,10 @@ void RegisterOnUpdateMainMenuSelection() {
                 break;
         }
     });
-    
+
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnUpdateFileAudioSelection>([](uint8_t optionIndex) {
         if (!CVarGetInteger(CVAR_SETTING("A11yTTS"), 0)) return;
-        
+
         switch (optionIndex) {
             case FS_AUDIO_STEREO: {
                 auto translation = GetParameritizedText("audio_stereo", TEXT_BANK_FILECHOOSE, nullptr);
@@ -741,7 +741,7 @@ void RegisterOnUpdateMainMenuSelection() {
 
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnUpdateFileTargetSelection>([](uint8_t optionIndex) {
         if (!CVarGetInteger(CVAR_SETTING("A11yTTS"), 0)) return;
-        
+
         switch (optionIndex) {
             case FS_TARGET_SWITCH: {
                 auto translation = GetParameritizedText("target_switch", TEXT_BANK_FILECHOOSE, nullptr);
@@ -760,7 +760,7 @@ void RegisterOnUpdateMainMenuSelection() {
 
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnUpdateFileLanguageSelection>([](uint8_t optionIndex) {
         if (!CVarGetInteger(CVAR_SETTING("A11yTTS"), 0)) return;
-        
+
         switch (optionIndex) {
             case LANGUAGE_ENG: {
                 auto translation = GetParameritizedText("language_english", TEXT_BANK_FILECHOOSE, nullptr);
@@ -914,10 +914,10 @@ std::string Message_TTS_Decode(uint8_t* sourceBuf, uint16_t startOfset, uint16_t
     std::string output;
     uint32_t destWriteIndex = 0;
     uint8_t isListingChoices = 0;
-    
+
     for (uint16_t i = 0; i < size; i++) {
         uint8_t cchar = sourceBuf[i + startOfset];
-        
+
         if (cchar < ' ') {
             switch (cchar) {
                 case MESSAGE_NEWLINE:
@@ -952,16 +952,16 @@ std::string Message_TTS_Decode(uint8_t* sourceBuf, uint16_t startOfset, uint16_t
             }
         }
     }
-    
+
     return output;
 }
 
 void RegisterOnDialogMessageHook() {
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnDialogMessage>([]() {
         if (!CVarGetInteger(CVAR_SETTING("A11yTTS"), 0)) return;
-        
+
         MessageContext *msgCtx = &gPlayState->msgCtx;
-        
+
         if (msgCtx->msgMode == MSGMODE_TEXT_NEXT_MSG || msgCtx->msgMode == MSGMODE_DISPLAY_SONG_PLAYED_TEXT_BEGIN || (msgCtx->msgMode == MSGMODE_TEXT_CONTINUING && msgCtx->stateTimer == 1)) {
             ttsHasNewMessage = 1;
         } else if (msgCtx->msgMode == MSGMODE_TEXT_DISPLAYING || msgCtx->msgMode == MSGMODE_TEXT_AWAIT_NEXT || msgCtx->msgMode == MSGMODE_TEXT_DONE || msgCtx->msgMode == MSGMODE_TEXT_DELAYED_BREAK
@@ -972,7 +972,7 @@ void RegisterOnDialogMessageHook() {
                 ttsHasMessage = 1;
                 ttsHasNewMessage = 0;
                 ttsCurrentHighlightedChoice = 0;
-                
+
                 uint16_t size = msgCtx->decodedTextLen;
                 auto decodedMsg = Message_TTS_Decode(msgCtx->msgBufDecoded, 0, size);
                 SpeechSynthesizer::Instance->Speak(decodedMsg.c_str(), GetLanguageCode());
@@ -986,7 +986,7 @@ void RegisterOnDialogMessageHook() {
                     }
                     startOffset++;
                 }
-                
+
                 uint16_t endOffset = 0;
                 if (startOffset < msgCtx->decodedTextLen) {
                     uint8_t i = msgCtx->choiceIndex;
@@ -999,7 +999,7 @@ void RegisterOnDialogMessageHook() {
                             startOffset++;
                         }
                     }
-                    
+
                     endOffset = startOffset;
                     while (endOffset < msgCtx->decodedTextLen) {
                         if (msgCtx->msgBufDecoded[endOffset] == MESSAGE_NEWLINE) {
@@ -1007,7 +1007,7 @@ void RegisterOnDialogMessageHook() {
                         }
                         endOffset++;
                     }
-                    
+
                     if (startOffset < msgCtx->decodedTextLen && startOffset != endOffset) {
                         uint16_t size = endOffset - startOffset;
                         auto decodedMsg = Message_TTS_Decode(msgCtx->msgBufDecoded, startOffset, size);
@@ -1018,7 +1018,7 @@ void RegisterOnDialogMessageHook() {
         } else if (ttsHasMessage) {
             ttsHasMessage = 0;
             ttsHasNewMessage = 0;
-            
+
             if (msgCtx->decodedTextLen < 3 || (msgCtx->msgBufDecoded[msgCtx->decodedTextLen - 2] != MESSAGE_FADE && msgCtx->msgBufDecoded[msgCtx->decodedTextLen - 3] != MESSAGE_FADE2)) {
                 SpeechSynthesizer::Instance->Speak("", GetLanguageCode()); // cancel current speech (except for faded out messages)
             }
@@ -1043,7 +1043,7 @@ void InitTTSBank() {
     initData->Format = RESOURCE_FORMAT_BINARY;
     initData->Type = static_cast<uint32_t>(Ship::ResourceType::Json);
     initData->ResourceVersion = 0;
-    
+
     sceneMap = std::static_pointer_cast<Ship::Json>(
         Ship::Context::GetInstance()->GetResourceManager()->LoadResource("accessibility/texts/scenes" + languageSuffix, true, initData))->Data;
 

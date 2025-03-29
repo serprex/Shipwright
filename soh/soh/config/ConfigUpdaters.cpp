@@ -6,7 +6,7 @@ namespace SOH {
     ConfigVersion1Updater::ConfigVersion1Updater() : ConfigVersionUpdater(1) {}
     ConfigVersion2Updater::ConfigVersion2Updater() : ConfigVersionUpdater(2) {}
     ConfigVersion3Updater::ConfigVersion3Updater() : ConfigVersionUpdater(3) {}
-    
+
     void ConfigVersion1Updater::Update(Ship::Config* conf) {
         if (conf->GetInt("Window.Width", 640) == 640) {
             conf->Erase("Window.Width");

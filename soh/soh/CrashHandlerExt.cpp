@@ -76,7 +76,7 @@ extern "C" void CrashHandler_PrintSohData(char* buffer, size_t* pos) {
     if (gPlayState != nullptr) {
         append_line(buffer, pos, "Actors:");
         CrashHandler_WriteActorData(buffer, pos);
-        
+
         WRITE_VAR_LINE(buffer, pos, "Scene: ", sSceneIdToStrArray[gPlayState->sceneNum]);
 
         snprintf(intCharBuffer, sizeof(intCharBuffer), "%i", gPlayState->roomCtx.curRoom.num);

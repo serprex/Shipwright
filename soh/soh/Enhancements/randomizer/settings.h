@@ -121,7 +121,7 @@ class Settings {
      * @brief Sets all the currently selected MenuIndexes to the currently assigned Rando::Context.
      */
     void SetAllToContext();
-    
+
     static std::shared_ptr<Settings> GetInstance();
 
   private:

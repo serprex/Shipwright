@@ -61,7 +61,7 @@ class Skeleton : public Ship::Resource<SkeletonData> {
 
     SkeletonType type;
     SkeletonData skeletonData;
-    
+
     LimbType limbType;
     int limbCount;
     int dListCount;

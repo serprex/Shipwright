@@ -579,7 +579,7 @@ void TimeSplitsItemSplitEvent(uint32_t type, u8 item) {
             type = SPLIT_TYPE_MISC;
         }
     }
-        
+
     for (auto& split : splitList) {
         if (split.splitType == type) {
             if (item == split.splitID) {
@@ -750,7 +750,7 @@ void TimeSplitsDrawItemList(uint32_t type) {
                     ImGui::OpenPopup("TimeSplitsPopUp");
                 } else {
                     splitList.push_back(split);
-                    
+
 
                     if (splitList.size() == 1) {
                         splitList[0].splitTimeStatus = SPLIT_STATUS_ACTIVE;
@@ -763,7 +763,7 @@ void TimeSplitsDrawItemList(uint32_t type) {
 
             TimeSplitsPopUpContext();
             ImGui::PopID();
-            
+
             if (type > SPLIT_TYPE_QUEST) {
                 ImGui::TableNextColumn();
                 ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0.0f, 7.0f));
@@ -771,7 +771,7 @@ void TimeSplitsDrawItemList(uint32_t type) {
                 ImGui::Text("%s", split.splitName.c_str());
                 ImGui::PopStyleVar(1);
             }
-            
+
         }
     }
     ImGui::EndTable();
@@ -947,7 +947,7 @@ static bool initialized = false;
 
 void TimeSplitWindow::DrawElement() {
     ImGui::SetWindowFontScale(timeSplitsWindowSize);
-    
+
     PushStyleTabs(THEME_COLOR);
     if (ImGui::BeginTabBar("Split Tabs")) {
         if (ImGui::BeginTabItem("Splits")) {
@@ -975,7 +975,7 @@ void TimeSplitWindow::InitElement() {
     Color_RGBA8 defaultColour = {0, 0, 0, 255};
     windowColor = VecFromRGBA8(CVarGetColor(CVAR_ENHANCEMENT("TimeSplits.WindowColor.Value"), defaultColour));
     InitializeSplitDataFile();
-    
+
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnTimestamp>([](u8 item) {
         if (item != ITEM_SKULL_TOKEN) {
             uint32_t tempType = SPLIT_TYPE_ITEM;

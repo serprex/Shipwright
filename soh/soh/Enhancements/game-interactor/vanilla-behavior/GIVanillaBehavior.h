@@ -275,7 +275,7 @@ typedef enum {
     // #### `args`
     // - `*EnDoor`
     VB_CONSUME_SMALL_KEY,
-    
+
     // #### `result`
     // ```c
     // itemDropped >= 0 && itemDropped < 0x1A

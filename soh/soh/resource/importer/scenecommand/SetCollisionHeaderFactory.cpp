@@ -10,7 +10,7 @@ std::shared_ptr<Ship::IResource> SetCollisionHeaderFactory::ReadResource(std::sh
     auto setCollisionHeader = std::make_shared<SetCollisionHeader>(initData);
 
     ReadCommandId(setCollisionHeader, reader);
-    
+
     setCollisionHeader->fileName = reader->ReadString();
     setCollisionHeader->collisionHeader = std::static_pointer_cast<CollisionHeader>(Ship::Context::GetInstance()->GetResourceManager()->LoadResourceProcess(setCollisionHeader->fileName.c_str()));
 

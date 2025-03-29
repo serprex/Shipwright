@@ -9,7 +9,7 @@ std::shared_ptr<Ship::IResource> SetSpecialObjectsFactory::ReadResource(std::sha
     auto setSpecialObjects = std::make_shared<SetSpecialObjects>(initData);
 
     ReadCommandId(setSpecialObjects, reader);
-    
+
     setSpecialObjects->specialObjects.elfMessage = reader->ReadInt8();
     setSpecialObjects->specialObjects.globalObject = reader->ReadInt16();
 

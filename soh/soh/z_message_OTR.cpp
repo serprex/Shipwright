@@ -13,7 +13,7 @@ extern "C" MessageTableEntry* sNesMessageEntryTablePtr;
 extern "C" MessageTableEntry* sGerMessageEntryTablePtr;
 extern "C" MessageTableEntry* sFraMessageEntryTablePtr;
 extern "C" MessageTableEntry* sStaffMessageEntryTablePtr;
-//extern "C" MessageTableEntry* _message_0xFFFC_nes;	
+//extern "C" MessageTableEntry* _message_0xFFFC_nes;
 
 static void SetMessageEntry(MessageTableEntry& entry, const SOH::MessageEntry& msgEntry) {
     entry.textId = msgEntry.id;
@@ -47,7 +47,7 @@ MessageTableEntry* OTRMessage_LoadTable(const std::string& filePath, bool isNES)
 
     if (file == nullptr)
         return nullptr;
-    
+
     // Allocate room for an additional message
     // OTRTODO: Should not be malloc'ing here. It's fine for now since we check elsewhere that the message table is
     // already null.

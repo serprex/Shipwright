@@ -41,7 +41,7 @@ class Item {
     void ApplyEffect() const;
     void UndoEffect() const;
 
-    
+
     const Text& GetName() const;
     bool IsAdvancement() const;
     int GetItemID() const;

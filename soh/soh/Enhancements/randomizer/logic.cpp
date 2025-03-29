@@ -354,7 +354,7 @@ namespace Rando {
             case RG_SERENADE_OF_WATER:
             case RG_NOCTURNE_OF_SHADOW:
                 return HasItem(RG_FAIRY_OCARINA) && HasItem(RG_OCARINA_A_BUTTON) && HasItem(RG_OCARINA_C_LEFT_BUTTON) && HasItem(RG_OCARINA_C_RIGHT_BUTTON) && HasItem(RG_OCARINA_C_DOWN_BUTTON);
-            
+
             // Misc. Items
             case RG_FISHING_POLE:
                 return HasItem(RG_CHILD_WALLET); // as long as you have enough rubies
@@ -428,7 +428,7 @@ namespace Rando {
     bool Logic::CanEquipSwap(RandomizerGet itemName) {
         if (!HasItem(itemName))
             return false;
-    
+
         if (CanDoGlitch(GlitchType::EquipSwapDins) || CanDoGlitch(GlitchType::EquipSwap))
             return true;
 
@@ -940,7 +940,7 @@ namespace Rando {
     }
 
     Logic::Logic() {
-        
+
     }
 
     uint8_t Logic::BottleCount() {
@@ -1139,7 +1139,7 @@ namespace Rando {
     uint8_t Logic::FireTimer(){
         return CanUse(RG_GORON_TUNIC) ? 255 : (ctx->GetTrickOption(RT_FEWER_TUNIC_REQUIREMENTS)) ? (Hearts() * 8) : 0;
     }
-    
+
     //Tunic is not required if you are using irons to do something that a simple gold scale dive could do, and you are not in water temple. (celing swimming and long walks through water do not count)
     uint8_t Logic::WaterTimer(){
         return CanUse(RG_ZORA_TUNIC) ? 255 : (ctx->GetTrickOption(RT_FEWER_TUNIC_REQUIREMENTS)) ? (Hearts() * 8) : 0;
@@ -2276,7 +2276,7 @@ namespace Rando {
         BigPoes          = 0;
 
         BaseHearts      = ctx->GetOption(RSK_STARTING_HEARTS).Get() + 1;
-        
+
 
         //Bridge Requirements
         BuiltRainbowBridge    = false;

@@ -444,7 +444,7 @@ static RandomizerCheck CreateRandomHint(std::vector<RandomizerCheck>& possibleHi
       return RC_UNKNOWN_CHECK;
     }
     hintedLocation = RandomElement(possibleHintLocations, true); //removing the location to avoid it being hinted again on fail
-   
+
     SPDLOG_DEBUG("\tLocation: ");
     SPDLOG_DEBUG(Rando::StaticData::GetLocation(hintedLocation)->GetName());
     SPDLOG_DEBUG("\n");
@@ -660,7 +660,7 @@ void CreateStoneHints() {
   }
   selectedHints.push_back(0);
   DistributeHints(selectedHints, totalStones, distTable, hintSetting.junkWeight);
-  
+
   while(totalStones != 0){
     totalStones = PlaceHints(selectedHints, distTable);
     if (totalStones != 0){

@@ -372,16 +372,16 @@ SaveState::SaveState(std::shared_ptr<SaveStateMgr> mgr, unsigned int slot) : sav
 void SaveState::BackupSeqScriptState(void) {
     for (unsigned int i = 0; i < 4; i++) {
         info->seqScriptStateCopy[i].value = gAudioContext.seqPlayers[i].scriptState.value;
-        
+
         info->seqScriptStateCopy[i].remLoopIters[0] = gAudioContext.seqPlayers[i].scriptState.remLoopIters[0];
         info->seqScriptStateCopy[i].remLoopIters[1] = gAudioContext.seqPlayers[i].scriptState.remLoopIters[1];
         info->seqScriptStateCopy[i].remLoopIters[2] = gAudioContext.seqPlayers[i].scriptState.remLoopIters[2];
         info->seqScriptStateCopy[i].remLoopIters[3] = gAudioContext.seqPlayers[i].scriptState.remLoopIters[3];
-        
+
         info->seqScriptStateCopy[i].depth = gAudioContext.seqPlayers[i].scriptState.depth;
-        
+
         info->seqScriptStateCopy[i].pc = (u8*)((uintptr_t)gAudioContext.seqPlayers[i].scriptState.pc - (uintptr_t)gAudioHeap);
-        
+
         info->seqScriptStateCopy[i].stack[0] =
             (u8*)((uintptr_t)gAudioContext.seqPlayers[i].scriptState.stack[0] - (uintptr_t)gAudioHeap);
         info->seqScriptStateCopy[i].stack[1] =
@@ -619,7 +619,7 @@ void SaveState::SaveOverlayStaticData(void) {
     info->D_80B5A4BC_copy = D_80B5A4BC;
     info->sKankyoIsSpawned_copy = sKankyoIsSpawned;
     info->sTrailingFairies_copy = sTrailingFairies;
-    
+
     info->sHeishi1PlayerIsCaughtCopy = sHeishi1PlayerIsCaught;
 
 }
@@ -802,7 +802,7 @@ void SaveState::LoadMiscCodeData(void) {
     sAudioHasMalonBgm = info->sAudioHasMalonBgm_copy;
     sAudioMalonBgmDist = info->sAudioMalonBgmDist_copy;
     sDisplayedNoteValue = info->sDisplayedNoteValue_copy;
-    
+
     sOcarinaNoteBufPos = info->sOcarinaNoteBufPos_copy;
     sOcarinaNoteBufLen = info->sOcarinaNoteBufLen_copy;
     memcpy(sOcarinaNoteBuf, info->sOcarinaNoteBuf_copy, sizeof(sOcarinaNoteBuf));
@@ -834,7 +834,7 @@ unsigned int SaveStateMgr::GetCurrentSlot(void) {
 void SaveStateMgr::ProcessSaveStateRequests(void) {
     while (!this->requests.empty()) {
         const auto& request = this->requests.front();
-        
+
         switch (request.type) {
             case RequestType::SAVE:
                 if (!this->states.contains(request.slot)) {
@@ -896,7 +896,7 @@ void SaveState::Save(void) {
 
     memcpy(info->gActiveSoundsCopy, gActiveSounds, sizeof(gActiveSounds));
     memcpy(&info->gSoundBankMutedCopy, gSoundBankMuted, sizeof(info->gSoundBankMutedCopy));
-    
+
     info->D_801333F0_copy = D_801333F0;
     info->gAudioSfxSwapOff_copy = gAudioSfxSwapOff;
 
@@ -951,7 +951,7 @@ void SaveState::Load(void) {
            sizeof(info->gAudioSfxSwapTarget_copy));
     memcpy(gAudioSfxSwapMode, &info->gAudioSfxSwapMode_copy,
            sizeof(info->gAudioSfxSwapMode_copy));
-    
+
     //Various static data
     D_801755D0 = info->D_801755D0_copy;
     LoadCameraData();

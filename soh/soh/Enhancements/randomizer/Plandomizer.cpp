@@ -342,7 +342,7 @@ ImVec4 plandomizerGetItemColor(Rando::Item randoItem) {
     if (randoItem.GetRandomizerGet() >= RG_GOHMA_SOUL && randoItem.GetRandomizerGet() <= RG_GANON_SOUL) {
         itemColor = bossSoulColorMapping.at(randoItem.GetRandomizerGet());
     }
-    
+
     return itemColor;
 }
 
@@ -387,7 +387,7 @@ void PlandomizerItemImageCorrection(Rando::Item randoItem) {
     imagePadding = 2.0f;
     textureUV0 = ImVec2( 0, 0 );
     textureUV1 = ImVec2( 1, 1 );
-    
+
 
     itemColor = plandomizerGetItemColor(randoItem);
 
@@ -510,7 +510,7 @@ void PlandomizerAddToItemList(Rando::Item randoItem) {
                 break;
             }
         }
-        
+
         if (!itemExists) {
             drawnItemsList.push_back(std::make_pair(randoItem, 1));
         }
@@ -538,7 +538,7 @@ void PlandomizerSaveSpoilerLog() {
             { "message", import.hintText.c_str() }
         };
     }
-    
+
     for (auto& import : plandoLogData) {
         if (import.checkRewardItem.GetRandomizerGet() == RG_ICE_TRAP) {
             spoilerSave["locations"][import.checkName] = {
@@ -731,8 +731,8 @@ void PlandomizerDrawItemPopup(uint32_t index) {
             PlandomizerOverlayText(std::make_pair(plandomizerRandoRetrieveItem(item), 1));
             ImGui::PopID();
         }
-        
-        
+
+
         ImGui::EndTable();
         ImGui::SeparatorText("Spoiler Log Rewards");
         ImGui::BeginTable("Item Button Table", 8);
@@ -881,12 +881,12 @@ void PlandomizerDrawIceTrapSetup(uint32_t index) {
     if (UIWidgets::InputString("##TrapName", &trapTextInput, UIWidgets::InputOptions().Color(THEME_COLOR).LabelPosition(UIWidgets::LabelPositions::None))) {
             plandoLogData[index].iceTrapName = trapTextInput.c_str();
         }
-    
+
     if (plandoLogData[index].shopPrice >= 0) {
         PlandomizerDrawShopSlider(index);
     }
     ImGui::EndTable();
-    
+
     ImGui::PopID();
 }
 static std::unordered_map<RandomizerCheckArea, const char*> rcAreaNameMap = {
@@ -1006,7 +1006,7 @@ void PlandomizerDrawOptions() {
         }
         ImGui::EndTable();
     }
-    
+
     ImGui::SeparatorText("Options");
     if (plandoLogData.size() == 0) {
         ImGui::Text("Please Load Spoiler Data...");

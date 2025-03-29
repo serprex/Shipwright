@@ -448,7 +448,7 @@ static bool FWHandler(std::shared_ptr<Ship::Console> Console, const std::vector<
         ERROR_MESSAGE("[SOH] Invalid option. Options are 'clear', 'warp', 'backup'");
         return 1;
     }
-    
+
     if (gPlayState != nullptr) {
         FaroresWindData clear = {};
         switch(it->second) {
@@ -485,7 +485,7 @@ static bool FWHandler(std::shared_ptr<Ship::Console> Console, const std::vector<
         ERROR_MESSAGE("gPlayState == nullptr");
         return 1;
     }
-    
+
     return 0;
 }
 
@@ -729,7 +729,7 @@ static bool GravityHandler(std::shared_ptr<Ship::Console> Console, const std::ve
         ERROR_MESSAGE("[SOH] Gravity value must be a number.");
         return 1;
     }
-    
+
     GameInteractionEffectQueryResult result = GameInteractor::ApplyEffect(effect);
     if (result == GameInteractionEffectQueryResult::Possible) {
         INFO_MESSAGE("[SOH] Updated gravity.");
@@ -753,7 +753,7 @@ static bool NoUIHandler(std::shared_ptr<Ship::Console> Console, const std::vecto
         ERROR_MESSAGE("[SOH] No UI value must be a number.");
         return 1;
     }
-    
+
     RemovableGameInteractionEffect* effect = new GameInteractionEffect::NoUI();
     GameInteractionEffectQueryResult result =
         state ? GameInteractor::ApplyEffect(effect) : GameInteractor::RemoveEffect(effect);

@@ -17,7 +17,7 @@ std::shared_ptr<Ship::IResource> ResourceFactoryBinarySkeletonLimbV0::ReadResour
     skeletonLimb->skinDList = reader->ReadString();
 
     skeletonLimb->skinVtxCnt = reader->ReadUInt16();
-    
+
     skeletonLimb->skinLimbModifCount = reader->ReadUInt32();
     skeletonLimb->skinLimbModifArray.reserve(skeletonLimb->skinLimbModifCount);
     skeletonLimb->skinLimbModifVertexArrays.reserve(skeletonLimb->skinLimbModifCount);
@@ -170,7 +170,7 @@ std::shared_ptr<Ship::IResource> ResourceFactoryBinarySkeletonLimbV0::ReadResour
             for (size_t i = 0; i < skeletonLimb->skinLimbModifArray.size(); i++) {
                 skeletonLimb->skinAnimLimbData.limbModifications[i].vtxCount = skeletonLimb->skinLimbModifVertexArrays[i].size();
                 skeletonLimb->skinAnimLimbData.limbModifications[i].skinVertices = skeletonLimb->skinLimbModifVertexArrays[i].data();
-                
+
                 skeletonLimb->skinAnimLimbData.limbModifications[i].transformCount = skeletonLimb->skinLimbModifTransformationArrays[i].size();
                 skeletonLimb->skinAnimLimbData.limbModifications[i].limbTransformations = skeletonLimb->skinLimbModifTransformationArrays[i].data();
 

@@ -9,7 +9,7 @@ SetCsCameraFactory::ReadResource(std::shared_ptr<Ship::ResourceInitData> initDat
     auto setCsCamera = std::make_shared<SetCsCamera>(initData);
 
     ReadCommandId(setCsCamera, reader);
-	
+
     reader->ReadInt8();  // camSize
     reader->ReadInt32(); // segOffset
 

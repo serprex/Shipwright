@@ -2336,7 +2336,7 @@ typedef enum {
     RC_GANONS_CASTLE_MQ_SPIRIT_TRIAL_POT_1,
     RC_GANONS_CASTLE_MQ_SPIRIT_TRIAL_POT_2,
     // End Pots
-    
+
     // Overworld Crates
     RC_GV_FREESTANDING_POH_CRATE,
     RC_GV_NEAR_COW_CRATE,

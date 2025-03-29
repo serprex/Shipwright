@@ -71,7 +71,7 @@ namespace SohGui {
     std::shared_ptr<SohStatsWindow> mStatsWindow;
     std::shared_ptr<Ship::GuiWindow> mGfxDebuggerWindow;
     std::shared_ptr<Ship::GuiWindow> mInputEditorWindow;
-    
+
     std::shared_ptr<SohMenu> mSohMenu;
     std::shared_ptr<AudioEditor> mAudioEditorWindow;
     std::shared_ptr<InputViewer> mInputViewer;
@@ -189,7 +189,7 @@ namespace SohGui {
     void Destroy() {
         auto gui = Ship::Context::GetInstance()->GetWindow()->GetGui();
         gui->RemoveAllGuiWindows();
-        
+
         mNotificationWindow = nullptr;
         mModalWindow = nullptr;
         mRandomizerSettingsWindow = nullptr;

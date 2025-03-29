@@ -585,7 +585,7 @@ void Menu::DrawElement() {
     if (windowHeight > 800) {
         menuSize.y = windowHeight * 0.9f;
     }
-    
+
     pos += window->WorkRect.GetSize() / 2 - menuSize / 2;
     ImGui::SetNextWindowPos(pos);
     ImGui::BeginChild("Menu Block", menuSize,

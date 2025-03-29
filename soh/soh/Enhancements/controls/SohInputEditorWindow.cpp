@@ -1309,7 +1309,7 @@ void SohInputEditorWindow::DrawMapping(CustomButtonMap& mapping, float labelWidt
 void SohInputEditorWindow::DrawOcarinaControlPanel() {
     ImVec2 cursor = ImGui::GetCursorPos();
     ImGui::SetCursorPos(ImVec2(cursor.x, cursor.y + 5));
-    
+
     CheckboxOptions checkOpt = CheckboxOptions().Color(THEME_COLOR);
     CVarCheckbox("Dpad Ocarina Playback", CVAR_SETTING("CustomOcarina.Dpad"), checkOpt);
     CVarCheckbox("Right Stick Ocarina Playback", CVAR_SETTING("CustomOcarina.RightStick"), checkOpt);

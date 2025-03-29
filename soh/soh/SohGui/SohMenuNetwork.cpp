@@ -80,7 +80,7 @@ void SohMenu::AddMenuNetwork() {
                 info.name = "Connecting...##Sail";
             }
         });
-    
+
     path.sidebarName = "Crowd Control";
     AddSidebarEntry("Network", path.sidebarName, 3);
     path.column = SECTION_COLUMN_1;

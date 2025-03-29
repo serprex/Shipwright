@@ -9,7 +9,7 @@ std::shared_ptr<Ship::IResource> SetSkyboxModifierFactory::ReadResource(std::sha
     auto setSkyboxModifier = std::make_shared<SetSkyboxModifier>(initData);
 
 	ReadCommandId(setSkyboxModifier, reader);
-	
+
     setSkyboxModifier->modifier.skyboxDisabled = reader->ReadInt8();
     setSkyboxModifier->modifier.sunMoonDisabled = reader->ReadInt8();
 

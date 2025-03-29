@@ -9,7 +9,7 @@ SetWindSettingsFactory::ReadResource(std::shared_ptr<Ship::ResourceInitData> ini
     auto setWind = std::make_shared<SetWindSettings>(initData);
 
     ReadCommandId(setWind, reader);
-    
+
     setWind->settings.windWest = reader->ReadInt8();
     setWind->settings.windVertical = reader->ReadInt8();
     setWind->settings.windSouth = reader->ReadInt8();

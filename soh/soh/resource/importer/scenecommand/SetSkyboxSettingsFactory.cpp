@@ -9,7 +9,7 @@ std::shared_ptr<Ship::IResource> SetSkyboxSettingsFactory::ReadResource(std::sha
     auto setSkyboxSettings = std::make_shared<SetSkyboxSettings>(initData);
 
     ReadCommandId(setSkyboxSettings, reader);
-	
+
     setSkyboxSettings->settings.unk = reader->ReadInt8();
     setSkyboxSettings->settings.skyboxId = reader->ReadInt8();
     setSkyboxSettings->settings.weather = reader->ReadInt8();

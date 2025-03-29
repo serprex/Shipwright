@@ -34,7 +34,7 @@
 	Logg | Tester - General Testing
 	Taylor Daley | Graphic Design
 	Can't Sleep | Graphic Design
-	
+
 ## Video Credits
     Kenix | Producer / Writer
     briaguya | Writer

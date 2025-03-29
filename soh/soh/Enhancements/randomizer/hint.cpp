@@ -63,7 +63,7 @@ Hint::Hint(RandomizerHint ownKey_, nlohmann::json json_){
       messages.push_back(CustomMessage(json_["message"].get<std::string>()));
     }
   }
-  
+
   if (json_.contains("distribution")){
     distribution = json_["distribution"].get<std::string>();
   }
@@ -381,7 +381,7 @@ oJson Hint::toJSON() {
   nlohmann::ordered_json log = {};
   if (enabled){
     log["type"] = StaticData::hintTypeNames[hintType].GetForCurrentLanguage(MF_CLEAN);
-    
+
     std::vector<std::string> hintMessages = GetAllMessageStrings(MF_CLEAN);
     if (hintMessages.size() == 1){
       log["message"] = hintMessages[0];
@@ -392,7 +392,7 @@ oJson Hint::toJSON() {
     if (distribution != ""){
       log["distribution"] = distribution;
     }
-    
+
     if (hintType != HINT_TYPE_FOOLISH){
       if (!(StaticData::staticHintInfoMap.contains(ownKey) && 
           StaticData::staticHintInfoMap[ownKey].targetChecks.size() > 0)){
@@ -407,7 +407,7 @@ oJson Hint::toJSON() {
           log["locations"] = locStrings;
         }
       }
-      
+
       if (!(StaticData::staticHintInfoMap.contains(ownKey) &&
           StaticData::staticHintInfoMap[ownKey].targetItems.size() > 0)){
         if (items.size() == 1){

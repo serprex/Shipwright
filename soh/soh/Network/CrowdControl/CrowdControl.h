@@ -63,7 +63,7 @@ class CrowdControl : public Network {
             bool isPaused;
             EffectResult lastExecutionResult;
         } Effect;
-        
+
         std::thread ccThreadProcess;
 
         std::vector<Effect*> activeEffects;

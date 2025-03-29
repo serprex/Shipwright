@@ -26,7 +26,7 @@ void ShuffleFreestanding_OnVanillaBehaviorHandler(GIVanillaBehavior id, bool* sh
             Rando::Context::GetInstance()->GetOption(RSK_SHUFFLE_FREESTANDING).Get();
         RandomizerCheck randomizerCheck = loc->GetRandomizerCheck();
         bool checkObtained = Rando::Context::GetInstance()->GetItemLocation(randomizerCheck)->HasObtained();
-        
+
         // Don't change to randomized item if current freestanding item isn't shuffled or already obtained.
         if ((freestandingSetting == RO_SHUFFLE_FREESTANDING_OVERWORLD && isDungeon) ||
             (freestandingSetting == RO_SHUFFLE_FREESTANDING_DUNGEONS && !isDungeon) || 

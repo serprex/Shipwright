@@ -10,7 +10,7 @@ SetPathwaysFactory::ReadResource(std::shared_ptr<Ship::ResourceInitData> initDat
     auto setPathways = std::make_shared<SetPathways>(initData);
 
     ReadCommandId(setPathways, reader);
-	
+
     setPathways->numPaths = reader->ReadUInt32();
     setPathways->paths.reserve(setPathways->numPaths);
     for (uint32_t i = 0; i < setPathways->numPaths; i++) {
