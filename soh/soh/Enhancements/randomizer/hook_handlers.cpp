@@ -29,6 +29,7 @@ extern "C" {
 #include "src/overlays/actors/ovl_En_Shopnuts/z_en_shopnuts.h"
 #include "src/overlays/actors/ovl_En_Dns/z_en_dns.h"
 #include "src/overlays/actors/ovl_En_Gb/z_en_gb.h"
+#include "src/overlays/actors/ovl_En_Po_Field/z_en_po_field.h"
 #include "src/overlays/actors/ovl_Item_B_Heart/z_item_b_heart.h"
 #include "src/overlays/actors/ovl_En_Ko/z_en_ko.h"
 #include "src/overlays/actors/ovl_En_Mk/z_en_mk.h"
@@ -1077,6 +1078,30 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             Flags_SetItemGetInf(ITEMGETINF_2C);
             enNiwLady->actionFunc = func_80ABA778;
             *should = false;
+            break;
+        }
+        case VB_BOTTLE_BIG_POE: {
+            if (RAND_GET_OPTION(RSK_SKIP_BOTTLING_BIG_POES)) {
+                EnPoField* enPoe = va_arg(args, EnPoField*);
+                enPoe->actor.textId = 0x508F;
+                Flags_SetSwitch(gPlayState, enPoe->actor.params & 0xFF);
+                HIGH_SCORE(HS_POE_POINTS) += 100;
+                if (HIGH_SCORE(HS_POE_POINTS) > 1100) {
+                    HIGH_SCORE(HS_POE_POINTS) = 1100;
+                }
+                *should = false;
+            }
+            break;
+        }
+        case VB_SELL_POES_TO_POE_COLLECTOR: {
+            EnGb* enGb = va_arg(args, EnGb*);
+            if (RAND_GET_OPTION(RSK_SKIP_BOTTLING_BIG_POES) && !Flags_GetRandomizerInf(RAND_INF_10_BIG_POES) &&
+                HIGH_SCORE(HS_POE_POINTS) >= 1000) {
+                enGb->textId = 0x70F8;
+                Message_ContinueTextbox(gPlayState, enGb->textId);
+                enGb->actionFunc = func_80A2FB40;
+                *should = false;
+            }
             break;
         }
         case VB_GIVE_ITEM_FROM_POE_COLLECTOR: {

@@ -602,7 +602,7 @@ void ValidateEntrances(bool checkPoeCollectorAccess, bool checkOtherEntranceAcce
     ResetLogic(ctx, gals, !checkOtherEntranceAccess);
 
     ctx->allLocationsReachable = false;
-    if (checkPoeCollectorAccess) {
+    if (checkPoeCollectorAccess && !ctx->GetOption(RSK_SKIP_BOTTLING_BIG_POES)) {
         logic->AreCheckingBigPoes = true;
     }
 

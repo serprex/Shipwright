@@ -595,6 +595,8 @@ void Settings::CreateOptionDescriptions() {
         "rewards on slider does not change.";
     mOptionDescriptions[RSK_CUCCO_COUNT] = "The amount of cuccos needed to claim the reward from Anju the Cucco Lady.";
     mOptionDescriptions[RSK_BIG_POE_COUNT] = "The Poe collector will give a reward for turning in this many Big Poes.";
+    mOptionDescriptions[RSK_SKIP_BOTTLING_BIG_POES] =
+        "Collecting big poes will not fill a bottle, but still require a bottle.";
     mOptionDescriptions[RSK_SKIP_CHILD_STEALTH] =
         "The crawlspace into Hyrule Castle goes straight to Zelda, skipping the guards.";
     mOptionDescriptions[RSK_SKIP_CHILD_ZELDA] =
