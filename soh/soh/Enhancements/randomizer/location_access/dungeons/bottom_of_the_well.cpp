@@ -57,7 +57,8 @@ void RegionTable_Init_BottomOfTheWell() {
     }, {
         //Exits
         Entrance(RR_BOTTOM_OF_THE_WELL_PERIMETER,         []{return ctx->GetTrickOption(RT_LENS_BOTW) || logic->CanUse(RG_LENS_OF_TRUTH);}),
-        Entrance(RR_BOTTOM_OF_THE_WELL_INNER_ROOMS,       []{return logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 3);}),
+        Entrance(RR_BOTTOM_OF_THE_WELL_WEST_INNER_ROOM,   []{return logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 3);}),
+        Entrance(RR_BOTTOM_OF_THE_WELL_EAST_INNER_ROOM,   []{return logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 3);}),
         Entrance(RR_BOTTOM_OF_THE_WELL_BASEMENT,          []{return true;}),
         Entrance(RR_BOTTOM_OF_THE_WELL_BASEMENT_PLATFORM, []{return ctx->GetTrickOption(RT_LENS_BOTW) || logic->CanUse(RG_LENS_OF_TRUTH);}),
     });
@@ -95,14 +96,20 @@ void RegionTable_Init_BottomOfTheWell() {
         Entrance(RR_BOTTOM_OF_THE_WELL_KEESE_BEAMOS_ROOM, []{return true;}),
     });
 
-    //If the player can voidwarp into one of these rooms they will need splitting up, and Fake walls will need specifying into middle and the rest moved to perimeter
-    areaTable[RR_BOTTOM_OF_THE_WELL_INNER_ROOMS] = Region("Bottom of the Well Inner Rooms", "Bottom of the Well", {RA_BOTTOM_OF_THE_WELL}, NO_DAY_NIGHT_CYCLE, {
+    areaTable[RR_BOTTOM_OF_THE_WELL_WEST_INNER_ROOM] = Region("Bottom of the Well West Inner Room", "Bottom of the Well", {RA_BOTTOM_OF_THE_WELL}, NO_DAY_NIGHT_CYCLE, {
         //Events
         EventAccess(&logic->DekuBabaSticks, []{return logic->CanGetDekuBabaSticks();}),
         EventAccess(&logic->DekuBabaNuts,   []{return logic->CanGetDekuBabaNuts();}),
     }, {
         //Locations
         LOCATION(RC_BOTTOM_OF_THE_WELL_GS_WEST_INNER_ROOM, logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG)),
+    }, {
+        //Exits
+        Entrance(RR_BOTTOM_OF_THE_WELL_BEHIND_FAKE_WALLS, []{return logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 3);}),
+    });
+
+    areaTable[RR_BOTTOM_OF_THE_WELL_EAST_INNER_ROOM] = Region("Bottom of the Well East Inner Room", "Bottom of the Well", {RA_BOTTOM_OF_THE_WELL}, NO_DAY_NIGHT_CYCLE, {}, {
+        //Locations
         LOCATION(RC_BOTTOM_OF_THE_WELL_GS_EAST_INNER_ROOM, logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG)),
     }, {
         //Exits
@@ -209,7 +216,7 @@ void RegionTable_Init_BottomOfTheWell() {
         Entrance(RR_BOTTOM_OF_THE_WELL_ENTRYWAY,            []{return logic->IsChild;}),
         Entrance(RR_BOTTOM_OF_THE_WELL_MQ_WEST_ROOM_SWITCH, []{return Here(RR_BOTTOM_OF_THE_WELL_MQ_PERIMETER, []{return logic->BlastOrSmash();}) && logic->CanPassEnemy(RE_BIG_SKULLTULA);}),
         Entrance(RR_BOTTOM_OF_THE_WELL_MQ_COFFIN_ROOM,      []{return (logic->LoweredWaterInsideBotw || logic->HasItem(RG_BRONZE_SCALE)) && logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 2);}),
-        Entrance(RR_BOTTOM_OF_THE_WELL_MQ_LOCKED_CAGE,      []{return logic->IsChild && logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 2) && logic->CanUseProjectile();}),
+        Entrance(RR_BOTTOM_OF_THE_WELL_MQ_FLOORMASTER_ROOM, []{return logic->IsChild && logic->CanUseProjectile();}),
         Entrance(RR_BOTTOM_OF_THE_WELL_MQ_DEAD_HAND_ROOM,   []{return logic->IsChild && logic->LoweredWaterInsideBotw;}),
         Entrance(RR_BOTTOM_OF_THE_WELL_MQ_MIDDLE,           []{return logic->CanUse(RG_ZELDAS_LULLABY);}),
         Entrance(RR_BOTTOM_OF_THE_WELL_MQ_BASEMENT,         []{return true;}),
@@ -235,12 +242,17 @@ void RegionTable_Init_BottomOfTheWell() {
         Entrance(RR_BOTTOM_OF_THE_WELL_MQ_PERIMETER,  []{return (logic->LoweredWaterInsideBotw || logic->HasItem(RG_BRONZE_SCALE)) && logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 2);}),
     });
 
+    areaTable[RR_BOTTOM_OF_THE_WELL_MQ_FLOORMASTER_ROOM] = Region("Bottom of the Well MQ Locked Cage", "Bottom of the Well", {RA_BOTTOM_OF_THE_WELL}, NO_DAY_NIGHT_CYCLE, {}, {}, {
+        Entrance(RR_BOTTOM_OF_THE_WELL_MQ_PERIMETER,   []{return logic->IsChild;}),
+        Entrance(RR_BOTTOM_OF_THE_WELL_MQ_LOCKED_CAGE, []{return logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 2);}),
+    });
+
     areaTable[RR_BOTTOM_OF_THE_WELL_MQ_LOCKED_CAGE] = Region("Bottom of the Well MQ Locked Cage", "Bottom of the Well", {RA_BOTTOM_OF_THE_WELL}, NO_DAY_NIGHT_CYCLE, {
         //Events
         EventAccess(&logic->OpenedMiddleHoleMQBotw, []{return logic->HasExplosives();}),
     }, {}, {
         //Exits
-        Entrance(RR_BOTTOM_OF_THE_WELL_MQ_PERIMETER, []{return logic->IsChild && logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 2);}),
+        Entrance(RR_BOTTOM_OF_THE_WELL_MQ_FLOORMASTER_ROOM, []{return logic->SmallKeys(RR_BOTTOM_OF_THE_WELL, 2);}),
     });
 
     areaTable[RR_BOTTOM_OF_THE_WELL_MQ_DEAD_HAND_ROOM] = Region("Bottom of the Well MQ Dead Hand Room", "Bottom of the Well", {RA_BOTTOM_OF_THE_WELL}, NO_DAY_NIGHT_CYCLE, {}, {
@@ -259,9 +271,34 @@ void RegionTable_Init_BottomOfTheWell() {
 
     areaTable[RR_BOTTOM_OF_THE_WELL_MQ_MIDDLE] = Region("Bottom of the Well MQ Middle", "Bottom of the Well", {RA_BOTTOM_OF_THE_WELL}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
-        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_MAP_CHEST,                        true),
+        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_MAP_CHEST,         true),
+        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_INNER_LOBBY_POT_1, logic->CanBreakPots()),
+        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_INNER_LOBBY_POT_2, logic->CanBreakPots()),
+        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_INNER_LOBBY_POT_3, logic->CanBreakPots()),
+        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_CELL_SUN_FAIRY,    logic->CanUse(RG_SUNS_SONG)),
+    }, {
+        //Exits
+        //If a relevant trick causes you to be able to warp into here without going through PERIMETER, a new eventAccess will be needed for lowering the gates with ZL
+        Entrance(RR_BOTTOM_OF_THE_WELL_MQ_BASEMENT_SWITCH_PLATFORM, []{return logic->OpenedMiddleHoleMQBotw;}),
+        Entrance(RR_BOTTOM_OF_THE_WELL_MQ_BASEMENT,                 []{return true;}),
+        Entrance(RR_BOTTOM_OF_THE_WELL_MQ_EAST_INNER_ROOM,          []{return true;}),
+        Entrance(RR_BOTTOM_OF_THE_WELL_MQ_WEST_INNER_ROOM,          []{return true;}),
+    });
+
+    areaTable[RR_BOTTOM_OF_THE_WELL_MQ_EAST_INNER_ROOM] = Region("Bottom of the Well East Inner Room", "Bottom of the Well", {RA_BOTTOM_OF_THE_WELL}, NO_DAY_NIGHT_CYCLE, {}, {
+        //Locations
         //This location technically involves an invisible platform, but it's intended to do lensless in vanilla and is clearly signposted by pots.
         LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_EAST_INNER_ROOM_FREESTANDING_KEY, true),
+        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_EAST_INNER_ROOM_POT_1, logic->CanBreakPots()),
+        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_EAST_INNER_ROOM_POT_2, logic->CanBreakPots()),
+        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_EAST_INNER_ROOM_POT_3, logic->CanBreakPots()),
+    }, {
+        //Exits
+        Entrance(RR_BOTTOM_OF_THE_WELL_MQ_MIDDLE, []{return true;}),
+    });
+
+    areaTable[RR_BOTTOM_OF_THE_WELL_MQ_WEST_INNER_ROOM] = Region("Bottom of the Well West Inner Room", "Bottom of the Well", {RA_BOTTOM_OF_THE_WELL}, NO_DAY_NIGHT_CYCLE, {}, {
+        //Locations
         //The enemies in this room are invisible and crowd around the player, being awkward to deal with blind unless you already know how.
         //the right wall is safe, and can be followed to get behind the grave which you can then pull easily assuming you can tank invisible keese
         //Using a deku nut however stuns everything easily. and if you have a melee weapon you can kill the skull through the grave then grab the drop
@@ -270,18 +307,9 @@ void RegionTable_Init_BottomOfTheWell() {
         //An MQ lens trick is recommended here, and a review of this room for OHKO logic what that is added is advised.
         //In the meantime I assume damage taken or the easy answer (nuts)
         LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_GS_WEST_INNER_ROOM,    logic->OpenedWestRoomMQBotw && (logic->TakeDamage() || logic->CanUse(RG_NUTS)) && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA)),
-        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_INNER_LOBBY_POT_1,     logic->CanBreakPots()),
-        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_INNER_LOBBY_POT_2,     logic->CanBreakPots()),
-        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_INNER_LOBBY_POT_3,     logic->CanBreakPots()),
-        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_EAST_INNER_ROOM_POT_1, logic->CanBreakPots()),
-        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_EAST_INNER_ROOM_POT_2, logic->CanBreakPots()),
-        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_EAST_INNER_ROOM_POT_3, logic->CanBreakPots()),
-        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_CELL_SUN_FAIRY,        logic->CanUse(RG_SUNS_SONG)),
     }, {
         //Exits
-        //If a relevant trick causes you to be able to warp into here without going through PERIMETER, a new eventAccess will be needed for lowering the gates with ZL
-        Entrance(RR_BOTTOM_OF_THE_WELL_MQ_BASEMENT_SWITCH_PLATFORM, []{return logic->OpenedMiddleHoleMQBotw;}),
-        Entrance(RR_BOTTOM_OF_THE_WELL_MQ_BASEMENT,                 []{return true;}),
+        Entrance(RR_BOTTOM_OF_THE_WELL_MQ_MIDDLE, []{return true;}),
     });
 
     areaTable[RR_BOTTOM_OF_THE_WELL_MQ_BASEMENT] = Region("Bottom of the Well MQ Basement", "Bottom of the Well", {RA_BOTTOM_OF_THE_WELL}, NO_DAY_NIGHT_CYCLE, {}, {

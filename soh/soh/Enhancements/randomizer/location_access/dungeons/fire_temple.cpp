@@ -207,6 +207,7 @@ void RegionTable_Init_FireTemple() {
     }, {
         //Exits
         Entrance(RR_FIRE_TEMPLE_EAST_CENTRAL_ROOM, []{return true;}),
+        Entrance(RR_FIRE_TEMPLE_FIRE_WALL_CHASE, []{return false;}),
     });
 
     areaTable[RR_FIRE_TEMPLE_BOULDER_MAZE_UPPER] = Region("Fire Temple Boulder Maze Upper", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
@@ -336,6 +337,7 @@ void RegionTable_Init_FireTemple() {
     {
         //Exits
         Entrance(RR_FIRE_TEMPLE_ABOVE_FIRE_MAZE, []{return logic->CanUse(RG_MEGATON_HAMMER);}),
+        Entrance(RR_FIRE_TEMPLE_WEST_PEAK, []{return false;}),
     });
 
     areaTable[RR_FIRE_TEMPLE_ABOVE_FIRE_MAZE] = Region("Fire Temple Above Fire Maze", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
@@ -476,18 +478,34 @@ void RegionTable_Init_FireTemple() {
     areaTable[RR_FIRE_TEMPLE_MQ_BIG_LAVA_ROOM] = Region("Fire Temple MQ Big Lava Room", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
         //I'm currently assuming the oversight version of RT_FIRE_MQ_BK_CHEST for the fire timer logic
-        LOCATION(RC_FIRE_TEMPLE_MQ_BIG_LAVA_ROOM_BLOCKED_DOOR_CHEST, logic->FireTimer() >= 40 && logic->HasFireSource() && logic->HasExplosives() && (logic->CanUse(RG_HOOKSHOT) || (logic->IsAdult && ctx->GetTrickOption(RT_FIRE_MQ_BLOCKED_CHEST)))),
-        //implies CanGetEnemyDrop(RE_GOLD_SKULLTULA)
-        LOCATION(RC_FIRE_TEMPLE_MQ_GS_BIG_LAVA_ROOM_OPEN_DOOR,       logic->FireTimer() >= 20 && logic->CanUse(RG_MEGATON_HAMMER)),
         LOCATION(RC_FIRE_TEMPLE_MQ_LAVA_ROOM_NORTH_POT,              logic->CanBreakPots()),
         LOCATION(RC_FIRE_TEMPLE_MQ_LAVA_ROOM_HIGH_POT,               logic->CanBreakPots()),
         LOCATION(RC_FIRE_TEMPLE_MQ_LAVA_ROOM_SOUTH_POT,              logic->FireTimer() >= 40 && (logic->CanUse(RG_HOOKSHOT) || (ctx->GetTrickOption(RT_FIRE_MQ_BLOCKED_CHEST) && ((logic->IsAdult && logic->CanBreakPots()) || logic->CanUse(RG_BOOMERANG))))),
     }, {
         //Exits
         // Fewer tunic requirements ends here
-        Entrance(RR_FIRE_TEMPLE_MQ_FIRST_ROOM_UPPER,    []{return logic->FireTimer() >= 20;}),
-        Entrance(RR_FIRE_TEMPLE_MQ_ELEVATOR_ROOM,       []{return logic->CanUse(RG_GORON_TUNIC) && logic->SmallKeys(RR_FIRE_TEMPLE, 2);}),
-        Entrance(RR_FIRE_TEMPLE_MQ_TORCH_FIREWALL_ROOM, []{return logic->HasFireSource() && ((logic->CanUse(RG_FAIRY_BOW) && logic->FireTimer() >= 25) || (ctx->GetTrickOption(RT_FIRE_MQ_BK_CHEST) && logic->FireTimer() >= 50)) && (logic->CanUse(RG_HOOKSHOT) || (logic->IsAdult && ctx->GetTrickOption(RT_FIRE_SOT)));}),
+        Entrance(RR_FIRE_TEMPLE_MQ_FIRST_ROOM_UPPER,          []{return logic->FireTimer() >= 20;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_BIG_LAVA_ROOM_NORTH_GORON, []{return logic->FireTimer() >= 20;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_BIG_LAVA_ROOM_SOUTH_GORON, []{return logic->FireTimer() >= 40 && logic->HasFireSource() && logic->HasExplosives() && (logic->CanUse(RG_HOOKSHOT) || (logic->IsAdult && ctx->GetTrickOption(RT_FIRE_MQ_BLOCKED_CHEST)));}),
+        Entrance(RR_FIRE_TEMPLE_MQ_ELEVATOR_ROOM,             []{return logic->CanUse(RG_GORON_TUNIC) && logic->SmallKeys(RR_FIRE_TEMPLE, 2);}),
+        Entrance(RR_FIRE_TEMPLE_MQ_TORCH_FIREWALL_ROOM,       []{return logic->HasFireSource() && ((logic->CanUse(RG_FAIRY_BOW) && logic->FireTimer() >= 25) || (ctx->GetTrickOption(RT_FIRE_MQ_BK_CHEST) && logic->FireTimer() >= 50)) && (logic->CanUse(RG_HOOKSHOT) || (logic->IsAdult && ctx->GetTrickOption(RT_FIRE_SOT)));}),
+    });
+
+    areaTable[RR_FIRE_TEMPLE_MQ_BIG_LAVA_ROOM_NORTH_GORON] = Region("Fire Temple MQ Big Lava Room North Goron", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
+        //Locations
+        //implies CanGetEnemyDrop(RE_GOLD_SKULLTULA)
+        LOCATION(RC_FIRE_TEMPLE_MQ_GS_BIG_LAVA_ROOM_OPEN_DOOR, logic->CanUse(RG_MEGATON_HAMMER)),
+    }, {
+        //Exits
+        Entrance(RR_FIRE_TEMPLE_MQ_BIG_LAVA_ROOM,  []{return true;}),
+    });
+
+    areaTable[RR_FIRE_TEMPLE_MQ_BIG_LAVA_ROOM_SOUTH_GORON] = Region("Fire Temple MQ Big Lava Room South Goron", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
+        //Locations
+        LOCATION(RC_FIRE_TEMPLE_MQ_BIG_LAVA_ROOM_BLOCKED_DOOR_CHEST, logic->HasFireSource()),
+    }, {
+        //Exits
+        Entrance(RR_FIRE_TEMPLE_MQ_BIG_LAVA_ROOM,  []{return true;}),
     });
 
     areaTable[RR_FIRE_TEMPLE_MQ_TORCH_FIREWALL_ROOM] = Region("Fire Temple MQ Torch Firewall Room", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
@@ -523,9 +541,6 @@ void RegionTable_Init_FireTemple() {
     });
 
     areaTable[RR_FIRE_TEMPLE_MQ_LOWER_MAZE] = Region("Fire Temple MQ Lower Maze", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
-        //Locations
-        //Check handled on both floors
-        LOCATION(RC_FIRE_TEMPLE_MQ_LIZALFOS_MAZE_SIDE_ROOM_CHEST, logic->HasExplosives() && ctx->GetTrickOption(RT_FIRE_MQ_MAZE_SIDE_ROOM)),
      }, {
         //Exits
         Entrance(RR_FIRE_TEMPLE_MQ_BIG_TORCH_ROOM,        []{return true;}),
@@ -533,6 +548,8 @@ void RegionTable_Init_FireTemple() {
         Entrance(RR_FIRE_TEMPLE_MQ_LOWER_MAZE_CRATE_CAGE, []{return Here(RR_FIRE_TEMPLE_MQ_LOWER_MAZE, []{return logic->CanJumpslash();});}),
         //it's possible to make the RT_FIRE_MQ_MAZE_HOVERS as child using bunny hood jumps, but not adult as adult bonks
         Entrance(RR_FIRE_TEMPLE_MQ_UPPER_MAZE,            []{return logic->HasExplosives() && logic->CanUse(RG_MEGATON_HAMMER) && logic->CanUse(RG_HOOKSHOT);}),
+        Entrance(RR_FIRE_TEMPLE_MQ_LOWER_MAZE_GORON_DOOR, []{return logic->HasExplosives() && ctx->GetTrickOption(RT_FIRE_MQ_MAZE_SIDE_ROOM);}),
+        Entrance(RR_FIRE_TEMPLE_MQ_NARROW_PATH_ROOM,      []{return false;}),
     });
 
     areaTable[RR_FIRE_TEMPLE_MQ_LOWER_MAZE_CRATE_CAGE] = Region("Fire Temple MQ Lower Maze Crate Cage", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
@@ -548,16 +565,31 @@ void RegionTable_Init_FireTemple() {
         Entrance(RR_FIRE_TEMPLE_MQ_UPPER_MAZE, []{return logic->IsAdult && ((ctx->GetTrickOption(RT_FIRE_MQ_MAZE_HOVERS) && logic->CanUse(RG_HOVER_BOOTS)) || ctx->GetTrickOption(RT_FIRE_MQ_MAZE_JUMP));}),
     });
 
+    areaTable[RR_FIRE_TEMPLE_MQ_LOWER_MAZE_GORON_DOOR] = Region("Fire Temple MQ Lower Maze Goron", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
+        //Exits
+        //This exists to join upper/lower access in a way compatible with door shuffle
+        Entrance(RR_FIRE_TEMPLE_MQ_LOWER_MAZE,       []{return true;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_LOWER_MAZE_GORON, []{return true;}),
+    });
+
+    areaTable[RR_FIRE_TEMPLE_MQ_LOWER_MAZE_GORON] = Region("Fire Temple MQ Lower Maze Goron", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
+        //Locations
+        LOCATION(RC_FIRE_TEMPLE_MQ_LIZALFOS_MAZE_SIDE_ROOM_CHEST, true),
+    }, {
+        //Exits
+        Entrance(RR_FIRE_TEMPLE_MQ_LOWER_MAZE_GORON_DOOR,       []{return true;}),
+    });
+
     areaTable[RR_FIRE_TEMPLE_MQ_UPPER_MAZE] = Region("Fire Temple MQ Upper Maze", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
         //Exits
-        Entrance(RR_FIRE_TEMPLE_MQ_LOWER_MAZE,          []{return true;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_LOWER_MAZE,                []{return true;}),
         //this cage is much more lenient than the lower cage as the switch is close to the front. sling, rang and bow all hit the switch easily, though might be too unintuitive for default logic
         //This shouldn't come up in most cases anyway as most methods to get here need either a melee weapon or explosives
-        Entrance(RR_FIRE_TEMPLE_MQ_UPPER_MAZE_BOX_CAGE, []{return Here(RR_FIRE_TEMPLE_MQ_UPPER_MAZE, []{return logic->CanJumpslash() || logic->HasExplosives();});}),
-        Entrance(RR_FIRE_TEMPLE_MQ_MAZE_SHORTCUT,       []{return logic->HasExplosives();}),
+        Entrance(RR_FIRE_TEMPLE_MQ_UPPER_MAZE_BOX_CAGE,       []{return Here(RR_FIRE_TEMPLE_MQ_UPPER_MAZE, []{return logic->CanJumpslash() || logic->HasExplosives();});}),
+        Entrance(RR_FIRE_TEMPLE_MQ_MAZE_SHORTCUT,             []{return logic->HasExplosives();}),
         //Implies RR_FIRE_TEMPLE_MQ_LOWER_MAZE access
-        Entrance(RR_FIRE_TEMPLE_MQ_BURNING_BLOCK_CLIMB, []{return logic->HasExplosives() && logic->CanUse(RG_MEGATON_HAMMER) && (logic->CanUse(RG_LONGSHOT) || (logic->CanUse(RG_HOOKSHOT) && logic->CanUse(RG_SONG_OF_TIME)));}),
-        Entrance(RR_FIRE_TEMPLE_MQ_HIGH_TORCH_ROOM,     []{return logic->SmallKeys(RR_FIRE_TEMPLE, 3) && logic->CanUse(RG_GORON_TUNIC);}),
+        Entrance(RR_FIRE_TEMPLE_MQ_BURNING_BLOCK_CLIMB_LOWER, []{return logic->HasExplosives() && logic->CanUse(RG_MEGATON_HAMMER) && (logic->CanUse(RG_LONGSHOT) || (logic->CanUse(RG_HOOKSHOT) && logic->CanUse(RG_SONG_OF_TIME)));}),
+        Entrance(RR_FIRE_TEMPLE_MQ_HIGH_TORCH_ROOM,           []{return logic->SmallKeys(RR_FIRE_TEMPLE, 3) && logic->CanUse(RG_GORON_TUNIC);}),
     });
 
     areaTable[RR_FIRE_TEMPLE_MQ_UPPER_MAZE_BOX_CAGE] = Region("Fire Temple MQ Upper Maze Box Cage", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
@@ -568,11 +600,11 @@ void RegionTable_Init_FireTemple() {
         LOCATION(RC_FIRE_TEMPLE_MQ_LIZALFOS_MAZE_UPPER_CRATE_3,         logic->CanBreakCrates()),
         LOCATION(RC_FIRE_TEMPLE_MQ_LIZALFOS_MAZE_UPPER_SMALL_CRATE_1,   logic->CanBreakSmallCrates()),
         LOCATION(RC_FIRE_TEMPLE_MQ_LIZALFOS_MAZE_UPPER_SMALL_CRATE_2,   logic->CanBreakSmallCrates()),
-        //Assumes maze access
-        LOCATION(RC_FIRE_TEMPLE_MQ_LIZALFOS_MAZE_SIDE_ROOM_CHEST, logic->HasExplosives()),
     }, {
         //Exits
         Entrance(RR_FIRE_TEMPLE_MQ_UPPER_MAZE, []{return true;}),
+        //Assumes maze access
+        Entrance(RR_FIRE_TEMPLE_MQ_LOWER_MAZE_GORON_DOOR, []{return logic->HasExplosives();}),
     });
 
     areaTable[RR_FIRE_TEMPLE_MQ_MAZE_SHORTCUT] = Region("Fire Temple MQ Maze Shortcut", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
@@ -599,18 +631,27 @@ void RegionTable_Init_FireTemple() {
         Entrance(RR_FIRE_TEMPLE_MQ_BIG_TORCH_ROOM, []{return logic->OpenedUpperFireShortcut;}),
     });
 
-
-    areaTable[RR_FIRE_TEMPLE_MQ_BURNING_BLOCK_CLIMB] = Region("Fire Temple MQ Burning Block Climb", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
+    areaTable[RR_FIRE_TEMPLE_MQ_BURNING_BLOCK_CLIMB_LOWER] = Region("Fire Temple MQ Burning Block Climb Lower", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
         //Events
         //EventAccess(&WallFairy, []{return logic->CanUse(RG_HOOKSHOT);}),
-    }, {
+    }, {}, {
+        Entrance(RR_FIRE_TEMPLE_MQ_UPPER_MAZE,                []{return true;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_BURNING_BLOCK_CLIMB_UPPER, []{return logic->CanUse(RG_HOOKSHOT);}),
+    });
+
+    areaTable[RR_FIRE_TEMPLE_MQ_BURNING_BLOCK_CLIMB_UPPER] = Region("Fire Temple MQ Burning Block Climb Upper", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
+        Entrance(RR_FIRE_TEMPLE_MQ_BURNING_BLOCK_CLIMB_LOWER, []{return true;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_BURNING_BLOCK, []{return true;}),
+    });
+
+    areaTable[RR_FIRE_TEMPLE_MQ_BURNING_BLOCK] = Region("Fire Temple MQ Burning Block", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
         //There's definitely ways to do this hammerless, but with one points on it's a trick
         LOCATION(RC_FIRE_TEMPLE_MQ_GS_SKULL_ON_FIRE,  logic->CanUse(RG_HOOKSHOT) && logic->CanUse(RG_MEGATON_HAMMER)),
     }, {
         //Exits
-        Entrance(RR_FIRE_TEMPLE_MQ_UPPER_MAZE,        []{return true;}),
-        Entrance(RR_FIRE_TEMPLE_MQ_NARROW_PATH_ROOM,  []{return logic->TakeDamage();}),
+        Entrance(RR_FIRE_TEMPLE_MQ_BURNING_BLOCK_CLIMB_UPPER, []{return true;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_NARROW_PATH_ROOM,          []{return logic->TakeDamage();}),
     });
 
     areaTable[RR_FIRE_TEMPLE_MQ_NARROW_PATH_ROOM] = Region("Fire Temple MQ Narrow Path Room", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
@@ -623,8 +664,10 @@ void RegionTable_Init_FireTemple() {
         LOCATION(RC_FIRE_TEMPLE_MQ_ABOVE_LAVA_POT_3, logic->CanBreakPots()),
     }, {
         //Exits
-        Entrance(RR_FIRE_TEMPLE_MQ_LOWER_MAZE,    []{return true;}),
-        Entrance(RR_FIRE_TEMPLE_MQ_BIG_LAVA_ROOM, []{return logic->TakeDamage();}),
+        Entrance(RR_FIRE_TEMPLE_MQ_LOWER_MAZE,           []{return true;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_HIGH_TORCH_ROOM,      []{return false;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_HIGH_TORCH_ROOM_CAGE, []{return false;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_BIG_LAVA_ROOM,        []{return logic->TakeDamage();}),
     });
 
     areaTable[RR_FIRE_TEMPLE_MQ_HIGH_TORCH_ROOM] = Region("Fire Temple MQ High Torch Room", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
@@ -643,52 +686,90 @@ void RegionTable_Init_FireTemple() {
         LOCATION(RC_FIRE_TEMPLE_MQ_LAVA_TORCH_SMALL_CRATE_5,    logic->CanBreakSmallCrates()),
     }, {
         //Exits
-        Entrance(RR_FIRE_TEMPLE_MQ_UPPER_MAZE,       []{return logic->SmallKeys(RR_FIRE_TEMPLE, 3);}),
-        Entrance(RR_FIRE_TEMPLE_MQ_NARROW_PATH_ROOM, []{return true;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_HIGH_TORCH_ROOM_CAGE, []{return true;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_UPPER_MAZE,           []{return logic->SmallKeys(RR_FIRE_TEMPLE, 3);}),
+        Entrance(RR_FIRE_TEMPLE_MQ_NARROW_PATH_ROOM,     []{return true;}),
         //Child has issues navigating the higher points of this room without an equip swapped hookshot
-        Entrance(RR_FIRE_TEMPLE_MQ_SOUTH_FIRE_MAZE,  []{return Here(RR_FIRE_TEMPLE_MQ_HIGH_TORCH_ROOM, []{return logic->CanUse(RG_FIRE_ARROWS) || (logic->CanUse(RG_FAIRY_BOW) && logic->CanUse(RG_HOOKSHOT));}) && (logic->IsAdult || logic->CanUse(RG_HOOKSHOT));}),
+        Entrance(RR_FIRE_TEMPLE_MQ_CORRIDOR,             []{return Here(RR_FIRE_TEMPLE_MQ_HIGH_TORCH_ROOM, []{return logic->CanUse(RG_FIRE_ARROWS) || (logic->CanUse(RG_FAIRY_BOW) && logic->CanUse(RG_HOOKSHOT));}) && (logic->IsAdult || logic->CanUse(RG_HOOKSHOT));}),
+    });
+
+    areaTable[RR_FIRE_TEMPLE_MQ_HIGH_TORCH_ROOM_CAGE] = Region("Fire Temple MQ High Torch Room", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
+        Entrance(RR_FIRE_TEMPLE_MQ_HIGH_TORCH_ROOM,  []{return logic->CanUse(RG_HOOKSHOT);}),
+        Entrance(RR_FIRE_TEMPLE_MQ_NARROW_PATH_ROOM, []{return true;}),
+    });
+
+    areaTable[RR_FIRE_TEMPLE_MQ_CORRIDOR] = Region("Fire Temple Corridor", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
+        //Exits
+        Entrance(RR_FIRE_TEMPLE_MQ_HIGH_TORCH_ROOM, []{return true;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_SOUTH_FIRE_MAZE, []{return true;}),
     });
 
     areaTable[RR_FIRE_TEMPLE_MQ_SOUTH_FIRE_MAZE] = Region("Fire Temple MQ South Fire Maze", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
-        LOCATION(RC_FIRE_TEMPLE_MQ_GS_FIRE_WALL_MAZE_CENTER, logic->HasExplosives()),
         LOCATION(RC_FIRE_TEMPLE_MQ_SOUTH_FIRE_MAZE_WEST_POT, logic->CanBreakPots()),
         LOCATION(RC_FIRE_TEMPLE_MQ_SOUTH_FIRE_MAZE_EAST_POT, logic->CanBreakPots()),
     }, {
         //Exits
-        Entrance(RR_FIRE_TEMPLE_MQ_NEAR_BOSS_ROOM,      []{return logic->HitFireTemplePlatform;}),
-        Entrance(RR_FIRE_TEMPLE_MQ_HIGH_TORCH_ROOM,     []{return true;}),
-        Entrance(RR_FIRE_TEMPLE_MQ_FIRE_MAZE_PLATFORMS, []{return logic->IsAdult || logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_HOVER_BOOTS);}),
+        Entrance(RR_FIRE_TEMPLE_MQ_NEAR_BOSS_ROOM,        []{return logic->HitFireTemplePlatform;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_CORRIDOR,              []{return true;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_FIRE_MAZE_PLATFORMS,   []{return logic->IsAdult || logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_HOVER_BOOTS);}),
         //Hover boots get there via the platforms
-        Entrance(RR_FIRE_TEMPLE_MQ_NORTH_FIRE_MAZE,     []{return (bool)ctx->GetTrickOption(RT_FIRE_MQ_FLAME_MAZE);}),
-        Entrance(RR_FIRE_TEMPLE_MQ_WEST_FIRE_MAZE,      []{return logic->OpenedFireMQFireMazeDoor;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_NORTH_FIRE_MAZE,       []{return (bool)ctx->GetTrickOption(RT_FIRE_MQ_FLAME_MAZE);}),
+        Entrance(RR_FIRE_TEMPLE_MQ_FIRE_MAZE_INNER_LOWER, []{return true;}),
     });
 
     areaTable[RR_FIRE_TEMPLE_MQ_FIRE_MAZE_PLATFORMS] = Region("Fire Temple MQ Fire Maze Platforms", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
         //Events
         EventAccess(&logic->HitFireTemplePlatform,    []{return logic->CanUse(RG_MEGATON_HAMMER);}),
+    }, {}, {
+        //Exits
+        Entrance(RR_FIRE_TEMPLE_MQ_SOUTH_FIRE_MAZE,       []{return true;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_NORTH_FIRE_MAZE,       []{return logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_HOVER_BOOTS);}),
+        Entrance(RR_FIRE_TEMPLE_MQ_FIRE_MAZE_INNER_UPPER, []{return true;}),
+        //trick to get to RR_FIRE_TEMPLE_MQ_WEST_FIRE_MAZE with hovers + taking damage is plausible
+    });
+
+    areaTable[RR_FIRE_TEMPLE_MQ_FIRE_MAZE_INNER_UPPER] = Region("Fire Temple MQ Fire Maze Inner Upper", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
+        //Events
         EventAccess(&logic->OpenedFireMQFireMazeDoor, []{return logic->CanUse(RG_MEGATON_HAMMER) && logic->CanUse(RG_HOOKSHOT);}),
     }, {}, {
+        Entrance(RR_FIRE_TEMPLE_MQ_FIRE_MAZE_PLATFORMS,   []{return true;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_FIRE_MAZE_INNER_LOWER, []{return false;}),
+    });
+
+    areaTable[RR_FIRE_TEMPLE_MQ_FIRE_MAZE_INNER_LOWER] = Region("Fire Temple MQ Fire Maze Inner Lower", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
+        //Locations
+        LOCATION(RC_FIRE_TEMPLE_MQ_GS_FIRE_WALL_MAZE_CENTER, logic->HasExplosives()),
+    }, {
+        //Exits
         Entrance(RR_FIRE_TEMPLE_MQ_SOUTH_FIRE_MAZE, []{return true;}),
-        Entrance(RR_FIRE_TEMPLE_MQ_NORTH_FIRE_MAZE, []{return logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_HOVER_BOOTS);}),
-        //trick to get to RR_FIRE_TEMPLE_MQ_WEST_FIRE_MAZE with hovers + taking damage is plausible
+        Entrance(RR_FIRE_TEMPLE_MQ_WEST_FIRE_MAZE,  []{return logic->OpenedFireMQFireMazeDoor;}),
     });
 
     areaTable[RR_FIRE_TEMPLE_MQ_NORTH_FIRE_MAZE] = Region("Fire Temple MQ North Fire Maze", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
-        LOCATION(RC_FIRE_TEMPLE_MQ_GS_FIRE_WALL_MAZE_SIDE_ROOM, logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA)),
         LOCATION(RC_FIRE_TEMPLE_MQ_PAST_FIRE_MAZE_SOUTH_POT,    logic->CanUse(RG_BOOMERANG)),
         LOCATION(RC_FIRE_TEMPLE_MQ_FIRE_MAZE_NORTHMOST_POT,     logic->CanBreakPots()),
         LOCATION(RC_FIRE_TEMPLE_MQ_FIRE_MAZE_NORTHWEST_POT,     logic->CanBreakPots()),
     }, {
         //Exits
-        Entrance(RR_FIRE_TEMPLE_MQ_SOUTH_FIRE_MAZE, []{return logic->IsAdult || ctx->GetTrickOption(RT_FIRE_MQ_FLAME_MAZE);}),
-        Entrance(RR_FIRE_TEMPLE_MQ_WEST_FIRE_MAZE,  []{return (bool)ctx->GetTrickOption(RT_FIRE_MQ_FLAME_MAZE);}),
+        Entrance(RR_FIRE_TEMPLE_MQ_FIRE_MAZE_SIDE_ROOM, []{return true;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_SOUTH_FIRE_MAZE,     []{return logic->IsAdult || ctx->GetTrickOption(RT_FIRE_MQ_FLAME_MAZE);}),
+        Entrance(RR_FIRE_TEMPLE_MQ_WEST_FIRE_MAZE,      []{return (bool)ctx->GetTrickOption(RT_FIRE_MQ_FLAME_MAZE);}),
     });
 
     areaTable[RR_FIRE_TEMPLE_MQ_WEST_FIRE_MAZE] = Region("Fire Temple MQ West Fire Maze", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
-        Entrance(RR_FIRE_TEMPLE_MQ_FIRE_MAZE_PAST_WALL, []{return true;}),
-        Entrance(RR_FIRE_TEMPLE_MQ_NORTH_FIRE_MAZE,     []{return (bool)ctx->GetTrickOption(RT_FIRE_MQ_FLAME_MAZE);}),
+        Entrance(RR_FIRE_TEMPLE_MQ_FIRE_MAZE_PAST_WALL,   []{return true;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_NORTH_FIRE_MAZE,       []{return (bool)ctx->GetTrickOption(RT_FIRE_MQ_FLAME_MAZE);}),
+        Entrance(RR_FIRE_TEMPLE_MQ_FIRE_MAZE_INNER_LOWER, []{return logic->OpenedFireMQFireMazeDoor;}),
+    });
+
+    areaTable[RR_FIRE_TEMPLE_MQ_FIRE_MAZE_SIDE_ROOM] = Region("Fire Temple MQ Fire Maze Side Room", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
+        //Locations
+        LOCATION(RC_FIRE_TEMPLE_MQ_GS_FIRE_WALL_MAZE_SIDE_ROOM, logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA)),
+    }, {
+        //Exits
+        Entrance(RR_FIRE_TEMPLE_MQ_NORTH_FIRE_MAZE, []{return logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA);}),
     });
 
     //this area exists for the pots in case we void warp to the top of fire somehow, because there's no way to get back the way we came
@@ -698,6 +779,7 @@ void RegionTable_Init_FireTemple() {
         LOCATION(RC_FIRE_TEMPLE_MQ_PAST_FIRE_MAZE_NORTH_POT, logic->CanBreakPots()),
         LOCATION(RC_FIRE_TEMPLE_MQ_FIRE_MAZE_NORTHWEST_POT,  logic->CanUse(RG_BOOMERANG)),
     }, {
+        //Exits
         Entrance(RR_FIRE_TEMPLE_MQ_UPPER_FLARE_DANCER, []{return true;}),
     });
 
@@ -705,8 +787,15 @@ void RegionTable_Init_FireTemple() {
         //Locations
         LOCATION(RC_FIRE_TEMPLE_MQ_FREESTANDING_KEY, logic->CanKillEnemy(RE_FLARE_DANCER)),
     }, {
+        //Exits
         Entrance(RR_FIRE_TEMPLE_MQ_FIRE_MAZE_PAST_WALL, []{return logic->CanKillEnemy(RE_FLARE_DANCER);}),
-        Entrance(RR_FIRE_TEMPLE_MQ_SCARECROW_ROOM,      []{return logic->CanKillEnemy(RE_FLARE_DANCER) && logic->SmallKeys(RR_FIRE_TEMPLE, 4);}),
+        Entrance(RR_FIRE_TEMPLE_MQ_SCARECROW_CLIMB, []{return logic->CanKillEnemy(RE_FLARE_DANCER);}),
+    });
+
+    areaTable[RR_FIRE_TEMPLE_MQ_SCARECROW_CLIMB] = Region("Fire Temple MQ Scarecrow Climb", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
+        //Exits
+        Entrance(RR_FIRE_TEMPLE_MQ_UPPER_FLARE_DANCER, []{return true;}),
+        Entrance(RR_FIRE_TEMPLE_MQ_SCARECROW_ROOM,     []{return logic->SmallKeys(RR_FIRE_TEMPLE, 4);}),
     });
 
     areaTable[RR_FIRE_TEMPLE_MQ_SCARECROW_ROOM] = Region("Fire Temple MQ Scarecrow Room", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
@@ -715,22 +804,30 @@ void RegionTable_Init_FireTemple() {
         //Child basically needs the scarecrow or a bunny hood though due to a worse ledge grab.
         LOCATION(RC_FIRE_TEMPLE_MQ_CHEST_ON_FIRE, logic->IsAdult || logic->CanUse(RG_SCARECROW)),
     }, {
-        //The dropdown here is unusual in that it hits 1 of 3 locations: RR_FIRE_TEMPLE_MQ_SOUTH_FIRE_MAZE, RR_FIRE_TEMPLE_MQ_FIRE_MAZE_PLATFORMS and the section of RR_FIRE_TEMPLE_MQ_FIRE_MAZE_PLATFORMS with the hammer switch
+        //Exits
+        //The dropdown here is unusual in that it hits 1 of 2 locations: RR_FIRE_TEMPLE_MQ_FIRE_MAZE_INNER_LOWER, RR_FIRE_TEMPLE_MQ_FIRE_MAZE_INNER_UPPER, and RR_FIRE_TEMPLE_MQ_FIRE_MAZE_INNER_UPPER with the hammer switch
         //Using this dropdown is in N64 logic elsewhere, but not here, probably because it requires good foreknowlege to determine where to land
         //This would be a logical method to reach the hammer switch without hookshot, but it practically requires access to the area that switch unlocks already. It could also be first child access to PLATFORMS if tricks ever enable that
         //If a practical use for this drop is found, it should be made a trick
-        Entrance(RR_FIRE_TEMPLE_MQ_UPPER_FLARE_DANCER, []{return logic->SmallKeys(RR_FIRE_TEMPLE, 4);}),
+        Entrance(RR_FIRE_TEMPLE_MQ_SCARECROW_CLIMB,    []{return logic->SmallKeys(RR_FIRE_TEMPLE, 4);}),
         Entrance(RR_FIRE_TEMPLE_MQ_COLLAPSED_STAIRS,   []{return Here(RR_FIRE_TEMPLE_MQ_SCARECROW_ROOM, []{return logic->CanUse(RG_MEGATON_HAMMER);}) && logic->SmallKeys(RR_FIRE_TEMPLE, 5);}),
     });
 
     //The peg knocked down from here could have logical implications for child in the fire maze if tricks to gain height like bomb jumps exist
-    areaTable[RR_FIRE_TEMPLE_MQ_COLLAPSED_STAIRS] = Region("Fire Temple MQ Collapsed Stairs", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
+    areaTable[RR_FIRE_TEMPLE_MQ_COLLAPSED_STAIRS] = Region("Fire Temple MQ Collapsed Stairs", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
+        //Exits
+        // TODO split into upper/lower, need adult to climb stairs
+        Entrance(RR_FIRE_TEMPLE_MQ_SCARECROW_ROOM,  []{return logic->SmallKeys(RR_FIRE_TEMPLE, 4);}),
+        Entrance(RR_FIRE_TEMPLE_MQ_ABOVE_FIRE_MAZE, []{return logic->CanUse(RG_HOOKSHOT) && Here(RR_FIRE_TEMPLE_MQ_COLLAPSED_STAIRS, []{return logic->CanUse(RG_MEGATON_HAMMER);});}),
+    });
+
+    areaTable[RR_FIRE_TEMPLE_MQ_ABOVE_FIRE_MAZE] = Region("Fire Temple MQ Above Fire Maze", "Fire Temple", {RA_FIRE_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
-        //If someone manages to make a trick to get here from fire maze, this needs to be in a separate room as the door back is barred
-        LOCATION(RC_FIRE_TEMPLE_MQ_GS_ABOVE_FIRE_MAZE, logic->CanUse(RG_HOOKSHOT)),
+        LOCATION(RC_FIRE_TEMPLE_MQ_GS_ABOVE_FIRE_MAZE, logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA)),
     }, {
-        Entrance(RR_FIRE_TEMPLE_MQ_FIRE_MAZE_PLATFORMS, []{return logic->CanUse(RG_HOOKSHOT) && Here(RR_FIRE_TEMPLE_MQ_COLLAPSED_STAIRS, []{return logic->CanUse(RG_MEGATON_HAMMER);});}),
-        Entrance(RR_FIRE_TEMPLE_MQ_SCARECROW_ROOM,      []{return logic->IsAdult && logic->CanUse(RG_HOOKSHOT);}),
+        //Exits
+        Entrance(RR_FIRE_TEMPLE_MQ_FIRE_MAZE_PLATFORMS, []{return Here(RR_FIRE_TEMPLE_MQ_COLLAPSED_STAIRS, []{return logic->CanUse(RG_MEGATON_HAMMER);});}),
+        Entrance(RR_FIRE_TEMPLE_MQ_COLLAPSED_STAIRS,    []{return true;}),
     });
 
 #pragma endregion

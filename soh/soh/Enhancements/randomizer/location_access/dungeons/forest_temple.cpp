@@ -305,18 +305,25 @@ void RegionTable_Init_ForestTemple() {
 
 #pragma region MQ
 
-    areaTable[RR_FOREST_TEMPLE_MQ_LOBBY] = Region("Forest Temple MQ Lobby", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
+    areaTable[RR_FOREST_TEMPLE_MQ_FIRST_ROOM] = Region("Forest Temple MQ First Room", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
         LOCATION(RC_FOREST_TEMPLE_MQ_FIRST_ROOM_CHEST, logic->CanPassEnemy(RE_BIG_SKULLTULA, ED_SHORT_JUMPSLASH, false) || logic->CanUse(RG_HOVER_BOOTS)),
-        //Implies CanPassEnemy(RE_BIG_SKULLTULA)
+    }, {
+        //Exits
+        Entrance(RR_FOREST_TEMPLE_ENTRYWAY,          []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_SOUTH_CORRIDOR, []{return true;}),
+    });
+
+    areaTable[RR_FOREST_TEMPLE_MQ_SOUTH_CORRIDOR] = Region("Forest Temple MQ South Corridor", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
+        //Locations
         LOCATION(RC_FOREST_TEMPLE_MQ_GS_FIRST_HALLWAY, logic->HookshotOrBoomerang()),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_ENTRYWAY,        []{return true;}),
-        Entrance(RR_FOREST_TEMPLE_MQ_CENTRAL_AREA, []{return logic->SmallKeys(RR_FOREST_TEMPLE, 1) && logic->CanPassEnemy(RE_BIG_SKULLTULA);}),
+        Entrance(RR_FOREST_TEMPLE_MQ_FIRST_ROOM, []{return logic->CanPassEnemy(RE_BIG_SKULLTULA);}),
+        Entrance(RR_FOREST_TEMPLE_MQ_LOBBY,      []{return logic->CanPassEnemy(RE_BIG_SKULLTULA) && logic->SmallKeys(RR_FOREST_TEMPLE, 1);}),
     });
 
-    areaTable[RR_FOREST_TEMPLE_MQ_CENTRAL_AREA] = Region("Forest Temple MQ Central Region", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
+    areaTable[RR_FOREST_TEMPLE_MQ_LOBBY] = Region("Forest Temple MQ Lobby", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
         //Events
         EventAccess(&logic->ForestTempleMeg, []{return logic->ForestTempleJoelle && logic->ForestTempleBeth && logic->ForestTempleAmy && logic->CanKillEnemy(RE_MEG);}),
     }, {
@@ -329,12 +336,20 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_MQ_LOBBY_POT_6, logic->CanBreakPots()),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_MQ_WOLFOS_ROOM,        []{return logic->IsChild || logic->CanUse(RG_SONG_OF_TIME);}),
-        Entrance(RR_FOREST_TEMPLE_MQ_NW_OUTDOORS,        []{return logic->CanHitEyeTargets();}),
-        Entrance(RR_FOREST_TEMPLE_MQ_NE_OUTDOORS,        []{return logic->CanHitEyeTargets();}),
-        Entrance(RR_FOREST_TEMPLE_MQ_LOWER_BLOCK_PUZZLE, []{return Here(RR_FOREST_TEMPLE_MQ_CENTRAL_AREA, []{return logic->CanKillEnemy(RE_STALFOS);});}),
+        Entrance(RR_FOREST_TEMPLE_MQ_SOUTH_CORRIDOR,        []{return logic->SmallKeys(RR_FOREST_TEMPLE, 1);}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NORTH_CORRIDOR,        []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_WEST_CORRIDOR,         []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_EAST_CORRIDOR,         []{return false;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NW_OUTDOORS,           []{return logic->CanHitEyeTargets();}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NE_OUTDOORS,           []{return logic->CanHitEyeTargets();}),
         //implies the other 3 poes
-        Entrance(RR_FOREST_TEMPLE_MQ_BASEMENT,           []{return logic->ForestTempleMeg;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_BASEMENT,              []{return logic->ForestTempleMeg;}),
+    });
+
+    areaTable[RR_FOREST_TEMPLE_MQ_NORTH_CORRIDOR] = Region("Forest Temple MQ North Corridor", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
+        //Exits
+        Entrance(RR_FOREST_TEMPLE_MQ_LOBBY,       []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_WOLFOS_ROOM, []{return logic->IsChild || logic->CanUse(RG_SONG_OF_TIME);}),
     });
 
     areaTable[RR_FOREST_TEMPLE_MQ_WOLFOS_ROOM] = Region("Forest Temple MQ Wolfos Room", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
@@ -348,7 +363,13 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_MQ_WOLFOS_POT_2, logic->CanBreakPots()),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_MQ_CENTRAL_AREA, []{return logic->ForestClearBelowBowChest && (logic->IsChild || logic->CanUse(RG_SONG_OF_TIME));}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NORTH_CORRIDOR, []{return logic->ForestClearBelowBowChest && (logic->IsChild || logic->CanUse(RG_SONG_OF_TIME));}),
+    });
+
+    areaTable[RR_FOREST_TEMPLE_MQ_WEST_CORRIDOR] = Region("Forest Temple MQ West Corridor", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
+        //Exits
+        Entrance(RR_FOREST_TEMPLE_MQ_LOBBY,              []{return Here(RR_FOREST_TEMPLE_MQ_WEST_CORRIDOR, []{return logic->CanKillEnemy(RE_STALFOS);});}),
+        Entrance(RR_FOREST_TEMPLE_MQ_LOWER_BLOCK_PUZZLE, []{return Here(RR_FOREST_TEMPLE_MQ_WEST_CORRIDOR, []{return logic->CanKillEnemy(RE_STALFOS);});}),
     });
 
     areaTable[RR_FOREST_TEMPLE_MQ_LOWER_BLOCK_PUZZLE] = Region("Forest Temple MQ Lower Block Puzzle", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
@@ -361,11 +382,11 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_MQ_GS_BLOCK_PUSH_ROOM, logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA)),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_MQ_CENTRAL_AREA,        []{return Here(RR_FOREST_TEMPLE_MQ_CENTRAL_AREA, []{return logic->CanKillEnemy(RE_STALFOS);});}),
+        Entrance(RR_FOREST_TEMPLE_MQ_WEST_CORRIDOR,       []{return true;}),
         Entrance(RR_FOREST_TEMPLE_MQ_MIDDLE_BLOCK_PUZZLE, []{return logic->HasItem(RG_GORONS_BRACELET) || (logic->MQForestBlockRoomTargets && logic->CanUse(RG_HOOKSHOT));}),
         //Assumes RR_FOREST_TEMPLE_MQ_MIDDLE_BLOCK_PUZZLE access
         Entrance(RR_FOREST_TEMPLE_MQ_UPPER_BLOCK_PUZZLE,  []{return (logic->IsAdult && logic->HasItem(RG_GORONS_BRACELET)) || (logic->MQForestBlockRoomTargets && logic->CanUse(RG_HOOKSHOT));}),
-        Entrance(RR_FOREST_TEMPLE_MQ_OUTDOOR_LEDGE,       []{return logic->ForestCanTwistHallway && (logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS));}),
+        Entrance(RR_FOREST_TEMPLE_MQ_INDOOR_LEDGE,        []{return logic->ForestCanTwistHallway && (logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS));}),
     });
 
     areaTable[RR_FOREST_TEMPLE_MQ_MIDDLE_BLOCK_PUZZLE] = Region("Forest Temple MQ Middle Block Puzzle", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
@@ -377,19 +398,16 @@ void RegionTable_Init_ForestTemple() {
         Entrance(RR_FOREST_TEMPLE_MQ_LOWER_BLOCK_PUZZLE, []{return true;}),
         Entrance(RR_FOREST_TEMPLE_MQ_UPPER_BLOCK_PUZZLE, []{return (logic->IsAdult && logic->HasItem(RG_GORONS_BRACELET)) || (logic->MQForestBlockRoomTargets && logic->CanUse(RG_HOOKSHOT));}),
         //Hammer cannot recoil from here, but can make the jump forwards with a hammer jumpslash as adult
-        Entrance(RR_FOREST_TEMPLE_MQ_OUTDOOR_LEDGE,      []{return logic->ForestCanTwistHallway && logic->CanUse(RG_HOVER_BOOTS) || (ctx->GetTrickOption(RT_FOREST_OUTSIDE_BACKDOOR) && (logic->CanJumpslashExceptHammer() || (logic->IsAdult && logic->CanUse(RG_MEGATON_HAMMER))));}),
+        Entrance(RR_FOREST_TEMPLE_MQ_INDOOR_LEDGE,       []{return logic->ForestCanTwistHallway && logic->CanUse(RG_HOVER_BOOTS) || (ctx->GetTrickOption(RT_FOREST_OUTSIDE_BACKDOOR) && (logic->CanJumpslashExceptHammer() || (logic->IsAdult && logic->CanUse(RG_MEGATON_HAMMER))));}),
     });
 
-    areaTable[RR_FOREST_TEMPLE_MQ_UPPER_BLOCK_PUZZLE] = Region("Forest Temple MQ After Block Puzzle", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
-        //Locations
-        LOCATION(RC_FOREST_TEMPLE_MQ_BOSS_KEY_CHEST, logic->SmallKeys(RR_FOREST_TEMPLE, 3)),
-    }, {
+    areaTable[RR_FOREST_TEMPLE_MQ_UPPER_BLOCK_PUZZLE] = Region("Forest Temple MQ After Block Puzzle", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
         //Exits
         Entrance(RR_FOREST_TEMPLE_MQ_STRAIGHT_HALLWAY, []{return logic->SmallKeys(RR_FOREST_TEMPLE, 3);}),
         Entrance(RR_FOREST_TEMPLE_MQ_JOELLE_ROOM,      []{return logic->ForestCanTwistHallway && logic->SmallKeys(RR_FOREST_TEMPLE, 4);}),
         //!QUANTUM LOGIC!
         //As there is no way in default logic to reach the other possible key use without going through RR_FOREST_TEMPLE_MQ_NW_OUTDOORS, this is logically safe for now
-        //Breaks if there's any other way to RR_FOREST_TEMPLE_MQ_FALLING_ROOM than going through the eye targets in RR_FOREST_TEMPLE_MQ_CENTRAL_AREA
+        //Breaks if there's any other way to RR_FOREST_TEMPLE_MQ_FALLING_ROOM than going through the eye targets in RR_FOREST_TEMPLE_MQ_LOBBY
         //Requires a bow/sling ammo source once ammo logic is done, to avoid edge cases.
         Entrance(RR_FOREST_TEMPLE_MQ_NW_OUTDOORS,      []{return logic->SmallKeys(RR_FOREST_TEMPLE, 2) && Here(RR_FOREST_TEMPLE_MQ_UPPER_BLOCK_PUZZLE, []{return logic->CanKillEnemy(RE_FLOORMASTER);});}),
     });
@@ -407,17 +425,34 @@ void RegionTable_Init_ForestTemple() {
         Entrance(RR_FOREST_TEMPLE_MQ_OUTDOOR_LEDGE, []{return Here(RR_FOREST_TEMPLE_MQ_FLOORMASTER_ROOM, []{return logic->CanKillEnemy(RE_FLOORMASTER);});}),
     });
 
-    areaTable[RR_FOREST_TEMPLE_MQ_OUTDOOR_LEDGE] = Region("Forest Temple MQ Outdoor Ledge", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
+    areaTable[RR_FOREST_TEMPLE_MQ_INDOOR_LEDGE] = Region("Forest Temple MQ Indoor Ledge", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
+        //Events
         EventAccess(&logic->ForestCanTwistHallway, []{return logic->CanHitSwitch();}),
-    }, {
+    }, {}, {
+        //Exits
+        Entrance(RR_FOREST_TEMPLE_MQ_LOWER_BLOCK_PUZZLE, []{return logic->ForestCanTwistHallway;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_OUTDOOR_LEDGE,      []{return true;}),
+    });
+
+    areaTable[RR_FOREST_TEMPLE_MQ_OUTDOOR_LEDGE] = Region("Forest Temple MQ Outdoor Ledge", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
-        LOCATION(RC_FOREST_TEMPLE_MQ_REDEAD_CHEST,           logic->CanKillEnemy(RE_REDEAD)),
         LOCATION(RC_FOREST_TEMPLE_MQ_COURTYARD_RIGHT_HEART,  true),
         LOCATION(RC_FOREST_TEMPLE_MQ_COURTYARD_MIDDLE_HEART, true),
         LOCATION(RC_FOREST_TEMPLE_MQ_COURTYARD_LEFT_HEART,   true),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_MQ_NW_OUTDOORS, []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_INDOOR_LEDGE,      []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NW_OUTDOORS,       []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_REDEAD_ROOM,       []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_FLOORMASTER_ROOM,  []{return true;}),
+    });
+
+    areaTable[RR_FOREST_TEMPLE_MQ_REDEAD_ROOM] = Region("Forest Temple MQ Redead Room", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
+        //Locations
+        LOCATION(RC_FOREST_TEMPLE_MQ_REDEAD_CHEST, logic->CanKillEnemy(RE_REDEAD)),
+    }, {
+        //Exits
+        Entrance(RR_FOREST_TEMPLE_MQ_OUTDOOR_LEDGE, []{return logic->CanKillEnemy(RE_REDEAD);}),
     });
 
     areaTable[RR_FOREST_TEMPLE_MQ_NW_OUTDOORS] = Region("Forest Temple MQ NW Outdoors", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
@@ -434,10 +469,16 @@ void RegionTable_Init_ForestTemple() {
     }, {
         //Exits
         Entrance(RR_FOREST_TEMPLE_MQ_NE_OUTDOORS,         []{return (((logic->CanUse(RG_IRON_BOOTS) || logic->CanUse(RG_LONGSHOT) || (ctx->GetTrickOption(RT_FOREST_MQ_WELL_SWIM) && logic->CanUse(RG_HOOKSHOT))) && logic->HasItem(RG_BRONZE_SCALE)) || logic->HasItem(RG_GOLDEN_SCALE)) && logic->WaterTimer() >= 16;}),
-        Entrance(RR_FOREST_TEMPLE_MQ_OUTDOORS_TOP_LEDGES, []{return logic->CanUse(RG_FIRE_ARROWS);}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NORTH_PASSAGE,       []{return logic->CanUse(RG_FIRE_ARROWS);}), // TODO event access with north passage?
+        Entrance(RR_FOREST_TEMPLE_MQ_OUTDOOR_LEDGE,       []{return ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->HasExplosives() && logic->CanUse(RG_HOVER_BOOTS);}),
     });
 
-    //The well only coniders the eye target here because the eye target is a temp flag, making it unwieldy to use as an EventAccess to make it it's own room
+    areaTable[RR_FOREST_TEMPLE_MQ_NORTH_PASSAGE] = Region("Forest Temple MQ North Passage", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
+        Entrance(RR_FOREST_TEMPLE_MQ_NW_OUTDOORS,         []{return logic->HasFireSourceWithTorch();}),
+        Entrance(RR_FOREST_TEMPLE_MQ_OUTDOORS_TOP_LEDGES, []{return true;}),
+    });
+
+    //The well only considers the eye target here because the eye target is a temp flag, making it unwieldy to use as an EventAccess to make it it's own room
     areaTable[RR_FOREST_TEMPLE_MQ_NE_OUTDOORS] = Region("Forest Temple MQ NE Outdoors", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
         //Events
         EventAccess(&logic->DekuBabaSticks, []{return logic->CanGetDekuBabaSticks();}),
@@ -453,6 +494,7 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_MQ_WELL_EAST_HEART,            (logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8) || logic->CanHitEyeTargets()),
     }, {
         //Exits
+        Entrance(RR_FOREST_TEMPLE_MQ_LOBBY,               []{return true;}),
         Entrance(RR_FOREST_TEMPLE_MQ_NW_OUTDOORS,         []{return (((logic->CanUse(RG_IRON_BOOTS) || logic->CanUse(RG_LONGSHOT)) && logic->HasItem(RG_BRONZE_SCALE)) || logic->HasItem(RG_GOLDEN_SCALE)) && logic->WaterTimer() >= 16;}),
         Entrance(RR_FOREST_TEMPLE_MQ_OUTDOORS_TOP_LEDGES, []{return logic->CanUse(RG_LONGSHOT) || (logic->CanUse(RG_HOOKSHOT) && ((logic->IsAdult && logic->CanUse(RG_HOVER_BOOTS)) || logic->CanUse(RG_SONG_OF_TIME)));}),
         Entrance(RR_FOREST_TEMPLE_MQ_NE_OUTDOORS_LEDGE,   []{return logic->CanUse(RG_LONGSHOT);}),
@@ -465,7 +507,7 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_MQ_GS_RAISED_ISLAND_COURTYARD,          ((logic->IsAdult && logic->CanUse(RG_SONG_OF_TIME)) || (logic->CanUse(RG_HOVER_BOOTS) && ctx->GetTrickOption(RT_FOREST_DOORFRAME))) && logic->CanJumpslash() && (logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->BlastOrSmash() || logic->CanUse(RG_DINS_FIRE) || logic->CanUse(RG_FAIRY_BOW) || logic->HookshotOrBoomerang() || (logic->CanStandingShield() && (logic->CanUse(RG_STICKS) || logic->CanUse(RG_BIGGORON_SWORD) || logic->CanUse(RG_MASTER_SWORD) || (logic->IsChild && logic->CanUse(RG_KOKIRI_SWORD)))))),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_MQ_NW_OUTDOORS,       []{return logic->HasFireSourceWithTorch();}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NORTH_PASSAGE,     []{return true;}),
         Entrance(RR_FOREST_TEMPLE_MQ_NE_OUTDOORS,       []{return true;}),
         //N64 logic doesn't check damage but I always take some so I'm adding it
         Entrance(RR_FOREST_TEMPLE_MQ_NE_OUTDOORS_LEDGE, []{return ctx->GetTrickOption(RT_FOREST_OUTDOORS_LEDGE) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanJumpslash() && logic->TakeDamage();}),
@@ -561,8 +603,14 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_MQ_GREEN_POE_POT_2, logic->CanBreakPots()),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_MQ_CENTRAL_AREA, []{return logic->ForestTempleAmy;}),
-        Entrance(RR_FOREST_TEMPLE_MQ_FALLING_ROOM, []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_EAST_CORRIDOR, []{return logic->ForestTempleAmy;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_FALLING_ROOM,  []{return true;}),
+    });
+
+    areaTable[RR_FOREST_TEMPLE_MQ_EAST_CORRIDOR] = Region("Forest Temple MQ East Corridor", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
+        //Exits
+        Entrance(RR_FOREST_TEMPLE_MQ_AMY_ROOM,   []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_LOBBY,      []{return true;}),
     });
 
     areaTable[RR_FOREST_TEMPLE_MQ_BASEMENT] = Region("Forest Temple MQ Basement", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
@@ -574,7 +622,7 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_MQ_BASEMENT_CHEST, true),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_MQ_CENTRAL_AREA,      []{return logic->ForestTempleMeg;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_LOBBY,             []{return logic->ForestTempleMeg;}),
         Entrance(RR_FOREST_TEMPLE_MQ_BASEMENT_POT_ROOM, []{return logic->CanPassEnemy(RE_BIG_SKULLTULA) || logic->TakeDamage();}),
         Entrance(RR_FOREST_TEMPLE_MQ_BOSS_REGION,       []{return logic->ForestOpenBossCorridor;}),
     });

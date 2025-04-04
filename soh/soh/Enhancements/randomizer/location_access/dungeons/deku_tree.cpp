@@ -225,7 +225,7 @@ void RegionTable_Init_DekuTree() {
         Entrance(RR_DEKU_TREE_MQ_1F,              []{return true;}),
         //Will need canAvoid logic with enemy shuffle
         Entrance(RR_DEKU_TREE_MQ_3F,              []{return true;}),
-        Entrance(RR_DEKU_TREE_MQ_EYE_TARGET_ROOM, []{return Here(RR_DEKU_TREE_MQ_2F, []{return logic->HasFireSource();});}),
+        Entrance(RR_DEKU_TREE_MQ_EYE_TARGET_ROOM, []{return Here(RR_DEKU_TREE_MQ_2F, []{return logic->HasFireSource() || (logic->MQDeku3FSwitch && (logic->CanUse(RG_STICKS) || logic->CanUse(RG_FAIRY_BOW)));});}),
     });
 
     areaTable[RR_DEKU_TREE_MQ_3F] = Region("Deku Tree MQ 3F", "Deku Tree", {RA_DEKU_TREE}, NO_DAY_NIGHT_CYCLE, {
@@ -233,7 +233,15 @@ void RegionTable_Init_DekuTree() {
         EventAccess(&logic->DekuBabaSticks,    []{return logic->CanGetDekuBabaSticks();}),
         EventAccess(&logic->DekuBabaNuts,      []{return logic->CanGetDekuBabaNuts();}),
         EventAccess(&logic->BrokeDeku1FWeb,    []{return true;}),
-    }, {
+        EventAccess(&logic->MQDeku3FSwitch,    []{return true;}),
+    }, {}, {
+        //Exits
+        Entrance(RR_DEKU_TREE_MQ_2F,              []{return true;}),
+        Entrance(RR_DEKU_TREE_MQ_SLINGSHOT_ROOM,  []{return true;}),
+        Entrance(RR_DEKU_TREE_MQ_BASEMENT,        []{return true;}),
+    });
+
+    areaTable[RR_DEKU_TREE_MQ_SLINGSHOT_ROOM] = Region("Deku Tree MQ 3F", "Deku Tree", {RA_DEKU_TREE}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
         //Implies CanKillEnemy(RE_GOHMA_LARVA)
         LOCATION(RC_DEKU_TREE_MQ_SLINGSHOT_CHEST,           logic->CanKillEnemy(RE_DEKU_BABA)),
@@ -246,11 +254,8 @@ void RegionTable_Init_DekuTree() {
         LOCATION(RC_DEKU_TREE_MQ_SLINGSHOT_ROOM_CRATE_1,    logic->CanBreakCrates()),
         LOCATION(RC_DEKU_TREE_MQ_SLINGSHOT_ROOM_CRATE_2,    logic->CanBreakCrates()),
     }, {
-        //Exits
-        Entrance(RR_DEKU_TREE_MQ_2F,              []{return true;}),
-        //Assumes RR_DEKU_TREE_MQ_2F access
-        Entrance(RR_DEKU_TREE_MQ_EYE_TARGET_ROOM, []{return Here(RR_DEKU_TREE_MQ_3F, []{return logic->CanUse(RG_STICKS) || logic->CanUse(RG_FAIRY_BOW);});}),
-        Entrance(RR_DEKU_TREE_MQ_BASEMENT,        []{return true;}),
+        // Exits
+        Entrance(RR_DEKU_TREE_MQ_3F, []{return logic->CanKillEnemy(RE_DEKU_BABA);}),
     });
 
     areaTable[RR_DEKU_TREE_MQ_EYE_TARGET_ROOM] = Region("Deku Tree MQ Eye Target Room", "Deku Tree", {RA_DEKU_TREE}, NO_DAY_NIGHT_CYCLE, {}, {

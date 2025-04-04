@@ -21,8 +21,9 @@ void RegionTable_Init_IceCavern() {
         LOCATION(RC_ICE_CAVERN_ENTRANCE_STORMS_FAIRY, logic->CanUse(RG_SONG_OF_STORMS)),
     }, {
         //Exits
-        Entrance(RR_ICE_CAVERN_ENTRYWAY, []{return true;}),
-        Entrance(RR_ICE_CAVERN_MAIN,     []{return Here(RR_ICE_CAVERN_BEGINNING, []{return logic->CanKillEnemy(RE_FREEZARD, ED_CLOSE, true, 4);});}),
+        Entrance(RR_ICE_CAVERN_ENTRYWAY,   []{return true;}),
+        Entrance(RR_ICE_CAVERN_MAIN,       []{return Here(RR_ICE_CAVERN_BEGINNING, []{return logic->CanKillEnemy(RE_FREEZARD, ED_CLOSE, true, 4);});}),
+        Entrance(RR_ICE_CAVERN_FINAL_ROOM, []{return false;}),
     });
 
     areaTable[RR_ICE_CAVERN_MAIN] = Region("Ice Cavern", "Ice Cavern", {RA_ICE_CAVERN}, NO_DAY_NIGHT_CYCLE, {
@@ -32,8 +33,6 @@ void RegionTable_Init_IceCavern() {
         //Locations
         LOCATION(RC_ICE_CAVERN_MAP_CHEST,               logic->BlueFire() && logic->IsAdult),
         LOCATION(RC_ICE_CAVERN_COMPASS_CHEST,           logic->BlueFire()),
-        LOCATION(RC_ICE_CAVERN_IRON_BOOTS_CHEST,        logic->BlueFire() && logic->CanKillEnemy(RE_WOLFOS)),
-        LOCATION(RC_SHEIK_IN_ICE_CAVERN,                logic->BlueFire() && logic->CanKillEnemy(RE_WOLFOS) && logic->IsAdult),
         LOCATION(RC_ICE_CAVERN_FREESTANDING_POH,        logic->BlueFire()),
         LOCATION(RC_ICE_CAVERN_GS_SPINNING_SCYTHE_ROOM, logic->HookshotOrBoomerang()),
         LOCATION(RC_ICE_CAVERN_GS_HEART_PIECE_ROOM,     logic->BlueFire() && logic->HookshotOrBoomerang()),
@@ -53,7 +52,21 @@ void RegionTable_Init_IceCavern() {
         LOCATION(RC_ICE_CAVERN_SLIDING_BLOCK_RUPEE_1,   logic->BlueFire() && (logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_BOOMERANG))),
         LOCATION(RC_ICE_CAVERN_SLIDING_BLOCK_RUPEE_2,   logic->BlueFire() && (logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_BOOMERANG))),
         LOCATION(RC_ICE_CAVERN_SLIDING_BLOCK_RUPEE_3,   logic->BlueFire() && (logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_BOOMERANG))),
-    }, {});
+    }, {
+        //Exits
+        Entrance(RR_ICE_CAVERN_BEGINNING,  []{return true;}),
+        Entrance(RR_ICE_CAVERN_FINAL_ROOM, []{return logic->BlueFire();}),
+    });
+
+    areaTable[RR_ICE_CAVERN_FINAL_ROOM] = Region("Ice Cavern", "Ice Cavern", {RA_ICE_CAVERN}, NO_DAY_NIGHT_CYCLE, {}, {
+        //Locations
+        LOCATION(RC_ICE_CAVERN_IRON_BOOTS_CHEST, logic->CanKillEnemy(RE_WOLFOS)),
+        LOCATION(RC_SHEIK_IN_ICE_CAVERN,         logic->CanKillEnemy(RE_WOLFOS) && logic->IsAdult),
+    }, {
+        //Exits
+        Entrance(RR_ICE_CAVERN_MAIN,      []{return Here(RR_ICE_CAVERN_FINAL_ROOM, []{return logic->CanKillEnemy(RE_WOLFOS);});}),
+        Entrance(RR_ICE_CAVERN_BEGINNING, []{return logic->CanUse(RG_IRON_BOOTS) && Here(RR_ICE_CAVERN_FINAL_ROOM, []{return logic->CanKillEnemy(RE_WOLFOS);});}),
+    });
 
 #pragma endregion
 
@@ -66,7 +79,8 @@ void RegionTable_Init_IceCavern() {
         //Exits
         Entrance(RR_ICE_CAVERN_ENTRYWAY, []{return true;}),
         //It is in logic to use a pot to hit the toggle switch here.
-        Entrance(RR_ICE_CAVERN_MQ_HUB,   []{return true;}),
+        Entrance(RR_ICE_CAVERN_MQ_HUB,          []{return true;}),
+        Entrance(RR_ICE_CAVERN_MQ_STALFOS_ROOM, []{return false;}),
     });
 
     areaTable[RR_ICE_CAVERN_MQ_HUB] = Region("Ice Cavern MQ Hub", "Ice Cavern", {RA_ICE_CAVERN}, NO_DAY_NIGHT_CYCLE, {
@@ -93,7 +107,7 @@ void RegionTable_Init_IceCavern() {
     areaTable[RR_ICE_CAVERN_MQ_MAP_ROOM] = Region("Ice Cavern MQ Map Room", "Ice Cavern", {RA_ICE_CAVERN}, NO_DAY_NIGHT_CYCLE, {
         //Events
         //Child can fit between the stalagmites on the left hand side
-        EventAccess(&logic->BlueFireAccess,  []{return logic->IsChild || logic->CanJumpslash() || logic->HasExplosives();}),
+        EventAccess(&logic->BlueFireAccess,  []{return logic->BlueFireAccess || logic->IsChild || logic->CanJumpslash() || logic->HasExplosives();}),
     }, {
         //Locations
         LOCATION(RC_ICE_CAVERN_MQ_MAP_CHEST, logic->BlueFire() && Here(RR_ICE_CAVERN_MQ_MAP_ROOM, []{return logic->CanHitSwitch();})),
