@@ -7,6 +7,8 @@
 #include "z_en_ice_hono.h"
 #include "objects/gameplay_keep/gameplay_keep.h"
 
+#include <libultraship/libultra.h>
+
 #define FLAGS 0
 
 void EnIceHono_Init(Actor* thisx, PlayState* play);
@@ -296,6 +298,10 @@ void EnIceHono_SpreadFlames(EnIceHono* this, PlayState* play) {
         }
     }
 
+    if (CVarGetInteger(CVAR_ENHANCEMENT("RebottleBlueFire"), 0)) {
+        EnIceHono_CapturableFlame(this, play);
+    }
+
     if (this->timer <= 0) {
         Actor_Kill(&this->actor);
     }
@@ -331,6 +337,11 @@ void EnIceHono_SmallFlameMove(EnIceHono* this, PlayState* play) {
         this->alpha -= 10;
         this->alpha = CLAMP(this->alpha, 0, 255);
     }
+
+    if (CVarGetInteger(CVAR_ENHANCEMENT("RebottleBlueFire"), 0)) {
+        EnIceHono_CapturableFlame(this, play);
+    }
+
     if (this->timer <= 0) {
         Actor_Kill(&this->actor);
     }
