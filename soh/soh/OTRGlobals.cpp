@@ -2373,6 +2373,7 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
             if (entrance != -1) {
                 auto data = GetEntranceData(Entrance_GetOverride(entrance));
                 if (data != nullptr) {
+                    Entrance_SetEntranceDiscovered(entrance, false);
                     font->charTexBuf[0] = (TEXTBOX_TYPE_WOODEN << 4) | TEXTBOX_POS_BOTTOM;
                     return msgCtx->msgLength = font->msgLength = SohUtils::CopyStringToCharBuffer(
                                buffer, data->destination + CustomMessage::MESSAGE_END(), maxBufferSize);
