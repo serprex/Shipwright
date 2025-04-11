@@ -2443,6 +2443,9 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
         } else if (textId == TEXT_BIG_POE_COLLECTED_RANDO) {
             messageEntry =
                 CustomMessageManager::Instance->RetrieveMessage(customMessageTableID, textId, MF_AUTO_FORMAT);
+        } else if (textId == TEXT_GERUDO_GUARD_FRIENDLY) {
+            messageEntry = CustomMessage("Want me to throw you in jail?&\x1B#Yes please&No thanks#", { QM_GREEN });
+            messageEntry.AutoFormat();
         }
     }
     if (textId == TEXT_GS_NO_FREEZE || textId == TEXT_GS_FREEZE) {

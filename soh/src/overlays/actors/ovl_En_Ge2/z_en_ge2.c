@@ -54,6 +54,7 @@ void EnGe2_Walk(EnGe2* this, PlayState* play);
 void EnGe2_Stand(EnGe2* this, PlayState* play);
 void EnGe2_WaitLookAtPlayer(EnGe2* this, PlayState* play);
 void EnGe2_ForceTalk(EnGe2* this, PlayState* play);
+void EnGe2_SetupCapturePlayer(EnGe2* this, PlayState* play);
 
 // Update functions
 void EnGe2_UpdateFriendly(Actor* thisx, PlayState* play);
@@ -439,20 +440,21 @@ void EnGe2_LookAtPlayer(EnGe2* this, PlayState* play) {
 
 void EnGe2_SetActionAfterTalk(EnGe2* this, PlayState* play) {
     if (Actor_TextboxIsClosing(&this->actor, play)) {
-
-        switch (this->actor.params & 0xFF) {
-            case GE2_TYPE_PATROLLING:
-                EnGe2_ChangeAction(this, GE2_ACTION_ABOUTTURN);
-                break;
-            case GE2_TYPE_STATIONARY:
-                EnGe2_ChangeAction(this, GE2_ACTION_STAND);
-                break;
-            case GE2_TYPE_GERUDO_CARD_GIVER:
-                this->actionFunc = EnGe2_WaitLookAtPlayer;
-                break;
+        if (GameInteractor_Should(VB_GERUDO_GUARD_SET_ACTION_AFTER_TALK, true, this)) {
+            switch (this->actor.params & 0xFF) {
+                case GE2_TYPE_PATROLLING:
+                    EnGe2_ChangeAction(this, GE2_ACTION_ABOUTTURN);
+                    break;
+                case GE2_TYPE_STATIONARY:
+                    EnGe2_ChangeAction(this, GE2_ACTION_STAND);
+                    break;
+                case GE2_TYPE_GERUDO_CARD_GIVER:
+                    this->actionFunc = EnGe2_WaitLookAtPlayer;
+                    break;
+            }
+            this->actor.update = EnGe2_UpdateFriendly;
+            this->actor.flags &= ~ACTOR_FLAG_TALK_OFFER_AUTO_ACCEPTED;
         }
-        this->actor.update = EnGe2_UpdateFriendly;
-        this->actor.flags &= ~ACTOR_FLAG_TALK_OFFER_AUTO_ACCEPTED;
     }
     EnGe2_TurnToFacePlayer(this, play);
 }
