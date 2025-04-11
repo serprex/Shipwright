@@ -1082,7 +1082,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
         }
         case VB_BOTTLE_BIG_POE: {
             EnPoField* enPoe = va_arg(args, EnPoField*);
-            enPoe->actor.textId = 0x508F;
+            enPoe->actor.textId = 0x5090;
             Flags_SetSwitch(gPlayState, enPoe->actor.params & 0xFF);
             HIGH_SCORE(HS_POE_POINTS) += 100;
             if (HIGH_SCORE(HS_POE_POINTS) > 1100) {
