@@ -175,13 +175,16 @@ class Logic {
     bool MQWaterB1Switch = false;
     // bool MQWaterPillarSoTBlock = false; should be irrelevant. SHOULD.
     bool MQWaterOpenedPillarB1 = false;
+    bool MQSpiritGibdosCleared = false;
     bool MQSpiritCrawlBoulder = false;
     bool MQSpiritMapRoomEnemies = false;
     bool MQSpiritTimeTravelChest = false;
     bool MQSpirit3SunsEnemies = false;
+    bool MQSpiritOpenedBigMirrorCave = false;
     bool Spirit1FSilverRupees = false;
     bool SpiritChildStalfosBridge = false;
     bool SpiritChildTorchesBridge = false;
+    bool SpiritAdultLobbySwitch = false;
 
     /* --- END OF HELPERS AND LOCATION ACCESS --- */
 

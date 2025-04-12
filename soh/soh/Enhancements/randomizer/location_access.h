@@ -295,10 +295,9 @@ class Region {
         } else if (Adult() && logic->IsAdult) {
             return condition();
             // if we do not have Certain Access, we need to check the overlap by seeing if we are both here as child and
-            // meet the adult universe's access condition We only need to do it as child, as only child access matters
+            // meet the adult universe's access condition. We only need to do it as child, as only child access matters
             // for this check, as adult access is assumed based on keys
         } else if (Child() && logic->IsChild && (!IsBrokenWall || logic->SmallKeys(RR_SPIRIT_TEMPLE, 6))) {
-            bool result = false;
             // store current age variables
             bool pastAdult = logic->IsAdult;
             bool pastChild = logic->IsChild;
@@ -306,7 +305,7 @@ class Region {
             // First check if the check is possible as child
             logic->IsChild = true;
             logic->IsAdult = false;
-            result = condition();
+            bool result = condition();
             // If so, check again as adult. both have to be true for result to be true
             if (result) {
                 logic->IsChild = false;
