@@ -22,7 +22,6 @@ void RegionTable_Init_JabuJabusBelly() {
         Entrance(RR_JABU_JABUS_BELLY_LIFT_ROOM, []{return logic->CanUseProjectile();}),
     });
 
-    //Combines Lift room middle and lower, 1F holes room, the forked corridor, and it's side rooms
     areaTable[RR_JABU_JABUS_BELLY_LIFT_ROOM] = Region("Jabu Jabus Belly Lift Room", "Jabu Jabus Belly", {RA_JABU_JABUS_BELLY}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
         LOCATION(RC_JABU_JABUS_BELLY_DEKU_SCRUB,                  logic->HasItem(RG_BRONZE_SCALE) && (logic->IsChild || logic->HasItem(RG_SILVER_SCALE) || ctx->GetTrickOption(RT_JABU_ALCOVE_JUMP_DIVE) || logic->CanUse(RG_IRON_BOOTS)) && logic->CanStunDeku()),
@@ -155,7 +154,7 @@ void RegionTable_Init_JabuJabusBelly() {
         Entrance(RR_JABU_JABUS_BELLY_FORKED_CORRIDOR, []{return true;}),
     });
 
-    areaTable[RR_JABU_JABUS_BELLY_BIGOCTO_LEDGE] = Region("Jabu Jabus Belly Bigocto Ledge", "Jabu Jabus Belly", {RA_JABU_JABUS_BELLY}, NO_DAY_NIGHT_CYCLE, {}, {
+    areaTable[RR_JABU_JABUS_BELLY_BIGOCTO_LEDGE] = Region("Jabu Jabus Belly Big Octo Ledge", "Jabu Jabus Belly", {RA_JABU_JABUS_BELLY}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
         //Only adult can get the token without assistance
         LOCATION(RC_JABU_JABUS_BELLY_GS_LOBBY_BASEMENT_UPPER, logic->IsAdult && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_SHORT_JUMPSLASH)),
@@ -166,13 +165,13 @@ void RegionTable_Init_JabuJabusBelly() {
         Entrance(RR_JABU_JABUS_BELLY_BIGOCTO,    []{return logic->JabuRutoIn1F && Here(RR_JABU_JABUS_BELLY_BIGOCTO_LEDGE, []{return logic->CanKillEnemy(RE_BIG_OCTO);});}),
     });
 
-    areaTable[RR_JABU_JABUS_BELLY_BIGOCTO] = Region("Jabu Jabus Belly Bigocto", "Jabu Jabus Belly", {RA_JABU_JABUS_BELLY}, NO_DAY_NIGHT_CYCLE, {}, {}, {
+    areaTable[RR_JABU_JABUS_BELLY_BIGOCTO] = Region("Jabu Jabus Belly Big Octo", "Jabu Jabus Belly", {RA_JABU_JABUS_BELLY}, NO_DAY_NIGHT_CYCLE, {}, {}, {
         //Exits
         Entrance(RR_JABU_JABUS_BELLY_BIGOCTO_LEDGE, []{return true;}),
         Entrance(RR_JABU_JABUS_BELLY_ABOVE_BIGOCTO, []{return logic->JabuRutoIn1F && Here(RR_JABU_JABUS_BELLY_BIGOCTO, []{return logic->CanKillEnemy(RE_BIG_OCTO);});}),
     });
 
-    areaTable[RR_JABU_JABUS_BELLY_ABOVE_BIGOCTO] = Region("Jabu Jabus Belly Above Bigocto", "Jabu Jabus Belly", {RA_JABU_JABUS_BELLY}, NO_DAY_NIGHT_CYCLE, {
+    areaTable[RR_JABU_JABUS_BELLY_ABOVE_BIGOCTO] = Region("Jabu Jabus Belly Above Big Octo", "Jabu Jabus Belly", {RA_JABU_JABUS_BELLY}, NO_DAY_NIGHT_CYCLE, {
         //Events
         EventAccess(&logic->FairyPot, []{return true;}),
         EventAccess(&logic->NutPot,   []{return true;}),
@@ -287,7 +286,8 @@ void RegionTable_Init_JabuJabusBelly() {
     });
 
     areaTable[RR_JABU_JABUS_BELLY_MQ_WATER_SWITCH_ROOM] = Region("Jabu Jabus Belly MQ Water Switch Room", "Jabu Jabus Belly", {RA_JABU_JABUS_BELLY}, NO_DAY_NIGHT_CYCLE, {
-        EventAccess(&logic->MQJabuWaterSwitchLiftAccess, []{return logic->MQJabuWaterSwitchLiftAccess || logic->CanKillEnemy(RE_LIZALFOS);}),
+        //Events
+        EventAccess(&logic->MQJabuWaterSwitchLiftAccess, []{return logic->CanKillEnemy(RE_LIZALFOS);}),
     }, {
         //Locations
         LOCATION(RC_JABU_JABUS_BELLY_MQ_BOOMERANG_ROOM_SMALL_CHEST, true),
@@ -305,6 +305,7 @@ void RegionTable_Init_JabuJabusBelly() {
     });
 
     areaTable[RR_JABU_JABUS_BELLY_MQ_WATER_SWITCH_ROOM_PAST_GEYSER] = Region("Jabu Jabus Belly MQ Water Switch Room Past Geyser", "Jabu Jabus Belly", {RA_JABU_JABUS_BELLY}, NO_DAY_NIGHT_CYCLE, {}, {}, {
+        //Exits
         Entrance(RR_JABU_JABUS_BELLY_MQ_WATER_SWITCH_ROOM, []{return logic->MQJabuWaterSwitchLiftAccess;}),
         Entrance(RR_JABU_JABUS_BELLY_MQ_LIFT_ROOM,         []{return true;}),
     });
