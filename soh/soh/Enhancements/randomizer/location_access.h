@@ -8,6 +8,7 @@
 #include "soh/Enhancements/randomizer/randomizerTypes.h"
 #include "soh/Enhancements/randomizer/context.h"
 #include "soh/Enhancements/randomizer/logic.h"
+#include "soh/Enhancements/randomizer/dungeon.h"
 
 typedef bool (*ConditionFn)();
 
@@ -232,6 +233,7 @@ class Region {
     }
 
     /*
+    RANDOTODO edit this
      * This logic covers checks that exist in the shared areas of MQ spirit from a glitchless standpoint.
      * This room has Quantum logic that I am currently handling with this function, however this is NOT suitable for
      glitch logic as it relies on specific ages
@@ -282,42 +284,57 @@ class Region {
      * - If Child and Adult can get the check (ignoring actual adult access to the location), and the location is either
      not 6 key locked or we have 6 keys, we can get the check with the overlap
      */
-    bool MQSpiritShared(ConditionFn condition, bool IsBrokenWall, bool anyAge = false) {
-        // if we have Certain Access as child, we can check anyAge and if true, resolve a condition with Here as if
-        // adult is here it's also Certain Access
-        if (logic->SmallKeys(RR_SPIRIT_TEMPLE, 7)) {
+
+    bool SpiritShared(ConditionFn condition, ConditionFn childAccess, ConditionFn adultAccess, uint8_t adultKeys, uint8_t childKeys, uint8_t eitherKeys, bool anyAge = false){
+        //If we have all of the keys, we know that access is Certain Access
+        if (ctx->GetDungeon(Rando::SPIRIT_TEMPLE)->IsMQ() ? logic->SmallKeys(RR_SPIRIT_TEMPLE, 7) : logic->SmallKeys(RR_SPIRIT_TEMPLE, 5)) {
             if (anyAge) {
                 return Here(condition);
             }
             return condition();
-            // else, if we are here as adult, we have Certain Access from that and don't need special handling for
-            // checking adult
-        } else if (Adult() && logic->IsAdult) {
-            return condition();
-            // if we do not have Certain Access, we need to check the overlap by seeing if we are both here as child and
-            // meet the adult universe's access condition We only need to do it as child, as only child access matters
-            // for this check, as adult access is assumed based on keys
-        } else if (Child() && logic->IsChild && (!IsBrokenWall || logic->SmallKeys(RR_SPIRIT_TEMPLE, 6))) {
-            bool result = false;
-            // store current age variables
-            bool pastAdult = logic->IsAdult;
-            bool pastChild = logic->IsChild;
+        // otherwise, we have to check the current age and...
+        } else if (Child() && logic->IsChild) {
+            bool result = condition();
+            //if we have enough keys to have Certain Access, we just run the condition
+            if (logic->SmallKeys(RR_SPIRIT_TEMPLE, childKeys)){
+                return result;
+            //otherwise we need to check both ages if we have enough keys that either can get there
+            } else if (result && logic->SmallKeys(RR_SPIRIT_TEMPLE, eitherKeys) && adultAccess) {
+                // store current age variables
+                bool pastAdult = logic->IsAdult;
+                bool pastChild = logic->IsChild;
 
-            // First check if the check is possible as child
-            logic->IsChild = true;
-            logic->IsAdult = false;
-            result = condition();
-            // If so, check again as adult. both have to be true for result to be true
-            if (result) {
                 logic->IsChild = false;
                 logic->IsAdult = true;
-                result = condition();
-            }
 
-            // set back age variables
-            logic->IsChild = pastChild;
-            logic->IsAdult = pastAdult;
-            return result;
+                result = condition();
+
+                logic->IsChild = pastChild;
+                logic->IsAdult = pastAdult;
+
+                return result;
+            }
+        } else if (Adult() && logic->IsAdult) {
+            bool result = condition();
+            //if we have enough keys to have Certain Access, we just run the condition
+            if (logic->SmallKeys(RR_SPIRIT_TEMPLE, childKeys)){
+                return result;
+            //otherwise we need to check both ages
+            } else if (result && logic->SmallKeys(RR_SPIRIT_TEMPLE, eitherKeys) && childAccess) {
+                // store current age variables
+                bool pastAdult = logic->IsAdult;
+                bool pastChild = logic->IsChild;
+
+                logic->IsChild = true;
+                logic->IsAdult = false;
+
+                result = condition();
+
+                logic->IsChild = pastChild;
+                logic->IsAdult = pastAdult;
+
+                return result;
+            }
         }
         return false;
     }
@@ -329,6 +346,7 @@ extern std::vector<EventAccess> grottoEvents;
 bool Here(const RandomizerRegion region,
           ConditionFn
               condition); // RANDOTODO make a less stupid way to check own at either age than self referencing with this
+bool SpiritSharedStatueRoom(const RandomizerRegion region, ConditionFn condition, bool anyAge = false);
 bool MQSpiritSharedStatueRoom(const RandomizerRegion region, ConditionFn condition, bool anyAge = false);
 bool MQSpiritSharedBrokenWallRoom(const RandomizerRegion region, ConditionFn condition, bool anyAge = false);
 bool CanPlantBean(const RandomizerRegion region);

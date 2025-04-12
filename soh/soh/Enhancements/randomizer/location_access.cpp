@@ -210,12 +210,20 @@ bool Here(const RandomizerRegion region, ConditionFn condition) {
     return areaTable[region].Here(condition);
 }
 
+bool SpiritExplosiveLogic(){
+    return logic->HasExplosives() ? 1 : ctx->GetOption(RSK_BOMBCHU_BAG) && logic->BombchuRefill() ? 2 : 3;
+}
+
+bool SpiritSharedStatueRoom(const RandomizerRegion region, ConditionFn condition, bool anyAge) {
+    return areaTable[region].SpiritShared(condition, []{return logic->HasExplosives();}, []{return true;}, 5, 3, SpiritExplosiveLogic(), anyAge);
+}
+
 bool MQSpiritSharedStatueRoom(const RandomizerRegion region, ConditionFn condition, bool anyAge) {
-    return areaTable[region].MQSpiritShared(condition, false, anyAge);
+    return areaTable[region].SpiritShared(condition, []{return true;}, []{return true;}, 7, 0, 0, anyAge);
 }
 
 bool MQSpiritSharedBrokenWallRoom(const RandomizerRegion region, ConditionFn condition, bool anyAge) {
-    return areaTable[region].MQSpiritShared(condition, true, anyAge);
+    return areaTable[region].SpiritShared(condition, []{return true;}, []{return true;}, 7, 7, 6, anyAge);
 }
 
 bool BeanPlanted(const RandomizerRegion region) {
