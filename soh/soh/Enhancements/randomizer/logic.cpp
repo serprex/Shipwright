@@ -2440,7 +2440,7 @@ void Logic::Reset() {
     OpenedWestRoomMQBotw = false;
     OpenedMiddleHoleMQBotw = false;
     BrokeDeku1FWeb = false;
-    MQDeku3FSwitch = false;
+    MQBurnedDeku2FWeb = false;
     ClearedMQDekuSERoom = false;
     MQDekuWaterRoomTorches = false;
     PushedDekuBasementBlock = false;

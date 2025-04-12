@@ -212,7 +212,10 @@ void RegionTable_Init_DekuTree() {
         //is it possible to recoil from here to the ledge with a trick?
     });
 
-    areaTable[RR_DEKU_TREE_MQ_2F] = Region("Deku Tree MQ 2F", "Deku Tree", {RA_DEKU_TREE}, NO_DAY_NIGHT_CYCLE, {}, {
+    areaTable[RR_DEKU_TREE_MQ_2F] = Region("Deku Tree MQ 2F", "Deku Tree", {RA_DEKU_TREE}, NO_DAY_NIGHT_CYCLE, {
+        //Events
+        EventAccess(&logic->MQBurnedDeku2FWeb,  []{return logic->HasFireSource();}),
+    }, {
         //Locations
         LOCATION(RC_DEKU_TREE_MQ_MAP_CHEST,     true),
         LOCATION(RC_DEKU_TREE_MQ_GS_LOBBY,      logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA)),
@@ -225,7 +228,7 @@ void RegionTable_Init_DekuTree() {
         Entrance(RR_DEKU_TREE_MQ_1F,              []{return true;}),
         //Will need canAvoid logic with enemy shuffle
         Entrance(RR_DEKU_TREE_MQ_3F,              []{return true;}),
-        Entrance(RR_DEKU_TREE_MQ_EYE_TARGET_ROOM, []{return Here(RR_DEKU_TREE_MQ_2F, []{return logic->HasFireSource() || (logic->MQDeku3FSwitch && (logic->CanUse(RG_STICKS) || logic->CanUse(RG_FAIRY_BOW)));});}),
+        Entrance(RR_DEKU_TREE_MQ_EYE_TARGET_ROOM, []{return logic->MQBurnedDeku2FWeb;}),
     });
 
     areaTable[RR_DEKU_TREE_MQ_3F] = Region("Deku Tree MQ 3F", "Deku Tree", {RA_DEKU_TREE}, NO_DAY_NIGHT_CYCLE, {
@@ -233,7 +236,7 @@ void RegionTable_Init_DekuTree() {
         EventAccess(&logic->DekuBabaSticks,    []{return logic->CanGetDekuBabaSticks();}),
         EventAccess(&logic->DekuBabaNuts,      []{return logic->CanGetDekuBabaNuts();}),
         EventAccess(&logic->BrokeDeku1FWeb,    []{return true;}),
-        EventAccess(&logic->MQDeku3FSwitch,    []{return true;}),
+        EventAccess(&logic->MQBurnedDeku2FWeb, []{return logic->CanUse(RG_STICKS) || logic->CanUse(RG_FAIRY_BOW);}),
     }, {}, {
         //Exits
         Entrance(RR_DEKU_TREE_MQ_2F,              []{return true;}),

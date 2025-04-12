@@ -146,7 +146,7 @@ class Logic {
     bool OpenedWestRoomMQBotw = false;
     bool OpenedMiddleHoleMQBotw = false;
     bool BrokeDeku1FWeb = false;
-    bool MQDeku3FSwitch = false;
+    bool MQBurnedDeku2FWeb = false;
     bool ClearedMQDekuSERoom = false;
     bool MQDekuWaterRoomTorches = false;
     bool PushedDekuBasementBlock = false;
