@@ -162,6 +162,7 @@ class Logic {
     bool MQGTGRightSideSwitch = false;
     bool GTGPlatformSilverRupees = false;
     bool MQJabuHolesRoomDoor = false;
+    bool JabuRutoIn1F = false;
     bool JabuWestTentacle = false;
     bool JabuEastTentacle = false;
     bool JabuNorthTentacle = false;
@@ -179,7 +180,8 @@ class Logic {
     bool MQSpiritTimeTravelChest = false;
     bool MQSpirit3SunsEnemies = false;
     bool Spirit1FSilverRupees = false;
-    bool JabuRutoIn1F = false;
+    bool SpiritChildStalfosBridge = false;
+    bool SpiritChildTorchesBridge = false;
 
     /* --- END OF HELPERS AND LOCATION ACCESS --- */
 

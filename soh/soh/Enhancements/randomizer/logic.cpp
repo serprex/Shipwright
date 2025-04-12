@@ -2500,6 +2500,7 @@ void Logic::Reset() {
     MQGTGMazeSwitch = false;
     GTGPlatformSilverRupees = false;
     MQJabuHolesRoomDoor = false;
+    JabuRutoIn1F = false;
     JabuWestTentacle = false;
     JabuEastTentacle = false;
     JabuNorthTentacle = false;
@@ -2516,7 +2517,8 @@ void Logic::Reset() {
     MQSpiritMapRoomEnemies = false;
     MQSpirit3SunsEnemies = false;
     Spirit1FSilverRupees = false;
-    JabuRutoIn1F = false;
+    SpiritChildStalfosBridge = false;
+    SpiritChildTorchesBridge = false;
 
     StopPerformanceTimer(PT_LOGIC_RESET);
 }
