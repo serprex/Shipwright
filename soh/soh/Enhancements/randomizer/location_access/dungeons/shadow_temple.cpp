@@ -66,7 +66,7 @@ void RegionTable_Init_ShadowTemple() {
         //Exits
         Entrance(RR_SHADOW_TEMPLE_COMPASS_ROOM,    []{return true;}),
         Entrance(RR_SHADOW_TEMPLE_SPINNING_BLADES, []{return true;}),
-        Entrance(RR_SHADOW_TEMPLE_HUGE_PIT,        []{return logic->HasExplosives() && logic->IsAdult && logic->SmallKeys(RR_SHADOW_TEMPLE, 1, 2);}),
+        Entrance(RR_SHADOW_TEMPLE_HUGE_PIT,        []{return logic->HasExplosives() && logic->IsAdult && logic->SmallKeys(RR_SHADOW_TEMPLE, 1);}),
     });
 
     areaTable[RR_SHADOW_TEMPLE_COMPASS_ROOM] = Region("Shadow Temple Compass Room", "Shadow Temple", {RA_SHADOW_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
@@ -102,7 +102,7 @@ void RegionTable_Init_ShadowTemple() {
         //Exits
         Entrance(RR_SHADOW_TEMPLE_FIRST_BEAMOS,              []{return false;}), // TODO hookshot up?
         Entrance(RR_SHADOW_TEMPLE_INVISIBLE_SPINNING_BLADES, []{return true;}),
-        Entrance(RR_SHADOW_TEMPLE_INVISIBLE_SPIKES,          []{return logic->SmallKeys(RR_SHADOW_TEMPLE, 2, 3);}),
+        Entrance(RR_SHADOW_TEMPLE_INVISIBLE_SPIKES,          []{return logic->SmallKeys(RR_SHADOW_TEMPLE, 2);}),
     });
 
     areaTable[RR_SHADOW_TEMPLE_INVISIBLE_SPINNING_BLADES] = Region("Shadow Temple Invisible Spinning Blades", "Shadow Temple", {RA_SHADOW_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
@@ -124,9 +124,9 @@ void RegionTable_Init_ShadowTemple() {
         LOCATION(RC_SHADOW_TEMPLE_INVISIBLE_SPIKES_CHEST, ((ctx->GetTrickOption(RT_LENS_SHADOW_PLATFORM) && ctx->GetTrickOption(RT_LENS_SHADOW)) || logic->CanUse(RG_LENS_OF_TRUTH))),
     }, {
         //Exits
-        Entrance(RR_SHADOW_TEMPLE_HUGE_PIT,    []{return logic->SmallKeys(RR_SHADOW_TEMPLE, 2, 3);}),
+        Entrance(RR_SHADOW_TEMPLE_HUGE_PIT,    []{return logic->SmallKeys(RR_SHADOW_TEMPLE, 2);}),
         Entrance(RR_SHADOW_TEMPLE_SKULL_JAR,   []{return ((ctx->GetTrickOption(RT_LENS_SHADOW_PLATFORM) && ctx->GetTrickOption(RT_LENS_SHADOW)) || logic->CanUse(RG_LENS_OF_TRUTH)) && logic->CanUse(RG_HOOKSHOT);}),
-        Entrance(RR_SHADOW_TEMPLE_WIND_TUNNEL, []{return ((ctx->GetTrickOption(RT_LENS_SHADOW_PLATFORM) && ctx->GetTrickOption(RT_LENS_SHADOW)) || logic->CanUse(RG_LENS_OF_TRUTH)) && logic->CanUse(RG_HOOKSHOT) && logic->SmallKeys(RR_SHADOW_TEMPLE, 3, 4);}),
+        Entrance(RR_SHADOW_TEMPLE_WIND_TUNNEL, []{return ((ctx->GetTrickOption(RT_LENS_SHADOW_PLATFORM) && ctx->GetTrickOption(RT_LENS_SHADOW)) || logic->CanUse(RG_LENS_OF_TRUTH)) && logic->CanUse(RG_HOOKSHOT) && logic->SmallKeys(RR_SHADOW_TEMPLE, 3);}),
     });
 
     areaTable[RR_SHADOW_TEMPLE_SKULL_JAR] = Region("Shadow Temple Skull Jar", "Shadow Temple", {RA_SHADOW_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
@@ -141,7 +141,7 @@ void RegionTable_Init_ShadowTemple() {
     // TODO upper/lower logic
     areaTable[RR_SHADOW_TEMPLE_WIND_TUNNEL] = Region("Shadow Temple Wind Tunnel", "Shadow Temple", {RA_SHADOW_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
         //Exits
-        Entrance(RR_SHADOW_TEMPLE_INVISIBLE_SPIKES,         []{return logic->SmallKeys(RR_SHADOW_TEMPLE, 3, 4);}),
+        Entrance(RR_SHADOW_TEMPLE_INVISIBLE_SPIKES,         []{return logic->SmallKeys(RR_SHADOW_TEMPLE, 3);}),
         Entrance(RR_SHADOW_TEMPLE_WIND_TUNNEL_HINT_ROOM,    []{return logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_HOOKSHOT);}),
         Entrance(RR_SHADOW_TEMPLE_ROOM_TO_BOAT,             []{return true;}),
     });
@@ -164,17 +164,17 @@ void RegionTable_Init_ShadowTemple() {
     }, {
         //Exits
         Entrance(RR_SHADOW_TEMPLE_WIND_TUNNEL, []{return logic->CanKillEnemy(RE_GIBDO, ED_CLOSE, true, 2);}),
-        Entrance(RR_SHADOW_TEMPLE_DOCK,        []{return logic->SmallKeys(RR_SHADOW_TEMPLE, 4, 5);}),
+        Entrance(RR_SHADOW_TEMPLE_DOCK,        []{return logic->SmallKeys(RR_SHADOW_TEMPLE, 4);}),
     });
 
     areaTable[RR_SHADOW_TEMPLE_DOCK] = Region("Shadow Temple Dock", "Shadow Temple", {RA_SHADOW_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
-        LOCATION(RC_SHADOW_TEMPLE_GS_NEAR_SHIP,            logic->CanUse(RG_LONGSHOT) && logic->SmallKeys(RR_SHADOW_TEMPLE, 4, 5)),
-        LOCATION(RC_SHADOW_TEMPLE_SCARECROW_NORTH_HEART,   logic->CanUse(RG_DISTANT_SCARECROW) && logic->SmallKeys(RR_SHADOW_TEMPLE, 4, 5)),
-        LOCATION(RC_SHADOW_TEMPLE_SCARECROW_SOUTH_HEART,   logic->CanUse(RG_DISTANT_SCARECROW) && logic->SmallKeys(RR_SHADOW_TEMPLE, 4, 5)),
+        LOCATION(RC_SHADOW_TEMPLE_GS_NEAR_SHIP,            logic->CanUse(RG_LONGSHOT) && logic->SmallKeys(RR_SHADOW_TEMPLE, 4)),
+        LOCATION(RC_SHADOW_TEMPLE_SCARECROW_NORTH_HEART,   logic->CanUse(RG_DISTANT_SCARECROW) && logic->SmallKeys(RR_SHADOW_TEMPLE, 4)),
+        LOCATION(RC_SHADOW_TEMPLE_SCARECROW_SOUTH_HEART,   logic->CanUse(RG_DISTANT_SCARECROW) && logic->SmallKeys(RR_SHADOW_TEMPLE, 4)),
     }, {
         //Exits
-        Entrance(RR_SHADOW_TEMPLE_ROOM_TO_BOAT,    []{return logic->SmallKeys(RR_SHADOW_TEMPLE, 4, 5);}),
+        Entrance(RR_SHADOW_TEMPLE_ROOM_TO_BOAT,    []{return logic->SmallKeys(RR_SHADOW_TEMPLE, 4);}),
         Entrance(RR_SHADOW_TEMPLE_SPINNING_BLADES, []{return logic->HasItem(RG_GORONS_BRACELET);}),
         Entrance(RR_SHADOW_TEMPLE_BEYOND_BOAT,     []{return ((logic->IsAdult && logic->HasItem(RG_GORONS_BRACELET)) || logic->CanUse(RG_HOOKSHOT)) && logic->CanUse(RG_ZELDAS_LULLABY);}),
     });

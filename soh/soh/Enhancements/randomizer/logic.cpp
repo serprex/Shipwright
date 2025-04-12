@@ -1368,75 +1368,30 @@ bool Logic::CanTriggerLACS() {
 }
 
 bool Logic::SmallKeys(RandomizerRegion dungeon, uint8_t requiredAmount) {
-    return SmallKeys(dungeon, requiredAmount, requiredAmount);
-}
-
-bool Logic::SmallKeys(RandomizerRegion dungeon, uint8_t requiredAmountGlitchless, uint8_t requiredAmountGlitched) {
     if (HasItem(RG_SKELETON_KEY)) {
         return true;
     }
     switch (dungeon) {
         case RR_FOREST_TEMPLE:
-            /*if (IsGlitched && (GetDifficultyValueFromString(GlitchHookshotJump_Boots) >=
-            static_cast<uint8_t>(GlitchDifficulty::INTERMEDIATE) || GetDifficultyValueFromString(GlitchHoverBoost) >=
-            static_cast<uint8_t>(GlitchDifficulty::NOVICE) || (GetDifficultyValueFromString(GlitchHover) >=
-            static_cast<uint8_t>(GlitchDifficulty::NOVICE) && GetDifficultyValueFromString(GlitchISG) >=
-            static_cast<uint8_t>(GlitchDifficulty::INTERMEDIATE)))) { return ForestTempleKeys >= requiredAmountGlitched;
-            }*/
-            return GetSmallKeyCount(SCENE_FOREST_TEMPLE) >= requiredAmountGlitchless;
-
+            return GetSmallKeyCount(SCENE_FOREST_TEMPLE) >= requiredAmount;
         case RR_FIRE_TEMPLE:
-            /*if (IsGlitched && (GetDifficultyValueFromString(GlitchLedgeClip) >=
-            static_cast<uint8_t>(GlitchDifficulty::INTERMEDIATE) || GetDifficultyValueFromString(GlitchHover) >=
-            static_cast<uint8_t>(GlitchDifficulty::INTERMEDIATE))) { return FireTempleKeys >= requiredAmountGlitched;
-            }*/
-            return GetSmallKeyCount(SCENE_FIRE_TEMPLE) >= requiredAmountGlitchless;
-
+            return GetSmallKeyCount(SCENE_FIRE_TEMPLE) >= requiredAmount;
         case RR_WATER_TEMPLE:
-            /*if (IsGlitched && (false)) {
-                return WaterTempleKeys >= requiredAmountGlitched;
-            }*/
-            return GetSmallKeyCount(SCENE_WATER_TEMPLE) >= requiredAmountGlitchless;
-
+            return GetSmallKeyCount(SCENE_WATER_TEMPLE) >= requiredAmount;
         case RR_SPIRIT_TEMPLE:
-            /*if (IsGlitched && (false)) {
-                return SpiritTempleKeys >= requiredAmountGlitched;
-            }*/
-            return GetSmallKeyCount(SCENE_SPIRIT_TEMPLE) >= requiredAmountGlitchless;
-
+            return GetSmallKeyCount(SCENE_SPIRIT_TEMPLE) >= requiredAmount;
         case RR_SHADOW_TEMPLE:
-            /*if (IsGlitched && (GetDifficultyValueFromString(GlitchHookshotClip) >=
-            static_cast<uint8_t>(GlitchDifficulty::NOVICE))) { return ShadowTempleKeys >= requiredAmountGlitched;
-            }*/
-            return GetSmallKeyCount(SCENE_SHADOW_TEMPLE) >= requiredAmountGlitchless;
-
+            return GetSmallKeyCount(SCENE_SHADOW_TEMPLE) >= requiredAmount;
         case RR_BOTTOM_OF_THE_WELL:
-            /*if (IsGlitched && (false)) {
-                return BottomOfTheWellKeys >= requiredAmountGlitched;
-            }*/
-            return GetSmallKeyCount(SCENE_BOTTOM_OF_THE_WELL) >= requiredAmountGlitchless;
-
+            return GetSmallKeyCount(SCENE_BOTTOM_OF_THE_WELL) >= requiredAmount;
         case RR_GERUDO_TRAINING_GROUND:
-            /*if (IsGlitched && (false)) {
-                return GerudoTrainingGroundsKeys >= requiredAmountGlitched;
-            }*/
-            return GetSmallKeyCount(SCENE_GERUDO_TRAINING_GROUND) >= requiredAmountGlitchless;
-
+            return GetSmallKeyCount(SCENE_GERUDO_TRAINING_GROUND) >= requiredAmount;
         case RR_GANONS_CASTLE:
-            /*if (IsGlitched && (false)) {
-                return GanonsCastleKeys >= requiredAmountGlitched;
-            }*/
-            return GetSmallKeyCount(SCENE_INSIDE_GANONS_CASTLE) >= requiredAmountGlitchless;
-
+            return GetSmallKeyCount(SCENE_INSIDE_GANONS_CASTLE) >= requiredAmount;
         case RR_MARKET_TREASURE_CHEST_GAME:
-            /*if (IsGlitched && (false)) {
-                return TreasureGameKeys >= requiredAmountGlitched;
-            }*/
-            return GetSmallKeyCount(SCENE_TREASURE_BOX_SHOP) >= requiredAmountGlitchless;
-
+            return GetSmallKeyCount(SCENE_TREASURE_BOX_SHOP) >= requiredAmount;
         case RR_GERUDO_FORTRESS:
-            return GetSmallKeyCount(SCENE_THIEVES_HIDEOUT) >= requiredAmountGlitchless;
-
+            return GetSmallKeyCount(SCENE_THIEVES_HIDEOUT) >= requiredAmount;
         default:
             return false;
     }

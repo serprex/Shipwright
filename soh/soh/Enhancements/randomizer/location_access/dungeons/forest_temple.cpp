@@ -50,7 +50,7 @@ void RegionTable_Init_ForestTemple() {
         Entrance(RR_FOREST_TEMPLE_NORTH_CORRIDOR,    []{return true;}),
         Entrance(RR_FOREST_TEMPLE_NW_OUTDOORS_LOWER, []{return logic->CanUse(RG_SONG_OF_TIME) || logic->IsChild;}),
         Entrance(RR_FOREST_TEMPLE_NE_OUTDOORS_LOWER, []{return logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT);}),
-        Entrance(RR_FOREST_TEMPLE_WEST_CORRIDOR,     []{return logic->SmallKeys(RR_FOREST_TEMPLE, 1, 5);}),
+        Entrance(RR_FOREST_TEMPLE_WEST_CORRIDOR,     []{return logic->SmallKeys(RR_FOREST_TEMPLE, 1);}),
         Entrance(RR_FOREST_TEMPLE_EAST_CORRIDOR,     []{return false;}),
         Entrance(RR_FOREST_TEMPLE_BOSS_REGION,       []{return logic->ForestTempleMeg;}),
         Entrance(RR_FOREST_TEMPLE_BOSS_ENTRYWAY,     []{return false;}),
@@ -171,7 +171,7 @@ void RegionTable_Init_ForestTemple() {
 
     areaTable[RR_FOREST_TEMPLE_WEST_CORRIDOR] = Region("Forest Temple West Corridor", "Forest Temple", {RA_FOREST_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_LOBBY,           []{return logic->SmallKeys(RR_FOREST_TEMPLE, 1, 5);}),
+        Entrance(RR_FOREST_TEMPLE_LOBBY,           []{return logic->SmallKeys(RR_FOREST_TEMPLE, 1);}),
         Entrance(RR_FOREST_TEMPLE_BLOCK_PUSH_ROOM, []{return logic->CanAttack() || logic->CanUse(RG_NUTS);}),
     });
 

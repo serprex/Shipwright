@@ -163,7 +163,7 @@ void RegionTable_Init_FireTemple() {
         //Exits
         Entrance(RR_FIRE_TEMPLE_SHORTCUT_ROOM,                []{return true;}),
         Entrance(RR_FIRE_TEMPLE_BOULDER_MAZE_LOWER_SIDE_ROOM, []{return true;}),
-        Entrance(RR_FIRE_TEMPLE_EAST_CENTRAL_ROOM,            []{return logic->SmallKeys(RR_FIRE_TEMPLE, 5, 7);}),
+        Entrance(RR_FIRE_TEMPLE_EAST_CENTRAL_ROOM,            []{return logic->SmallKeys(RR_FIRE_TEMPLE, 5);}),
         Entrance(RR_FIRE_TEMPLE_BOULDER_MAZE_UPPER,           []{return false;}),
     });
 
@@ -183,8 +183,8 @@ void RegionTable_Init_FireTemple() {
     }, {
         //Exits
         Entrance(RR_FIRE_TEMPLE_BIG_LAVA_ROOM,      []{return logic->TakeDamage();}),
-        Entrance(RR_FIRE_TEMPLE_BOULDER_MAZE_LOWER, []{return logic->SmallKeys(RR_FIRE_TEMPLE, 5, 8);}),
-        Entrance(RR_FIRE_TEMPLE_FIRE_WALL_CHASE,    []{return logic->SmallKeys(RR_FIRE_TEMPLE, 6, 8);}),
+        Entrance(RR_FIRE_TEMPLE_BOULDER_MAZE_LOWER, []{return logic->SmallKeys(RR_FIRE_TEMPLE, 5);}),
+        Entrance(RR_FIRE_TEMPLE_FIRE_WALL_CHASE,    []{return logic->SmallKeys(RR_FIRE_TEMPLE, 6);}),
         Entrance(RR_FIRE_TEMPLE_MAP_AREA,           []{return logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_FAIRY_BOW);}),
     });
 
@@ -195,7 +195,7 @@ void RegionTable_Init_FireTemple() {
         LOCATION(RC_FIRE_TEMPLE_FIRE_WALL_EXIT_HEART, logic->FireTimer() >= 24),
     }, {
         //Exits
-        Entrance(RR_FIRE_TEMPLE_EAST_CENTRAL_ROOM,  []{return logic->FireTimer() >= 24 && logic->SmallKeys(RR_FIRE_TEMPLE, 6, 8);}),
+        Entrance(RR_FIRE_TEMPLE_EAST_CENTRAL_ROOM,  []{return logic->FireTimer() >= 24 && logic->SmallKeys(RR_FIRE_TEMPLE, 6);}),
         Entrance(RR_FIRE_TEMPLE_MAP_AREA,           []{return logic->IsAdult;}),
         Entrance(RR_FIRE_TEMPLE_BOULDER_MAZE_UPPER, []{return logic->FireTimer() >= 24 && logic->IsAdult;}),
         Entrance(RR_FIRE_TEMPLE_CORRIDOR,           []{return logic->FireTimer() >= 24 && logic->IsAdult && logic->SmallKeys(RR_FIRE_TEMPLE, 7);}),
