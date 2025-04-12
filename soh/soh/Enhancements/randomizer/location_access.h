@@ -233,56 +233,25 @@ class Region {
     }
 
     /*
-    RANDOTODO edit this
-     * This logic covers checks that exist in the shared areas of MQ spirit from a glitchless standpoint.
-     * This room has Quantum logic that I am currently handling with this function, however this is NOT suitable for
-     glitch logic as it relies on specific ages
-     * In this chunk there are 3 possibilities for passing a check, but first I have to talk about parallel universes.
+     * This logic covers checks that exist in the shared areas of Spirit from a glitchless standpoint.
+     * This code will fail if any glitch allows Adult to go in the Child spirit door first or vice versa as it relies on specific ages
 
-     * In MQ Spirit key logic, we mostly care about 2 possibilities for how the player can spend keys, creating 2
-     Parralel universes
-     * In the first universe, the player did not enter spirit as adult until after climbing as child, thus child spends
-     keys linearly, only needing 2 to reach statue room.
-     * In the second universe, the player went in as adult, possibly out of logic, and started wasting the keys to lock
-     child out.
-     * These Universes converge when the player has 7 keys (meaning adult can no longer lock child out) and adult is
-     known to be able to reach Statue room. This creates "Certain Access", which is tracked seperatly for each age.
-     * Child Certain Access is simple, if we have 7 keys and child access, it's Certain Access.
-     * Adult Certain Access is also simple, adult is not key locked, so if they make it to a location, it's Certain
-     Access.
-     * Things get complicated when we handle the overlap of the 2 universes,
-     * though an important detail is that if we have Certain Access as either age, we don't need to checked the overlap
-     because overlap logic is strictly stricter than either Certain Access.
+     * There are 4 possibilities for passing a check, but first I have to talk about parallel universes.
 
-     * In order to track the first universe, the logic allows technical child access with the minimum number of keys,
-     and then checks in this function for if we have 7 keys to determine if that is Certain or not.
-     * This is for technical reasons, as areas with no access at all will simply not be checked.
-     * Normally we would need to do similar shenanigans to track the second universe, however adult must have go through
-     statue room to waste keys,
-     * so can go back there and get new keys for Child to use if they do, and the navigation logic for shared MQ spirit
-     from Statue Room is very simple for Adult.
-     * Additionally, we don't need to know if adult can actually reach spirit temple or climb to statue room, because if
-     the player can't do that, then universe 2 can't happen anyway,
-     * and if the player does so out of logic, they can do it again, as the only consumable used sets a permanent flag.
-
-     * The Adult Navigation logic is as such:
-     * - Broken Wall room is 6 key locked, because if the player tries to spend 6 keys in a way that would block adults
-     access, they would have to give child access instead.
-     * - The child side hammer switch for the time travelling chest is 7 key locked for adult
-     * - Reaching gauntlets hand is 7 key locked
-     * - Going back into big block room is complex, but the only check there is child only so not a concern
-     * - Everything else is possible with basic adult movement, or is impossible for child to reach glitchlessly
-     * Anything 7 key locked does not need to be checked as shared, as all child access is Certain and because of this
-     workaround we don't need to fake Adult access, meaning that is also Certain.
-     * All of this combined means that when checking if adult can reach a location in universe 2, we only have to ask if
-     it is a 6 key locked location or not.
-
-     * Knowing all of this this, we can confirm things are logical in 3 different ways:
-     * - If we have Adult Access, we know it is Certain Access, so they can get checks alone.
-     * - If we have 7 keys, child has Certain Access as we know they cannot be locked out, so can get checks alone,
-     otherwise we check the logical overlap
-     * - If Child and Adult can get the check (ignoring actual adult access to the location), and the location is either
-     not 6 key locked or we have 6 keys, we can get the check with the overlap
+     * In the first universe, the player enters spirit as child, and spends as many keys as they can to lock adult out
+     * In the second, they enter as adult and spend as many keys as they can to lock child out.
+     
+     * When an Age can no longer be kept out by the other age, that age is said to have Certain Access to a region
+     * If both ages have access to a region with a certain number of keys, but there is no Certain Access,
+     * then a check is only in logic if both ages can collect the check independently
+     
+     * If an age has Certain Access then that age can collect checks alone,
+     * and there is no reason to check the other age untile the universes converge.
+     
+     * The universes converge when the player has all the keys, giving both ages Certain Access.
+     
+     * We must check for these universes manually as we allow technical access with minimum keys for
+     * technical reasons as otherwise the code will never run
      */
 
     bool SpiritShared(ConditionFn condition, ConditionFn childAccess, ConditionFn adultAccess, uint8_t adultKeys, uint8_t childKeys, uint8_t eitherKeys, bool anyAge = false){
@@ -317,7 +286,7 @@ class Region {
         } else if (Adult() && logic->IsAdult) {
             bool result = condition();
             //if we have enough keys to have Certain Access, we just run the condition
-            if (logic->SmallKeys(RR_SPIRIT_TEMPLE, childKeys)){
+            if (logic->SmallKeys(RR_SPIRIT_TEMPLE, adultKeys)){
                 return result;
             //otherwise we need to check both ages
             } else if (result && logic->SmallKeys(RR_SPIRIT_TEMPLE, eitherKeys) && childAccess) {
