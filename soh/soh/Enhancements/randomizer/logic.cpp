@@ -2519,6 +2519,7 @@ void Logic::Reset() {
     Spirit1FSilverRupees = false;
     SpiritChildStalfosBridge = false;
     SpiritChildTorchesBridge = false;
+    SpiritSunBlockTorch = false;
 
     StopPerformanceTimer(PT_LOGIC_RESET);
 }

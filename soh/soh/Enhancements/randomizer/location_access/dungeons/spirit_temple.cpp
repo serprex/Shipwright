@@ -102,17 +102,14 @@ void RegionTable_Init_SpiritTemple() {
 
     areaTable[RR_SPIRIT_TEMPLE_CHILD_CLIMB] = Region("Child Spirit Temple Climb", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
-        LOCATION(RC_SPIRIT_TEMPLE_CHILD_CLIMB_NORTH_CHEST, logic->HasProjectile(HasProjectileAge::Both) || ((logic->SmallKeys(RR_SPIRIT_TEMPLE, 3) || (logic->SmallKeys(RR_SPIRIT_TEMPLE, 2) && ctx->GetOption(RSK_BOMBCHU_BAG) && logic->BombchuRefill() && ctx->GetOption(RSK_SHUFFLE_DUNGEON_ENTRANCES).Is(RO_DUNGEON_ENTRANCE_SHUFFLE_OFF))) && logic->CanUse(RG_SILVER_GAUNTLETS) && logic->HasProjectile(HasProjectileAge::Adult)) || (logic->SmallKeys(RR_SPIRIT_TEMPLE, 5) && logic->IsChild && logic->HasProjectile(HasProjectileAge::Child))),
-        LOCATION(RC_SPIRIT_TEMPLE_CHILD_CLIMB_EAST_CHEST,  logic->HasProjectile(HasProjectileAge::Both) || ((logic->SmallKeys(RR_SPIRIT_TEMPLE, 3) || (logic->SmallKeys(RR_SPIRIT_TEMPLE, 2) && ctx->GetOption(RSK_BOMBCHU_BAG) && logic->BombchuRefill() && ctx->GetOption(RSK_SHUFFLE_DUNGEON_ENTRANCES).Is(RO_DUNGEON_ENTRANCE_SHUFFLE_OFF))) && logic->CanUse(RG_SILVER_GAUNTLETS) && logic->HasProjectile(HasProjectileAge::Adult)) || (logic->SmallKeys(RR_SPIRIT_TEMPLE, 5) && logic->IsChild && logic->HasProjectile(HasProjectileAge::Child))),
-        LOCATION(RC_SPIRIT_TEMPLE_GS_SUN_ON_FLOOR_ROOM,    logic->HasProjectile(HasProjectileAge::Both) || logic->CanUse(RG_DINS_FIRE) ||
-                                                            (logic->TakeDamage() && (logic->CanJumpslashExceptHammer() || logic->HasProjectile(HasProjectileAge::Child))) ||
-                                                                (logic->IsChild && logic->SmallKeys(RR_SPIRIT_TEMPLE, 5) && logic->HasProjectile(HasProjectileAge::Child)) ||
-                                                                    ((logic->SmallKeys(RR_SPIRIT_TEMPLE, 3) || (logic->SmallKeys(RR_SPIRIT_TEMPLE, 2) && ctx->GetOption(RSK_BOMBCHU_BAG) && logic->BombchuRefill() && ctx->GetOption(RSK_SHUFFLE_DUNGEON_ENTRANCES).Is(RO_DUNGEON_ENTRANCE_SHUFFLE_OFF))) && logic->CanUse(RG_SILVER_GAUNTLETS) && (logic->HasProjectile(HasProjectileAge::Adult) || (logic->TakeDamage() && logic->CanJumpslashExceptHammer())))),
+        LOCATION(RC_SPIRIT_TEMPLE_CHILD_CLIMB_NORTH_CHEST, SpiritSharedBrokenWallRoom([]{return logic->CanHitSwitch(ED_BOMB_THROW);})),
+        LOCATION(RC_SPIRIT_TEMPLE_CHILD_CLIMB_EAST_CHEST,  SpiritSharedBrokenWallRoom([]{return logic->CanHitSwitch(ED_BOMB_THROW);})),
+        LOCATION(RC_SPIRIT_TEMPLE_GS_SUN_ON_FLOOR_ROOM,    SpiritSharedBrokenWallRoom([]{return logic->CanKillEnemy(RE_GOLD_SKULLTULA, logic->TakeDamage() ? ED_SHORT_JUMPSLASH : ED_BOMB_THROW);})),
         LOCATION(RC_SPIRIT_TEMPLE_CHILD_CLIMB_POT_1,       logic->CanBreakPots()),
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_CHILD_BEFORE_CLIMB, []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 5);}),
-        Entrance(RR_SPIRIT_TEMPLE_STATUE_ROOM,    []{return logic->HasExplosives() || (ctx->GetOption(RSK_SUNLIGHT_ARROWS) && logic->CanUse(RG_LIGHT_ARROWS));}),
+        Entrance(RR_SPIRIT_TEMPLE_STATUE_ROOM,        []{return logic->HasExplosives() || (ctx->GetOption(RSK_SUNLIGHT_ARROWS) && logic->CanUse(RG_LIGHT_ARROWS));}),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_ADULT_LOBBY] = Region("Adult Spirit Temple Lobby", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
@@ -160,9 +157,9 @@ void RegionTable_Init_SpiritTemple() {
 
     areaTable[RR_SPIRIT_TEMPLE_STATUE_ROOM] = Region("Spirit Temple Statue Room", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
-        LOCATION(RC_SPIRIT_TEMPLE_MAP_CHEST,                    SpiritSharedStatueRoom(RR_SPIRIT_TEMPLE_STATUE_ROOM, []{return logic->HasFireSource() || (ctx->GetTrickOption(RT_SPIRIT_MAP_CHEST) && logic->CanUse(RG_FAIRY_BOW));})),
-        LOCATION(RC_SPIRIT_TEMPLE_GS_LOBBY,                     SpiritSharedStatueRoom(RR_SPIRIT_TEMPLE_STATUE_ROOM, []{return logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, 
-                                                                                                                        (ctx->GetTrickOption(RT_SPIRIT_LOBBY_JUMP) || logic->CanUse(RG_HOVER_BOOTS)) ? ED_CLOSE : ctx->GetTrickOption(RT_SPIRIT_LOBBY_GS) ? ED_BOOMERANG : ED_HOOKSHOT);})),
+        LOCATION(RC_SPIRIT_TEMPLE_MAP_CHEST,                    SpiritSharedStatueRoom([]{return logic->HasFireSourceWithTorch() || (ctx->GetTrickOption(RT_SPIRIT_MAP_CHEST) && logic->CanUse(RG_FAIRY_BOW));})),
+        LOCATION(RC_SPIRIT_TEMPLE_GS_LOBBY,                     SpiritSharedStatueRoom([]{return logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, 
+                                                                                                  (ctx->GetTrickOption(RT_SPIRIT_LOBBY_JUMP) || logic->CanUse(RG_HOVER_BOOTS)) ? ED_CLOSE : ctx->GetTrickOption(RT_SPIRIT_LOBBY_GS) ? ED_BOOMERANG : ED_HOOKSHOT);})),
         LOCATION(RC_SPIRIT_TEMPLE_CENTRAL_CHAMBER_POT_1,        logic->CanBreakPots()),
         LOCATION(RC_SPIRIT_TEMPLE_CENTRAL_CHAMBER_POT_2,        logic->CanBreakPots()),
         LOCATION(RC_SPIRIT_TEMPLE_CENTRAL_CHAMBER_POT_3,        logic->CanBreakPots()),
@@ -185,12 +182,15 @@ void RegionTable_Init_SpiritTemple() {
         Entrance(RR_SPIRIT_TEMPLE_BLOCK_PUZZLE, []{return true;}),
     });
 
-    areaTable[RR_SPIRIT_TEMPLE_BLOCK_PUZZLE] = Region("Spirit Temple Block Puzzle", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
+    areaTable[RR_SPIRIT_TEMPLE_BLOCK_PUZZLE] = Region("Spirit Temple Block Puzzle", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {
+        //Events
+        EventAccess(&logic->SpiritSunBlockTorch, []{return SpiritSharedSunBlockRoom([]{return logic->IsAdult || logic->CanKillEnemy(RE_BEAMOS);});}),
+    }, {
         //Locations
-        LOCATION(RC_SPIRIT_TEMPLE_SUN_BLOCK_ROOM_CHEST,         ((logic->HasExplosives() || logic->SmallKeys(RR_SPIRIT_TEMPLE, 3) || (logic->SmallKeys(RR_SPIRIT_TEMPLE, 2) && ctx->GetOption(RSK_BOMBCHU_BAG) && logic->BombchuRefill() && ctx->GetOption(RSK_SHUFFLE_DUNGEON_ENTRANCES).Is(RO_DUNGEON_ENTRANCE_SHUFFLE_OFF))) &&
-                                                                    (logic->CanUse(RG_DINS_FIRE) || ((logic->CanUse(RG_FIRE_ARROWS) || ctx->GetTrickOption(RT_SPIRIT_SUN_CHEST)) && logic->CanUse(RG_FAIRY_BOW) && logic->CanUse(RG_STICKS) ))) ||
-                                                                    (logic->SmallKeys(RR_SPIRIT_TEMPLE, 5) && logic->HasExplosives() && logic->CanUse(RG_STICKS)) ||
-                                                                    (logic->SmallKeys(RR_SPIRIT_TEMPLE, 3) && (logic->CanUse(RG_FIRE_ARROWS) || (ctx->GetTrickOption(RT_SPIRIT_SUN_CHEST) && logic->CanUse(RG_FAIRY_BOW))) && logic->CanUse(RG_SILVER_GAUNTLETS))),
+        //Child can push blocks to get to the chest without killing the beamos, but it's likely a trick for similar reasons to armos push, and is not relevant without doorsanity
+        LOCATION(RC_SPIRIT_TEMPLE_SUN_BLOCK_ROOM_CHEST, SpiritSharedSunBlockRoom([]{return (logic->HasFireSource() || 
+                                                                                           (logic->SpiritSunBlockTorch && (logic->CanUse(RG_STICKS) || (ctx->GetTrickOption(RT_SPIRIT_SUN_CHEST) && logic->CanUse(RG_FAIRY_BOW))))) &&
+                                                                                           (logic->IsAdult || logic->CanKillEnemy(RE_BEAMOS) || logic->CanUse(RG_HOOKSHOT));})), 
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_STAIRS_TO_BLOCK_PUZZLE, []{return true;}),

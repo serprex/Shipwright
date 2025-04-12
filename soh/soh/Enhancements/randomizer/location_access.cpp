@@ -213,10 +213,20 @@ bool Here(const RandomizerRegion region, ConditionFn condition) {
 bool SpiritExplosiveLogic() {
     return logic->HasExplosives() ? 1 : ctx->GetOption(RSK_BOMBCHU_BAG) && logic->BombchuRefill() ? 2 : 3;
 }
-
-bool SpiritSharedStatueRoom(const RandomizerRegion region, ConditionFn condition, bool anyAge) {
-    return areaTable[region].SpiritShared(
+// RANDOTODO basically every condition here will need climb or longshot.
+bool SpiritSharedStatueRoom(ConditionFn condition, bool anyAge) {
+    return areaTable[RR_SPIRIT_TEMPLE_STATUE_ROOM].SpiritShared(
         condition, [] { return logic->HasExplosives(); }, [] { return true; }, 5, 3, SpiritExplosiveLogic(), anyAge);
+}
+
+bool SpiritSharedSunBlockRoom(ConditionFn condition, bool anyAge) {
+    return areaTable[RR_SPIRIT_TEMPLE_BLOCK_PUZZLE].SpiritShared(
+        condition, [] { return logic->HasExplosives(); }, [] { return true; }, 5, 3, SpiritExplosiveLogic(), anyAge);
+}
+
+bool SpiritSharedBrokenWallRoom(ConditionFn condition, bool anyAge) {
+    return areaTable[RR_SPIRIT_TEMPLE_CHILD_CLIMB].SpiritShared(
+        condition, [] { return true; }, [] { return true; }, 5, 3, 1, anyAge);
 }
 
 bool MQSpiritSharedStatueRoom(const RandomizerRegion region, ConditionFn condition, bool anyAge) {

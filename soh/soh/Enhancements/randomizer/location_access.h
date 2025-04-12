@@ -318,7 +318,9 @@ extern std::vector<EventAccess> grottoEvents;
 bool Here(const RandomizerRegion region,
           ConditionFn
               condition); // RANDOTODO make a less stupid way to check own at either age than self referencing with this
-bool SpiritSharedStatueRoom(const RandomizerRegion region, ConditionFn condition, bool anyAge = false);
+bool SpiritSharedBrokenWallRoom(ConditionFn condition, bool anyAge = false);
+bool SpiritSharedStatueRoom(ConditionFn condition, bool anyAge = false);
+bool SpiritSharedSunBlockRoom(ConditionFn condition, bool anyAge = false);
 bool MQSpiritSharedStatueRoom(const RandomizerRegion region, ConditionFn condition, bool anyAge = false);
 bool MQSpiritSharedBrokenWallRoom(const RandomizerRegion region, ConditionFn condition, bool anyAge = false);
 bool CanPlantBean(const RandomizerRegion region);

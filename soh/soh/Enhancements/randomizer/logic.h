@@ -182,6 +182,7 @@ class Logic {
     bool Spirit1FSilverRupees = false;
     bool SpiritChildStalfosBridge = false;
     bool SpiritChildTorchesBridge = false;
+    bool SpiritSunBlockTorch = false;
 
     /* --- END OF HELPERS AND LOCATION ACCESS --- */
 
