@@ -2444,6 +2444,7 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
             messageEntry =
                 CustomMessageManager::Instance->RetrieveMessage(customMessageTableID, textId, MF_AUTO_FORMAT);
         } else if (textId == TEXT_GERUDO_GUARD_FRIENDLY && player->talkActor->id == ACTOR_EN_GE2) {
+            // TODO_TRANSLATE Translate into french and german
             messageEntry = CustomMessage("Want me to throw you in jail?&\x1B#Yes please&No thanks#", { QM_GREEN });
             messageEntry.AutoFormat();
         }
