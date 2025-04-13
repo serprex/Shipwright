@@ -982,7 +982,7 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             break;
         }
         case VB_BIGGORON_CONSIDER_TRADE_COMPLETE: {
-            // This being true will prevent other biggoron trades, there are already safegaurds in place to prevent
+            // This being true will prevent other biggoron trades, there are already safeguards in place to prevent
             // claim check from being traded multiple times, so we don't really need the quest to ever be considered
             // "complete"
             *should = false;
