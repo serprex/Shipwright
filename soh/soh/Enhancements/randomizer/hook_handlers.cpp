@@ -1104,9 +1104,11 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
         case VB_GIVE_ITEM_FROM_POE_COLLECTOR: {
             EnGb* enGb = va_arg(args, EnGb*);
             if (!Flags_GetRandomizerInf(RAND_INF_10_BIG_POES)) {
+                Flags_SetInfTable(INFTABLE_SPOKE_TO_POE_COLLECTOR_IN_RUINED_MARKET);
                 Flags_SetRandomizerInf(RAND_INF_10_BIG_POES);
+                enGb->textId = 0x70F5;
                 enGb->dyna.actor.parent = NULL;
-                enGb->actionFunc = func_80A2FC0C;
+                enGb->actionFunc = func_80A2F83C;
                 *should = false;
             }
             break;
