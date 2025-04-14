@@ -255,8 +255,8 @@ class Region {
      * technical reasons as otherwise the code will never run
      */
 
-    bool SpiritShared(ConditionFn condition, ConditionFn childAccess, ConditionFn adultAccess, uint8_t adultKeys,
-                      uint8_t childKeys, uint8_t eitherKeys, bool anyAge = false) {
+    bool SpiritShared(ConditionFn condition, ConditionFn childAccess, ConditionFn adultAccess, uint8_t childKeys,
+                      uint8_t adultKeys, uint8_t eitherKeys, bool anyAge = false) {
         // If we have all of the keys, we know that access is Certain Access
         if (ctx->GetDungeon(Rando::SPIRIT_TEMPLE)->IsMQ() ? logic->SmallKeys(RR_SPIRIT_TEMPLE, 7)
                                                           : logic->SmallKeys(RR_SPIRIT_TEMPLE, 5)) {
