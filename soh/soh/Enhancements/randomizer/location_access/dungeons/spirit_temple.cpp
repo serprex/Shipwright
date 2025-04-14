@@ -162,6 +162,7 @@ void RegionTable_Init_SpiritTemple() {
         LOCATION(RC_SPIRIT_TEMPLE_FIRST_MIRROR_LEFT_CHEST,  true),
         LOCATION(RC_SPIRIT_TEMPLE_FIRST_MIRROR_RIGHT_CHEST, true),
     }, {
+        //Exits
         Entrance(RR_SPIRIT_TEMPLE_ADULT_LOBBY,      []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 3);}),
         Entrance(RR_SPIRIT_TEMPLE_STATUE_ROOM_EAST, []{return true;}),
     });
@@ -227,7 +228,7 @@ void RegionTable_Init_SpiritTemple() {
     areaTable[RR_SPIRIT_TEMPLE_WEST_IRON_KNUCKLE] = Region("Spirit Temple East Stairs to Iron Knuckle", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_WEST_STAIRS_TO_HAND,           []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 5);}),
-        Entrance(RR_SPIRIT_TEMPLE_EXIT_TO_SILVER_GAUNTLETS_HAND, []{return logic->CanKillEnemy(RE_IRON_KNUCKLE);}),
+        Entrance(RR_SPIRIT_TEMPLE_EXIT_TO_SILVER_GAUNTLETS_HAND, []{return Here(RR_SPIRIT_TEMPLE_WEST_IRON_KNUCKLE, []{return logic->CanKillEnemy(RE_IRON_KNUCKLE);});}),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_EXIT_TO_SILVER_GAUNTLETS_HAND] = Region("Spirit Temple Exit to Mirror Shield Hand", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
@@ -302,7 +303,7 @@ void RegionTable_Init_SpiritTemple() {
     areaTable[RR_SPIRIT_TEMPLE_EAST_IRON_KNUCKLE] = Region("Spirit Temple East Stairs to Iron Knuckle", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_EAST_STAIRS_TO_HAND,        []{return true;}),
-        Entrance(RR_SPIRIT_TEMPLE_EXIT_TO_MIRROR_SHIELD_HAND, []{return logic->CanKillEnemy(RE_IRON_KNUCKLE);}),
+        Entrance(RR_SPIRIT_TEMPLE_EXIT_TO_MIRROR_SHIELD_HAND, []{return Here(RR_SPIRIT_TEMPLE_EAST_IRON_KNUCKLE, []{return logic->CanKillEnemy(RE_IRON_KNUCKLE);});}),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_EXIT_TO_MIRROR_SHIELD_HAND] = Region("Spirit Temple Exit to Mirror Shield Hand", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
