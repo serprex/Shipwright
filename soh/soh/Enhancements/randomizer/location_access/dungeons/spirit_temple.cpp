@@ -272,7 +272,7 @@ void RegionTable_Init_SpiritTemple() {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_STAIRS_TO_BEAMOS_PITS, []{return logic->CanKillEnemy(RE_BEAMOS);}),
         Entrance(RR_SPIRIT_TEMPLE_FOUR_ARMOS,            []{return logic->CanKillEnemy(RE_BEAMOS);}),
-        Entrance(RR_SPIRIT_TEMPLE_BIG_WALL,              []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 5);}),
+        Entrance(RR_SPIRIT_TEMPLE_BIG_WALL_LOWER,        []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 5);}),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_FOUR_ARMOS] = Region("Spirit Temple Four Armos", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
@@ -321,19 +321,25 @@ void RegionTable_Init_SpiritTemple() {
         Entrance(RR_DESERT_COLOSSUS,                          []{return true;}),
     });
 
-    areaTable[RR_SPIRIT_TEMPLE_BIG_WALL] = Region("Spirit Temple Big Wall", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
+    areaTable[RR_SPIRIT_TEMPLE_BIG_WALL_LOWER] = Region("Spirit Temple Big Wall Lower", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
+        //Exits
+        Entrance(RR_SPIRIT_TEMPLE_BEAMOS_PITS,    []{return true;}),
+        Entrance(RR_SPIRIT_TEMPLE_BIG_WALL_UPPER, []{return ctx->GetTrickOption(RT_SPIRIT_WALL) || logic->CanUse(RG_LONGSHOT) || logic->CanUse(RG_BOMBCHU_5) || (logic->CanAvoidEnemy(RE_BEAMOS, true, 2) && (logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_MEGATON_HAMMER)));}),
+    });
+
+    areaTable[RR_SPIRIT_TEMPLE_BIG_WALL_UPPER] = Region("Spirit Temple Big Wall Upper", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
         LOCATION(RC_SPIRIT_TEMPLE_ADULT_CLIMB_LEFT_HEART,  logic->CanUse(RG_HOOKSHOT)),
         LOCATION(RC_SPIRIT_TEMPLE_ADULT_CLIMB_RIGHT_HEART, logic->CanUse(RG_HOOKSHOT)),
     }, {
         //Exits
-        Entrance(RR_SPIRIT_TEMPLE_BEAMOS_PITS, []{return true;}),
-        Entrance(RR_SPIRIT_TEMPLE_4F_CENTRAL,  []{return ctx->GetTrickOption(RT_SPIRIT_WALL) || logic->CanUse(RG_LONGSHOT) || logic->CanUse(RG_BOMBCHU_5) || ((logic->CanUse(RG_BOMB_BAG) || logic->CanUse(RG_NUTS) || logic->CanUse(RG_DINS_FIRE)) && (logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_MEGATON_HAMMER)));}),
+        Entrance(RR_SPIRIT_TEMPLE_BIG_WALL_LOWER, []{return true;}),
+        Entrance(RR_SPIRIT_TEMPLE_4F_CENTRAL,     []{return true;}),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_4F_CENTRAL] = Region("Spirit Temple 4F Central", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
         //Exits
-        Entrance(RR_SPIRIT_TEMPLE_BIG_WALL,        []{return true;}),
+        Entrance(RR_SPIRIT_TEMPLE_BIG_WALL_UPPER,  []{return true;}),
         Entrance(RR_SPIRIT_TEMPLE_BOSS_KEY_ROOM,   []{return logic->CanUse(RG_ZELDAS_LULLABY);}),
         Entrance(RR_SPIRIT_TEMPLE_BIG_MIRROR_ROOM, []{return true;}),
     });
@@ -694,7 +700,7 @@ void RegionTable_Init_SpiritTemple() {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_MQ_FIRE_WALL_STAIRS_UPPER, []{return logic->CanAvoidEnemy(RE_BEAMOS, true, 4) && logic->CanUse(RG_SONG_OF_TIME);}),
         Entrance(RR_SPIRIT_TEMPLE_MQ_SOT_SUN_ROOM,           []{return logic->CanAvoidEnemy(RE_BEAMOS, true, 4) && logic->CanUse(RG_SONG_OF_TIME);}),
-        Entrance(RR_SPIRIT_TEMPLE_MQ_BIG_WALL,               []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 6);}),
+        Entrance(RR_SPIRIT_TEMPLE_MQ_BIG_WALL_LOWER,         []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 6);}),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_MQ_SOT_SUN_ROOM] = Region("Spirit Temple MQ SoT Sun Room", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
@@ -743,7 +749,7 @@ void RegionTable_Init_SpiritTemple() {
         Entrance(RR_SPIRIT_TEMPLE_MQ_SOT_SUN_ROOM, []{return true;}),
     });
 
-    areaTable[RR_SPIRIT_TEMPLE_MQ_BIG_WALL] = Region("Spirit Temple MQ Big Wall", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
+    areaTable[RR_SPIRIT_TEMPLE_MQ_BIG_WALL_LOWER] = Region("Spirit Temple MQ Big Wall Lower", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
         LOCATION(RC_SPIRIT_TEMPLE_MQ_LONG_CLIMB_POT_1, logic->CanBreakPots()),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_LONG_CLIMB_POT_2, logic->CanBreakPots()),
@@ -751,8 +757,14 @@ void RegionTable_Init_SpiritTemple() {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_MQ_FOUR_BEAMOS_ROOM, []{return true;}),
         //technically we only need to avoid them, but the sheer height and the moving walls makes getting to the top after only stunning them very difficult/impossible
+        Entrance(RR_SPIRIT_TEMPLE_MQ_BIG_WALL_UPPER,   []{return logic->CanKillEnemy(RE_KEESE);}),
+    });
+
+    areaTable[RR_SPIRIT_TEMPLE_MQ_BIG_WALL_UPPER] = Region("Spirit Temple MQ Big Wall Upper", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
+        //Exits
+        Entrance(RR_SPIRIT_TEMPLE_MQ_BIG_WALL_LOWER, []{return true;}),
         //The silver rupees are irrelevant without silver shuffle
-        Entrance(RR_SPIRIT_TEMPLE_MQ_4F_CENTRAL,       []{return logic->CanKillEnemy(RE_KEESE);}),
+        Entrance(RR_SPIRIT_TEMPLE_MQ_4F_CENTRAL,     []{return true;}),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_MQ_4F_CENTRAL] = Region("Spirit Temple MQ 4F Central", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
@@ -761,7 +773,7 @@ void RegionTable_Init_SpiritTemple() {
         LOCATION(RC_SPIRIT_TEMPLE_MQ_BEFORE_MIRROR_POT_2, logic->CanBreakPots()),
     }, {
         //Exits
-        Entrance(RR_SPIRIT_TEMPLE_MQ_BIG_WALL,         []{return true;}),
+        Entrance(RR_SPIRIT_TEMPLE_MQ_BIG_WALL_UPPER,   []{return true;}),
         Entrance(RR_SPIRIT_TEMPLE_MQ_NINE_CHAIRS_ROOM, []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 7);}),
         Entrance(RR_SPIRIT_TEMPLE_MQ_BIG_MIRROR_ROOM,  []{return logic->CanUse(RG_ZELDAS_LULLABY);}),
     });
