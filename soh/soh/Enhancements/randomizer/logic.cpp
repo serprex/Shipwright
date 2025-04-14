@@ -2513,13 +2513,17 @@ void Logic::Reset() {
     MQWaterB1Switch = false;
     // MQWaterPillarSoTBlock     = false;
     MQWaterOpenedPillarB1 = false;
+    MQSpiritGibdosCleared = false;
     MQSpiritCrawlBoulder = false;
     MQSpiritMapRoomEnemies = false;
+    MQSpiritTimeTravelChest = false;
     MQSpirit3SunsEnemies = false;
+    MQSpiritOpenedBigMirrorCave = false;
     Spirit1FSilverRupees = false;
     SpiritChildStalfosBridge = false;
     SpiritChildTorchesBridge = false;
     SpiritSunBlockTorch = false;
+    SpiritAdultLobbySwitch = false;
 
     StopPerformanceTimer(PT_LOGIC_RESET);
 }
