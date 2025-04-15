@@ -1584,6 +1584,10 @@ void SohInputEditorWindow::DrawLinkTab() {
             DrawStickSection(portIndex, Ship::RIGHT, 1, CHIP_COLOR_N64_YELLOW);
         }
 
+        if (ImGui::CollapsingHeader("A11y")) {
+
+        }
+
         if (ImGui::CollapsingHeader("Rumble")) {
             DrawRumbleSection(portIndex);
         }
@@ -1597,6 +1601,7 @@ void SohInputEditorWindow::DrawLinkTab() {
         }
 
         if (ImGui::CollapsingHeader("Modifier Buttons")) {
+            DrawButtonLine("QV", portIndex, BTN_CUSTOM_QUERYVIEW);
             DrawButtonLine("M1", portIndex, BTN_CUSTOM_MODIFIER1);
             DrawButtonLine("M2", portIndex, BTN_CUSTOM_MODIFIER2);
 
