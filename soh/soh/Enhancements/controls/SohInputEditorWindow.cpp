@@ -1584,10 +1584,6 @@ void SohInputEditorWindow::DrawLinkTab() {
             DrawStickSection(portIndex, Ship::RIGHT, 1, CHIP_COLOR_N64_YELLOW);
         }
 
-        if (ImGui::CollapsingHeader("A11y")) {
-
-        }
-
         if (ImGui::CollapsingHeader("Rumble")) {
             DrawRumbleSection(portIndex);
         }

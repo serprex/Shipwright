@@ -1,6 +1,5 @@
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/Enhancements/speechsynthesizer/SpeechSynthesizer.h"
-
 #include <cassert>
 #include <File.h>
 #include <Json.h>
@@ -11,6 +10,8 @@
 #include "soh/OTRGlobals.h"
 #include "message_data_static.h"
 #include "overlays/gamestates/ovl_file_choose/file_choose.h"
+#include "overlays/actors/ovl_En_Elf/z_en_elf.h"
+#include "soh/ActorDB.h"
 #include "soh/Enhancements/boss-rush/BossRush.h"
 #include "soh/resource/type/SohResourceType.h"
 
@@ -175,6 +176,37 @@ void RegisterOnInterfaceUpdateHook() {
 
         if (!GameInteractor::IsSaveLoaded(true))
             return;
+
+        if (CHECK_BTN_ALL(gPlayState->state.input->press.button, BTN_CUSTOM_QUERYVIEW)) {
+            int minDist = 1000000;
+            Actor* readOut = NULL;
+            Player* player = GET_PLAYER(gPlayState);
+            if (player != NULL) {
+                for (int i = 0; i < ACTORCAT_MAX; i++) {
+                    if (i == ACTORCAT_PLAYER)
+                        continue;
+                    for (Actor* actor = gPlayState->actorCtx.actorLists[i].head; actor != NULL; actor = actor->next) {
+                        if (actor->id == ACTOR_EN_ELF && actor->params == FAIRY_NAVI)
+                            continue;
+                        u16 reverseYaw = (actor->yawTowardsPlayer + 0x8000) - player->actor.world.rot.y;
+                        if ((reverseYaw < 0x2000 || reverseYaw > 0xE000) && actor->xyzDistToPlayerSq < minDist) {
+                            readOut = actor;
+                            minDist = actor->xyzDistToPlayerSq;
+                        }
+                    }
+                }
+                if (readOut != NULL) {
+                    auto entry = ActorDB::Instance->RetrieveEntry(readOut->id);
+                    if (entry.name.empty()) {
+                        char ttsAnnounceBuf[8];
+                        int annouceBuf = snprintf(ttsAnnounceBuf, sizeof(ttsAnnounceBuf), "%d", readOut->id);
+                        SpeechSynthesizer::Instance->Speak(ttsAnnounceBuf, "en-US");
+                    } else {
+                        SpeechSynthesizer::Instance->Speak(entry.name.c_str(), "en-US");
+                    }
+                }
+            }
+        }
 
         static int16_t lostHealth = 0;
         static int16_t prevHealth = 0;
