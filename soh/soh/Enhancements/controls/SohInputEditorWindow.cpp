@@ -1597,7 +1597,6 @@ void SohInputEditorWindow::DrawLinkTab() {
         }
 
         if (ImGui::CollapsingHeader("Modifier Buttons")) {
-            DrawButtonLine("QV", portIndex, BTN_CUSTOM_QUERYVIEW);
             DrawButtonLine("M1", portIndex, BTN_CUSTOM_MODIFIER1);
             DrawButtonLine("M2", portIndex, BTN_CUSTOM_MODIFIER2);
 

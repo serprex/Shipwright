@@ -177,7 +177,17 @@ void RegisterOnInterfaceUpdateHook() {
         if (!GameInteractor::IsSaveLoaded(true))
             return;
 
-        if (CHECK_BTN_ALL(gPlayState->state.input->press.button, BTN_CUSTOM_QUERYVIEW)) {
+        if (CHECK_BTN_ALL(gPlayState->state.input->press.button, BTN_CUSTOM_MODIFIER1)) {
+            Player* player = GET_PLAYER(gPlayState);
+            if (player != NULL) {
+                char ttsAnnounceBuf[16];
+                int angle = (int)(player->actor.world.rot.y / (65536 / 360.0));
+                int annouceBuf = snprintf(ttsAnnounceBuf, sizeof(ttsAnnounceBuf), "facing %d", angle);
+                SpeechSynthesizer::Instance->Speak(ttsAnnounceBuf, "en-US");
+            }
+        }
+
+        if (CHECK_BTN_ALL(gPlayState->state.input->press.button, BTN_CUSTOM_MODIFIER2)) {
             int minDist = 1000000;
             Actor* readOut = NULL;
             Player* player = GET_PLAYER(gPlayState);

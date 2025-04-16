@@ -314,7 +314,6 @@ OTRGlobals::OTRGlobals() {
     context->GetResourceManager()->SetAltAssetsEnabled(prevAltAssets);
 
     auto controlDeck = std::make_shared<LUS::ControlDeck>(std::vector<CONTROLLERBUTTONS_T>({
-        BTN_CUSTOM_QUERYVIEW,
         BTN_CUSTOM_MODIFIER1,
         BTN_CUSTOM_MODIFIER2,
         BTN_CUSTOM_OCARINA_NOTE_D4,
