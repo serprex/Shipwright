@@ -17,7 +17,5 @@ void MoveMidoInKokiriForest_Register();
 void SkipChildRutoInteractions_Register();
 void FasterHeavyBlockLift_Register();
 void FasterRupeeAccumulator_Register();
-void FasterEmptyBottle_Register();
-void FasterBeanSkulltula_Register();
 
 #endif // TIME_SAVERS_H

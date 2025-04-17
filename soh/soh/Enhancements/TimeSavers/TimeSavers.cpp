@@ -15,6 +15,4 @@ void TimeSavers_Register() {
     SkipChildRutoInteractions_Register();
     FasterHeavyBlockLift_Register();
     FasterRupeeAccumulator_Register();
-    FasterEmptyBottle_Register();
-    FasterBeanSkulltula_Register();
 }
