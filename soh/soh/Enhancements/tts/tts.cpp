@@ -180,10 +180,16 @@ void RegisterOnInterfaceUpdateHook() {
         if (CHECK_BTN_ALL(gPlayState->state.input->press.button, BTN_CUSTOM_MODIFIER1)) {
             Player* player = GET_PLAYER(gPlayState);
             if (player != NULL) {
-                char ttsAnnounceBuf[16];
-                int angle = (int)(player->actor.world.rot.y / (65536 / 360.0));
-                int annouceBuf = snprintf(ttsAnnounceBuf, sizeof(ttsAnnounceBuf), "facing %d", angle);
-                SpeechSynthesizer::Instance->Speak(ttsAnnounceBuf, "en-US");
+                u16 angle = (u16)player->actor.world.rot.y;
+                const char* ttsAnnounce = (angle > 0xf000 || angle < 0x1000) ? "south"
+                                          : angle < 0x3000                   ? "southeast"
+                                          : angle < 0x5000                   ? "east"
+                                          : angle < 0x7000                   ? "northeast"
+                                          : angle < 0x9000                   ? "north"
+                                          : angle < 0xB000                   ? "northwest"
+                                          : angle < 0xD000                   ? "west"
+                                                                             : "southwest";
+                SpeechSynthesizer::Instance->Speak(ttsAnnounce, "en-US");
             }
         }
 
