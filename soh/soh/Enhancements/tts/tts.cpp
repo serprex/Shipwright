@@ -95,10 +95,8 @@ const char* GetLanguageCode() {
     switch (CVarGetInteger(CVAR_SETTING("Languages"), 0)) {
         case LANGUAGE_FRA:
             return "fr-FR";
-            break;
         case LANGUAGE_GER:
             return "de-DE";
-            break;
     }
 
     return "en-US";
@@ -1148,6 +1146,47 @@ void RegisterOnSetGameLanguageHook() {
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSetGameLanguage>([]() { InitTTSBank(); });
 }
 
+void RegisterOnSetDoAction() {
+    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSetDoAction>([](uint16_t action) {
+        if (CVarGetInteger(CVAR_SETTING("A11yTTS"), 0)) {
+            uint8_t language = CVarGetInteger(CVAR_SETTING("Languages"), 0);
+            const char* text;
+            switch (action) {
+                case DO_ACTION_CHECK:
+                    text = language == LANGUAGE_FRA ? "voir" : language == LANGUAGE_GER ? "lesen" : "check";
+                    break;
+                case DO_ACTION_ENTER:
+                    text = language == LANGUAGE_FRA ? "enter" : language == LANGUAGE_GER ? "kriechen" : "ranger";
+                    break;
+                case DO_ACTION_OPEN:
+                    text = language == LANGUAGE_FRA ? "ouvrir" : language == LANGUAGE_GER ? "öffnen" : "open";
+                    break;
+                case DO_ACTION_THROW:
+                    text = language == LANGUAGE_FRA ? "jeter" : language == LANGUAGE_GER ? "werfen" : "throw";
+                    break;
+                case DO_ACTION_CLIMB:
+                    text = language == LANGUAGE_FRA ? "monter" : language == LANGUAGE_GER ? "hinauf" : "climb";
+                    break;
+                case DO_ACTION_DROP:
+                    text = language == LANGUAGE_FRA ? "poser" : language == LANGUAGE_GER ? "ablegen" : "drop";
+                    break;
+                case DO_ACTION_SPEAK:
+                    text = language == LANGUAGE_FRA ? "parler" : language == LANGUAGE_GER ? "reden" : "speak";
+                    break;
+                case DO_ACTION_GRAB:
+                    text = language == LANGUAGE_FRA ? "action" : language == LANGUAGE_GER ? "aktion" : "grab";
+                    break;
+                case DO_ACTION_PUTAWAY:
+                    text = language == LANGUAGE_FRA ? "ranger" : language == LANGUAGE_GER ? "zurück" : "putaway";
+                    break;
+                default:
+                    return;
+            }
+            SpeechSynthesizer::Instance->Speak(text, GetLanguageCode());
+        }
+    });
+}
+
 void RegisterTTSModHooks() {
     RegisterOnSetGameLanguageHook();
     RegisterOnDialogMessageHook();
@@ -1156,6 +1195,7 @@ void RegisterTTSModHooks() {
     RegisterOnInterfaceUpdateHook();
     RegisterOnKaleidoscopeUpdateHook();
     RegisterOnUpdateMainMenuSelection();
+    RegisterOnSetDoAction();
 }
 
 void RegisterTTS() {
