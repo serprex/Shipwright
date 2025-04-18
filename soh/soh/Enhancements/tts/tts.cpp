@@ -1161,23 +1161,14 @@ void RegisterOnSetDoAction() {
                 case DO_ACTION_OPEN:
                     text = language == LANGUAGE_FRA ? "ouvrir" : language == LANGUAGE_GER ? "öffnen" : "open";
                     break;
-                case DO_ACTION_THROW:
-                    text = language == LANGUAGE_FRA ? "jeter" : language == LANGUAGE_GER ? "werfen" : "throw";
-                    break;
                 case DO_ACTION_CLIMB:
                     text = language == LANGUAGE_FRA ? "monter" : language == LANGUAGE_GER ? "hinauf" : "climb";
-                    break;
-                case DO_ACTION_DROP:
-                    text = language == LANGUAGE_FRA ? "poser" : language == LANGUAGE_GER ? "ablegen" : "drop";
                     break;
                 case DO_ACTION_SPEAK:
                     text = language == LANGUAGE_FRA ? "parler" : language == LANGUAGE_GER ? "reden" : "speak";
                     break;
                 case DO_ACTION_GRAB:
                     text = language == LANGUAGE_FRA ? "action" : language == LANGUAGE_GER ? "aktion" : "grab";
-                    break;
-                case DO_ACTION_PUTAWAY:
-                    text = language == LANGUAGE_FRA ? "ranger" : language == LANGUAGE_GER ? "zurück" : "putaway";
                     break;
                 default:
                     return;
