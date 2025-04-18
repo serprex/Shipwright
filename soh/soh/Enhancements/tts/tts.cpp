@@ -198,16 +198,28 @@ void RegisterOnInterfaceUpdateHook() {
             Actor* readOut = NULL;
             Player* player = GET_PLAYER(gPlayState);
             if (player != NULL) {
-                for (int i = 0; i < ACTORCAT_MAX; i++) {
-                    if (i == ACTORCAT_PLAYER)
-                        continue;
-                    for (Actor* actor = gPlayState->actorCtx.actorLists[i].head; actor != NULL; actor = actor->next) {
-                        if (actor->id == ACTOR_EN_ELF && actor->params == FAIRY_NAVI)
+                if (player->focusActor != NULL) {
+                    readOut = player->focusActor;
+                } else {
+                    for (int i = 0; i < ACTORCAT_MAX; i++) {
+                        if (i == ACTORCAT_PLAYER)
                             continue;
-                        u16 reverseYaw = (actor->yawTowardsPlayer + 0x8000) - player->actor.world.rot.y;
-                        if ((reverseYaw < 0x2000 || reverseYaw > 0xE000) && actor->xyzDistToPlayerSq < minDist) {
-                            readOut = actor;
-                            minDist = actor->xyzDistToPlayerSq;
+                        for (Actor* actor = gPlayState->actorCtx.actorLists[i].head; actor != NULL;
+                             actor = actor->next) {
+                            if ((actor->id == ACTOR_EN_ELF && actor->params == FAIRY_NAVI) ||
+                                actor->id == ACTOR_SHOT_SUN)
+                                continue;
+                            if (actor->id == ACTOR_EN_ITEM00 && (player->stateFlags1 & PLAYER_STATE1_IN_WATER) &&
+                                player->currentBoots != PLAYER_BOOTS_IRON && actor->xzDistToPlayer < 40 &&
+                                actor->world.pos.z < player->actor.world.pos.z) {
+                                SpeechSynthesizer::Instance->Speak("item below", "en-US");
+                                goto spoke;
+                            }
+                            u16 reverseYaw = (actor->yawTowardsPlayer + 0x8000) - player->actor.world.rot.y;
+                            if ((reverseYaw < 0x2000 || reverseYaw > 0xE000) && actor->xyzDistToPlayerSq < minDist) {
+                                readOut = actor;
+                                minDist = actor->xyzDistToPlayerSq;
+                            }
                         }
                     }
                 }
@@ -223,6 +235,7 @@ void RegisterOnInterfaceUpdateHook() {
                 }
             }
         }
+    spoke:
 
         static int16_t lostHealth = 0;
         static int16_t prevHealth = 0;
