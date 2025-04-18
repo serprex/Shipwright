@@ -209,11 +209,16 @@ void RegisterOnInterfaceUpdateHook() {
                             if ((actor->id == ACTOR_EN_ELF && actor->params == FAIRY_NAVI) ||
                                 actor->id == ACTOR_SHOT_SUN)
                                 continue;
-                            if (actor->id == ACTOR_EN_ITEM00 && (player->stateFlags1 & PLAYER_STATE1_IN_WATER) &&
-                                player->currentBoots != PLAYER_BOOTS_IRON && actor->xzDistToPlayer < 40 &&
+                            if (actor->xzDistToPlayer < 40 && (player->stateFlags1 & PLAYER_STATE1_IN_WATER) &&
+                                player->currentBoots != PLAYER_BOOTS_IRON &&
                                 actor->world.pos.z < player->actor.world.pos.z) {
-                                SpeechSynthesizer::Instance->Speak("item below", "en-US");
-                                goto spoke;
+                                if (actor->id == ACTOR_EN_ITEM00) {
+                                    SpeechSynthesizer::Instance->Speak("item below", "en-US");
+                                    goto spoke;
+                                } else if (actor->id == ACTOR_OBJ_SWITCH) {
+                                    SpeechSynthesizer::Instance->Speak("switch below", "en-US");
+                                    goto spoke;
+                                }
                             }
                             u16 reverseYaw = (actor->yawTowardsPlayer + 0x8000) - player->actor.world.rot.y;
                             if ((reverseYaw < 0x2000 || reverseYaw > 0xE000) && actor->xyzDistToPlayerSq < minDist) {
