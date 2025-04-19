@@ -324,7 +324,6 @@ endif()
 
 if (ESPEAK)
     add_compile_definitions(ESPEAK=1)
-    target_link_libraries(${PROJECT_NAME} PUBLIC espeak-ng)
 endif()
 
 target_include_directories(${PROJECT_NAME} PRIVATE assets
