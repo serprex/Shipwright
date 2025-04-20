@@ -274,7 +274,7 @@ OTRGlobals::OTRGlobals() {
     if (std::filesystem::exists(ootPath)) {
         OTRFiles.push_back(ootPath);
     }
-    std::string sohOtrPath = Ship::Context::GetPathRelativeToAppBundle("soh.o2r");
+    std::string sohOtrPath = Ship::Context::GetPathRelativeToAppBundle("soh.otr");
     if (std::filesystem::exists(sohOtrPath)) {
         OTRFiles.push_back(sohOtrPath);
     }
@@ -294,7 +294,7 @@ OTRGlobals::OTRGlobals() {
         }
     }
 
-    std::string sohAccessibilityPath = Ship::Context::GetPathRelativeToAppDirectory("accessibility.otr");
+    std::string sohAccessibilityPath = Ship::Context::GetPathRelativeToAppDirectory("accessibility.o2r");
     if (std::filesystem::exists(sohAccessibilityPath)) {
         OTRFiles.push_back(sohAccessibilityPath);
     }
