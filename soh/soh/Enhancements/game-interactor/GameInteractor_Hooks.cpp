@@ -288,11 +288,9 @@ void GameInteractor_ExecuteOnSetGameLanguage() {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnSetGameLanguage>();
 }
 
-void GameInteractor_ExecuteOnGameStillFrozen()
-{
+void GameInteractor_ExecuteOnGameStillFrozen() {
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnGameStillFrozen>();
 }
-
 
 // MARK: - System
 

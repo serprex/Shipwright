@@ -292,7 +292,7 @@ class Wall: protected TerrainCueSound {
                 play();
                     ActorAccessibility_SeekSound(this, 0, 44100 * 2);
        }
-            f32 pitchModifier;
+            f32 pitchModifier = 0.0;
 
             if (targetPitch < 0)
                     pitchModifier = LERP(2.5, 0.5 + targetPitch, (f32)frames / 20.0f);
@@ -396,13 +396,12 @@ class Lava : protected TerrainCueSound {
     f32 probeSpeed; // Approximate for now.
     Vec3f velocity;
     Vec3f expectedVelocity;
-    int terrainDiscovered;
+    int terrainDiscovered = DISCOVERED_NOTHING;
     CollisionPoly* floorPoly;
     CollisionPoly* wallPoly;
     s32 wallBgId;
     f32 wallHeight;
     s32 floorBgId;
-    f32 yDistToWater;
     f32 pushedSpeed;
     bool disabled;     // Only used for debugging.
     bool trackingMode; // A debugging feature which forces Link to move along the probe's path. Used to catch collision
@@ -549,7 +548,7 @@ class Lava : protected TerrainCueSound {
             return wallHeight;
         }
         D_80854798.y = 18.0f;
-        D_80854798.z = player->ageProperties->unk_38 + 10.0f;
+        D_80854798.z = player->ageProperties->wallCheckRadius + 10.0f;
         f32 wallYaw = Math_Atan2S(poly->normal.z, poly->normal.x);
         f32 nx = COLPOLY_GET_NORMAL(poly->normal.x);
         f32 ny = COLPOLY_GET_NORMAL(poly->normal.y);
@@ -583,7 +582,7 @@ class Lava : protected TerrainCueSound {
             // passing in the real player with a temporarily modified pos vector, I'm using this fake player instance
             // instead. These functions only need the player's position and shape rotation vectors set.
             if (Player_PosVsWallLineTest(actor->play, &fakePlayer, &D_80854798, &testPoly, &bgId, &collisionResult) &&
-                abs(wallYaw - Math_Atan2S(testPoly->normal.z, testPoly->normal.x)) < 0x4000 &&
+                std::abs(wallYaw - Math_Atan2S(testPoly->normal.z, testPoly->normal.x)) < 0x4000 &&
                 !func_80041E18(&actor->play->colCtx, testPoly, bgId)) {
                 wallHeight = 399.96002f;
             }
@@ -702,7 +701,7 @@ class Lava : protected TerrainCueSound {
         floorHeight = BgCheck_EntityRaycastFloor3(&actor->play->colCtx, &floorPoly, &floorBgId, &pos);
         if ((floorHeight - playerHeight) > 100.0) {
             destroyCurrentSound();
-            pos.y - floorHeight;
+            pos.y -= floorHeight; // TODO remove?
             platform.setPosition(pos);
             platform.run();
             return true;
@@ -874,9 +873,9 @@ class Lava : protected TerrainCueSound {
             wallCheckHeight = 15.0f;
             ceilingCheckHeight = 30.0f;
         } else {
-            wallCheckRadius = player->ageProperties->unk_38;
+            wallCheckRadius = player->ageProperties->wallCheckRadius;
             wallCheckHeight = 26.0f;
-            ceilingCheckHeight = player->ageProperties->unk_00;
+            ceilingCheckHeight = player->ageProperties->ceilingCheckHeight;
         }
         // The virtual cue actors travel in lines relative to Link's angle.
         rot = ActorAccessibility_ComputeRelativeAngle(&player->actor.world.rot, &relRot);

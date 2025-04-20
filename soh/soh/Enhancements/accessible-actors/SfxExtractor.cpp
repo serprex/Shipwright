@@ -1,19 +1,16 @@
 #include "SfxExtractor.h"
-#include "dr_libs/wav.h"
+#include "dr_libs/dr_wav.h"
 #include "soh/Enhancements/speechsynthesizer/SpeechSynthesizer.h"
 #include "soh/Enhancements/tts/tts.h"
 #include "miniaudio.h"
-#include "z64.h"
-#include "functions.h"
 #include "soh/OTRGlobals.h"
 #include "SfxTable.h"
 #include <sstream>
 const char* GetLanguageCode();
 extern "C" {
-extern Vec3f D_801333D4;
-extern f32 D_801333E0;
-extern s8 D_801333E8;
-extern u8 D_801333F0;
+#include "z64.h"
+#include "functions.h"
+#include "variables.h"
 void AudioMgr_CreateNextAudioBuffer(s16* samples, u32 num_samples);
 extern bool freezeGame;
 }
@@ -57,8 +54,8 @@ void SfxExtractor::setEndOfInput() {
         endOfInput -= 2;
     }
 }
-void SfxExtractor::renderOutput() {
 
+void SfxExtractor::renderOutput() {
     ma_channel_converter_config config =
         ma_channel_converter_config_init(ma_format_s16, 2, NULL, 1, NULL, ma_channel_mix_mode_default);
     ma_channel_converter converter;
@@ -88,10 +85,11 @@ void SfxExtractor::renderOutput() {
         mark += thisChunk;
     }
     drwav_uninit(&wav);
-    archive->AddFile(fileName.c_str(), (uintptr_t)mem, size);
-
+    std::vector<uint8_t> fileData((uint8_t*)mem, (uint8_t*)mem + size);
     drwav_free(mem, NULL);
+    archive->WriteFile(fileName.c_str(), fileData);
 }
+
 void SfxExtractor::setup() {
     try {
 
@@ -100,7 +98,7 @@ void SfxExtractor::setup() {
         captureThreadState = CT_WAITING;
         OTRAudio_InstallSfxCaptureThread();
         // Make sure we're starting from a clean slate.
-        std::string sohAccessibilityPath = LUS::Context::GetPathRelativeToAppDirectory("accessibility.otr");
+        std::string sohAccessibilityPath = Ship::Context::GetPathRelativeToAppDirectory("accessibility.otr");
         if (std::filesystem::exists(sohAccessibilityPath)) {
             currentStep = STEP_ERROR_OTR;
             return;
@@ -114,9 +112,10 @@ void SfxExtractor::setup() {
             sfxToRip.push(sfxTable[i]);
 
         currentStep = STEP_MAIN;
-        for (int i = 1; i < 10; i++)
+        for (int i = 1; i < 10; i++) {
             progressMilestones[i - 1] = sfxToRip.size() - ((int)ceil(sfxToRip.size() * (i / 10.0f)));
-        archive = LUS::Archive::CreateArchive("accessibility.otr", sfxToRip.size());
+        }
+        archive = Ship::Context::GetInstance()->GetResourceManager()->GetArchiveManager()->AddArchive("accessibility.otr");
 
     } catch (...) { currentStep = STEP_ERROR; }
 }
@@ -129,7 +128,7 @@ void SfxExtractor::ripNextSfx() {
     // Was the last sfx a loop? If so then we need to stop it, and then we need to run audio out to nowhere for as long
     // as it takes to get back to a blank slate.
     if (currentSfx != -1) {
-        Audio_StopSfxByPos(&D_801333D4);
+        Audio_StopSfxByPos(&gSfxDefaultPos);
         captureThreadState = CT_PRIMING;
         currentSfx = -1;
 
@@ -144,7 +143,7 @@ void SfxExtractor::ripNextSfx() {
     sfxToRip.pop();
     startOfInput = 0;
     endOfInput = 0;
-    Audio_PlaySoundGeneral(currentSfx, &D_801333D4, 4, &D_801333E0, &D_801333E0, &D_801333E8);
+    Audio_PlaySoundGeneral(currentSfx, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
 
     {
         auto lock = OTRAudio_Lock();
@@ -162,8 +161,8 @@ void SfxExtractor::finished() {
     Audio_QueueSeqCmd(NA_BGM_TITLE);
 
     if (currentStep == STEP_ERROR || currentStep == STEP_ERROR_OTR) {
-        Audio_PlaySoundGeneral(NA_SE_SY_ERROR, &D_801333D4, 4, &D_801333E0, &D_801333E0, &D_801333E8);
-        Audio_PlaySoundGeneral(NA_SE_EN_GANON_LAUGH, &D_801333D4, 4, &D_801333E0, &D_801333E0, &D_801333E8);
+        Audio_PlaySoundGeneral(NA_SE_SY_ERROR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+        Audio_PlaySoundGeneral(NA_SE_EN_GANON_LAUGH, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
         std::stringstream ss;
         ss << "Sorry, we tried to extract the sound effects, but Ganondorf overruled us with an iron fist."
            << std::endl;

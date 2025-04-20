@@ -1,4 +1,6 @@
 #include "ActorAccessibility.h"
+#include "soh/OTRGlobals.h"
+
 #include <map>
 #include <random>
 
@@ -25,9 +27,9 @@ extern "C" {
 void EnKarebaba_DeadItemDrop(EnKarebaba*, PlayState*);
 }
 //Declarations specific to Torches
-#include "overlays\actors\ovl_Obj_Syokudai\z_obj_syokudai.h"
+#include "overlays/actors/ovl_Obj_Syokudai/z_obj_syokudai.h"
 //Declarations specific to dogs
-#include "overlays\actors\ovl_En_Dog\z_en_dog.h"
+#include "overlays/actors/ovl_En_Dog/z_en_dog.h"
 extern "C" {
 void EnDog_FollowPlayer(EnDog*, PlayState*);
 s8 EnDog_CanFollow(EnDog*, PlayState*);
@@ -303,7 +305,7 @@ void accessible_area_change(AccessibleActor* actor) {
         //kakariko village attenuation
         else if (actor->play->sceneNum == 82) {
             if (actor->sceneIndex == 83 || actor->sceneIndex == 81 || actor->sceneIndex == 96) {
-                actor->policy.runsAlways == true;
+                actor->policy.runsAlways = true;
                 actor->policy.ydist = 5000;
                 if (actor->xzDistToPlayer > 700) {
                     if (actor->sceneIndex == 81) {
@@ -650,9 +652,9 @@ void accessible_audio_compass_cleanup(AccessibleActor* actor)
 }
 void accessible_audio_compass(AccessibleActor* actor) {
     Player* player = GET_PLAYER(actor->play);
-    if (player->stateFlags1 & PLAYER_STATE1_TARGETING || player->stateFlags1 & PLAYER_STATE1_CLIMBING_LADDER)
+    if (player->stateFlags1 & PLAYER_STATE1_Z_TARGETING || player->stateFlags1 & PLAYER_STATE1_CLIMBING_LADDER)
         return;
-    OSContPad* trackerButtonsPressed = LUS::Context::GetInstance()->GetControlDeck()->GetPads();
+    OSContPad* trackerButtonsPressed = std::dynamic_pointer_cast<LUS::ControlDeck>(Ship::Context::GetInstance()->GetControlDeck())->GetPads();
     AudioCompassData* data = (AudioCompassData*)actor->userData;
     bool compassCombo = trackerButtonsPressed != nullptr && trackerButtonsPressed[0].button & buttonList[11] &&
                         trackerButtonsPressed[0].button & buttonList[6];
@@ -671,7 +673,7 @@ void accessible_audio_compass(AccessibleActor* actor) {
    
     
         /* Player* player = GET_PLAYER(actor->play);
-    if (player->stateFlags1 & PLAYER_STATE1_TARGETING || player->stateFlags1 & PLAYER_STATE1_CLIMBING_LADDER)
+    if (player->stateFlags1 & PLAYER_STATE1_Z_TARGETING || player->stateFlags1 & PLAYER_STATE1_CLIMBING_LADDER)
         return;
 
     actor->world.pos = player->actor.world.pos;

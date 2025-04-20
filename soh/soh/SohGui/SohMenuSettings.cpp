@@ -196,12 +196,12 @@ void SohMenu::AddMenuSettings() {
         .RaceDisable(false)
         .Options(CheckboxOptions().Tooltip("Disables the automatic re-centering of the camera when idle."));
 
-            AddWidget(path "Accessible Audio Cues", WIDGET_CVAR_CHECKBOX)
+            AddWidget(path, "Accessible Audio Cues", WIDGET_CVAR_CHECKBOX)
                 .CVar("gA11yAudioInteraction")
                 .RaceDisable(false)
                 .Options(CheckboxOptions().Tooltip("Enables accessibility audio cues"));
 
-            AddWidget(path "Extract Sfx", WIDGET_CVAR_CHECKBOX)
+            AddWidget(path, "Extract Sfx", WIDGET_CVAR_CHECKBOX)
                 .CVar("gExtractSfx")
                 .RaceDisable(false)
                 .Options(CheckboxOptions().Tooltip("Extracts the sfx to be used in accessible audio cues, must be run once for the audio cues to play then restart game"));

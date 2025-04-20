@@ -127,11 +127,17 @@ Sail* Sail::Instance;
 #include "soh/resource/importer/BackgroundFactory.h"
 
 #include "soh/config/ConfigUpdaters.h"
+#include "soh/ShipInit.hpp" 
 #if !defined(__SWITCH__) && !defined(__WIIU__)
 #include "Enhancements/accessible-actors/ActorAccessibility.h"
 #endif
 
+extern "C" {
+#include "src/overlays/actors/ovl_En_Dns/z_en_dns.h"
+}
+
 void SoH_ProcessDroppedFiles(std::string filePath);
+
 OTRGlobals* OTRGlobals::Instance;
 SaveManager* SaveManager::Instance;
 CustomMessageManager* CustomMessageManager::Instance;
@@ -288,7 +294,7 @@ OTRGlobals::OTRGlobals() {
         }
     }
 
-        std::string sohAccessibilityPath = LUS::Context::GetPathRelativeToAppDirectory("accessibility.otr");
+        std::string sohAccessibilityPath = Ship::Context::GetPathRelativeToAppDirectory("accessibility.otr");
         if (std::filesystem::exists(sohAccessibilityPath)) {
             OTRFiles.push_back(sohAccessibilityPath);
         }

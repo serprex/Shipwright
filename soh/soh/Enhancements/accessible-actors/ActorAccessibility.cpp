@@ -1,6 +1,7 @@
 #include "ActorAccessibility.h"
 #include "AccessibleAudioEngine.h"
 #include "soh/OTRGlobals.h"
+#include "resource/type/Blob.h"
 
 #include <map>
 #include <random>
@@ -55,9 +56,8 @@ typedef std::unordered_set<s16> SceneList_t;//A list of scenes which have alread
 
 typedef struct {
     std::string path;
-    std::shared_ptr<LUS::File> resource;
+    std::shared_ptr<Ship::IResource> resource;
     std::shared_ptr<s16*> decodedSample;//Set if the record is for a raw sample as opposed to a SFX.
-
 }SfxRecord;
 
 class AudioGlossaryData {
@@ -425,7 +425,7 @@ int ActorAccessibility_GetRandomStartingFrameCount(int min, int max) {
             return;
         if (actor->policy.aimAssist.isProvider) {
             if (player->stateFlags1 & PLAYER_STATE1_FIRST_PERSON &&
-                (player->stateFlags1 & PLAYER_STATE1_BOOMERANG_IN_HAND ||
+                (player->stateFlags1 & PLAYER_STATE1_USING_BOOMERANG ||
                  player->stateFlags1 & PLAYER_STATE1_ITEM_IN_HAND)) {
             ActorAccessibility_SetSoundPitch(actor, 9, actor->aimAssist.pitch);
             actor->aimAssist.framesSinceAimAssist++;
@@ -527,7 +527,7 @@ int ActorAccessibility_GetRandomStartingFrameCount(int min, int max) {
             return;
         }
         
-        OSContPad* trackerButtonsPressed = LUS::Context::GetInstance()->GetControlDeck()->GetPads();
+        OSContPad* trackerButtonsPressed = std::dynamic_pointer_cast<LUS::ControlDeck>(Ship::Context::GetInstance()->GetControlDeck())->GetPads();
         bool comboStartGlossary = trackerButtonsPressed != nullptr && trackerButtonsPressed[0].button & buttons[10] &&
                                 trackerButtonsPressed[0].button & buttons[6];
         if (comboStartGlossary) {
@@ -750,7 +750,7 @@ int ActorAccessibility_GetRandomStartingFrameCount(int min, int max) {
         {
             SfxRecord tempRecord;
             std::string fullPath = SfxExtractor::getExternalFileName(sfxId);
-            auto res = LUS::Context::GetInstance()->GetResourceManager()->LoadFile(fullPath);
+            auto res = std::static_pointer_cast<Ship::Blob>(Ship::Context::GetInstance()->GetResourceManager()->LoadResource(fullPath));
 
 if(res == nullptr)
 return NULL;//Resource doesn't exist, user's gotta run the extractor.
@@ -760,8 +760,8 @@ return NULL;//Resource doesn't exist, user's gotta run the extractor.
             tempRecord.path = ss.str();
             aa->sfxMap[sfxId] = tempRecord;
             record = &aa->sfxMap[sfxId];
-            aa->audioEngine->cacheDecodedSample(record->path, record->resource->Buffer.data(),
-                                                record->resource->Buffer.size());
+            aa->audioEngine->cacheDecodedSample(record->path, record->resource->GetRawPointer(),
+                                                record->resource->GetPointerSize());
         } else
             record = &it->second;
 
@@ -780,11 +780,11 @@ return NULL;//Resource doesn't exist, user's gotta run the extractor.
             std::stringstream ss;
             ss << "audio/samples/" << key;
             std::string fullPath = ss.str();
-            auto res = LUS::Context::GetInstance()->GetResourceManager()->LoadResource(fullPath);
+            auto res = Ship::Context::GetInstance()->GetResourceManager()->LoadResource(fullPath);
             if (res == nullptr)
 return NULL; // Resource doesn't exist, user's gotta run the extractor.
             AudioDecoder decoder;
-            decoder.setSample((LUS::AudioSample*)res.get());
+            decoder.setSample((SOH::AudioSample*)res.get());
             s16* wav;
             size_t wavSize = decoder.decodeToWav(&wav);
 

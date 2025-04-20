@@ -21,7 +21,7 @@
 #include <time.h>
 #include <assert.h>
 
-bool freezeGame = false;//Used for SFX ripper.
+bool freezeGame = false; // Used for SFX ripper.
 TransitionUnk sTrnsnUnk;
 s32 gTrnsnUnkState;
 VisMono gPlayVisMono;

@@ -1,7 +1,7 @@
 #pragma once
 #include "libultraship/libultraship.h"
 class SfxExtractor {
-    std::shared_ptr<LUS::Archive> archive;
+    std::shared_ptr<Ship::Archive> archive;
     int currentStep;
     int captureThreadState;
     std::queue<s16> sfxToRip;

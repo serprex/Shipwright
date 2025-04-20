@@ -80,7 +80,7 @@
 #include "textures/place_title_cards/g_pn_56.h"
 #include "textures/place_title_cards/g_pn_57.h"
 #endif
-bool freezeActors= false;
+bool freezeActors = false;
 
 static CollisionPoly* sCurCeilingPoly;
 static s32 sCurCeilingBgId;
@@ -2558,8 +2558,6 @@ u32 D_80116068[ACTORCAT_MAX] = {
 };
 
 void Actor_UpdateAll(PlayState* play, ActorContext* actorCtx) {
-
-    
 
     Actor* refActor;
     Actor* actor;
