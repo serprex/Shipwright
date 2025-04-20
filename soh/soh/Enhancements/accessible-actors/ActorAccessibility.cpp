@@ -132,7 +132,7 @@ void ActorAccessibility_Init() {
 
     aa = new ActorAccessibility();
     aa->glossary = new AudioGlossaryData();
-    aa->isOn = CVarGetInteger("gA11yAudioInteraction", 0);
+    aa->isOn = CVarGetInteger(CVAR_SETTING("A11yAudioInteraction"), 0);
     if (!aa->isOn)
         return;
     aa->extractSfx = CVarGetInteger("gExtractSfx", 0);

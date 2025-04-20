@@ -197,7 +197,7 @@ void SohMenu::AddMenuSettings() {
         .Options(CheckboxOptions().Tooltip("Disables the automatic re-centering of the camera when idle."));
 
     AddWidget(path, "Accessible Audio Cues", WIDGET_CVAR_CHECKBOX)
-        .CVar("gA11yAudioInteraction")
+        .CVar(CVAR_SETTING("A11yAudioInteraction"))
         .RaceDisable(false)
         .Options(CheckboxOptions().Tooltip("Enables accessibility audio cues"));
 
