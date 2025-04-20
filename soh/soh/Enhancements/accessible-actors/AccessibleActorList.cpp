@@ -13,61 +13,56 @@
 #include "overlays/actors/ovl_Boss_Goma/z_boss_goma.h"
 
 std::vector<uint32_t> buttonList = { BTN_A, BTN_B, BTN_CUP,   BTN_CDOWN, BTN_CLEFT, BTN_CRIGHT, BTN_L,
-                                  BTN_Z, BTN_R, BTN_START, BTN_DUP,   BTN_DDOWN, BTN_DLEFT,  BTN_DRIGHT };
-//Declarations specific to chests.
+                                     BTN_Z, BTN_R, BTN_START, BTN_DUP,   BTN_DDOWN, BTN_DLEFT,  BTN_DRIGHT };
+// Declarations specific to chests.
 #include "overlays/actors/ovl_En_Box/z_en_box.h"
 extern "C" {
 
 void EnBox_WaitOpen(EnBox*, PlayState*);
 }
-//Declarations specific to Babas.
+// Declarations specific to Babas.
 #include "overlays/actors/ovl_En_Karebaba/z_en_karebaba.h"
 extern "C" {
 
 void EnKarebaba_DeadItemDrop(EnKarebaba*, PlayState*);
 }
-//Declarations specific to Torches
+// Declarations specific to Torches
 #include "overlays/actors/ovl_Obj_Syokudai/z_obj_syokudai.h"
-//Declarations specific to dogs
+// Declarations specific to dogs
 #include "overlays/actors/ovl_En_Dog/z_en_dog.h"
 extern "C" {
 void EnDog_FollowPlayer(EnDog*, PlayState*);
 s8 EnDog_CanFollow(EnDog*, PlayState*);
 }
-    //User data for the general helper VA.
-typedef struct
-{
+// User data for the general helper VA.
+typedef struct {
     s16 currentScene;
     s8 currentRoom;
     bool currentRoomClear;
 
-}GeneralHelperData;
-typedef struct
-{
+} GeneralHelperData;
+typedef struct {
     f32 linearVelocity;
     int framesUntilChime;
 
-}AudioCompassData;
-typedef struct
-{
+} AudioCompassData;
+typedef struct {
     int framesUntilAboveChime;
 
-}SwitchData;
+} SwitchData;
 
-    // Begin actor-specific policy callbacks.
+// Begin actor-specific policy callbacks.
 
 void accessible_en_ishi(AccessibleActor* actor) {
     ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_OCTAROCK_ROCK, false);
-    //ActorAccessibility_PlaySpecialSound(actor, NA_SE_EN_OCTAROCK_ROCK);
+    // ActorAccessibility_PlaySpecialSound(actor, NA_SE_EN_OCTAROCK_ROCK);
 }
 
 void accessible_en_NPC_Gen(AccessibleActor* actor) {
     ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_VO_NB_LAUGH, false);
-
 }
 void accessible_en_chest(AccessibleActor* actor) {
-   
-    
+
     Player* player = GET_PLAYER(actor->play);
     EnBox* chest = (EnBox*)actor->actor;
     if (chest->actionFunc != EnBox_WaitOpen)
@@ -77,37 +72,35 @@ void accessible_en_chest(AccessibleActor* actor) {
     if (chest->type <= 8 && chest->type >= 5) {
         size = 15; // small
     } else {
-        size = 30;//large
+        size = 30; // large
     }
     if (!(treasureFlag >= 20 && treasureFlag < 32)) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_TBOX_UNLOCK, false);
     }
-    //Only chests that are "waiting to be opened" should play a sound. Chests which have not yet appeared (because some enemy has not been killed, switch has not been hit, etc) will not be in this action mode.
+    // Only chests that are "waiting to be opened" should play a sound. Chests which have not yet appeared (because some
+    // enemy has not been killed, switch has not been hit, etc) will not be in this action mode.
     f32 leftAngle = actor->actor->world.rot.y - 16384;
     f32 velocityXRight = Math_SinS(leftAngle);
     f32 velocityZRight = Math_CosS(leftAngle);
-    
+
     f32 frontAngle = actor->actor->world.rot.y;
     f32 velocityXFront = Math_SinS(frontAngle);
     f32 velocityZFront = Math_CosS(frontAngle);
 
-    f32 xdist = (player->actor.world.pos.x - actor->actor->world.pos.x) * velocityXFront + 
-        (player->actor.world.pos.z-actor->actor->world.pos.z) * velocityZFront;
-    f32 zdist = fabs((player->actor.world.pos.x - actor->actor->world.pos.x) * velocityXRight + 
-        (player->actor.world.pos.z-actor->actor->world.pos.z) * velocityZRight);
-
+    f32 xdist = (player->actor.world.pos.x - actor->actor->world.pos.x) * velocityXFront +
+                (player->actor.world.pos.z - actor->actor->world.pos.z) * velocityZFront;
+    f32 zdist = fabs((player->actor.world.pos.x - actor->actor->world.pos.x) * velocityXRight +
+                     (player->actor.world.pos.z - actor->actor->world.pos.z) * velocityZRight);
 
     if ((xdist - size / 2) < 0) {
         ActorAccessibility_SetSoundPitch(actor, 0, 0.5);
     } else if ((xdist + size / 2) > 0 && zdist < size / 2 && xdist < 150.0) {
         ActorAccessibility_PlaySoundForActor(actor, 1, NA_SE_EV_DIAMOND_SWITCH, false);
     }
-        
-
 }
 
 void accessible_en_gerudo(AccessibleActor* actor) {
-    ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_VO_NB_LAUGH, false);//update sound for ones that detect you
+    ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_VO_NB_LAUGH, false); // update sound for ones that detect you
 }
 
 void accessible_en_Sign(AccessibleActor* actor) {
@@ -154,7 +147,7 @@ void accessible_torches(AccessibleActor* actor) {
         return;
     }
 
-    //unlit permanent torches
+    // unlit permanent torches
     if ((actor->actor->params) == 8192) {
         if (torche->litTimer == 0) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_BOMB_IGNIT, false);
@@ -162,7 +155,7 @@ void accessible_torches(AccessibleActor* actor) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_ANUBIS_FIRE, false);
         }
     }
-    //lit permanent torches
+    // lit permanent torches
     if ((actor->actor->params) == 9216 || (actor->actor->params) == 962) {
 
         actor->policy.volume = 0.5;
@@ -187,20 +180,17 @@ bool accessible_switch_init(AccessibleActor* actor) {
     SwitchData* data = (SwitchData*)malloc(sizeof(SwitchData));
     data->framesUntilAboveChime = 0;
     if (data == NULL)
-        return false;//failure to allocate memory.
-    actor->userData = (void*) data;
+        return false; // failure to allocate memory.
+    actor->userData = (void*)data;
     return true;
-
 }
-void accessible_switch_cleanup(AccessibleActor* actor)
-{
+void accessible_switch_cleanup(AccessibleActor* actor) {
     free(actor->userData);
-
 }
 
-    void accessible_switch(AccessibleActor * actor) {
+void accessible_switch(AccessibleActor* actor) {
 
-        SwitchData* data = (SwitchData*)actor->userData;
+    SwitchData* data = (SwitchData*)actor->userData;
 
     Player* player = GET_PLAYER(actor->play);
     ObjSwitch* sw = (ObjSwitch*)actor->actor;
@@ -211,26 +201,24 @@ void accessible_switch_cleanup(AccessibleActor* actor)
         }
         if (scale.y >= 33.0f / 200.0f) {
             if (actor->play->sceneNum == 0 && actor->play->roomCtx.curRoom.num == 5 && actor->xzDistToPlayer < 20) {
-                ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_DIAMOND_SWITCH, false);//Should result in same behaviour.
+                ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_DIAMOND_SWITCH,
+                                                     false); // Should result in same behaviour.
             }
             if (actor->frameCount % 30 != 0) {
                 return;
             }
             ActorAccessibility_PlaySoundForActor(actor, 1, NA_SE_EV_FOOT_SWITCH, false);
-}
-    }
-    else if (actor->frameCount % 30 != 0) {
+        }
+    } else if (actor->frameCount % 30 != 0) {
         return;
-    }
-    else if ((actor->actor->params & 7) == 1) {
+    } else if ((actor->actor->params & 7) == 1) {
         if (actor->xyzDistToPlayer > 800) {
             return;
         }
         if (scale.y >= 33.0f / 200.0f) { //(!(Flags_GetSwitch(actor->play, (actor->params >> 8 & 0x3F)))) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_HAMMER_HIT, false);
         }
-    } 
-    else if ((actor->actor->params & 7) == 2) {
+    } else if ((actor->actor->params & 7) == 2) {
         if (sw->eyeTexIndex == 0) { //(!(Flags_GetSwitch(actor->play, (actor->params >> 8 & 0x3F))))
                                     // make it only play for open eye
             actor->policy.aimAssist.isProvider = true;
@@ -243,9 +231,7 @@ void accessible_switch_cleanup(AccessibleActor* actor)
             return;
         }
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_DIAMOND_SWITCH, false);
-
     }
-
 }
 
 void accessible_larva(AccessibleActor* actor) {
@@ -261,7 +247,6 @@ void accessible_va_prototype(AccessibleActor* actor) {
 
     Player* player = GET_PLAYER(actor->play);
     ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_BOMB_EXPLOSION, false);
-
 }
 
 void accessible_maruta(AccessibleActor* actor) {
@@ -279,7 +264,7 @@ void accessible_area_change(AccessibleActor* actor) {
         actor->play->sceneNum != 82) {
         return;
     }
-    /*switch (actor->sceneIndex) { 
+    /*switch (actor->sceneIndex) {
         case 85 || 91:
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_SARIA_MELODY, false);
         case 81:
@@ -287,9 +272,9 @@ void accessible_area_change(AccessibleActor* actor) {
         case 0:
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_FANTOM_WARP_L, false);
     }*/
-    
-        //hyrule field attenuation
-        if (actor->play->sceneNum == 81) {
+
+    // hyrule field attenuation
+    if (actor->play->sceneNum == 81) {
         if (actor->xzDistToPlayer > 700) {
             actor->policy.distance = actor->xzDistToPlayer * 1.2;
             if (actor->xzDistToPlayer > 8000) {
@@ -302,145 +287,142 @@ void accessible_area_change(AccessibleActor* actor) {
             }
         }
     }
-        //kakariko village attenuation
-        else if (actor->play->sceneNum == 82) {
-            if (actor->sceneIndex == 83 || actor->sceneIndex == 81 || actor->sceneIndex == 96) {
-                actor->policy.runsAlways = true;
-                actor->policy.ydist = 5000;
-                if (actor->xzDistToPlayer > 700) {
-                    if (actor->sceneIndex == 81) {
-                        actor->policy.distance = actor->xyzDistToPlayer * 1.4;
-                    } else {
-                        actor->policy.distance = actor->xyzDistToPlayer * 1.2;
-                    }
-                    if (actor->xzDistToPlayer > 8000) {
-                        return;
-                    }
+    // kakariko village attenuation
+    else if (actor->play->sceneNum == 82) {
+        if (actor->sceneIndex == 83 || actor->sceneIndex == 81 || actor->sceneIndex == 96) {
+            actor->policy.runsAlways = true;
+            actor->policy.ydist = 5000;
+            if (actor->xzDistToPlayer > 700) {
+                if (actor->sceneIndex == 81) {
+                    actor->policy.distance = actor->xyzDistToPlayer * 1.4;
                 } else {
-                    actor->policy.distance = 1500;
-                    if (actor->xzDistToPlayer > 1500) {
-                        return;
-                    }
+                    actor->policy.distance = actor->xyzDistToPlayer * 1.2;
                 }
-            } else if (actor->sceneIndex == 8) {
-                if (!(((gSaveContext.eventChkInf[6]) >> (7)) & 1))
-                    return;
-            }
-                else {
-                actor->policy.ydist = 500;
-                    actor->policy.distance = 1000;
-                if (actor->xzDistToPlayer > 1000) {
+                if (actor->xzDistToPlayer > 8000) {
                     return;
                 }
-                } 
+            } else {
+                actor->policy.distance = 1500;
+                if (actor->xzDistToPlayer > 1500) {
+                    return;
+                }
             }
-            
-        
-        else if (actor->play->sceneNum == 91 || actor->play->sceneNum == 69 || actor->play->sceneNum == 70) {
+        } else if (actor->sceneIndex == 8) {
+            if (!(((gSaveContext.eventChkInf[6]) >> (7)) & 1))
+                return;
+        } else {
+            actor->policy.ydist = 500;
             actor->policy.distance = 1000;
             if (actor->xzDistToPlayer > 1000) {
                 return;
             }
         }
-   /* if (actor->play->sceneNum <= 11) {
-        actor->policy.distance = 500;
-         }*/
-        else {
-            if (actor->xzDistToPlayer > 1500) {
-                return;
-            }
+    }
+
+    else if (actor->play->sceneNum == 91 || actor->play->sceneNum == 69 || actor->play->sceneNum == 70) {
+        actor->policy.distance = 1000;
+        if (actor->xzDistToPlayer > 1000) {
+            return;
         }
+    }
+    /* if (actor->play->sceneNum <= 11) {
+         actor->policy.distance = 500;
+          }*/
+    else {
+        if (actor->xzDistToPlayer > 1500) {
+            return;
+        }
+    }
     if (actor->sceneIndex == 85 || actor->sceneIndex == 91) {
         if (actor->play->sceneNum == 91 && gSaveContext.entranceIndex != 1504 && gSaveContext.entranceIndex != 1246) {
             return;
         }
         if (actor->play->sceneNum == 85 && actor->world.pos.y < 0) {
-            
+
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_HORSE_RUN_LEVEL, false);
         } else {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_SARIA_MELODY, false);
         }
-        //kokiri forest and lost woods
+        // kokiri forest and lost woods
     } else if (actor->play->sceneNum >= 17 && actor->play->sceneNum <= 25) {
         return; // dont check for entrances while in boss rooms
     } else if (actor->sceneIndex == 81) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_HORSE_RUN_LEVEL, false);
-        //hyrule field
-    } else if (actor->sceneIndex == 10 && actor->play->sceneNum != 85) {//temp
+        // hyrule field
+    } else if (actor->sceneIndex == 10 && actor->play->sceneNum != 85) { // temp
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_OC_DOOR_OPEN, false);
     } else if (actor->sceneIndex <= 11) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_FANTOM_WARP_L, false);
-        //dungeons
+        // dungeons
     } else if (actor->sceneIndex >= 27 && actor->sceneIndex <= 29) {
         if (actor->play->sceneNum >= 32 && actor->play->sceneNum <= 34) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_HORSE_RUN_LEVEL, false);
         } else {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_SMALL_DOG_BARK, false);
-       }
+        }
     } else if (actor->sceneIndex >= 30 && actor->sceneIndex <= 33) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_SMALL_DOG_BARK, false);
-        //market sound
+        // market sound
     } else if ((actor->sceneIndex >= 34 && actor->sceneIndex <= 36) || actor->sceneIndex == 67) {
         if (actor->play->sceneNum == 67) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_SMALL_DOG_BARK, false);
         } else {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_STONE_BOUND, false);
         }
-        
-        //ToT sound
+
+        // ToT sound
     } else if (actor->sceneIndex == 69 || actor->sceneIndex == 70) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_MUSI_SINK, false);
     } else if (actor->sceneIndex == 82) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_CHICKEN_CRY_M, false);
-        //kakariko sound
+        // kakariko sound
     } else if (actor->sceneIndex == 83) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_PO_APPEAR, false);
-        //graveyard sound
-    } else if (actor->sceneIndex == 84 || actor->sceneIndex == 88 || actor->sceneIndex == 89) { //last one is zora fountain maybe seperate?
+        // graveyard sound
+    } else if (actor->sceneIndex == 84 || actor->sceneIndex == 88 ||
+               actor->sceneIndex == 89) { // last one is zora fountain maybe seperate?
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_RIVER_STREAM_S, false);
-        //zora sound
-    } else if (actor->sceneIndex == 86) {//might not need to exist
-        //forest medow sound
+        // zora sound
+    } else if (actor->sceneIndex == 86) { // might not need to exist
+        // forest medow sound
     } else if (actor->sceneIndex == 87) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_WATER_WALL, false);
-        //Lake Hylia sound
-    } else if (actor->sceneIndex == 90 || actor->sceneIndex == 93) { //gerudo valley and fortress
+        // Lake Hylia sound
+    } else if (actor->sceneIndex == 90 || actor->sceneIndex == 93) { // gerudo valley and fortress
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_GERUDOFT_BREATH, false);
-        //gerudo valley sound
-    } else if (actor->sceneIndex == 92 || actor->sceneIndex == 94) {//haunted wasteland and desert colosus
+        // gerudo valley sound
+    } else if (actor->sceneIndex == 92 || actor->sceneIndex == 94) { // haunted wasteland and desert colosus
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_SAND_STORM, false);
-        
-    }  else if (actor->sceneIndex == 100 || actor->sceneIndex ==95) {
+
+    } else if (actor->sceneIndex == 100 || actor->sceneIndex == 95) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_BRIDGE_OPEN, false);
-        //Hyrule Castle sound
+        // Hyrule Castle sound
     } else if (actor->sceneIndex == 96) {
 
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_DODO_K_ROLL, false);
-        //DMT sound
+        // DMT sound
     } else if (actor->sceneIndex == 97) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_DODO_K_LAVA, false);
-        //DMC sound
+        // DMC sound
     } else if (actor->sceneIndex == 98) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_DARUNIA_HIT_BREAST, false);
-        //Goron City
+        // Goron City
     } else if (actor->sceneIndex == 99) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_COW_CRY, false);
-        //Lon Lon
+        // Lon Lon
     } else if (actor->sceneIndex >= 17 && actor->sceneIndex <= 25) {
-        return;//boss rooms
-    }
-    else {
+        return; // boss rooms
+    } else {
         actor->policy.distance = 500;
         if (actor->play->sceneNum == 83) {
             actor->policy.ydist = 0;
         }
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_OC_DOOR_OPEN, false);
-
     }
 }
 
 void accessible_231_dekus(AccessibleActor* actor) {
-    
+
     if (actor->actor->params == 1) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_NUTS_FAINT, false);
         ActorAccessibility_SetSoundPitch(actor, 0, 1.0);
@@ -455,7 +437,6 @@ void accessible_231_dekus(AccessibleActor* actor) {
     } else {
         return;
     }
-
 }
 
 void accessible_hana(AccessibleActor* actor) {
@@ -464,7 +445,6 @@ void accessible_hana(AccessibleActor* actor) {
     } else if (actor->actor->params == 0) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_DIG_UP, false);
     }
-    
 }
 
 void accessible_climable(AccessibleActor* actor) {
@@ -482,35 +462,36 @@ void accessible_en_guard(AccessibleActor* actor) {
     f32 guardsfx = NA_SE_IT_SWORD_IMPACT;
     if (fabs(actor->actor->world.pos.x - player->actor.world.pos.x) >
         fabs(actor->actor->world.pos.z - player->actor.world.pos.z)) {
-    if (fabs(actor->actor->shape.rot.y - 16384) <1000) {        if (actor->actor->world.pos.x < player->actor.world.pos.x) {
-            ActorAccessibility_PlaySoundForActor(actor, 0, guardsfx, false);
-            ActorAccessibility_SetSoundPitch(actor, 0, 2.0);
-        } else {
-            ActorAccessibility_PlaySoundForActor(actor, 0, guardsfx, false);
-            ActorAccessibility_SetSoundPitch(actor, 0, 0.2); 
-        }
-    } else if ((actor->actor->shape.rot.y + 16384)<1000) {
-        if (actor->actor->world.pos.x < player->actor.world.pos.x) {
-            ActorAccessibility_PlaySoundForActor(actor, 0, guardsfx, false);
-            ActorAccessibility_SetSoundPitch(actor, 0, 0.2);
-        } else {
-            ActorAccessibility_PlaySoundForActor(actor, 0, guardsfx, false);
-            ActorAccessibility_SetSoundPitch(actor, 0, 2.0);
-        }
-    } else {
-        ActorAccessibility_PlaySoundForActor(actor, 0, guardsfx, false);
-        ActorAccessibility_SetSoundPitch(actor, 0, 1.0);
-    }
-    } else {
-        if (fabs(actor->actor->shape.rot.y) < 1000) {
-             if (actor->actor->world.pos.z < player->actor.world.pos.z) {
+        if (fabs(actor->actor->shape.rot.y - 16384) < 1000) {
+            if (actor->actor->world.pos.x < player->actor.world.pos.x) {
                 ActorAccessibility_PlaySoundForActor(actor, 0, guardsfx, false);
                 ActorAccessibility_SetSoundPitch(actor, 0, 2.0);
             } else {
                 ActorAccessibility_PlaySoundForActor(actor, 0, guardsfx, false);
                 ActorAccessibility_SetSoundPitch(actor, 0, 0.2);
             }
-        } else if (fabs(actor->actor->shape.rot.y+32768)<1000) {
+        } else if ((actor->actor->shape.rot.y + 16384) < 1000) {
+            if (actor->actor->world.pos.x < player->actor.world.pos.x) {
+                ActorAccessibility_PlaySoundForActor(actor, 0, guardsfx, false);
+                ActorAccessibility_SetSoundPitch(actor, 0, 0.2);
+            } else {
+                ActorAccessibility_PlaySoundForActor(actor, 0, guardsfx, false);
+                ActorAccessibility_SetSoundPitch(actor, 0, 2.0);
+            }
+        } else {
+            ActorAccessibility_PlaySoundForActor(actor, 0, guardsfx, false);
+            ActorAccessibility_SetSoundPitch(actor, 0, 1.0);
+        }
+    } else {
+        if (fabs(actor->actor->shape.rot.y) < 1000) {
+            if (actor->actor->world.pos.z < player->actor.world.pos.z) {
+                ActorAccessibility_PlaySoundForActor(actor, 0, guardsfx, false);
+                ActorAccessibility_SetSoundPitch(actor, 0, 2.0);
+            } else {
+                ActorAccessibility_PlaySoundForActor(actor, 0, guardsfx, false);
+                ActorAccessibility_SetSoundPitch(actor, 0, 0.2);
+            }
+        } else if (fabs(actor->actor->shape.rot.y + 32768) < 1000) {
             if (actor->actor->world.pos.z < player->actor.world.pos.z) {
                 ActorAccessibility_PlaySoundForActor(actor, 0, guardsfx, false);
                 ActorAccessibility_SetSoundPitch(actor, 0, 0.2);
@@ -523,8 +504,6 @@ void accessible_en_guard(AccessibleActor* actor) {
             ActorAccessibility_SetSoundPitch(actor, 0, 1.0);
         }
     }
-    
-
 }
 
 void accessible_en_dogs(AccessibleActor* actor) {
@@ -533,22 +512,19 @@ void accessible_en_dogs(AccessibleActor* actor) {
         dog->actionFunc = EnDog_FollowPlayer;
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_DIAMOND_SWITCH, false);
         ActorAccessibility_SetSoundPitch(actor, 0, 1.0);
-
     }
     if (actor->frameCount % 30 != 0) {
         return;
     }
     if (actor->actor->params == 608 || actor->actor->params == 336 || actor->actor->params == 304 ||
-        actor->actor->params == 3088 ||
-        actor->actor->params == 2576 || actor->actor->params <0) {
+        actor->actor->params == 3088 || actor->actor->params == 2576 || actor->actor->params < 0) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_SMALL_DOG_BARK, false);
-        
+
         ActorAccessibility_SetSoundPitch(actor, 0, 2.0);
     } else {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_SMALL_DOG_BARK, false);
         ActorAccessibility_SetSoundPitch(actor, 0, 0.5);
     }
-
 }
 
 void accessible_goma(AccessibleActor* actor) {
@@ -562,19 +538,18 @@ void accessible_door_of_time(AccessibleActor* actor) {
     ActorAccessibility_PlaySampleForActor(actor, 0, "Chanting", false);
     ActorAccessibility_SetSoundPitch(actor, 0, 1.0);
 
-    //ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_DIAMOND_SWITCH, false);
+    // ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_DIAMOND_SWITCH, false);
 }
 
 void accessible_sticks(AccessibleActor* actor) {
     EnKarebaba* baba = (EnKarebaba*)actor->actor;
-    
+
     if (baba->actionFunc != EnKarebaba_DeadItemDrop)
         return;
     if (actor->actor->flags == 80) {
 
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_NUTS_DAMAGE, false);
     }
-
 }
 
 void accessible_graveyard_soil(AccessibleActor* actor) {
@@ -583,7 +558,7 @@ void accessible_graveyard_soil(AccessibleActor* actor) {
 
 void accessible_cucco(AccessibleActor* actor) {
     if (actor->actor->params == 14) {
-        
+
     } else if (actor->actor->params == 13) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_CHICKEN_CRY_N, false);
         ActorAccessibility_SetSoundPitch(actor, 0, 1.5);
@@ -602,40 +577,31 @@ bool accessible_general_helper_init(AccessibleActor* actor) {
 
     actor->userData = data;
     return true;
-
 }
-void accessible_general_helper_cleanup(AccessibleActor* actor)
-{
+void accessible_general_helper_cleanup(AccessibleActor* actor) {
     free(actor->userData);
     actor->userData = NULL;
 }
-void accessible_va_general_helper(AccessibleActor* actor)
-{
+void accessible_va_general_helper(AccessibleActor* actor) {
     GeneralHelperData* data = (GeneralHelperData*)actor->userData;
-    if (data->currentScene == actor->play->sceneNum && data->currentRoom != actor->play->roomCtx.curRoom.num)
-    {
+    if (data->currentScene == actor->play->sceneNum && data->currentRoom != actor->play->roomCtx.curRoom.num) {
         ActorAccessibility_AnnounceRoomNumber(actor->play);
         data->currentRoom = actor->play->roomCtx.curRoom.num;
         data->currentRoomClear = Flags_GetClear(actor->play, data->currentRoom);
     }
-    if (data->currentScene != actor->play->sceneNum)
-    {
+    if (data->currentScene != actor->play->sceneNum) {
         ActorAccessibility_InterpretCurrentScene(actor->play);
         data->currentScene = actor->play->sceneNum;
         data->currentRoom = actor->play->roomCtx.curRoom.num;
         data->currentRoomClear = Flags_GetClear(actor->play, data->currentRoom);
-
     }
-//Report when a room is completed.
-    if (!data->currentRoomClear && Flags_GetClear(actor->play, data->currentRoom))
-    {
+    // Report when a room is completed.
+    if (!data->currentRoomClear && Flags_GetClear(actor->play, data->currentRoom)) {
         data->currentRoomClear = Flags_GetClear(actor->play, data->currentRoom);
         ActorAccessibility_AnnounceRoomNumber(actor->play);
-
     }
 }
-bool accessible_audio_compass_init(AccessibleActor* actor)
-{
+bool accessible_audio_compass_init(AccessibleActor* actor) {
     AudioCompassData* data = (AudioCompassData*)malloc(sizeof(AudioCompassData));
     if (data == NULL)
         return false;
@@ -644,73 +610,68 @@ bool accessible_audio_compass_init(AccessibleActor* actor)
 
     actor->userData = data;
     return true;
-
 }
-void accessible_audio_compass_cleanup(AccessibleActor* actor)
-{
+void accessible_audio_compass_cleanup(AccessibleActor* actor) {
     free(actor->userData);
 }
 void accessible_audio_compass(AccessibleActor* actor) {
     Player* player = GET_PLAYER(actor->play);
     if (player->stateFlags1 & PLAYER_STATE1_Z_TARGETING || player->stateFlags1 & PLAYER_STATE1_CLIMBING_LADDER)
         return;
-    OSContPad* trackerButtonsPressed = std::dynamic_pointer_cast<LUS::ControlDeck>(Ship::Context::GetInstance()->GetControlDeck())->GetPads();
+    OSContPad* trackerButtonsPressed =
+        std::dynamic_pointer_cast<LUS::ControlDeck>(Ship::Context::GetInstance()->GetControlDeck())->GetPads();
     AudioCompassData* data = (AudioCompassData*)actor->userData;
     bool compassCombo = trackerButtonsPressed != nullptr && trackerButtonsPressed[0].button & buttonList[11] &&
                         trackerButtonsPressed[0].button & buttonList[6];
     actor->world.pos = player->actor.world.pos;
     actor->world.pos.z -= 50;
 
-  
     if (data->framesUntilChime > 0)
         data->framesUntilChime--;
     if (compassCombo && data->framesUntilChime <= 0) {
 
         ActorAccessibility_PlaySoundForActor(actor, 0, actor->policy.sound, false);
         data->framesUntilChime = 30;
-        }
-    
-   
-    
-        /* Player* player = GET_PLAYER(actor->play);
-    if (player->stateFlags1 & PLAYER_STATE1_Z_TARGETING || player->stateFlags1 & PLAYER_STATE1_CLIMBING_LADDER)
-        return;
-
-    actor->world.pos = player->actor.world.pos;
-    actor->world.pos.z -= 50;
-    bool shouldChime = false;
-    if (actor->world.rot.y != player->actor.world.rot.y) {
-        actor->world.rot.y = player->actor.world.rot.y;
-        if (player->linearVelocity == 0)
-        shouldChime = true;
     }
-    AudioCompassData* data = (AudioCompassData*)actor->userData;
-    if (data->linearVelocity == 0.0 && player->linearVelocity > 0.0) {
-        shouldChime = true;
 
-    }
-    data->linearVelocity = player->linearVelocity;
-    if (data->framesUntilChime > 0)
-        data->framesUntilChime--;
-    if (shouldChime && data->framesUntilChime <= 0) {
+    /* Player* player = GET_PLAYER(actor->play);
+if (player->stateFlags1 & PLAYER_STATE1_Z_TARGETING || player->stateFlags1 & PLAYER_STATE1_CLIMBING_LADDER)
+    return;
 
-        ActorAccessibility_PlaySoundForActor(actor, 0, actor->policy.sound, false);
-        data->framesUntilChime = 10;
+actor->world.pos = player->actor.world.pos;
+actor->world.pos.z -= 50;
+bool shouldChime = false;
+if (actor->world.rot.y != player->actor.world.rot.y) {
+    actor->world.rot.y = player->actor.world.rot.y;
+    if (player->linearVelocity == 0)
+    shouldChime = true;
+}
+AudioCompassData* data = (AudioCompassData*)actor->userData;
+if (data->linearVelocity == 0.0 && player->linearVelocity > 0.0) {
+    shouldChime = true;
 
-    }*/
+}
+data->linearVelocity = player->linearVelocity;
+if (data->framesUntilChime > 0)
+    data->framesUntilChime--;
+if (shouldChime && data->framesUntilChime <= 0) {
 
+    ActorAccessibility_PlaySoundForActor(actor, 0, actor->policy.sound, false);
+    data->framesUntilChime = 10;
+
+}*/
 }
 
 void accessible_stick_warning(AccessibleActor* actor) {
     Player* player = GET_PLAYER(actor->play);
     actor->world.pos = player->actor.world.pos;
     actor->world.pos.z -= 50;
-    if (fabs(player->unk_860 - 25) < 24.0 && player->heldItemId==0) {
+    if (fabs(player->unk_860 - 25) < 24.0 && player->heldItemId == 0) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_SY_WARNING_COUNT_N, false);
     }
 }
 
-    void ActorAccessibility_InitActors() {
+void ActorAccessibility_InitActors() {
     const int Npc_Frames = 35;
     ActorAccessibilityPolicy policy;
     ActorAccessibility_InitPolicy(&policy, "Rock", accessible_en_ishi, 0);
@@ -826,7 +787,7 @@ void accessible_stick_warning(AccessibleActor* actor) {
     policy.distance = 800;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_KANBAN, policy);
 
-    //ACTOR_EN_A_OBJ has exactly the same configuration.
+    // ACTOR_EN_A_OBJ has exactly the same configuration.
     ActorAccessibility_AddSupportedActor(ACTOR_EN_A_OBJ, policy);
     ActorAccessibility_InitPolicy(&policy, "Large Crate", NULL, NA_SE_EV_WOODBOX_BREAK);
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_KIBAKO2, policy);
@@ -867,7 +828,7 @@ void accessible_stick_warning(AccessibleActor* actor) {
     policy.distance = 2000;
     policy.pitch = 1.2;
     ActorAccessibility_AddSupportedActor(ACTOR_BG_YDAN_SP, policy);
-                                         
+
     ActorAccessibility_InitPolicy(&policy, "Shutter Door", accessible_door, 0);
     policy.n = 30;
     policy.distance = 1000;
@@ -881,7 +842,6 @@ void accessible_stick_warning(AccessibleActor* actor) {
     policy.n = 1;
     policy.ydist = 200;
     policy.pitch = 1.1;
-    
 
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_SWITCH, policy);
     ActorAccessibility_InitPolicy(&policy, "Ocarina Spots", NULL, NA_SE_EV_DIAMOND_SWITCH);
@@ -902,14 +862,14 @@ void accessible_stick_warning(AccessibleActor* actor) {
     policy.distance = 800;
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_SYOKUDAI, policy);
     ActorAccessibility_InitPolicy(&policy, "Deku Tree Moving Platform", accessible_hasi, 0);
-    //policy.volume = 1.3;
+    // policy.volume = 1.3;
     policy.distance = 1000;
     ActorAccessibility_AddSupportedActor(ACTOR_BG_YDAN_HASI, policy);
     ActorAccessibility_InitPolicy(&policy, "Pot", NULL, NA_SE_EV_POT_BROKEN);
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_TSUBO, policy);
-    //ActorAccessibility_InitPolicy(&policy, "Deku Tree Entrance", NULL, NA_SE_EV_FANTOM_WARP_L);
-    //policy.distance = 5000;
-    //ActorAccessibility_AddSupportedActor(ACTOR_BG_TREEMOUTH, policy);
+    // ActorAccessibility_InitPolicy(&policy, "Deku Tree Entrance", NULL, NA_SE_EV_FANTOM_WARP_L);
+    // policy.distance = 5000;
+    // ActorAccessibility_AddSupportedActor(ACTOR_BG_TREEMOUTH, policy);
     ActorAccessibility_InitPolicy(&policy, "Platform collapsable", NULL, NA_SE_EV_BLOCK_SHAKE);
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_LIFT, policy);
     ActorAccessibility_InitPolicy(&policy, "Ladder in Slingshot Room", accessible_maruta, 0);
@@ -964,29 +924,28 @@ void accessible_stick_warning(AccessibleActor* actor) {
     policy.distance = 2000;
     ActorAccessibility_AddSupportedActor(VA_CRAWLSPACE, policy);
     ActorAccessibility_InitPolicy(&policy, "Ladder/climable", accessible_climable, 0);
-    //policy.volume = 1.5;
+    // policy.volume = 1.5;
     policy.pitch = 1.3;
-    //policy.distance = 2000;
+    // policy.distance = 2000;
     ActorAccessibility_AddSupportedActor(VA_CLIMB, policy);
     ActorAccessibility_InitPolicy(&policy, "Door", NULL, NA_SE_OC_DOOR_OPEN);
     policy.n = 30;
     policy.pitch = 1.1;
     policy.distance = 1000;
     ActorAccessibility_AddSupportedActor(VA_DOOR, policy);
-    
+
     ActorAccessibility_InitPolicy(&policy, "Area Change", accessible_area_change, 0);
     policy.n = 60;
     policy.distance = 100000;
     ActorAccessibility_AddSupportedActor(VA_AREA_CHANGE, policy);
-    ActorAccessibility_InitPolicy(&policy, "marker", NULL,
-                                  NA_SE_EV_DIAMOND_SWITCH); 
+    ActorAccessibility_InitPolicy(&policy, "marker", NULL, NA_SE_EV_DIAMOND_SWITCH);
     policy.distance = 1000;
     policy.pitch = 1.7;
     ActorAccessibility_AddSupportedActor(VA_MARKER, policy);
-    //ActorAccessibility_InitPolicy(&policy, "Spike", NULL, NA_SE_EV_DIAMOND_SWITCH);
-    //policy.distance = 200;
-    //policy.pitch = 0.5;
-    //ActorAccessibility_AddSupportedActor(VA_SPIKE, policy);
+    // ActorAccessibility_InitPolicy(&policy, "Spike", NULL, NA_SE_EV_DIAMOND_SWITCH);
+    // policy.distance = 200;
+    // policy.pitch = 0.5;
+    // ActorAccessibility_AddSupportedActor(VA_SPIKE, policy);
     ActorAccessibility_InitPolicy(&policy, "Stick Burnout Warning", accessible_stick_warning, 0);
     policy.n = 1;
     policy.runsAlways = true;
@@ -1002,27 +961,27 @@ void accessible_stick_warning(AccessibleActor* actor) {
     policy.cleanupUserData = accessible_audio_compass_cleanup;
     policy.initUserData = accessible_audio_compass_init;
     policy.runsAlways = true;
-    policy.sound = NA_SE_EV_SHIP_BELL;//Setting this here so it's easy to change if we ever decide to change it.
+    policy.sound = NA_SE_EV_SHIP_BELL; // Setting this here so it's easy to change if we ever decide to change it.
     policy.pitch = 0.5;
-
 
     ActorAccessibility_AddSupportedActor(VA_AUDIO_COMPASS, policy);
 
     // Now query a list of virtual actors for a given
-                                                                // location (scene
-                                                       // and room
-                                           // number).
-    VirtualActorList* list = (VirtualActorList*)ActorAccessibility_GetVirtualActorList(EVERYWHERE, 0);//Global/ omnipresent.
+    // location (scene
+    // and room
+    // number).
+    VirtualActorList* list =
+        (VirtualActorList*)ActorAccessibility_GetVirtualActorList(EVERYWHERE, 0); // Global/ omnipresent.
 
     // Now place the actor.
     ActorAccessibility_AddVirtualActor(list, VA_GENERAL_HELPER, { { 0.0, 0.0, 0.0 }, { 0, 0, 0 } });
-    ActorAccessibility_AddVirtualActor(list, VA_AUDIO_COMPASS, { { 0.0, 0.0, 0.0}, { 0, 0, 0 } });
+    ActorAccessibility_AddVirtualActor(list, VA_AUDIO_COMPASS, { { 0.0, 0.0, 0.0 }, { 0, 0, 0 } });
     ActorAccessibility_AddVirtualActor(list, VA_STICK_WARNING, { { 0.0, 0.0, 0.0 }, { 0, 0, 0 } });
     list = ActorAccessibility_GetVirtualActorList(85, 0); // Kokiri Forest
     ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -784.0, 120.0, 1046.00 }, { 0, 14702, 0 } });
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2146.5, 1.0, -142.8 } });
-    //ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { -547.0, 60.0, -1036.00 }, { 0, 14702, 0 } });
-    //ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { -29.0, -80.0, 983.00 }, { 0, 14702, 0 } });
+    // ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { -547.0, 60.0, -1036.00 }, { 0, 14702, 0 } });
+    // ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { -29.0, -80.0, 983.00 }, { 0, 14702, 0 } });
     /*ActorAccessibility_AddVirtualActor(list, VA_DOOR, { { -448.0, 0.0, -528.00 }, { 0, 14702, 0 } });
     ActorAccessibility_AddVirtualActor(list, VA_DOOR, { { -1082.0, 120.0, 383.00 }, { 0, 14702, 0 } });
     ActorAccessibility_AddVirtualActor(list, VA_DOOR, { { -27.0, 100.0, 1117.00 }, { 0, 14702, 0 } });
@@ -1030,50 +989,52 @@ void accessible_stick_warning(AccessibleActor* actor) {
     ActorAccessibility_AddVirtualActor(list, VA_DOOR, { { 1046.0, 0.0, 549.00 }, { 0, 14702, 0 } });
     ActorAccessibility_AddVirtualActor(list, VA_DOOR, { { 848.0, 0.0, -323.00 }, { 0, 14702, 0 } });
     */
-    //ActorAccessibility_AddVirtualActor(list, VA_AREA_CHANGE,{ { -317.0, 373.2, -1542.00 }, {0, 14702, 0 }}, AREA_KORIRI);
- 
-    //ActorAccessibility_AddVirtualActor(list, VA_AREA_CHANGE, { { -1380.0, -67.0, -288.00 }, { 0, 14702, 0 } }, AREA_HYRULE_FIELD);
+    // ActorAccessibility_AddVirtualActor(list, VA_AREA_CHANGE,{ { -317.0, 373.2, -1542.00 }, {0, 14702, 0 }},
+    // AREA_KORIRI);
+
+    // ActorAccessibility_AddVirtualActor(list, VA_AREA_CHANGE, { { -1380.0, -67.0, -288.00 }, { 0, 14702, 0 } },
+    // AREA_HYRULE_FIELD);
 
     list = ActorAccessibility_GetVirtualActorList(85, 2); // Kokiri Forest Room with boulder and kokiri sword
     ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -788.0, 120.0, 1392.00 }, { 0, 14702, 0 } });
 
-    //list = ActorAccessibility_GetVirtualActorList(38, 0); //know-it-all house
-    //ActorAccessibility_AddVirtualActor(list, VA_DOOR, { { 12.0, 0.0, -131.00 }, { 0, 14702, 0 } });
+    // list = ActorAccessibility_GetVirtualActorList(38, 0); //know-it-all house
+    // ActorAccessibility_AddVirtualActor(list, VA_DOOR, { { 12.0, 0.0, -131.00 }, { 0, 14702, 0 } });
 
-    //list = ActorAccessibility_GetVirtualActorList(40, 0); // mido house
-    //ActorAccessibility_AddVirtualActor(list, VA_DOOR, { { -6.6, 0.0, -179.00 }, { 0, 14702, 0 } });
+    // list = ActorAccessibility_GetVirtualActorList(40, 0); // mido house
+    // ActorAccessibility_AddVirtualActor(list, VA_DOOR, { { -6.6, 0.0, -179.00 }, { 0, 14702, 0 } });
 
-    //list = ActorAccessibility_GetVirtualActorList(52, 0); // link's house
-    //ActorAccessibility_AddVirtualActor(list, VA_DOOR, { { 2.3, 0.0, -134.00 }, { 0, 14702, 0 } });
+    // list = ActorAccessibility_GetVirtualActorList(52, 0); // link's house
+    // ActorAccessibility_AddVirtualActor(list, VA_DOOR, { { 2.3, 0.0, -134.00 }, { 0, 14702, 0 } });
 
-    //list = ActorAccessibility_GetVirtualActorList(41, 0); // saria's house
-    //ActorAccessibility_AddVirtualActor(list, VA_DOOR, { { 1.7, 0.0, -188.00 }, { 0, 14702, 0 } });
+    // list = ActorAccessibility_GetVirtualActorList(41, 0); // saria's house
+    // ActorAccessibility_AddVirtualActor(list, VA_DOOR, { { 1.7, 0.0, -188.00 }, { 0, 14702, 0 } });
 
-    //list = ActorAccessibility_GetVirtualActorList(39, 0); // twins house
-    //ActorAccessibility_AddVirtualActor(list, VA_DOOR, { { 3.0, 0.0, -179.00 }, { 0, 14702, 0 } });
+    // list = ActorAccessibility_GetVirtualActorList(39, 0); // twins house
+    // ActorAccessibility_AddVirtualActor(list, VA_DOOR, { { 3.0, 0.0, -179.00 }, { 0, 14702, 0 } });
 
-    //list = ActorAccessibility_GetVirtualActorList(45, 0); // Kokiri Shop
-    //ActorAccessibility_AddVirtualActor(list, VA_DOOR, { { 0.0, 0.0, 150.00 }, { 0, 14702, 0 } });
+    // list = ActorAccessibility_GetVirtualActorList(45, 0); // Kokiri Shop
+    // ActorAccessibility_AddVirtualActor(list, VA_DOOR, { { 0.0, 0.0, 150.00 }, { 0, 14702, 0 } });
 
-    list = ActorAccessibility_GetVirtualActorList(0, 0);//deku tree main room
-    //ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { -226.7, 0, 197.0 } });
-    //ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { 118.6, 0, -286.6 } });
+    list = ActorAccessibility_GetVirtualActorList(0, 0); // deku tree main room
+    // ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { -226.7, 0, 197.0 } });
+    // ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { 118.6, 0, -286.6 } });
 
-    //ActorAccessibility_AddVirtualActor(list, VA_AREA_CHANGE, { {0, 0, 640} }, AREA_KORIRI);
-    
-    //ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { 287.4, 368.0, 347.0 } });
-    //ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { 419.4, 368.0, 173.6 } });
-    //ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { 323, 567.0, 314.6 } });
-    //ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { 127.5, 897.0, 433.6 } });
-    //ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { 440.9, 897.0, 101.6 } });
+    // ActorAccessibility_AddVirtualActor(list, VA_AREA_CHANGE, { {0, 0, 640} }, AREA_KORIRI);
+
+    // ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { 287.4, 368.0, 347.0 } });
+    // ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { 419.4, 368.0, 173.6 } });
+    // ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { 323, 567.0, 314.6 } });
+    // ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { 127.5, 897.0, 433.6 } });
+    // ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { 440.9, 897.0, 101.6 } });
 
     list = ActorAccessibility_GetVirtualActorList(0, 2); // deku tree slingshot room
-    //ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { -1159, 288.0, 1403.0 } });
-    //ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { -1179.6, 480.0, 1463.6 } });
-    //ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { -1398.9, 288.0, 1161.6 } });
+    // ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { -1159, 288.0, 1403.0 } });
+    // ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { -1179.6, 480.0, 1463.6 } });
+    // ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { -1398.9, 288.0, 1161.6 } });
 
     list = ActorAccessibility_GetVirtualActorList(0, 10); // deku tree compass room
-    //ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { -762, 733.0, 151.0 } });
+    // ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { -762, 733.0, 151.0 } });
     /*ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -935, 780.0, -113 } });
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -1031.0, 800.0, 109.7 } });
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -1184, 820.0, -103.4 } });*/
@@ -1084,14 +1045,14 @@ void accessible_stick_warning(AccessibleActor* actor) {
     list = ActorAccessibility_GetVirtualActorList(0, 3); // deku tree basement 1 lobby
     ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -901, -820.0, 0.5 } });
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -181.761, -905.0, -28.3 } });
-    //ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { 108, -919.5, 5.0 } });
+    // ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { 108, -919.5, 5.0 } });
 
     list = ActorAccessibility_GetVirtualActorList(0, 9); // deku tree b2 lobby
-    //ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { -639, -1912.5, 188.0 } });
-        //Install cues for walls, ledges etc.
-    list = ActorAccessibility_GetVirtualActorList(1, 2);//dodongo bombflower stairs room
+    // ActorAccessibility_AddVirtualActor(list, VA_CLIMB, { { -639, -1912.5, 188.0 } });
+    // Install cues for walls, ledges etc.
+    list = ActorAccessibility_GetVirtualActorList(1, 2); // dodongo bombflower stairs room
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -1958, 20, -1297 } });
-    list = ActorAccessibility_GetVirtualActorList(69, 0);//hyrule courtyard
+    list = ActorAccessibility_GetVirtualActorList(69, 0); // hyrule courtyard
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1734.0, 0.0, 140.514 } });
     AccessibleActor* temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1734.0, 0.0, 140.514 } });
     temp->policy.pitch = 0.3;
@@ -1117,5 +1078,4 @@ void accessible_stick_warning(AccessibleActor* actor) {
     temp->policy.pitch = 1.8;
     temp->policy.volume = 0.5;
     ActorAccessibility_InitCues();
-
 }

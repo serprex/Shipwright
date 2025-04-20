@@ -92,13 +92,13 @@ void SfxExtractor::renderOutput() {
 
 void SfxExtractor::setup() {
     try {
-
-        SpeechSynthesizer::Instance->Speak("Sfx extraction speedrun initiated. Please wait. This will take a few minutes.", GetLanguageCode());
+        SpeechSynthesizer::Instance->Speak(
+            "Sfx extraction speedrun initiated. Please wait. This will take a few minutes.", GetLanguageCode());
         // Kill the audio thread so we can take control.
         captureThreadState = CT_WAITING;
         OTRAudio_InstallSfxCaptureThread();
         // Make sure we're starting from a clean slate.
-        std::string sohAccessibilityPath = Ship::Context::GetPathRelativeToAppDirectory("accessibility.otr");
+        std::string sohAccessibilityPath = Ship::Context::GetPathRelativeToAppDirectory("accessibility.o2r");
         if (std::filesystem::exists(sohAccessibilityPath)) {
             currentStep = STEP_ERROR_OTR;
             return;
@@ -115,10 +115,11 @@ void SfxExtractor::setup() {
         for (int i = 1; i < 10; i++) {
             progressMilestones[i - 1] = sfxToRip.size() - ((int)ceil(sfxToRip.size() * (i / 10.0f)));
         }
-        archive = Ship::Context::GetInstance()->GetResourceManager()->GetArchiveManager()->AddArchive("accessibility.otr");
-
+        archive = std::make_shared<Ship::O2rArchive>("accessibility.o2r");
+        archive->Open();
     } catch (...) { currentStep = STEP_ERROR; }
 }
+
 void SfxExtractor::ripNextSfx() {
     {
         auto lock = OTRAudio_Lock();
@@ -143,7 +144,8 @@ void SfxExtractor::ripNextSfx() {
     sfxToRip.pop();
     startOfInput = 0;
     endOfInput = 0;
-    Audio_PlaySoundGeneral(currentSfx, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+    Audio_PlaySoundGeneral(currentSfx, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
+                           &gSfxDefaultReverb);
 
     {
         auto lock = OTRAudio_Lock();
@@ -161,17 +163,18 @@ void SfxExtractor::finished() {
     Audio_QueueSeqCmd(NA_BGM_TITLE);
 
     if (currentStep == STEP_ERROR || currentStep == STEP_ERROR_OTR) {
-        Audio_PlaySoundGeneral(NA_SE_SY_ERROR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
-        Audio_PlaySoundGeneral(NA_SE_EN_GANON_LAUGH, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+        Audio_PlaySoundGeneral(NA_SE_SY_ERROR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                               &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+        Audio_PlaySoundGeneral(NA_SE_EN_GANON_LAUGH, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                               &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
         std::stringstream ss;
         ss << "Sorry, we tried to extract the sound effects, but Ganondorf overruled us with an iron fist."
            << std::endl;
         if (currentStep == STEP_ERROR_OTR)
-            ss << "In all seriousness, please delete accessibility.otr and try again.";
+            ss << "In all seriousness, please delete accessibility.o2r and try again.";
         SpeechSynthesizer::Instance->Speak(ss.str().c_str(), GetLanguageCode());
     } else
         Audio_PlayFanfare(NA_BGM_ITEM_GET);
-
 }
 void SfxExtractor::maybeGiveProgressReport() {
     size_t ripsRemaining = sfxToRip.size() + 1;
@@ -188,7 +191,7 @@ SfxExtractor::SfxExtractor() {
     currentStep = STEP_SETUP;
 }
 
-    void SfxExtractor::frameCallback() {
+void SfxExtractor::frameCallback() {
     switch (currentStep) {
         case STEP_SETUP:
             setup();
@@ -223,9 +226,9 @@ void SfxExtractor::captureCallback() {
         AudioMgr_CreateNextAudioBuffer(mark, SFX_EXTRACTION_ONE_FRAME);
 
         if (!outputStarted && isAllZero(mark, SFX_EXTRACTION_ONE_FRAME * 2)) {
-waitTime++;
+            waitTime++;
             if (waitTime < 300)
-                continue;//Output is silent, allow more time for audio to begin.
+                continue;                     // Output is silent, allow more time for audio to begin.
             captureThreadState = CT_FINISHED; // Sound is unavailable, so skip over it and move on.
             return;
         }

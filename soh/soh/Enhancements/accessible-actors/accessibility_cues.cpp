@@ -13,27 +13,29 @@ f32 BgCheck_RaycastFloorImpl(PlayState* play, CollisionContext* colCtx, u16 xpFl
 #include "soh/Enhancements/speechsynthesizer/SpeechSynthesizer.h"
 #include "soh/Enhancements/tts/tts.h"
 }
-# define DETECTION_DISTANCE 500.0
+#define DETECTION_DISTANCE 500.0
 #define MIN_INCLINE_DISTANCE 5.0
 #define MIN_DECLINE_DISTANCE 5.0
 #define DEFAULT_PROBE_SPEED 5.5
 #define NOMINMAX
-static Player fakePlayer;//Used for wall height detection.
+static Player fakePlayer;                        // Used for wall height detection.
 static Vec3f D_80854798 = { 0.0f, 18.0f, 0.0f }; // From z_player.c.
 
 const char* GetLanguageCode();
 
-enum { DISCOVERED_NOTHING = 0,
-DISCOVERED_INCLINE,
-DISCOVERED_DECLINE,
-DISCOVERED_LEDGE,
-DISCOVERED_WALL,
-DISCOVERED_SPIKE,
-DISCOVERED_WATER,
-DISCOVERED_GROUND,
-DISCOVERED_LAVA,
+enum {
+    DISCOVERED_NOTHING = 0,
+    DISCOVERED_INCLINE,
+    DISCOVERED_DECLINE,
+    DISCOVERED_LEDGE,
+    DISCOVERED_WALL,
+    DISCOVERED_SPIKE,
+    DISCOVERED_WATER,
+    DISCOVERED_GROUND,
+    DISCOVERED_LAVA,
 };
-//Abstract class for terrain cue sound handling. Implementations should not allocate memory. These are always in-place constructed in static memory owned by the TerrainCueDirection object.
+// Abstract class for terrain cue sound handling. Implementations should not allocate memory. These are always in-place
+// constructed in static memory owned by the TerrainCueDirection object.
 class TerrainCueSound {
   protected:
     AccessibleActor* actor;
@@ -42,7 +44,7 @@ class TerrainCueSound {
     f32 currentPitch;
     f32 xzDistToPlayer;
     s16 currentSFX;
-    int restFrames;//Used to control how often sounds get played.
+    int restFrames; // Used to control how often sounds get played.
 
     bool shouldLoop;
     // Call to start playback.
@@ -50,7 +52,6 @@ class TerrainCueSound {
         ActorAccessibility_PlaySound(this, 0, currentSFX, shouldLoop);
         ActorAccessibility_SetSoundPos(this, 0, &terrainProjectedPos, xzDistToPlayer, actor->policy.distance);
         ActorAccessibility_SetSoundPitch(this, 0, currentPitch);
-
     }
 
     // Call when terrain is no longer present to stop playback.
@@ -58,12 +59,12 @@ class TerrainCueSound {
         ActorAccessibility_StopSound(this, 0);
     }
 
-    //Custom terrain sound behaviour.
+    // Custom terrain sound behaviour.
     virtual void run() = 0;
     // Update sound position and volume once per frame.
     virtual void updatePositions(Vec3f& pos) {
         terrainPos = pos;
-            Player* player = GET_PLAYER(actor->play);
+        Player* player = GET_PLAYER(actor->play);
 
         f32 w = 0.0f;
         // Set projectedPos.
@@ -73,7 +74,6 @@ class TerrainCueSound {
         xzDistToPlayer = Math_Vec3f_DistXZ(&terrainPos, &player->actor.world.pos);
         ActorAccessibility_SetSoundPos(this, 0, &terrainProjectedPos, xzDistToPlayer, actor->policy.distance);
         ActorAccessibility_SetSoundPitch(this, 0, currentPitch);
-
     }
 
   public:
@@ -84,16 +84,13 @@ class TerrainCueSound {
         restFrames = 0;
         xzDistToPlayer = 0;
         currentSFX = 0;
-
     }
     virtual ~TerrainCueSound() {
         stop();
-
     }
     void update(Vec3f& pos) {
         updatePositions(pos);
         run();
-
     }
 };
 class Incline : protected TerrainCueSound {
@@ -117,7 +114,7 @@ class Incline : protected TerrainCueSound {
 
             return;
         }
-        ActorAccessibility_SetSoundPitch(this, 0, 0.5 + (1-pitchModifier));
+        ActorAccessibility_SetSoundPitch(this, 0, 0.5 + (1 - pitchModifier));
         /*currentPitch += 0.1;
         if (currentPitch >= 2.0) {
             stop();
@@ -125,155 +122,141 @@ class Incline : protected TerrainCueSound {
             restFrames = 5;
         }*/
     }
-    void setPitchModifier(float modifier)
-    {
+    void setPitchModifier(float modifier) {
         pitchModifier = modifier;
-
     }
 };
 
 class Decline : protected TerrainCueSound {
     float pitchModifier;
 
-      public:
-        Decline(AccessibleActor* actor, Vec3f pos, float pitchModifier) : TerrainCueSound(actor, pos) {
-            restFrames = 0;
+  public:
+    Decline(AccessibleActor* actor, Vec3f pos, float pitchModifier) : TerrainCueSound(actor, pos) {
+        restFrames = 0;
+        currentPitch = 2.0;
+        currentSFX = NA_SE_PL_MAGIC_SOUL_FLASH;
+        this->pitchModifier = 0.0;
+
+        play();
+    }
+    virtual ~Decline() {
+    }
+    virtual void run() {
+        if (restFrames > 0) {
+            restFrames--;
+            if (restFrames == 0)
+                play();
+
+            return;
+        }
+        ActorAccessibility_SetSoundPitch(this, 0, 1.0 + pitchModifier);
+        /*currentPitch -= 0.1;
+        if (currentPitch < 0.5) {
+            stop();
             currentPitch = 2.0;
-            currentSFX = NA_SE_PL_MAGIC_SOUL_FLASH;
-            this->pitchModifier = 0.0;
+            restFrames = 5;
+        }*/
+    }
+    void setPitchModifier(float mod) {
+        pitchModifier = mod;
+    }
+};
+class Ledge : protected TerrainCueSound {
+    s8 savedType; // Distinguishes between a ledge link can fall from and one he can climb up.
+    Vec3s probeRot;
 
-            play();
-        }
-        virtual ~Decline() {
-        }
-        virtual void run() {
-            if (restFrames > 0) {
-                restFrames--;
-                if (restFrames == 0)
-                    play();
-
-                return;
-            }
-            ActorAccessibility_SetSoundPitch(this, 0, 1.0 + pitchModifier);
-            /*currentPitch -= 0.1;
-            if (currentPitch < 0.5) {
-                stop();
-                currentPitch = 2.0;
-                restFrames = 5;
-            }*/
-        }
-        void setPitchModifier(float mod)
-        {
-            pitchModifier = mod;
-
-        }
-        
-    };
-class Ledge :protected TerrainCueSound {
-        s8 savedType;//Distinguishes between a ledge link can fall from and one he can climb up.
-        Vec3s probeRot;
-
-      public:
+  public:
     Ledge(AccessibleActor* actor, Vec3f pos, Vec3s probeRot, s8 type = 0) : TerrainCueSound(actor, pos) {
-            if (type == 1)
-                currentPitch = 2.0;
-            savedType = type;
-            switch (type) { 
-                case 0: 
-                    currentSFX =  NA_SE_EV_WIND_TRAP;
-                    shouldLoop = 1;
-                    break;
-                    
-                case 1:
-                    currentSFX = NA_SE_EV_WOOD_BOUND;
-                    shouldLoop = 0;
-                    break;
-                case 2:
-                    currentSFX = NA_SE_PL_LAND_WATER0;
-                    shouldLoop = 0;
-                    break;
-                case 3:
-                    currentSFX = NA_SE_SY_WARNING_COUNT_N;
-                    shouldLoop = 0;
-                    break;
-            }
-            
-            this->probeRot = probeRot;
-        if (type == 0) {
-                if (probeRot.y == 0)
-                    currentPitch = 0.4;
-                else if (probeRot.y < 0)
-                    currentPitch = 0.2;
-                else
-                    currentPitch = 0.8;
+        if (type == 1)
+            currentPitch = 2.0;
+        savedType = type;
+        switch (type) {
+            case 0:
+                currentSFX = NA_SE_EV_WIND_TRAP;
+                shouldLoop = 1;
+                break;
+
+            case 1:
+                currentSFX = NA_SE_EV_WOOD_BOUND;
+                shouldLoop = 0;
+                break;
+            case 2:
+                currentSFX = NA_SE_PL_LAND_WATER0;
+                shouldLoop = 0;
+                break;
+            case 3:
+                currentSFX = NA_SE_SY_WARNING_COUNT_N;
+                shouldLoop = 0;
+                break;
         }
 
-            play();
+        this->probeRot = probeRot;
+        if (type == 0) {
+            if (probeRot.y == 0)
+                currentPitch = 0.4;
+            else if (probeRot.y < 0)
+                currentPitch = 0.2;
+            else
+                currentPitch = 0.8;
+        }
 
+        play();
     }
     virtual ~Ledge() {
-    
     }
     s8 type() {
         return savedType;
-
     }
     void run() {
-        if (savedType==0)
-                return;//Downward ledges play a looping sound and do not need ongoing maintenance.
-        if (restFrames == 0)
-        {
-                play();
-                restFrames = 10;
-                return;
-
+        if (savedType == 0)
+            return; // Downward ledges play a looping sound and do not need ongoing maintenance.
+        if (restFrames == 0) {
+            play();
+            restFrames = 10;
+            return;
         }
         restFrames--;
-
     }
-    };
-class Platform: protected TerrainCueSound {
+};
+class Platform : protected TerrainCueSound {
   public:
     Platform(AccessibleActor* actor, Vec3f pos) : TerrainCueSound(actor, pos) {
         currentPitch = 2.0;
-//actor->policy.volume = 1.5;
+        // actor->policy.volume = 1.5;
         currentSFX = NA_SE_IT_SHIELD_REFLECT_SW;
         shouldLoop = false;
-
     }
     virtual ~Platform() {
     }
-    void setActor(AccessibleActor* actor)
-    {
+    void setActor(AccessibleActor* actor) {
         this->actor = actor;
-
     }
-    void setPosition(Vec3f& pos)
-    {
+    void setPosition(Vec3f& pos) {
         updatePositions(pos);
     }
     void run() {
         if (restFrames == 0) {
-                play();
-                restFrames = 10;
-                return;
+            play();
+            restFrames = 10;
+            return;
         }
         restFrames--;
     }
 };
 
-class Wall: protected TerrainCueSound {
-        int frames;
+class Wall : protected TerrainCueSound {
+    int frames;
     Vec3s probeRot;
-        f32 targetPitch;
+    f32 targetPitch;
+
   public:
     Wall(AccessibleActor* actor, Vec3f pos, Vec3s rot) : TerrainCueSound(actor, pos) {
         probeRot = rot;
         currentPitch = 0.5;
 
-        targetPitch = (f32) probeRot.y / (16384.0f * 2.0f);
+        targetPitch = (f32)probeRot.y / (16384.0f * 2.0f);
         if (probeRot.y != 0 && targetPitch < -0.4)
-                targetPitch = -0.4;
+            targetPitch = -0.4;
 
         currentSFX = NA_SE_IT_SWORD_CHARGE;
 
@@ -288,18 +271,18 @@ class Wall: protected TerrainCueSound {
         frames++;
 
         if (frames == 20) {
-                frames = 0;
-                play();
-                    ActorAccessibility_SeekSound(this, 0, 44100 * 2);
-       }
-            f32 pitchModifier = 0.0;
+            frames = 0;
+            play();
+            ActorAccessibility_SeekSound(this, 0, 44100 * 2);
+        }
+        f32 pitchModifier = 0.0;
 
-            if (targetPitch < 0)
-                    pitchModifier = LERP(2.5, 0.5 + targetPitch, (f32)frames / 20.0f);
-            else if (targetPitch > 0)
-                    pitchModifier = LERP(0.1, (0.5 + targetPitch), (f32)frames / 20.0f);
+        if (targetPitch < 0)
+            pitchModifier = LERP(2.5, 0.5 + targetPitch, (f32)frames / 20.0f);
+        else if (targetPitch > 0)
+            pitchModifier = LERP(0.1, (0.5 + targetPitch), (f32)frames / 20.0f);
 
-            ActorAccessibility_SetSoundPitch(this, 0, pitchModifier);
+        ActorAccessibility_SetSoundPitch(this, 0, pitchModifier);
     }
 };
 class Spike : protected TerrainCueSound {
@@ -341,6 +324,7 @@ class Water : protected TerrainCueSound {
 
 class Ground : protected TerrainCueSound {
     float pitchModifier;
+
   public:
     Ground(AccessibleActor* actor, Vec3f pos, float pitchModifier) : TerrainCueSound(actor, pos) {
         currentPitch = 1.0;
@@ -356,7 +340,7 @@ class Ground : protected TerrainCueSound {
             restFrames = 10;
             return;
         }
-        ActorAccessibility_SetSoundPitch(this, 0, 1.0 + (2*pitchModifier));
+        ActorAccessibility_SetSoundPitch(this, 0, 1.0 + (2 * pitchModifier));
         restFrames--;
     }
     void setPitchModifier(float modifier) {
@@ -368,7 +352,7 @@ class Lava : protected TerrainCueSound {
   public:
     Lava(AccessibleActor* actor, Vec3f pos) : TerrainCueSound(actor, pos) {
         currentPitch = 1.0;
-        currentSFX = NA_SE_SY_WARNING_COUNT_N; //change?
+        currentSFX = NA_SE_SY_WARNING_COUNT_N; // change?
         play();
     }
     virtual ~Lava() {
@@ -383,9 +367,10 @@ class Lava : protected TerrainCueSound {
     }
 };
 
-    class TerrainCueDirection {
+class TerrainCueDirection {
     AccessibleActor* actor;
-    int startingBodyPart;//Decides where the probe starts from. Probes going out to the left or right of the player start from the shoulders.
+    int startingBodyPart; // Decides where the probe starts from. Probes going out to the left or right of the player
+                          // start from the shoulders.
     Vec3f pos;
     Vec3f prevPos;
     Vec3s relRot; // Relative angle.
@@ -464,7 +449,7 @@ class Lava : protected TerrainCueSound {
         destroyCurrentSound();
 
         new (&decline) Decline(actor, pos, pitchModifier);
-        
+
         currentSound = (TerrainCueSound*)&decline;
         terrainDiscovered = DISCOVERED_DECLINE;
     }
@@ -484,10 +469,9 @@ class Lava : protected TerrainCueSound {
 
     void discoverWall(Vec3f pos) {
         Player* player = GET_PLAYER(actor->play);
-        if (player->stateFlags1 & PLAYER_STATE1_FIRST_PERSON)
-        {
+        if (player->stateFlags1 & PLAYER_STATE1_FIRST_PERSON) {
             if (terrainDiscovered == DISCOVERED_WALL)
-                    destroyCurrentSound();
+                destroyCurrentSound();
             return;
         }
         if (terrainDiscovered == DISCOVERED_WALL)
@@ -644,7 +628,7 @@ class Lava : protected TerrainCueSound {
         velocity.x += pushedSpeed * Math_SinS(pushedYaw);
         velocity.z += pushedSpeed * Math_CosS(pushedYaw);
     }
-    
+
     bool checkPerpendicularWall(Vec3f_ ppos, Vec3s_ ogRot) {
         pos = ppos;
         Player* player = GET_PLAYER(actor->play);
@@ -657,7 +641,6 @@ class Lava : protected TerrainCueSound {
         move(false);
         move(false);
         move(false);
-
 
         rot = ogRot;
         rot.y += 16384;
@@ -688,7 +671,7 @@ class Lava : protected TerrainCueSound {
             return true;
         }
         wallPoly = checkWall(pos, prevPos, wallPos);
-        if (wallPoly == NULL || rdist(pos)>200) {
+        if (wallPoly == NULL || rdist(pos) > 200) {
             return false;
         }
 
@@ -706,8 +689,8 @@ class Lava : protected TerrainCueSound {
             platform.run();
             return true;
         }
-            return false;
-        }
+        return false;
+    }
     // Check if we're being pushed away from our intended destination.
     bool isPushedAway() {
         f32 dist = Math_Vec3f_DistXZ(&velocity, &expectedVelocity);
@@ -793,9 +776,9 @@ class Lava : protected TerrainCueSound {
             return true;
         }
         pos.x += velocity.x;
-        
+
         pos.z += velocity.z;
-        
+
         if (gravity == 1) {
             pos.y += velocity.y;
             f32 floorHeight = 0;
@@ -806,7 +789,6 @@ class Lava : protected TerrainCueSound {
             if (!BgCheck_PosInStaticBoundingBox(&actor->play->colCtx, &pos))
                 return false; // Out of bounds.
         }
-        
 
         return true;
     }
@@ -845,15 +827,15 @@ class Lava : protected TerrainCueSound {
             return 0;
         }
         s8 floorparam = func_80041D4C(colCtx, floorpoly, BG_ACTOR_MAX);
-        if (floorparam == 2 || floorparam ==3) {
-            
+        if (floorparam == 2 || floorparam == 3) {
+
             return 1;
         } else {
 
             return 0;
         }
     }
-    
+
     void scan() {
 
         Player* player = GET_PLAYER(actor->play);
@@ -881,13 +863,12 @@ class Lava : protected TerrainCueSound {
         rot = ActorAccessibility_ComputeRelativeAngle(&player->actor.world.rot, &relRot);
         pushedSpeed = 0.0;
         pushedYaw = 0;
-        probeSpeed = DEFAULT_PROBE_SPEED;//Experiment with this.
+        probeSpeed = DEFAULT_PROBE_SPEED; // Experiment with this.
         // Draw a line from Link's position to the max detection distance based on the configured relative angle.
         if (!trackingModeStarted) {
             pos = player->actor.world.pos;
-//If a starting body part has been specified, then set the probe's initial X and Z position only.
-            if (startingBodyPart != PLAYER_BODYPART_MAX)
-            {
+            // If a starting body part has been specified, then set the probe's initial X and Z position only.
+            if (startingBodyPart != PLAYER_BODYPART_MAX) {
                 pos.x = player->bodyPartsPos[startingBodyPart].x;
                 pos.z = player->bodyPartsPos[startingBodyPart].y;
             }
@@ -901,7 +882,8 @@ class Lava : protected TerrainCueSound {
             distToTravel = 1.0;
         Vec3f collisionResult;
         s32 bgId = 0;
-//Don't be fooled: link being in the air does not mean we've found a dropoff. I mean... it could mean that, but it's a little too late to do anything about it at that point anyway.
+        // Don't be fooled: link being in the air does not mean we've found a dropoff. I mean... it could mean that, but
+        // it's a little too late to do anything about it at that point anyway.
 
         if (player->stateFlags3 & PLAYER_STATE3_MIDAIR || player->stateFlags2 & PLAYER_STATE2_HOPPING) {
             f32 floorHeight = 0;
@@ -918,7 +900,7 @@ class Lava : protected TerrainCueSound {
             setVelocity();
             f32 step = fabs(velocity.x + velocity.z);
             distToTravel -= (step + fabs(pos.y - pos.y));
-            //checks if link is in the water, needs different logic
+            // checks if link is in the water, needs different logic
             if (player->stateFlags1 & PLAYER_STATE1_IN_WATER) {
                 pos.y = player->actor.prevPos.y;
                 if (!move()) {
@@ -932,9 +914,9 @@ class Lava : protected TerrainCueSound {
                 // is there an incline ahead that leads out of the water
                 if (pos.y > player->actor.world.pos.y) {
                     discoverIncline(pos);
-                    break; 
+                    break;
                 }
-                //keeps probe at links feet
+                // keeps probe at links feet
                 if (pos.y < player->actor.world.pos.y) {
                     pos.y = player->actor.world.pos.y;
                 }
@@ -945,21 +927,20 @@ class Lava : protected TerrainCueSound {
                     continue;
                 }
 
-                //sets probe to be at surface of water
+                // sets probe to be at surface of water
                 pos.y += player->actor.yDistToWater;
                 prevPos.y += player->actor.yDistToWater;
 
-                //checks for new wall poly
+                // checks for new wall poly
                 wallPoly = checkWall(pos, prevPos, wallPos);
 
-               
-                //if not climable and exists then treats it as a wall
+                // if not climable and exists then treats it as a wall
                 if (wallPoly != NULL) {
                     discoverWall(pos);
                     break;
                 }
-                
-                //checks for ledges
+
+                // checks for ledges
                 pos.y = player->actor.world.pos.y - 10.0;
                 f32 ogStep = step;
                 step = 1.0;
@@ -997,7 +978,8 @@ class Lava : protected TerrainCueSound {
                 rot.y = ogRot.y;
                 pos = ogPos;
 
-                if (clockwiseTest && counterclockwiseTest && (forwardTest || wallHeight < 44.0) && wallHeight < 48 && //probably have to change for adult
+                if (clockwiseTest && counterclockwiseTest && (forwardTest || wallHeight < 44.0) &&
+                    wallHeight < 48 && // probably have to change for adult
                     (fabs(clockwiseY - counterclockwiseY) < 2.0 ||
                      fabs(clockwiseY - counterclockwiseY) > wallHeight - 5.0)) {
                     discoverLedge(pos, true);
@@ -1006,54 +988,54 @@ class Lava : protected TerrainCueSound {
                     discoverWall(pos);
                     break;
                 }
-            //link is climbing
+                // link is climbing
             } else if (player->stateFlags1 == PLAYER_STATE1_CLIMBING_LADDER) {
-                f32 playerHeight = BgCheck_EntityRaycastFloor3(&actor->play->colCtx, &floorPoly, &floorBgId, &player->actor.world.pos);
+                f32 playerHeight =
+                    BgCheck_EntityRaycastFloor3(&actor->play->colCtx, &floorPoly, &floorBgId, &player->actor.world.pos);
                 f32 floorHeight;
                 s8 moveMethod = false;
                 Vec3s_ ogRot = rot;
                 setVelocity();
-                
+
                 if (ogRot.y == player->actor.world.rot.y) {
-                    //sets forward probe to look above link
+                    // sets forward probe to look above link
                     moveMethod = 2;
-                    
                 }
-                player->actor.world.rot.y = player->actor.shape.rot.y;//corrects links rotation
-                
+                player->actor.world.rot.y = player->actor.shape.rot.y; // corrects links rotation
+
                 if (!move(moveMethod)) {
                     destroyCurrentSound();
 
                     break; // Probe is out of bounds.
                 }
-                //this following bit checks the wall poly and for now just checks if it has a drop off below it
-                //or if it is the forward probe, checks if the vine ends otherwise it continues
+                // this following bit checks the wall poly and for now just checks if it has a drop off below it
+                // or if it is the forward probe, checks if the vine ends otherwise it continues
                 Vec3f wallPos;
                 CollisionPoly* wallPoly = checkWall(pos, prevPos, wallPos);
-                
+
                 if (wallPoly != NULL) {
-                    
-                        if ((moveMethod == 2) && (func_80041DB8(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 8 &&
-                            func_80041DB8(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 3)) {
-                        
-                            if (fabs(pos.y - player->actor.world.pos.y) < 100) {
-                                discoverLedge(pos, false);
-                                
-                                break;
-                            } else {
-                                destroyCurrentSound();
-                                break;
-                            }
-                         
-                    } else {                        
-                            if (moveMethod != 2 && checkVinePlatform(pos, ogRot, playerHeight)){
+
+                    if ((moveMethod == 2) && (func_80041DB8(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 8 &&
+                                              func_80041DB8(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 3)) {
+
+                        if (fabs(pos.y - player->actor.world.pos.y) < 100) {
+                            discoverLedge(pos, false);
+
+                            break;
+                        } else {
+                            destroyCurrentSound();
+                            break;
+                        }
+
+                    } else {
+                        if (moveMethod != 2 && checkVinePlatform(pos, ogRot, playerHeight)) {
                             break;
                         }
                         continue;
                     }
                 }
-                //this means that either the wall poly found above is not a vine or is NULL
-                //the next three secections check infront and behind the probe for wall polys
+                // this means that either the wall poly found above is not a vine or is NULL
+                // the next three secections check infront and behind the probe for wall polys
                 //
                 if (moveMethod != 2) {
                     prevPos = pos;
@@ -1127,7 +1109,7 @@ class Lava : protected TerrainCueSound {
                         }
                     }
                 }
-                //this means no wall polys were found, first we check for ceilng poly
+                // this means no wall polys were found, first we check for ceilng poly
                 if (moveMethod == 2) {
                     rot.y = player->actor.shape.rot.y;
                     rot.y += 16384;
@@ -1139,18 +1121,17 @@ class Lava : protected TerrainCueSound {
                         break; // Probe is out of bounds.
                     }
                     prevPos = pos;
-                    //pos.y += 200;
+                    // pos.y += 200;
                     f32 checkHeight = fabs(player->actor.world.pos.y - pos.y);
                     f32 ceilingPos;
                     if (BgCheck_AnyCheckCeiling(&actor->play->colCtx, &ceilingPos, &player->actor.world.pos,
                                                 checkHeight + 30)) {
-                        
+
                         if (checkHeight < 100) {
                             pos.y = ceilingPos;
                             discoverWall(pos);
                             break;
                         }
-                        
                     }
                     destroyCurrentSound();
                     break; /*else {
@@ -1158,8 +1139,7 @@ class Lava : protected TerrainCueSound {
                             discoverLedge(pos, true);
                             break;
                         }
-                    }*///not needed?
-
+                    }*/    // not needed?
                 }
                 if (moveMethod != 2 && checkPerpendicularWall(pos, ogRot)) {
                     discoverWall(pos);
@@ -1167,9 +1147,9 @@ class Lava : protected TerrainCueSound {
                 }
                 discoverLedge(pos, false);
                 break;
-                
+
             }
-            
+
             else if (checkForLava(player->actor.world.pos)) {
                 if (!move()) {
                     destroyCurrentSound();
@@ -1179,19 +1159,17 @@ class Lava : protected TerrainCueSound {
                     discoverGround(pos);
                     break;
                 }
-                    
-            }
 
+            }
 
             // link is on land
             else {
-                
+
                 if (!move()) {
                     destroyCurrentSound();
                     break; // Probe is out of bounds.
                 }
 
-                
                 if (isPushedAway() && player->stateFlags1 != PLAYER_STATE1_CLIMBING_LADDER) {
                     // Call this a wall for now.
                     discoverWall(pos);
@@ -1203,12 +1181,11 @@ class Lava : protected TerrainCueSound {
                     // This is a fall.
 
                     bool foundLiquid = false;
-                    if (((pos.y - player->actor.prevPos.y) < player->actor.yDistToWater-30) &&
+                    if (((pos.y - player->actor.prevPos.y) < player->actor.yDistToWater - 30) &&
                         (player->actor.yDistToWater < 0)) {
                         discoverLedge(pos, 2);
                         foundLiquid = true;
-                    }
-                    else if (rdist(pos) < 100.0) {
+                    } else if (rdist(pos) < 100.0) {
                         s8 i = 50;
                         Vec3f_ oldPos = pos;
                         while (i > 0) {
@@ -1225,13 +1202,13 @@ class Lava : protected TerrainCueSound {
                     if (!foundLiquid) {
                         discoverLedge(pos);
                     }
-                        
+
                     testForPlatform();
 
                     break;
                 }
 
-                //checks for water
+                // checks for water
                 if (((pos.y - player->actor.prevPos.y) < player->actor.yDistToWater) &&
                     (player->actor.yDistToWater < 0 && player->stateFlags1 != PLAYER_STATE1_CLIMBING_LADDER)) {
                     discoverWater(pos);
@@ -1243,7 +1220,6 @@ class Lava : protected TerrainCueSound {
                     discoverLedge(pos);
                 }
 
-                
                 if (pos.y > prevPos.y && fabs(pos.y - prevPos.y) < 20 && fabs(pos.y - prevPos.y) > 1.2 &&
                     player->stateFlags1 != PLAYER_STATE1_CLIMBING_LADDER) {
                     // This is an incline.
@@ -1259,7 +1235,7 @@ class Lava : protected TerrainCueSound {
                             player->stateFlags1 != PLAYER_STATE1_CLIMBING_LADDER)) {
                         prevPos = pos;
                         if (!move()) {
-                            //destroyCurrentSound();
+                            // destroyCurrentSound();
                             break; // Probe is out of bounds.
                         }
                     }
@@ -1283,7 +1259,7 @@ class Lava : protected TerrainCueSound {
                             player->stateFlags1 != PLAYER_STATE1_CLIMBING_LADDER)) {
                         prevPos = pos;
                         if (!move()) {
-                            //destroyCurrentSound();
+                            // destroyCurrentSound();
                             break; // Probe is out of bounds.
                         }
                     }
@@ -1313,14 +1289,14 @@ class Lava : protected TerrainCueSound {
                     continue;
                 // Is this a spiked wall?
                 Vec3f polyVerts[3];
-                
+
                 CollisionPoly_GetVertices(wallPoly, colCtx->colHeader->vtxList, polyVerts);
                 if (SurfaceType_IsWallDamage(&actor->play->colCtx, wallPoly, BGCHECK_SCENE)) {
                     discoverSpike(pos);
                     break;
                 }
                 // is this a ladder or vine wall?
-                
+
                 wallHeight = findWallHeight(pos, wallPoly);
                 if (wallHeight <= player->ageProperties->unk_0C &&
                     player->stateFlags1 != PLAYER_STATE1_CLIMBING_LADDER) {
@@ -1333,8 +1309,6 @@ class Lava : protected TerrainCueSound {
 
                     break;
                 }
-                
-                
 
                 else {
                     continue;
@@ -1344,25 +1318,20 @@ class Lava : protected TerrainCueSound {
                     discoverWall(pos);
                     break;
                 }
-
-                
             }
         }
         if (trackingMode)
-player->actor.world.pos = pos;
-            //Emit sound from the discovered position.
-if (currentSound)
+            player->actor.world.pos = pos;
+        // Emit sound from the discovered position.
+        if (currentSound)
             currentSound->update(pos);
-if (currentSound && trackingMode) {
-disabled = true;
-trackingMode = false;
-trackingModeStarted = false;
-}
-
-
+        if (currentSound && trackingMode) {
+            disabled = true;
+            trackingMode = false;
+            trackingModeStarted = false;
+        }
     }
-    void testForPlatform()
-    {
+    void testForPlatform() {
         Player* player = GET_PLAYER(actor->play);
 
         f32 ledgeCheckDistance = 200.0;
@@ -1374,70 +1343,65 @@ trackingModeStarted = false;
             f32 step = fabs(velocity.x + velocity.z);
 
             if (!move()) {
-               break; // Probe is out of bounds.
+                break; // Probe is out of bounds.
             }
             ledgeCheckDistance -= (step + fabs(pos.y - pos.y));
 
             if ((fabs(pos.y - player->actor.prevPos.y) <= 70.00) && fabs(pos.y - prevPos.y) >= 20.0) {
-               platform.setPosition(pos);
-               platform.run();
-               break;
+                platform.setPosition(pos);
+                platform.run();
+                break;
             }
         }
         pos = startingPos;
     }
-    };
+};
 
 typedef struct {
     TerrainCueDirection directions[3]; // Directly ahead of Link, 90 degrees to his left and 90 degrees to his right.
-    int previousAction; //previous action icon state
-}TerrainCueState;
+    int previousAction;                // previous action icon state
+} TerrainCueState;
 
-    //Callback for initialization of terrain cue state.
+// Callback for initialization of terrain cue state.
 bool ActorAccessibility_InitTerrainCueState(AccessibleActor* actor) {
-    TerrainCueState* state = (TerrainCueState*) malloc(sizeof(TerrainCueState));
+    TerrainCueState* state = (TerrainCueState*)malloc(sizeof(TerrainCueState));
     if (state == NULL)
         return false;
     state->directions[0].init(actor, { 0, 0, 0 });
-    state->directions[1].init(actor, { 0, 16384, 0 });//, PLAYER_BODYPART_L_SHOULDER);
-    state->directions[2].init(actor, { 0, -16384, 0 });//, PLAYER_BODYPART_R_SHOULDER);
+    state->directions[1].init(actor, { 0, 16384, 0 });  //, PLAYER_BODYPART_L_SHOULDER);
+    state->directions[2].init(actor, { 0, -16384, 0 }); //, PLAYER_BODYPART_R_SHOULDER);
     state->previousAction = DO_ACTION_NONE;
 
     actor->userData = state;
     return true;
-
-
 }
 void ActorAccessibility_CleanupTerrainCueState(AccessibleActor* actor) {
     free(actor->userData);
     actor->userData = NULL;
-
 }
-//Computes a relative angle based on Link's (or some other actor's) current angle.
+// Computes a relative angle based on Link's (or some other actor's) current angle.
 Vec3s ActorAccessibility_ComputeRelativeAngle(Vec3s* origin, Vec3s* offset) {
     Vec3s rot = *origin;
     rot.x += offset->x;
     rot.y += offset->y;
     rot.z += offset->z;
     return rot;
-
 }
 
-
-void accessible_va_terrain_cue(AccessibleActor * actor) {
+void accessible_va_terrain_cue(AccessibleActor* actor) {
     TerrainCueState* state = (TerrainCueState*)actor->userData;
 
     for (int i = 0; i < 3; i++)
-            state->directions[i].scan();
+        state->directions[i].scan();
 
     int currentState = actor->play->interfaceCtx.unk_1F0;
     Player* player = GET_PLAYER(actor->play);
 
     if (state->previousAction != currentState) {
-        //Audio_PlaySoundGeneral(NA_SE_EV_DIAMOND_SWITCH, &player->actor.world.pos, 4, &actor->basePitch,
-        //                       &actor->baseVolume,
-        //                       &actor->currentReverb);
-        switch (currentState) { 
+        // Audio_PlaySoundGeneral(NA_SE_EV_DIAMOND_SWITCH, &player->actor.world.pos, 4, &actor->basePitch,
+        //                        &actor->baseVolume,
+        //                        &actor->currentReverb);
+        switch (currentState) {
             case DO_ACTION_CHECK:
                 SpeechSynthesizer::Instance->Speak("Check", GetLanguageCode());
                 break;
@@ -1457,112 +1421,102 @@ void accessible_va_terrain_cue(AccessibleActor * actor) {
                 SpeechSynthesizer::Instance->Speak("Speak", GetLanguageCode());
                 break;
             case DO_ACTION_STOP:
-                SpeechSynthesizer::Instance->Speak("Stop", GetLanguageCode()); // possibly disable? not sure what it does
+                SpeechSynthesizer::Instance->Speak("Stop",
+                                                   GetLanguageCode()); // possibly disable? not sure what it does
                 break;
             default:
                 SpeechSynthesizer::Instance->Speak(" ", GetLanguageCode());
                 break;
         }
 
-        
-        
         state->previousAction = currentState;
     } else {
         state->previousAction = currentState;
     }
 }
 
-
-    
-        /*
-         void accessible_va_wall_cue(AccessibleActor* actor) {
-    Player* player = GET_PLAYER(actor->play);
+/*
+ void accessible_va_wall_cue(AccessibleActor* actor) {
+Player* player = GET_PLAYER(actor->play);
 //The virtual cue actors travel in lines relative to Link's angle.
 Vec3s rot = computeRelativeAngle(player->actor.world.rot, actor->world.rot);
-    Vec3f velocity;
-    velocity.x = Math_SinS(rot.y);
-    velocity.z = Math_CosS(rot.y);
+Vec3f velocity;
+velocity.x = Math_SinS(rot.y);
+velocity.z = Math_CosS(rot.y);
 //Draw a line from Link's position to the max detection distance based on the configured relative angle.
-    Vec3f pos = player->actor.world.pos;
-    Vec3f headPos = player->bodyPartsPos[PLAYER_BODYPART_TORSO];
-    f32 headDistY = headPos.y - pos.y;
+Vec3f pos = player->actor.world.pos;
+Vec3f headPos = player->bodyPartsPos[PLAYER_BODYPART_TORSO];
+f32 headDistY = headPos.y - pos.y;
 
-    f32 step = fabs(velocity.x + velocity.z);
-    f32 distToTravel = detectionDistance;
-    CollisionPoly* poly = NULL;
-    Vec3f collisionResult;
-    s32 bgId = 0;
-    while (true) {
-        Vec3f prevPos = pos;
-        Vec3f prevHeadPos = headPos;
+f32 step = fabs(velocity.x + velocity.z);
+f32 distToTravel = detectionDistance;
+CollisionPoly* poly = NULL;
+Vec3f collisionResult;
+s32 bgId = 0;
+while (true) {
+Vec3f prevPos = pos;
+Vec3f prevHeadPos = headPos;
 
-        pos.x += velocity.x;
-        pos.y += 1;
-        pos.z += velocity.z;
-        headPos.x += velocity.x;
-        headPos.y += 1;
-        headPos.z += velocity.z;
+pos.x += velocity.x;
+pos.y += 1;
+pos.z += velocity.z;
+headPos.x += velocity.x;
+headPos.y += 1;
+headPos.z += velocity.z;
 
-        distToTravel -= step;
-        f32 floorHeight = 0;
-        CollisionPoly tempPoly;
-        floorHeight = BgCheck_AnyRaycastFloor1(&actor->play->colCtx, &tempPoly, &pos);
-            pos.y = floorHeight;
-        headPos.y = floorHeight + headDistY;
+distToTravel -= step;
+f32 floorHeight = 0;
+CollisionPoly tempPoly;
+floorHeight = BgCheck_AnyRaycastFloor1(&actor->play->colCtx, &tempPoly, &pos);
+    pos.y = floorHeight;
+headPos.y = floorHeight + headDistY;
 
-        if (BgCheck_AnyLineTest3(&actor->play->colCtx, &prevPos, &pos, &collisionResult, &poly, 1, 0, 0, 0, &bgId)) {
-                s16 wallYaw = Math_Atan2S(poly->normal.z, poly->normal.x);
-            CollisionPoly* headPoly = NULL;
+if (BgCheck_AnyLineTest3(&actor->play->colCtx, &prevPos, &pos, &collisionResult, &poly, 1, 0, 0, 0, &bgId)) {
+        s16 wallYaw = Math_Atan2S(poly->normal.z, poly->normal.x);
+    CollisionPoly* headPoly = NULL;
 
-                BgCheck_AnyLineTest3(&actor->play->colCtx, &prevHeadPos, &headPos, &collisionResult, &headPoly, 1, 0, 0, 0,
-                                 &bgId);
-            if (headPoly != NULL)
-                break;
+        BgCheck_AnyLineTest3(&actor->play->colCtx, &prevHeadPos, &headPos, &collisionResult, &headPoly, 1, 0, 0, 0,
+                         &bgId);
+    if (headPoly != NULL)
+        break;
 
-            poly = NULL;
+    poly = NULL;
 
-        }
-        
-        if (distToTravel <= 0)
-            break;
+}
 
-    }
-    if (poly == NULL) {
-        //Audio_StopSfxByPosAndId(&actor->world.pos, wallCueSound);
-        return; // Nothing found.
+if (distToTravel <= 0)
+    break;
 
-    }
-    // Move the virtual actor to the position of the discovered wall so we can use preexisting sound
-                   // logic.
-    actor->world.pos = collisionResult;
-     framesUntilCue--;
-    if (framesUntilCue < 1) {
-        framesUntilCue = 10;
-        ActorAccessibility_PlaySpecialSound(actor, wallCueSound);
+}
+if (poly == NULL) {
+//Audio_StopSfxByPosAndId(&actor->world.pos, wallCueSound);
+return; // Nothing found.
 
-    }
+}
+// Move the virtual actor to the position of the discovered wall so we can use preexisting sound
+           // logic.
+actor->world.pos = collisionResult;
+framesUntilCue--;
+if (framesUntilCue < 1) {
+framesUntilCue = 10;
+ActorAccessibility_PlaySpecialSound(actor, wallCueSound);
 
-    }
-    */
+}
 
-
-
-
-
+}
+*/
 
 void ActorAccessibility_InitCues() {
 
-ActorAccessibilityPolicy policy;
+    ActorAccessibilityPolicy policy;
     ActorAccessibility_InitPolicy(&policy, "Terrain cue helper", accessible_va_terrain_cue, 0);
-        policy.n = 1;
-        policy.runsAlways = true;
-        policy.distance = 500;
-        policy.initUserData = ActorAccessibility_InitTerrainCueState;
-        policy.cleanupUserData = ActorAccessibility_CleanupTerrainCueState;
+    policy.n = 1;
+    policy.runsAlways = true;
+    policy.distance = 500;
+    policy.initUserData = ActorAccessibility_InitTerrainCueState;
+    policy.cleanupUserData = ActorAccessibility_CleanupTerrainCueState;
 
-        ActorAccessibility_AddSupportedActor(VA_TERRAIN_CUE, policy);
-        VirtualActorList* list = ActorAccessibility_GetVirtualActorList(EVERYWHERE, 0);
-        ActorAccessibility_AddVirtualActor(list, VA_TERRAIN_CUE, { { 0, 0, 0 }, { 0, 0, 0 } });
-
-    
-    }
+    ActorAccessibility_AddSupportedActor(VA_TERRAIN_CUE, policy);
+    VirtualActorList* list = ActorAccessibility_GetVirtualActorList(EVERYWHERE, 0);
+    ActorAccessibility_AddVirtualActor(list, VA_TERRAIN_CUE, { { 0, 0, 0 }, { 0, 0, 0 } });
+}

@@ -1,6 +1,7 @@
 #pragma once
-//A big nasty array containing every SFX ID in the game.
-//All of the "DUMMY's" and "YOBI's" have been removed as they produce duplicate sounds at best, and cause errors or even crashes at worst.
+// A big nasty array containing every SFX ID in the game.
+// All of the "DUMMY's" and "YOBI's" have been removed as they produce duplicate sounds at best, and cause errors or
+// even crashes at worst.
 
 const s16 sfxTable[1207] = {
     NA_SE_PL_WALK_GROUND,

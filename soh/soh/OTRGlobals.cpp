@@ -274,7 +274,7 @@ OTRGlobals::OTRGlobals() {
     if (std::filesystem::exists(ootPath)) {
         OTRFiles.push_back(ootPath);
     }
-    std::string sohOtrPath = Ship::Context::GetPathRelativeToAppBundle("soh.otr");
+    std::string sohOtrPath = Ship::Context::GetPathRelativeToAppBundle("soh.o2r");
     if (std::filesystem::exists(sohOtrPath)) {
         OTRFiles.push_back(sohOtrPath);
     }

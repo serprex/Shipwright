@@ -4,7 +4,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-    #define NUM_MANAGED_SOUND_SLOTS 10 //How many auto-managed sound slots can any given actor have? this can differ from AAE_SLOTS_PER_HANDLE, but cannot be greater.
+#define NUM_MANAGED_SOUND_SLOTS \
+    10 // How many auto-managed sound slots can any given actor have? this can differ from AAE_SLOTS_PER_HANDLE, but
+       // cannot be greater.
 struct AccessibleActor;
 typedef struct AccessibleActor AccessibleActor;
 // A callback that is run regularely as the game progresses in order to provide accessibility services for an actor.
@@ -28,20 +30,20 @@ typedef struct {
 
     int n;        // How often to run the callback in frames.
     f32 distance; // Maximum xz distance from player before the actor should be considered out of range.
-    f32 ydist; // Maximum y distance from player before the actor should be considered out of range.
+    f32 ydist;    // Maximum y distance from player before the actor should be considered out of range.
     f32 pitch;
     f32 volume;
     f32 pitchModifier;
     bool runsAlways; // If set, then the distance policy is ignored.
     ActorAccessibilityUserDataInit initUserData;
     ActorAccessibilityUserDataCleanup cleanupUserData;
-//Aim assist settings.
+    // Aim assist settings.
     struct {
-        bool isProvider;//determines whether or not this actor supports aim assist.
-        s16 sfx;       // The sound to play when this actor provides aim assist. Uses sound slot 9.
-        f32 tolerance; // How close to the center of the actor does Link have to aim for aim assist to consider
-                                // it lined up.
-    }aimAssist;
+        bool isProvider; // determines whether or not this actor supports aim assist.
+        s16 sfx;         // The sound to play when this actor provides aim assist. Uses sound slot 9.
+        f32 tolerance;   // How close to the center of the actor does Link have to aim for aim assist to consider
+                         // it lined up.
+    } aimAssist;
 
 } ActorAccessibilityPolicy;
 
@@ -71,8 +73,10 @@ struct AccessibleActor {
     f32 basePitch;
 
     f32 currentPitch;
-    s16 sceneIndex;//If this actor represents a scene transition, then this will contain the destination scene index. Zero otherwise.
-    bool managedSoundSlots[NUM_MANAGED_SOUND_SLOTS];//These have their attenuation and panning parameters updated every frame automatically.
+    s16 sceneIndex; // If this actor represents a scene transition, then this will contain the destination scene index.
+                    // Zero otherwise.
+    bool managedSoundSlots[NUM_MANAGED_SOUND_SLOTS]; // These have their attenuation and panning parameters updated
+                                                     // every frame automatically.
     struct {
         u16 framesSinceAimAssist; // Allows rate-based vertical aim assist. Incremented every frame for aim assist
                                   // actors. Manually reset by aim assist provider.
@@ -99,22 +103,25 @@ void ActorAccessibility_AddSupportedActor(s16 type, ActorAccessibilityPolicy pol
 void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActor* actor);
 void ActorAccessibility_RunAccessibilityForAllActors(PlayState* play);
 /*
-*Play sounds (usually from the game) using the external sound engine. This is probably not the function you want to call most of the time (see below).
-* handle: pointer to an arbitrary object. This object can be anything as it's only used as a classifier, but it's recommended that you use an AccessibleActor* as your handle whenever possible. Using AccessibleActor* as the handle gives you automatic cleanup when the actor is killed.
-* slot: Allows multiple sounds to be assigned to a single handle. The maximum number of slots per actor is 10 by default (but can be controlled by modifying AAE_SLOTS_PER_HANDLE).
-* sfxId: one of the game's sfx IDs. Note that this plays prerendered sounds which you must have previously prepared.
- *looping: whether to play the sound just once or on a continuous loop.
-*/
+ *Play sounds (usually from the game) using the external sound engine. This is probably not the function you want to
+ *call most of the time (see below). handle: pointer to an arbitrary object. This object can be anything as it's only
+ *used as a classifier, but it's recommended that you use an AccessibleActor* as your handle whenever possible. Using
+ *AccessibleActor* as the handle gives you automatic cleanup when the actor is killed. slot: Allows multiple sounds to
+ *be assigned to a single handle. The maximum number of slots per actor is 10 by default (but can be controlled by
+ *modifying AAE_SLOTS_PER_HANDLE). sfxId: one of the game's sfx IDs. Note that this plays prerendered sounds which you
+ *must have previously prepared. looping: whether to play the sound just once or on a continuous loop.
+ */
 void ActorAccessibility_PlaySound(void* actor, int slot, s16 sfxId, bool looping);
-//Play one of the game's internal samples.
- void ActorAccessibility_PlayRawSample(void* handle, int slot, const char* name, bool looping);
-// 
-//Stop a sound. Todo: consider making this a short fade instead of just cutting it off.
+// Play one of the game's internal samples.
+void ActorAccessibility_PlayRawSample(void* handle, int slot, const char* name, bool looping);
+//
+// Stop a sound. Todo: consider making this a short fade instead of just cutting it off.
 void ActorAccessibility_StopSound(void* handle, int slot);
 void ActorAccessibility_StopAllSounds(void* handle);
 
 void ActorAccessibility_SetSoundPitch(void* handle, int slot, float pitch);
-//When we don't have access to something super fancy (such as HRTF), blind-accessible games generally use a change in pitch to tell the player that an object is behind the player.
+// When we don't have access to something super fancy (such as HRTF), blind-accessible games generally use a change in
+// pitch to tell the player that an object is behind the player.
 void ActorAccessibility_SetPitchBehindModifier(void* handle, int slot, float mod);
 
 void ActorAccessibility_SetListenerPos(Vec3f* pos, Vec3f* rot);
@@ -125,18 +132,19 @@ void ActorAccessibility_SetSoundPan(void* handle, int slot, Vec3f* projectedPos)
 void ActorAccessibility_SetSoundFilter(void* handle, int slot, float cutoff);
 void ActorAccessibility_SeekSound(void* handle, int slot, size_t offset);
 
-    /*
-* Play a sound on behalf of an AccessibleActor.
-* This version includes automatic sound management: pitch, panning and attenuation parameters will be updated automatically based on the actor's position.
-* 
-*/
+/*
+ * Play a sound on behalf of an AccessibleActor.
+ * This version includes automatic sound management: pitch, panning and attenuation parameters will be updated
+ * automatically based on the actor's position.
+ *
+ */
 void ActorAccessibility_PlaySoundForActor(AccessibleActor* actor, int slot, s16 sfxId, bool looping);
 void ActorAccessibility_PlaySampleForActor(AccessibleActor* actor, int slot, const char* name, bool looping);
 
 void ActorAccessibility_StopSoundForActor(AccessibleActor* actor, int slot);
 void ActorAccessibility_StopAllSoundsForActor(AccessibleActor* actor);
 f32 ActorAccessibility_ComputeCurrentVolume(f32 maxDistance, f32 xzDistToPlayer);
-    // Computes a relative angle based on Link's (or some other actor's) current angle.
+// Computes a relative angle based on Link's (or some other actor's) current angle.
 Vec3s ActorAccessibility_ComputeRelativeAngle(Vec3s* origin, Vec3s* offset);
 void ActorAccessibility_InitCues();
 // Stuff related to lists of virtual actors.
@@ -153,37 +161,36 @@ typedef enum {
     VA_MARKER,
     VA_SPIKE,
     VA_GENERAL_HELPER, // Room announcements, action icon and other misc help.
-    VA_AUDIO_COMPASS,//Points north.
-    VA_STICK_WARNING,//beep when stick is about to burn out.
+    VA_AUDIO_COMPASS,  // Points north.
+    VA_STICK_WARNING,  // beep when stick is about to burn out.
 
     VA_FINAL,
 
 } VIRTUAL_ACTOR_TABLE;
-
 
 #define EVERYWHERE -32768 // Denotes a virtual actor that is global/ omnipresent.
 
 // Get the list of virtual actors for a given scene and room index.
 VirtualActorList* ActorAccessibility_GetVirtualActorList(s16 sceneNum, s8 roomNum);
 AccessibleActor* ActorAccessibility_AddVirtualActor(VirtualActorList* list, VIRTUAL_ACTOR_TABLE type, PosRot where);
-//Parses the loaded seen and converts select polygons (like ladders, spikes and scene exits) into virtual actors.
+// Parses the loaded seen and converts select polygons (like ladders, spikes and scene exits) into virtual actors.
 void ActorAccessibility_InterpretCurrentScene(PlayState* play);
-//Convert a collision polygon into a virtual actor.
-void ActorAccessibility_PolyToVirtualActor(PlayState* play, CollisionPoly* poly, VIRTUAL_ACTOR_TABLE va, VirtualActorList* destination);
-//Report which room of a dungeon the player is in.
- void ActorAccessibility_AnnounceRoomNumber(PlayState* play);
- //Aim cue support.
-  void ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* actor);
-    // External audio engine stuff.
+// Convert a collision polygon into a virtual actor.
+void ActorAccessibility_PolyToVirtualActor(PlayState* play, CollisionPoly* poly, VIRTUAL_ACTOR_TABLE va,
+                                           VirtualActorList* destination);
+// Report which room of a dungeon the player is in.
+void ActorAccessibility_AnnounceRoomNumber(PlayState* play);
+// Aim cue support.
+void ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* actor);
+// External audio engine stuff.
 //  Initialize the accessible audio engine.
 bool ActorAccessibility_InitAudio();
 void ActorAccessibility_ShutdownAudio();
 // Combine the games' audio with the output from AccessibleAudioEngine. To be called exclusively from the audio thread.
 void ActorAccessibility_MixAccessibleAudioWithGameAudio(int16_t* ogBuffer, uint32_t nFrames);
 void ActorAccessibility_HandleSoundExtractionMode(PlayState* play);
-//This is called by the audio thread when it's ready to try to pull sfx from the game.
+// This is called by the audio thread when it's ready to try to pull sfx from the game.
 void ActorAccessibility_DoSoundExtractionStep();
-
 
 void ActorAccessibility_AudioGlossary(PlayState* play);
 #ifdef __cplusplus
