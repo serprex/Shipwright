@@ -889,7 +889,7 @@ bool Logic::CanAvoidEnemy(RandomizerEnemy enemy, bool grounded, uint8_t quantity
         case RE_PURPLE_LEEVER:
             return true;
         case RE_BEAMOS:
-            return !grounded || CanUse(RG_NUTS) ||
+            return !grounded || CanUse(RG_NUTS) || CanUse(RG_DINS_FIRE) ||
                    (quantity == 1 && (CanUse(RG_FAIRY_BOW) || CanUse(RG_FAIRY_SLINGSHOT)));
         case RE_MAD_SCRUB:
             return !grounded || CanUse(RG_NUTS);
