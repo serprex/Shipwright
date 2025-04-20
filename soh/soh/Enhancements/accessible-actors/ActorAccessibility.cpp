@@ -62,7 +62,7 @@ typedef std::unordered_set<s16>
 
 typedef struct {
     std::string path;
-    std::shared_ptr<Ship::IResource> resource;
+    std::shared_ptr<Ship::File> resource;
     std::shared_ptr<s16*> decodedSample; // Set if the record is for a raw sample as opposed to a SFX.
 } SfxRecord;
 
@@ -689,8 +689,7 @@ const char* ActorAccessibility_MapSfxToExternalAudio(s16 sfxId) {
     if (it == aa->sfxMap.end()) {
         SfxRecord tempRecord;
         std::string fullPath = SfxExtractor::getExternalFileName(sfxId);
-        auto res = std::static_pointer_cast<Ship::Blob>(
-            Ship::Context::GetInstance()->GetResourceManager()->LoadResource(fullPath));
+        auto res = Ship::Context::GetInstance()->GetResourceManager()->GetArchiveManager()->LoadFile(fullPath);
 
         if (res == nullptr)
             return NULL; // Resource doesn't exist, user's gotta run the extractor.
@@ -700,10 +699,11 @@ const char* ActorAccessibility_MapSfxToExternalAudio(s16 sfxId) {
         tempRecord.path = ss.str();
         aa->sfxMap[sfxId] = tempRecord;
         record = &aa->sfxMap[sfxId];
-        aa->audioEngine->cacheDecodedSample(record->path, record->resource->GetRawPointer(),
-                                            record->resource->GetPointerSize());
-    } else
+        aa->audioEngine->cacheDecodedSample(record->path, record->resource->Buffer->data(),
+                                            record->resource->Buffer->size());
+    } else {
         record = &it->second;
+    }
 
     return record->path.c_str();
 }
@@ -730,8 +730,9 @@ const char* ActorAccessibility_MapRawSampleToExternalAudio(const char* name) {
         aa->sampleMap[key] = tempRecord;
         record = &aa->sampleMap[key];
         aa->audioEngine->cacheDecodedSample(record->path, wav, wavSize);
-    } else
+    } else {
         record = &it->second;
+    }
 
     return record->path.c_str();
 }
