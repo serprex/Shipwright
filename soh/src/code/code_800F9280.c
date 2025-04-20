@@ -269,9 +269,11 @@ void Audio_ProcessSeqCmd(u32 cmd) {
                 duration++;
             }
             gActiveSeqs[playerIdx].channelData[chanIdx].volTarget = (f32)val / 127.0f;
-            if (gActiveSeqs[playerIdx].channelData[chanIdx].volCur != gActiveSeqs[playerIdx].channelData[chanIdx].volTarget) {
+            if (gActiveSeqs[playerIdx].channelData[chanIdx].volCur !=
+                gActiveSeqs[playerIdx].channelData[chanIdx].volTarget) {
                 gActiveSeqs[playerIdx].channelData[chanIdx].volStep =
-                    (gActiveSeqs[playerIdx].channelData[chanIdx].volCur - gActiveSeqs[playerIdx].channelData[chanIdx].volTarget) /
+                    (gActiveSeqs[playerIdx].channelData[chanIdx].volCur -
+                     gActiveSeqs[playerIdx].channelData[chanIdx].volTarget) /
                     (f32)duration;
                 gActiveSeqs[playerIdx].channelData[chanIdx].volTimer = duration;
                 gActiveSeqs[playerIdx].volChannelFlags |= 1 << chanIdx;
@@ -370,11 +372,10 @@ void Audio_ProcessSeqCmd(u32 cmd) {
 extern f32 D_80130F24;
 extern f32 D_80130F28;
 
-void Audio_QueueSeqCmd(u32 cmd) 
-{
+void Audio_QueueSeqCmd(u32 cmd) {
     if (freezeGame)
         return;//No music during SFX rip.
-
+               //
     u8 op = cmd >> 28;
     if (op == 0 || op == 2 || op == 12) {
         u8 seqId = cmd & 0xFF;
@@ -547,7 +548,8 @@ void func_800FA3DC(void) {
 
                 gActiveSeqs[playerIdx].tempoTarget = phi_a2;
                 gActiveSeqs[playerIdx].tempoCur = gAudioContext.seqPlayers[playerIdx].tempo / 0x30;
-                gActiveSeqs[playerIdx].tempoStep = (gActiveSeqs[playerIdx].tempoCur - gActiveSeqs[playerIdx].tempoTarget) / phi_t0;
+                gActiveSeqs[playerIdx].tempoStep =
+                    (gActiveSeqs[playerIdx].tempoCur - gActiveSeqs[playerIdx].tempoTarget) / phi_t0;
                 gActiveSeqs[playerIdx].tempoTimer = phi_t0;
                 gActiveSeqs[playerIdx].tempoCmd = 0;
             }
@@ -586,9 +588,11 @@ void func_800FA3DC(void) {
                 if (gActiveSeqs[playerIdx].channelData[k].freqScaleTimer != 0) {
                     gActiveSeqs[playerIdx].channelData[k].freqScaleTimer--;
                     if (gActiveSeqs[playerIdx].channelData[k].freqScaleTimer != 0) {
-                        gActiveSeqs[playerIdx].channelData[k].freqScaleCur -= gActiveSeqs[playerIdx].channelData[k].freqScaleStep;
+                        gActiveSeqs[playerIdx].channelData[k].freqScaleCur -=
+                            gActiveSeqs[playerIdx].channelData[k].freqScaleStep;
                     } else {
-                        gActiveSeqs[playerIdx].channelData[k].freqScaleCur = gActiveSeqs[playerIdx].channelData[k].freqScaleTarget;
+                        gActiveSeqs[playerIdx].channelData[k].freqScaleCur =
+                            gActiveSeqs[playerIdx].channelData[k].freqScaleTarget;
                         gActiveSeqs[playerIdx].freqScaleChannelFlags ^= (1 << k);
                     }
                     // CHAN_UPD_FREQ_SCALE
