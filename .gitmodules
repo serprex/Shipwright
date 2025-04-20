@@ -7,3 +7,6 @@
 [submodule "OTRExporter"]
 	path = OTRExporter
 	url = https://github.com/harbourmasters/OTRExporter
+[submodule "dr_libs"]
+	path = soh/include/dr_libs
+	url = https://github.com/mackron/dr_libs
