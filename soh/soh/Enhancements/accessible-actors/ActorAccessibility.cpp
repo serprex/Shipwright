@@ -20,9 +20,6 @@
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/Enhancements/audio/AudioDecoder.h"
 
-std::vector<uint32_t> buttons = { BTN_A, BTN_B, BTN_CUP,   BTN_CDOWN, BTN_CLEFT, BTN_CRIGHT, BTN_L,
-                                  BTN_Z, BTN_R, BTN_START, BTN_DUP,   BTN_DDOWN, BTN_DLEFT,  BTN_DRIGHT };
-
 extern "C" {
 extern PlayState* gPlayState;
 extern bool freezeGame;
@@ -102,9 +99,7 @@ class ActorAccessibility {
 static ActorAccessibility* aa;
 
 uint64_t ActorAccessibility_GetNextID() {
-    uint64_t result = aa->nextActorID;
-    aa->nextActorID++;
-    return result;
+    return aa->nextActorID++;
 }
 
 // Hooks for game-interactor.
@@ -128,8 +123,8 @@ void ActorAccessibility_OnGameStillFrozen() {
     if (aa->extractSfx)
         ActorAccessibility_HandleSoundExtractionMode(gPlayState);
 }
-void ActorAccessibility_Init() {
 
+void ActorAccessibility_Init() {
     aa = new ActorAccessibility();
     aa->glossary = new AudioGlossaryData();
     aa->isOn = CVarGetInteger(CVAR_SETTING("A11yAudioInteraction"), 0);
@@ -342,18 +337,14 @@ void ActorAccessibility_StopAllVirtualActors(VirtualActorList* list) {
         ActorAccessibility_StopAllSounds((void*)&(*i));
 }
 void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActor* actor) {
-    Player* player = GET_PLAYER(play);
     actor->play = play;
-    if (ActorAccessibility_IsRealActor(actor))
+    if (ActorAccessibility_IsRealActor(actor)) {
         ActorAccessibility_CopyParamsFromRealActor(actor);
-
-    else {
-        // Perform calculations that the game would normally take care of for real actors.
+    } else {
+        Player* player = GET_PLAYER(play);
         f32 w = 0.0f;
         // Set actor->projectedPos.
         SkinMatrix_Vec3fMtxFMultXYZW(&play->viewProjectionMtxF, &actor->world.pos, &actor->projectedPos, &w);
-        // Set actor->xzDistToPlayer.
-
         actor->xzDistToPlayer = Math_Vec3f_DistXZ(&actor->world.pos, &player->actor.world.pos);
         actor->xyzDistToPlayer = Math_Vec3f_DistXYZ(&actor->world.pos, &player->actor.world.pos);
         actor->yDistToPlayer = fabs((actor->world.pos.y) - (player->actor.world.pos.y));
@@ -375,14 +366,15 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
     if (aa->glossary->GlossaryStarted) {
         aa->glossary->frameCount++;
     }
-    if (actor->frameCount != 1 && (actor->frameCount - 1) % actor->policy.n != 0)
+    if (actor->frameCount % actor->policy.n)
         return;
     if (!actor->policy.runsAlways && actor->xyzDistToPlayer > actor->policy.distance) {
         return;
     }
-    if (actor->isDrawn == 0 && actor->actor->id != 406 && actor->actor->id != 302 && !aa->glossary->GlossaryStarted)
+    if (actor->isDrawn == 0 && actor->actor->id != ACTOR_EN_IT && actor->actor->id != ACTOR_EN_OKARINA_TAG && !aa->glossary->GlossaryStarted)
         return;
     if (actor->policy.aimAssist.isProvider) {
+        Player* player = GET_PLAYER(play);
         if (player->stateFlags1 & PLAYER_STATE1_FIRST_PERSON &&
             (player->stateFlags1 & PLAYER_STATE1_USING_BOOMERANG || player->stateFlags1 & PLAYER_STATE1_ITEM_IN_HAND)) {
             ActorAccessibility_SetSoundPitch(actor, 9, actor->aimAssist.pitch);
@@ -395,9 +387,10 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
                 actor->aimAssist.framesSinceAimAssist = 0;
                 ActorAccessibility_PlaySoundForActor(actor, 9, actor->policy.aimAssist.sfx, false);
             }
-        } else
-            actor->aimAssist.framesSinceAimAssist =
-                32768; // Make sure there's no delay the next time you draw your bow or whatever.
+        } else {
+             // Make sure there's no delay the next time you draw your bow or whatever.
+            actor->aimAssist.framesSinceAimAssist = 32768;
+        }
     }
 
     if (actor->policy.callback != NULL)
@@ -406,7 +399,6 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
         ActorAccessibility_PlaySoundForActor(actor, 0, actor->policy.sound, false);
 }
 void ActorAccessibility_RunAccessibilityForAllActors(PlayState* play) {
-
     Player* player = GET_PLAYER(play);
     if (play->sceneNum != aa->currentScene) {
         ActorAccessibility_StopAllVirtualActors(aa->currentEverywhere);
@@ -461,9 +453,7 @@ void ActorAccessibility_RunAccessibilityForAllActors(PlayState* play) {
 }
 
 void ActorAccessibility_AudioGlossary(PlayState* play) {
-
     if (aa->glossary->GlossaryStarted) {
-
         freezeActors = true;
         AccessibleActor glossaryActor = (*aa->glossary->current).second;
         ActorAccessibility_CopyParamsFromRealActor(&glossaryActor);
@@ -479,8 +469,8 @@ void ActorAccessibility_AudioGlossary(PlayState* play) {
 
     OSContPad* trackerButtonsPressed =
         std::dynamic_pointer_cast<LUS::ControlDeck>(Ship::Context::GetInstance()->GetControlDeck())->GetPads();
-    bool comboStartGlossary = trackerButtonsPressed != nullptr && trackerButtonsPressed[0].button & buttons[10] &&
-                              trackerButtonsPressed[0].button & buttons[6];
+    bool comboStartGlossary = trackerButtonsPressed != nullptr && trackerButtonsPressed[0].button & BTN_DUP &&
+                              trackerButtonsPressed[0].button & BTN_L;
     if (comboStartGlossary) {
         aa->glossary->GlossaryStarted = true;
         aa->glossary->current = aa->accessibleActorList.begin();
@@ -489,8 +479,8 @@ void ActorAccessibility_AudioGlossary(PlayState* play) {
         SpeechSynthesizer::Instance->Speak((*aa->glossary->current).second.policy.englishName, GetLanguageCode());
         return;
     }
-    bool comboNextGlossary = trackerButtonsPressed != nullptr && trackerButtonsPressed[0].button & buttons[13] &&
-                             trackerButtonsPressed[0].button & buttons[6];
+    bool comboNextGlossary = trackerButtonsPressed != nullptr && trackerButtonsPressed[0].button & BTN_DRIGHT &&
+                             trackerButtonsPressed[0].button & BTN_L;
     if (comboNextGlossary && aa->glossary->GlossaryStarted) {
         aa->glossary->current++;
         if (aa->glossary->current == aa->accessibleActorList.end()) {
@@ -499,8 +489,8 @@ void ActorAccessibility_AudioGlossary(PlayState* play) {
         aa->glossary->cooldown = 5;
         SpeechSynthesizer::Instance->Speak((*aa->glossary->current).second.policy.englishName, GetLanguageCode());
     }
-    bool comboPrevGlossary = trackerButtonsPressed != nullptr && trackerButtonsPressed[0].button & buttons[12] &&
-                             trackerButtonsPressed[0].button & buttons[6];
+    bool comboPrevGlossary = trackerButtonsPressed != nullptr && trackerButtonsPressed[0].button & BTN_DLEFT &&
+                             trackerButtonsPressed[0].button & BTN_L;
     if (comboPrevGlossary && aa->glossary->GlossaryStarted) {
         if (aa->glossary->current != aa->accessibleActorList.begin()) {
             aa->glossary->current--;
@@ -509,8 +499,8 @@ void ActorAccessibility_AudioGlossary(PlayState* play) {
 
         SpeechSynthesizer::Instance->Speak((*aa->glossary->current).second.policy.englishName, GetLanguageCode());
     }
-    bool comboDisableGlossary = trackerButtonsPressed != nullptr && trackerButtonsPressed[0].button & buttons[11] &&
-                                trackerButtonsPressed[0].button & buttons[6];
+    bool comboDisableGlossary = trackerButtonsPressed != nullptr && trackerButtonsPressed[0].button & BTN_DDOWN &&
+                                trackerButtonsPressed[0].button & BTN_L;
     if (comboDisableGlossary) {
         aa->glossary->cooldown = 0;
         aa->glossary->GlossaryStarted = false;
@@ -626,7 +616,6 @@ void ActorAccessibility_AnnounceRoomNumber(PlayState* play) {
 // Aim cue support.
 void ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* actor) {
     Player* player = GET_PLAYER(actor->play);
-    // 16384
     s32 angle = player->actor.focus.rot.x;
     angle = angle / -14000.0 * 16384;
     f32 slope = Math_SinS(angle) / Math_CosS(angle) * 1.0;
@@ -666,15 +655,15 @@ bool ActorAccessibility_InitAudio() {
     return true;
 }
 void ActorAccessibility_ShutdownAudio() {
-    if (aa->isOn == 0)
-        return;
-    delete aa->audioEngine;
+    if (aa->isOn) {
+        delete aa->audioEngine;
+        aa->isOn = 0;
+    }
 }
 void ActorAccessibility_MixAccessibleAudioWithGameAudio(int16_t* ogBuffer, uint32_t nFrames) {
-    if (aa->isOn == 0)
-        return;
-
-    aa->audioEngine->mix(ogBuffer, nFrames);
+    if (aa->isOn) {
+        aa->audioEngine->mix(ogBuffer, nFrames);
+    }
 }
 // Map one of the game's sfx to a path which as understood by the external audio engine. The returned token is a
 // short hex string that can be passed directly to the audio engine.

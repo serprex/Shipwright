@@ -115,12 +115,6 @@ class Incline : protected TerrainCueSound {
             return;
         }
         ActorAccessibility_SetSoundPitch(this, 0, 0.5 + (1 - pitchModifier));
-        /*currentPitch += 0.1;
-        if (currentPitch >= 2.0) {
-            stop();
-            currentPitch = 0.5;
-            restFrames = 5;
-        }*/
     }
     void setPitchModifier(float modifier) {
         pitchModifier = modifier;
@@ -1251,8 +1245,7 @@ class TerrainCueDirection {
                 }
                 if (pos.y < prevPos.y && fabs(pos.y - prevPos.y) < 20 && fabs(pos.y - prevPos.y) > 1.2 &&
                     player->stateFlags1 != PLAYER_STATE1_CLIMBING_LADDER) {
-                    // This is a decline.
-                    // discorver top
+                    // This is a decline. discover top
                     Vec3f_ top = pos;
 
                     while ((pos.y < prevPos.y && fabs(pos.y - prevPos.y) < 20 && fabs(pos.y - prevPos.y) > 1.2 &&
@@ -1398,9 +1391,6 @@ void accessible_va_terrain_cue(AccessibleActor* actor) {
     Player* player = GET_PLAYER(actor->play);
 
     if (state->previousAction != currentState) {
-        // Audio_PlaySoundGeneral(NA_SE_EV_DIAMOND_SWITCH, &player->actor.world.pos, 4, &actor->basePitch,
-        //                        &actor->baseVolume,
-        //                        &actor->currentReverb);
         switch (currentState) {
             case DO_ACTION_CHECK:
                 SpeechSynthesizer::Instance->Speak("Check", GetLanguageCode());
@@ -1421,11 +1411,7 @@ void accessible_va_terrain_cue(AccessibleActor* actor) {
                 SpeechSynthesizer::Instance->Speak("Speak", GetLanguageCode());
                 break;
             case DO_ACTION_STOP:
-                SpeechSynthesizer::Instance->Speak("Stop",
-                                                   GetLanguageCode()); // possibly disable? not sure what it does
-                break;
-            default:
-                SpeechSynthesizer::Instance->Speak(" ", GetLanguageCode());
+                SpeechSynthesizer::Instance->Speak("Stop", GetLanguageCode());
                 break;
         }
 

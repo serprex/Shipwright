@@ -5,35 +5,26 @@
 #include <random>
 
 #include <functions.h>
-#include <overlays/actors/ovl_Obj_Switch/z_obj_switch.h>
 #include <macros.h>
 #include <stdio.h>
 #include <string>
 #include <float.h>
-#include "overlays/actors/ovl_Boss_Goma/z_boss_goma.h"
 
-std::vector<uint32_t> buttonList = { BTN_A, BTN_B, BTN_CUP,   BTN_CDOWN, BTN_CLEFT, BTN_CRIGHT, BTN_L,
-                                     BTN_Z, BTN_R, BTN_START, BTN_DUP,   BTN_DDOWN, BTN_DLEFT,  BTN_DRIGHT };
-// Declarations specific to chests.
-#include "overlays/actors/ovl_En_Box/z_en_box.h"
 extern "C" {
+#include "overlays/actors/ovl_Obj_Switch/z_obj_switch.h"
+#include "overlays/actors/ovl_Bg_Bdan_Switch/z_bg_bdan_switch.h"
+#include "overlays/actors/ovl_Boss_Goma/z_boss_goma.h"
+#include "overlays/actors/ovl_En_Karebaba/z_en_karebaba.h"
+#include "overlays/actors/ovl_En_Box/z_en_box.h"
+#include "overlays/actors/ovl_Obj_Syokudai/z_obj_syokudai.h"
+#include "overlays/actors/ovl_En_Dog/z_en_dog.h"
 
 void EnBox_WaitOpen(EnBox*, PlayState*);
-}
-// Declarations specific to Babas.
-#include "overlays/actors/ovl_En_Karebaba/z_en_karebaba.h"
-extern "C" {
-
 void EnKarebaba_DeadItemDrop(EnKarebaba*, PlayState*);
-}
-// Declarations specific to Torches
-#include "overlays/actors/ovl_Obj_Syokudai/z_obj_syokudai.h"
-// Declarations specific to dogs
-#include "overlays/actors/ovl_En_Dog/z_en_dog.h"
-extern "C" {
 void EnDog_FollowPlayer(EnDog*, PlayState*);
 s8 EnDog_CanFollow(EnDog*, PlayState*);
 }
+
 // User data for the general helper VA.
 typedef struct {
     s16 currentScene;
@@ -240,13 +231,16 @@ void accessible_larva(AccessibleActor* actor) {
     }
 }
 
+void accessible_eiyer(AccessibleActor* actor) {
+    if (GET_PLAYER(actor->play)->actor.world.pos.y > actor->actor->world.pos.y - 8) {
+        ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_FISHING_REEL_SLOW, false);
+    } else {
+        ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_FISHING_REEL_HIGH, false);
+    }
+}
+
 void accessible_door(AccessibleActor* actor) {
     ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_OC_DOOR_OPEN, false);
-}
-void accessible_va_prototype(AccessibleActor* actor) {
-
-    Player* player = GET_PLAYER(actor->play);
-    ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_BOMB_EXPLOSION, false);
 }
 
 void accessible_maruta(AccessibleActor* actor) {
@@ -551,6 +545,13 @@ void accessible_sticks(AccessibleActor* actor) {
     }
 }
 
+void accessible_jabu_switch(AccessibleActor* actor) {
+    int type = actor->actor->params & 0xFF;
+    if (type == YELLOW_TALL_1 || type == YELLOW_TALL_2) {
+        actor->policy.aimAssist.isProvider = true;
+    }
+}
+
 void accessible_jabu_elevator(AccessibleActor* actor) {
     if ((actor->actor->params & 0xFF) == 2 && actor->xzDistToPlayer > 50) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_PL_LAND_LADDER, false);
@@ -627,8 +628,8 @@ void accessible_audio_compass(AccessibleActor* actor) {
     OSContPad* trackerButtonsPressed =
         std::dynamic_pointer_cast<LUS::ControlDeck>(Ship::Context::GetInstance()->GetControlDeck())->GetPads();
     AudioCompassData* data = (AudioCompassData*)actor->userData;
-    bool compassCombo = trackerButtonsPressed != nullptr && trackerButtonsPressed[0].button & buttonList[11] &&
-                        trackerButtonsPressed[0].button & buttonList[6];
+    bool compassCombo = trackerButtonsPressed != nullptr && trackerButtonsPressed[0].button & BTN_DDOWN &&
+                        trackerButtonsPressed[0].button & BTN_L;
     actor->world.pos = player->actor.world.pos;
     actor->world.pos.z -= 50;
 
@@ -786,7 +787,7 @@ void ActorAccessibility_InitActors() {
 
     ActorAccessibility_InitPolicy(&policy, "Ruto", NULL, NA_SE_VO_RT_LAUGH_0);
     policy.n = 40;
-    policy.pitch = 0.7;
+    policy.pitch = 1.1;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_RU1, policy);
 
     ActorAccessibility_InitPolicy(&policy, "Bean patch", NULL, NA_SE_EN_MUSI_SINK);
@@ -835,7 +836,7 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_SWITCH, policy);
     ActorAccessibility_InitPolicy(&policy, "Jabu Switch", NULL, NA_SE_EV_DIAMOND_SWITCH);
     policy.volume = 0.6;
-    policy.distance = 2000;
+    policy.distance = 1000;
     policy.ydist = 300;
     ActorAccessibility_AddSupportedActor(ACTOR_BG_BDAN_SWITCH, policy);
     ActorAccessibility_InitPolicy(&policy, "Jabu Elevator", accessible_jabu_elevator, 0);
@@ -897,6 +898,14 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_EN_GOMA, policy);
     ActorAccessibility_InitPolicy(&policy, "small jellyfish", NULL, NA_SE_EN_BIRI_FLY);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_BILI, policy);
+    ActorAccessibility_InitPolicy(&policy, "stinger", accessible_eiyer, 0);
+    policy.n = 1;
+    policy.distance = 1000;
+    policy.ydist = 200;
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_EIYER, policy);
+    ActorAccessibility_InitPolicy(&policy, "bubble", NULL, NA_SE_EN_DAIOCTA_SPLASH);
+    policy.ydist = 200;
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_BUBBLE, policy);
     ActorAccessibility_InitPolicy(&policy, "tentacle obstacle", NULL, NA_SE_EN_BALINADE_THUNDER);
     policy.distance = 100;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_BX, policy);
@@ -1000,9 +1009,12 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -1958, 20, -1297 } });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_JABU_JABU, 2);
-    AccessibleActor* temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -260, -445, -3377 } }); // green tentacle hole
-    temp->policy.distance = 100;
-    temp->policy.sound = NA_SE_EN_OCTAROCK_BUBLE;
+    AccessibleActor* temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -260, -400, -3377 } }); // green tentacle hole
+    temp->policy.distance = 200;
+    temp->policy.sound = NA_SE_EN_DAIOCTA_DEAD;
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 230, -400, -3211 } }); // ruto hole
+    temp->policy.distance = 200;
+    temp->policy.sound = NA_SE_VO_RT_FALL;
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_CASTLE_COURTYARD_GUARDS_DAY, 0); // hyrule courtyard
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1734.0, 0.0, 140.514 } });
