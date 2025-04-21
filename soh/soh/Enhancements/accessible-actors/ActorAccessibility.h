@@ -164,7 +164,7 @@ typedef enum {
 
 } VIRTUAL_ACTOR_TABLE;
 
-#define EVERYWHERE -32768 // Denotes a virtual actor that is global/ omnipresent.
+#define EVERYWHERE -32768 // Denotes a virtual actor that is global
 
 // Get the list of virtual actors for a given scene and room index.
 VirtualActorList* ActorAccessibility_GetVirtualActorList(s16 sceneNum, s8 roomNum);

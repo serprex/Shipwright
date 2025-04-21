@@ -232,13 +232,12 @@ void ActorAccessibility_RemoveTrackedActor(Actor* actor) {
 }
 
 f32 ActorAccessibility_DBToLinear(float gain) {
-    return (float)pow(10.0, gain / 20.0f);
+    return powf(10.0, gain / 20.0f);
 }
 f32 ActorAccessibility_ComputeCurrentVolume(f32 maxDistance, f32 xzDistToPlayer) {
     if (maxDistance == 0)
         return 0.0;
     f32 absDistance = fabs(xzDistToPlayer);
-
     f32 db = LERP(0.0 - MAX_DB_REDUCTION, 0.0, (maxDistance - absDistance) / maxDistance);
 
     return ActorAccessibility_DBToLinear(db);
