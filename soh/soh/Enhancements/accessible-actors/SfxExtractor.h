@@ -5,17 +5,14 @@ class SfxExtractor {
     int currentStep;
     int captureThreadState;
     int sfxToRip;
-    size_t startOfInput;
-    size_t endOfInput;
     s16 currentSfx;
     std::vector<int16_t> tempStorage; // Stores raw audio data for the sfx currently being ripped.
     int16_t* tempBuffer;              // Raw pointer to the above vector.
     // Check if a buffer contains meaningful audio output.
     bool isAllZero(int16_t* buffer, size_t count);
-    // Find the beginning of a captured signal.
-    void setStartOfInput();
-    void setEndOfInput();
-    void renderOutput();
+    size_t adjustedStartOfInput();
+    size_t adjustedEndOfInput(size_t endOfInput);
+    void renderOutput(size_t endOfInput);
     void setup();
     void ripNextSfx();
     void finished(); // Also handles failure.

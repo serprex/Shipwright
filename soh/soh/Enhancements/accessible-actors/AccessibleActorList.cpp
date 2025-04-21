@@ -904,7 +904,8 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_InitPolicy(&policy, "bubble", NULL, NA_SE_EN_DAIOCTA_SPLASH);
     policy.ydist = 200;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_BUBBLE, policy);
-    ActorAccessibility_InitPolicy(&policy, "tentacle obstacle", NULL, NA_SE_EN_BALINADE_THUNDER);
+    ActorAccessibility_InitPolicy(&policy, "tentacle", NULL, NA_SE_EN_BALINADE_THUNDER);
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_BA, policy);
     policy.distance = 100;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_BX, policy);
     ActorAccessibility_InitPolicy(&policy, "redead", NULL, NA_SE_EN_REDEAD_CRY);

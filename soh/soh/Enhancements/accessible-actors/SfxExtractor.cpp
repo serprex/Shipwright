@@ -31,31 +31,38 @@ enum {
 } CAPTURE_THREAD_STATES;
 #define SFX_EXTRACTION_BUFFER_SIZE 44100 * 15
 #define SFX_EXTRACTION_ONE_FRAME 736
-bool SfxExtractor::isAllZero(int16_t* buffer, size_t count)
-
-{
-    for (auto i = 0; i < count; i++) {
+bool SfxExtractor::isAllZero(int16_t* buffer, size_t count) {
+    for (size_t i = 0; i < count; i++) {
         if (buffer[i] != 0)
             return false;
     }
     return true;
 }
-void SfxExtractor::setStartOfInput() {
-    startOfInput = 0;
-    for (startOfInput = 0; startOfInput < SFX_EXTRACTION_BUFFER_SIZE * 2; startOfInput += 2) {
-        if (tempBuffer[startOfInput] != 0 || tempBuffer[startOfInput + 1] != 0)
-            break;
+
+// Find the beginning of a captured signal.
+size_t SfxExtractor::adjustedStartOfInput() {
+    size_t startOfInput = 0;
+    while (startOfInput + 2 < SFX_EXTRACTION_BUFFER_SIZE * 2 &&
+           (tempBuffer[startOfInput] == 0 || tempBuffer[startOfInput + 1] == 0)) {
+        startOfInput += 2;
     }
-}
-void SfxExtractor::setEndOfInput() {
-    while (endOfInput > 0) {
-        if (tempBuffer[endOfInput] != 0 || tempBuffer[endOfInput - 1] != 0)
-            break;
-        endOfInput -= 2;
-    }
+    return startOfInput;
 }
 
-void SfxExtractor::renderOutput() {
+size_t SfxExtractor::adjustedEndOfInput(size_t endOfInput) {
+    while (endOfInput > 0 && (tempBuffer[endOfInput] == 0 || tempBuffer[endOfInput - 1] == 0)) {
+        endOfInput -= 2;
+    }
+    return endOfInput;
+}
+
+void SfxExtractor::renderOutput(size_t endOfInput) {
+    size_t startOfInput = adjustedStartOfInput();
+    endOfInput = adjustedEndOfInput(endOfInput);
+    if (endOfInput <= startOfInput) {
+        return;
+    }
+
     ma_channel_converter_config config =
         ma_channel_converter_config_init(ma_format_s16, 2, NULL, 1, NULL, ma_channel_mix_mode_default);
     ma_channel_converter converter;
@@ -103,8 +110,8 @@ void SfxExtractor::setup() {
             currentStep = STEP_ERROR_OTR;
             return;
         }
-        tempStorage.resize((SFX_EXTRACTION_BUFFER_SIZE + (SFX_EXTRACTION_ONE_FRAME * 3)) * 2,
-                           0); // Over-allocated just a tad because otherwise we'll overrun if the last frame is short.
+        // Over-allocated just a tad because otherwise we'll overrun if the last frame is short.
+        tempStorage.resize((SFX_EXTRACTION_BUFFER_SIZE + (SFX_EXTRACTION_ONE_FRAME * 3)) * 2, 0);
         tempBuffer = tempStorage.data();
 
         sfxToRip = 0;
@@ -135,8 +142,6 @@ void SfxExtractor::ripNextSfx() {
     }
 
     currentSfx = sfxTable[sfxToRip++];
-    startOfInput = 0;
-    endOfInput = 0;
     Audio_PlaySoundGeneral(currentSfx, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                            &gSfxDefaultReverb);
 
@@ -150,6 +155,7 @@ void SfxExtractor::finished() {
     OTRAudio_UninstallSfxCaptureThread(); // Returns to normal audio opperation.
     CVarClear("gExtractSfx");
     CVarSave();
+    archive->Close();
     archive = nullptr;
     freezeGame = false;
 
@@ -170,16 +176,15 @@ void SfxExtractor::finished() {
         Audio_PlayFanfare(NA_BGM_ITEM_GET);
 }
 void SfxExtractor::maybeGiveProgressReport() {
-    size_t ripsRemaining = sfxCount - sfxToRip;
     for (int i = 0; i < 9; i++) {
-        if (ripsRemaining == sfxCount - ((int)ceil(sfxCount * ((i + 1) / 10.0f)))) {
-            int percentDone = (i + 1) * 10;
+        if (sfxToRip == sfxCount * (i + 1) / 10) {
             std::stringstream ss;
-            ss << percentDone << " percent complete.";
+            ss << (i + 1) * 10 << " percent complete.";
             SpeechSynthesizer::Instance->Speak(ss.str().c_str(), GetLanguageCode());
         }
     }
 }
+
 SfxExtractor::SfxExtractor() {
     currentStep = STEP_SETUP;
 }
@@ -196,6 +201,7 @@ void SfxExtractor::frameCallback() {
             finished();
     }
 }
+
 void SfxExtractor::prime() {
     while (true) {
         AudioMgr_CreateNextAudioBuffer(tempBuffer, SFX_EXTRACTION_ONE_FRAME);
@@ -204,6 +210,7 @@ void SfxExtractor::prime() {
     }
     captureThreadState = CT_FINISHED;
 }
+
 void SfxExtractor::captureCallback() {
     if (captureThreadState == CT_PRIMING)
         prime();
@@ -213,30 +220,27 @@ void SfxExtractor::captureCallback() {
     int16_t* mark = tempBuffer;
     size_t samplesLeft = SFX_EXTRACTION_BUFFER_SIZE;
     bool outputStarted = false;
-    endOfInput = 0;
+    size_t endOfInput = 0;
     int waitTime = 0;
     while (samplesLeft > 0) {
         AudioMgr_CreateNextAudioBuffer(mark, SFX_EXTRACTION_ONE_FRAME);
 
-        if (!outputStarted && isAllZero(mark, SFX_EXTRACTION_ONE_FRAME * 2)) {
-            waitTime++;
-            if (waitTime < 300)
-                continue;                     // Output is silent, allow more time for audio to begin.
+        if (isAllZero(mark, SFX_EXTRACTION_ONE_FRAME * 2)) {
+            if (outputStarted) {
+                break;
+            } else if (waitTime++ < 300) {
+                continue; // Output is silent, allow more time for audio to begin.
+            }
             captureThreadState = CT_FINISHED; // Sound is unavailable, so skip over it and move on.
             return;
         }
 
-        else
-            outputStarted = true;
-        if (isAllZero(mark, SFX_EXTRACTION_ONE_FRAME * 2))
-            break; // End of sound.
+        outputStarted = true;
         mark += (SFX_EXTRACTION_ONE_FRAME * 2);
         endOfInput += (SFX_EXTRACTION_ONE_FRAME * 2);
         samplesLeft -= std::min<size_t>(SFX_EXTRACTION_ONE_FRAME, samplesLeft);
     }
-    setStartOfInput();
-    setEndOfInput();
-    renderOutput();
+    renderOutput(endOfInput);
     captureThreadState = CT_FINISHED; // Go to the next one.
 }
 std::string SfxExtractor::getExternalFileName(int16_t sfxId) {
