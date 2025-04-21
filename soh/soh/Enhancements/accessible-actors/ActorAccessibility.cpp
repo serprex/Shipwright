@@ -202,8 +202,7 @@ void ActorAccessibility_TrackNewActor(Actor* actor) {
     accessibleActor.baseVolume = accessibleActor.policy.volume;
     accessibleActor.currentVolume = accessibleActor.policy.volume;
     accessibleActor.sceneIndex = 0;
-    for (int i = 0; i < NUM_MANAGED_SOUND_SLOTS; i++)
-        accessibleActor.managedSoundSlots[i] = false;
+    accessibleActor.managedSoundSlots = 0;
     accessibleActor.aimAssist.framesSinceAimAssist = 32768;
     accessibleActor.aimAssist.frequency = 10;
     accessibleActor.aimAssist.pitch = 1.0;
@@ -296,32 +295,30 @@ void ActorAccessibility_ConfigureSoundForActor(AccessibleActor* actor, int slot)
     ActorAccessibility_SetPitchBehindModifier(actor, slot, actor->policy.pitchModifier);
     ActorAccessibility_SetSoundPos(actor, slot, &actor->projectedPos, actor->xyzDistToPlayer, actor->policy.distance);
     ActorAccessibility_SetSoundVolume(actor, slot, actor->policy.volume);
-    actor->managedSoundSlots[slot] = true;
+    actor->managedSoundSlots |= 1 << slot;
 }
 void ActorAccessibility_PlaySoundForActor(AccessibleActor* actor, int slot, s16 sfxId, bool looping) {
-    if (slot < 0 || slot > NUM_MANAGED_SOUND_SLOTS)
+    if (slot < 0 || slot > AAE_SLOTS_PER_HANDLE)
         return;
     ActorAccessibility_PlaySound(actor, slot, sfxId, looping);
     ActorAccessibility_ConfigureSoundForActor(actor, slot);
 }
 void ActorAccessibility_PlaySampleForActor(AccessibleActor* actor, int slot, const char* name, bool looping) {
-    if (slot < 0 || slot > NUM_MANAGED_SOUND_SLOTS)
+    if (slot < 0 || slot > AAE_SLOTS_PER_HANDLE)
         return;
     ActorAccessibility_PlayRawSample(actor, slot, name, looping);
     ActorAccessibility_ConfigureSoundForActor(actor, slot);
 }
 void ActorAccessibility_StopSoundForActor(AccessibleActor* actor, int slot) {
-    if (slot < 0 || slot >= NUM_MANAGED_SOUND_SLOTS)
+    if (slot < 0 || slot >= AAE_SLOTS_PER_HANDLE)
         return;
     ActorAccessibility_StopSound(actor, slot);
-    actor->managedSoundSlots[slot] = false;
+    actor->managedSoundSlots &= ~(1 << slot);
 }
-void ActorAccessibility_StopAllSoundsForActor(AccessibleActor* actor)
 
-{
+void ActorAccessibility_StopAllSoundsForActor(AccessibleActor* actor) {
     ActorAccessibility_StopAllSounds(actor);
-    for (int i = 0; i < NUM_MANAGED_SOUND_SLOTS; i++)
-        actor->managedSoundSlots[i] = false;
+    actor->managedSoundSlots = 0;
 }
 
 bool ActorAccessibility_IsRealActor(AccessibleActor* actor) {
@@ -367,8 +364,8 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
         return;
     }
     // Send sound parameters to the new audio engine. Eventually remove the old stuff once all actors are carried over.
-    for (int i = 0; i < NUM_MANAGED_SOUND_SLOTS; i++) {
-        if (actor->managedSoundSlots[i]) {
+    for (int i = 0; i < AAE_SLOTS_PER_HANDLE; i++) {
+        if (actor->managedSoundSlots & (1 << i)) {
             ActorAccessibility_SetSoundPos(actor, i, &actor->projectedPos, actor->xyzDistToPlayer,
                                            actor->policy.distance);
             // Judgement call: pitch changes are rare enough that it doesn't make sense to pay the cost of updating it
@@ -553,8 +550,7 @@ AccessibleActor* ActorAccessibility_AddVirtualActor(VirtualActorList* list, VIRT
     actor.play = NULL;
     actor.world = where;
     actor.sceneIndex = 0;
-    for (int i = 0; i < NUM_MANAGED_SOUND_SLOTS; i++)
-        actor.managedSoundSlots[i] = 0;
+    actor.managedSoundSlots = 0;
     actor.aimAssist.framesSinceAimAssist = 0;
     actor.aimAssist.frequency = 10;
     actor.aimAssist.pitch = 1.0;

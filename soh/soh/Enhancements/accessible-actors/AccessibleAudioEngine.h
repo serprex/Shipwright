@@ -10,7 +10,7 @@
 #include <unordered_map>
 #include <array>
 #define AAE_SOUND_ACTION_BATCH_SIZE 64
-#define AAE_SLOTS_PER_HANDLE 10
+#define AAE_SLOTS_PER_HANDLE 16
 class IResource;
 struct DecodedSample {
     void* data; // A wav file.

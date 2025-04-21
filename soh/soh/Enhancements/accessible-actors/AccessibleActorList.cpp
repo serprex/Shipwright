@@ -55,7 +55,10 @@ typedef struct {
 
 void accessible_en_ishi(AccessibleActor* actor) {
     ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_OCTAROCK_ROCK, false);
-    // ActorAccessibility_PlaySpecialSound(actor, NA_SE_EN_OCTAROCK_ROCK);
+}
+
+void accessible_en_bombiwa(AccessibleActor* actor) {
+    ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_ROCK_BROKEN, false);
 }
 
 void accessible_en_NPC_Gen(AccessibleActor* actor) {
@@ -814,10 +817,10 @@ void ActorAccessibility_InitActors() {
     policy.n = Npc_Frames;
     policy.pitch = 1.1;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_GE1, policy);
-    ActorAccessibility_InitPolicy(&policy, "Brown Bombable Rock", accessible_en_ishi, 0);
+    ActorAccessibility_InitPolicy(&policy, "Brown Bombable Rock", accessible_en_bombiwa, 0);
     policy.n = 30;
     policy.pitch = 0.7;
-    ActorAccessibility_AddSupportedActor(ACTOR_OBJ_BOMBIWA, policy); // Improve?
+    ActorAccessibility_AddSupportedActor(ACTOR_OBJ_BOMBIWA, policy);
     ActorAccessibility_InitPolicy(&policy, "Grotto Door", accessible_grotto, 0);
     policy.n = 30;
     policy.pitch = 1.0;

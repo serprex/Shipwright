@@ -4,9 +4,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-#define NUM_MANAGED_SOUND_SLOTS \
-    10 // How many auto-managed sound slots can any given actor have? this can differ from AAE_SLOTS_PER_HANDLE, but
-       // cannot be greater.
 struct AccessibleActor;
 typedef struct AccessibleActor AccessibleActor;
 // A callback that is run regularely as the game progresses in order to provide accessibility services for an actor.
@@ -75,14 +72,13 @@ struct AccessibleActor {
     f32 currentPitch;
     s16 sceneIndex; // If this actor represents a scene transition, then this will contain the destination scene index.
                     // Zero otherwise.
-    bool managedSoundSlots[NUM_MANAGED_SOUND_SLOTS]; // These have their attenuation and panning parameters updated
-                                                     // every frame automatically.
+    u16 managedSoundSlots; // These have their attenuation and panning parameters updated every frame automatically.
     struct {
         u16 framesSinceAimAssist; // Allows rate-based vertical aim assist. Incremented every frame for aim assist
                                   // actors. Manually reset by aim assist provider.
         f32 pitch;                // Used to report whether Link is aiming higher or lower than the actor.
         u8 frequency; // How often the sound will be played. Lower frequencies indicate that Link's vertical aim is
-                      // closer to the actor.   } aimAssist;
+                      // closer to the actor.
     } aimAssist;
 
     // Add more state as needed.
