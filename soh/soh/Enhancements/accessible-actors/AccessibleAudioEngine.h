@@ -1,6 +1,6 @@
 #ifndef ACCESSIBLE_AUDIO_ENGINE_H
 #define ACCESSIBLE_AUDIO_ENGINE_H
-#include "miniaudio.h"
+#include "miniaudio/miniaudio.h"
 #include <stdint.h>
 #include <thread>
 #include <mutex>

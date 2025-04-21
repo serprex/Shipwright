@@ -2,7 +2,7 @@
 #include "dr_libs/dr_wav.h"
 #include "soh/Enhancements/speechsynthesizer/SpeechSynthesizer.h"
 #include "soh/Enhancements/tts/tts.h"
-#include "miniaudio.h"
+#include "miniaudio/miniaudio.h"
 #include "soh/OTRGlobals.h"
 #include "SfxTable.h"
 #include <sstream>
