@@ -107,14 +107,8 @@ void SfxExtractor::setup() {
                            0); // Over-allocated just a tad because otherwise we'll overrun if the last frame is short.
         tempBuffer = tempStorage.data();
 
-        // Build are master sfx extraction todo list.
-        for (int i = 0; i < sfxCount; i++)
-            sfxToRip.push(sfxTable[i]);
-
+        sfxToRip = 0;
         currentStep = STEP_MAIN;
-        for (int i = 1; i < 10; i++) {
-            progressMilestones[i - 1] = sfxToRip.size() - ((int)ceil(sfxToRip.size() * (i / 10.0f)));
-        }
         archive = std::make_shared<Ship::O2rArchive>("accessibility.o2r");
         archive->Open();
     } catch (...) { currentStep = STEP_ERROR; }
@@ -135,13 +129,12 @@ void SfxExtractor::ripNextSfx() {
 
         return;
     }
-    if (sfxToRip.empty()) {
+    if (sfxToRip == sfxCount) {
         currentStep = STEP_FINISHED; // Caught 'em all!
         return;
     }
 
-    currentSfx = sfxToRip.front();
-    sfxToRip.pop();
+    currentSfx = sfxTable[sfxToRip++];
     startOfInput = 0;
     endOfInput = 0;
     Audio_PlaySoundGeneral(currentSfx, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
@@ -177,9 +170,9 @@ void SfxExtractor::finished() {
         Audio_PlayFanfare(NA_BGM_ITEM_GET);
 }
 void SfxExtractor::maybeGiveProgressReport() {
-    size_t ripsRemaining = sfxToRip.size() + 1;
+    size_t ripsRemaining = sfxCount - sfxToRip;
     for (int i = 0; i < 9; i++) {
-        if (ripsRemaining == progressMilestones[i]) {
+        if (ripsRemaining == sfxCount - ((int)ceil(sfxCount * ((i+1) / 10.0f)))) {
             int percentDone = (i + 1) * 10;
             std::stringstream ss;
             ss << percentDone << " percent complete.";
