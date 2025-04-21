@@ -1170,6 +1170,12 @@ void RegisterOnSetDoAction() {
                 case DO_ACTION_GRAB:
                     text = language == LANGUAGE_FRA ? "action" : language == LANGUAGE_GER ? "aktion" : "grab";
                     break;
+                case DO_ACTION_DOWN: {
+                    Player* player = GET_PLAYER(gPlayState);
+                    if (player == NULL || !(player->stateFlags1 & PLAYER_STATE1_ON_HORSE))
+                        return;
+                    text = language == LANGUAGE_FRA ? "descendre" : language == LANGUAGE_GER ? "herab" : "down";
+                } break;
                 default:
                     return;
             }
