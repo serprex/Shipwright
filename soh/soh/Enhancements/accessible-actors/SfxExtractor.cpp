@@ -172,7 +172,7 @@ void SfxExtractor::finished() {
 void SfxExtractor::maybeGiveProgressReport() {
     size_t ripsRemaining = sfxCount - sfxToRip;
     for (int i = 0; i < 9; i++) {
-        if (ripsRemaining == sfxCount - ((int)ceil(sfxCount * ((i+1) / 10.0f)))) {
+        if (ripsRemaining == sfxCount - ((int)ceil(sfxCount * ((i + 1) / 10.0f)))) {
             int percentDone = (i + 1) * 10;
             std::stringstream ss;
             ss << percentDone << " percent complete.";

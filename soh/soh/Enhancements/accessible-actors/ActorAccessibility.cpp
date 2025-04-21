@@ -371,7 +371,8 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
     if (!actor->policy.runsAlways && actor->xyzDistToPlayer > actor->policy.distance) {
         return;
     }
-    if (actor->isDrawn == 0 && actor->actor->id != ACTOR_EN_IT && actor->actor->id != ACTOR_EN_OKARINA_TAG && !aa->glossary->GlossaryStarted)
+    if (actor->isDrawn == 0 && actor->actor->id != ACTOR_EN_IT && actor->actor->id != ACTOR_EN_OKARINA_TAG &&
+        !aa->glossary->GlossaryStarted)
         return;
     if (actor->policy.aimAssist.isProvider) {
         Player* player = GET_PLAYER(play);
@@ -388,7 +389,7 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
                 ActorAccessibility_PlaySoundForActor(actor, 9, actor->policy.aimAssist.sfx, false);
             }
         } else {
-             // Make sure there's no delay the next time you draw your bow or whatever.
+            // Make sure there's no delay the next time you draw your bow or whatever.
             actor->aimAssist.framesSinceAimAssist = 32768;
         }
     }

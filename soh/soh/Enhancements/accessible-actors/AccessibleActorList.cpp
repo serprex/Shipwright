@@ -165,8 +165,7 @@ void accessible_hasi(AccessibleActor* actor) {
         actor->policy.ydist = 1000;
         actor->policy.distance = 1000;
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_OCTAROCK_ROCK, false);
-    }
-    else if ((actor->actor->params) == 1) {
+    } else if ((actor->actor->params) == 1) {
         actor->policy.ydist = 1000;
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_PL_DAMAGE, false);
     }
@@ -557,7 +556,6 @@ void accessible_jabu_elevator(AccessibleActor* actor) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_PL_LAND_LADDER, false);
     }
 }
-
 
 void accessible_graveyard_soil(AccessibleActor* actor) {
     ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_WOODSTICK_BROKEN, false);
@@ -979,8 +977,7 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(VA_AUDIO_COMPASS, policy);
 
     // Now query a list of virtual actors for a given location (scene and room number).
-    VirtualActorList* list =
-        (VirtualActorList*)ActorAccessibility_GetVirtualActorList(EVERYWHERE, 0);
+    VirtualActorList* list = (VirtualActorList*)ActorAccessibility_GetVirtualActorList(EVERYWHERE, 0);
 
     // Now place the actor.
     ActorAccessibility_AddVirtualActor(list, VA_GENERAL_HELPER, { { 0.0, 0.0, 0.0 }, { 0, 0, 0 } });
@@ -991,7 +988,8 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -784.0, 120.0, 1046.00 }, { 0, 14702, 0 } });
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2146.5, 1.0, -142.8 } });
 
-    list = ActorAccessibility_GetVirtualActorList(SCENE_KOKIRI_FOREST, 2); // Kokiri Forest Room with boulder and kokiri sword
+    list = ActorAccessibility_GetVirtualActorList(SCENE_KOKIRI_FOREST,
+                                                  2); // Kokiri Forest Room with boulder and kokiri sword
     ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -788.0, 120.0, 1392.00 }, { 0, 14702, 0 } });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_DEKU_TREE, 2); // deku tree slingshot room
@@ -1009,7 +1007,8 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -1958, 20, -1297 } });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_JABU_JABU, 2);
-    AccessibleActor* temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -260, -400, -3377 } }); // green tentacle hole
+    AccessibleActor* temp =
+        ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -260, -400, -3377 } }); // green tentacle hole
     temp->policy.distance = 200;
     temp->policy.sound = NA_SE_EN_DAIOCTA_DEAD;
     temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 230, -400, -3211 } }); // ruto hole
