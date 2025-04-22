@@ -1156,7 +1156,7 @@ void RegisterOnSetDoAction() {
                     text = language == LANGUAGE_FRA ? "voir" : language == LANGUAGE_GER ? "lesen" : "check";
                     break;
                 case DO_ACTION_ENTER:
-                    text = language == LANGUAGE_FRA ? "enter" : language == LANGUAGE_GER ? "kriechen" : "ranger";
+                    text = language == LANGUAGE_FRA ? "entrer" : language == LANGUAGE_GER ? "kriechen" : "enter";
                     break;
                 case DO_ACTION_OPEN:
                     text = language == LANGUAGE_FRA ? "ouvrir" : language == LANGUAGE_GER ? "öffnen" : "open";
