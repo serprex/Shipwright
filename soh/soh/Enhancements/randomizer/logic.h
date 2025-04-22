@@ -26,6 +26,7 @@ enum class GlitchDifficulty {
     HERO,
 };
 
+
 class Logic {
   public:
     bool noVariable = false;
@@ -182,10 +183,14 @@ class Logic {
     bool MQSpirit3SunsEnemies = false;
     bool MQSpiritOpenedBigMirrorCave = false;
     bool Spirit1FSilverRupees = false;
-    bool SpiritChildStalfosBridge = false;
-    bool SpiritChildTorchesBridge = false;
-    bool SpiritSunBlockTorch = false;
-    bool SpiritAdultLobbySwitch = false;
+    bool SpiritChildSwitchBridge = false;
+    bool SpiritRupeeBridge = false;
+    bool SpiritBouldersSilvers = false;
+    bool SpiritStatueRoomSouthDoor = false;
+    bool SpiritPlatformLowered = false;
+    bool Spirit4FSwitch = false;
+    bool ReverseSpiritChild = false;
+    bool ReverseSpiritAdult = true;
 
     /* --- END OF HELPERS AND LOCATION ACCESS --- */
 
@@ -294,6 +299,12 @@ class Logic {
     static std::map<uint32_t, uint32_t> RandoGetToDungeonScene;
     static std::map<RandomizerGet, uint32_t> RandoGetToEquipFlag;
     static std::map<RandomizerGet, uint32_t> RandoGetToRandInf;
+    bool Logic::IsReverseAccessPossible();
+    bool Logic::SpiritBrokenWallToStatue();
+    bool Logic::SpiritEastToSwitch();
+    bool Logic::SpiritWestToSkull();
+    bool Logic::MQSpiritStatueToSunBlock();
+    bool Logic::MQSpiritStatueSouthDoor();
 
   private:
     std::shared_ptr<Context> ctx;

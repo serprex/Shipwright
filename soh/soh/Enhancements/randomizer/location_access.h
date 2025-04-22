@@ -111,6 +111,25 @@ class Entrance;
 enum class EntranceType;
 } // namespace Rando
 
+struct SpiritLogicData {
+    uint8_t childKeys; //the number of keys that guarantees Child can reach this region
+    //The number of keys that guarantees Child can reach this region if they have reverse access
+    //This changes for MQ broken wall room as the first child lock can only be opened by Child
+    //guaranteeing access with 6 keys
+    uint8_t childReverseKeys; 
+    uint8_t adultKeys; //the number of keys that guarantees Adult can reach this region
+    //The area access condition to reach this region as Child, from the first lock,
+    //including the minimum number of keys for ambiguous access
+    // 1 key is always assumed to be required
+    ConditionFn childAccess;
+    //The area access condition to reach this region as Adult, from the first lock
+    //including the minimum number of keys for ambiguous access
+    //1 key is always assumed to be required on vanilla
+    ConditionFn adultAccess;
+    //The area access condition to reach this region from the boss door,
+    ConditionFn reverseAccess;
+};
+
 class Region {
   public:
     Region();
@@ -231,85 +250,11 @@ class Region {
                        "Adult Night: " +
                        std::to_string(adultNight);
     }
-
-    /*
-     * This logic covers checks that exist in the shared areas of Spirit from a glitchless standpoint.
-     * This code will fail if any glitch allows Adult to go in the Child spirit door first or vice versa as it relies on
-     specific ages
-
-     * There are 4 possibilities for passing a check, but first I have to talk about parallel universes.
-
-     * In the first universe, the player enters spirit as child, and spends as many keys as they can to lock adult out
-     * In the second, they enter as adult and spend as many keys as they can to lock child out.
-
-     * When an Age can no longer be kept out by the other age, that age is said to have Certain Access to a region
-     * If both ages have access to a region with a certain number of keys, but there is no Certain Access,
-     * then a check is only in logic if both ages can collect the check independently
-
-     * If an age has Certain Access then that age can collect checks alone,
-     * and there is no reason to check the other age untile the universes converge.
-
-     * The universes converge when the player has all the keys, giving both ages Certain Access.
-
-     * We must check for these universes manually as we allow technical access with minimum keys for
-     * technical reasons as otherwise the code will never run
-     */
-
-    bool SpiritShared(ConditionFn condition, ConditionFn childAccess, ConditionFn adultAccess, uint8_t childKeys,
-                      uint8_t adultKeys, uint8_t eitherKeys, bool anyAge = false) {
-        // If we have all of the keys, we know that access is Certain Access
-        if (ctx->GetDungeon(Rando::SPIRIT_TEMPLE)->IsMQ() ? logic->SmallKeys(RR_SPIRIT_TEMPLE, 7)
-                                                          : logic->SmallKeys(RR_SPIRIT_TEMPLE, 5)) {
-            if (anyAge) {
-                return Here(condition);
-            }
-            return condition();
-            // otherwise, we have to check the current age and...
-        } else if (Child() && logic->IsChild) {
-            bool result = condition();
-            // if we have enough keys to have Certain Access, we just run the condition
-            if (logic->SmallKeys(RR_SPIRIT_TEMPLE, childKeys)) {
-                return result;
-                // otherwise we need to check both ages if we have enough keys that either can get there
-            } else if (result && logic->SmallKeys(RR_SPIRIT_TEMPLE, eitherKeys) && adultAccess) {
-                // store current age variables
-                bool pastAdult = logic->IsAdult;
-                bool pastChild = logic->IsChild;
-
-                logic->IsChild = false;
-                logic->IsAdult = true;
-
-                result = condition();
-
-                logic->IsChild = pastChild;
-                logic->IsAdult = pastAdult;
-
-                return result;
-            }
-        } else if (Adult() && logic->IsAdult) {
-            bool result = condition();
-            // if we have enough keys to have Certain Access, we just run the condition
-            if (logic->SmallKeys(RR_SPIRIT_TEMPLE, adultKeys)) {
-                return result;
-                // otherwise we need to check both ages
-            } else if (result && logic->SmallKeys(RR_SPIRIT_TEMPLE, eitherKeys) && childAccess) {
-                // store current age variables
-                bool pastAdult = logic->IsAdult;
-                bool pastChild = logic->IsChild;
-
-                logic->IsChild = true;
-                logic->IsAdult = false;
-
-                result = condition();
-
-                logic->IsChild = pastChild;
-                logic->IsAdult = pastAdult;
-
-                return result;
-            }
-        }
-        return false;
-    }
+    
+    static std::map<RandomizerRegion, SpiritLogicData> spiritLogicData;
+      
+    bool SpiritShared(ConditionFn condition, ConditionFn childAccess, ConditionFn adultAccess, ConditionFn ReverseAccess,
+        uint8_t childKeys, uint8_t adultKeys, uint8_t eitherKeys, bool anyAge);
 };
 
 extern std::array<Region, RR_MAX> areaTable;
@@ -318,11 +263,8 @@ extern std::vector<EventAccess> grottoEvents;
 bool Here(const RandomizerRegion region,
           ConditionFn
               condition); // RANDOTODO make a less stupid way to check own at either age than self referencing with this
-bool SpiritSharedBrokenWallRoom(ConditionFn condition, bool anyAge = false);
-bool SpiritSharedStatueRoom(ConditionFn condition, bool anyAge = false);
-bool SpiritSharedSunBlockRoom(ConditionFn condition, bool anyAge = false);
-bool MQSpiritSharedStatueRoom(const RandomizerRegion region, ConditionFn condition, bool anyAge = false);
-bool MQSpiritSharedBrokenWallRoom(const RandomizerRegion region, ConditionFn condition, bool anyAge = false);
+bool SpiritShared(RandomizerRegion region, ConditionFn condition, bool anyAge = false, 
+                  RandomizerRegion otherRegion = RR_NONE, ConditionFn otherCondition = []{return false;});
 bool CanPlantBean(const RandomizerRegion region);
 bool BothAges(const RandomizerRegion region);
 bool ChildCanAccess(const RandomizerRegion region);

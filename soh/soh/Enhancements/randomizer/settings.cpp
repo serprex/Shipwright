@@ -1006,11 +1006,11 @@ void Settings::CreateOptions() {
               "Removes the requirements for the Lens of Truth in Spirit Temple.");
     OPT_TRICK(RT_SPIRIT_CHILD_CHU, RCQUEST_VANILLA, RA_SPIRIT_TEMPLE, { Tricks::Tag::NOVICE },
               "Spirit Temple Child Side Bridge with Bombchu", "A carefully-timed Bombchu can hit the switch.");
-    OPT_TRICK(RT_SPIRIT_LOBBY_GS, RCQUEST_VANILLA, RA_SPIRIT_TEMPLE, { Tricks::Tag::NOVICE },
-              "Spirit Temple Main Room GS with Boomerang",
-              "Standing on the highest part of the arm of the statue, a precise Boomerang throw can kill and obtain "
-              "this Gold Skulltula. You must throw the Boomerang slightly off to the side so that it curves into the "
-              "Skulltula, as aiming directly at it will clank off of the wall in front.");
+    OPT_TRICK(RT_SPIRIT_WEST_LEDGE, RCQUEST_BOTH, RA_SPIRIT_TEMPLE, { Tricks::Tag::NOVICE },
+              "Spirit Temple Statue Room West Ledge Checks with Boomerang",
+              "By carefully walking onto the upper arm of the statue, it's possible to get a good angle on the "
+              "Gold Skulltula (In Vanilla) and the farthest pot (In MQ) to collect the checks with Boomerang. "
+              "The nearest pot in MQ can be reached from the forearm and is always in logic.");
     OPT_TRICK(RT_SPIRIT_LOWER_ADULT_SWITCH, RCQUEST_VANILLA, RA_SPIRIT_TEMPLE, { Tricks::Tag::ADVANCED },
               "Spirit Temple Lower Adult Switch with Bombs",
               "A bomb can be used to hit the switch on the ceiling, but it must be thrown from a particular distance "

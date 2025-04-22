@@ -539,14 +539,11 @@ bool Logic::CanKillEnemy(RandomizerEnemy enemy, EnemyDistance distance, bool wal
                     killed = killed || CanUse(RG_BIGGORON_SWORD) || CanUse(RG_STICKS);
                     [[fallthrough]];
                 case ED_BOMB_THROW:
-                    killed = killed || CanUse(RG_BOMB_BAG);
+                    killed = killed || CanUse(RG_BOMB_BAG) || CanUse(RG_DINS_FIRE);
                     [[fallthrough]];
                 case ED_BOOMERANG:
-                    // RANDOTODO test dins and chu range in a practical example
-                    killed = killed || CanUse(RG_DINS_FIRE);
-                    [[fallthrough]];
                 case ED_HOOKSHOT:
-                    // RANDOTODO test dins and chu range in a practical example
+                    // RANDOTODO test chu range in a practical example
                     killed = killed || CanUse(RG_HOOKSHOT) || (wallOrFloor && CanUse(RG_BOMBCHU_5));
                     [[fallthrough]];
                 case ED_LONGSHOT:
@@ -576,15 +573,15 @@ bool Logic::CanKillEnemy(RandomizerEnemy enemy, EnemyDistance distance, bool wal
                     killed = killed || CanUse(RG_BIGGORON_SWORD) || CanUse(RG_STICKS);
                     [[fallthrough]];
                 case ED_BOMB_THROW:
-                    // RANDOTODO test dins and chu range in a practical example
+                    // RANDOTODO test chu range in a practical example
                     killed = killed || (!inWater && CanUse(RG_BOMB_BAG));
                     [[fallthrough]];
                 case ED_BOOMERANG:
-                    // RANDOTODO test dins and chu range in a practical example
+                    // RANDOTODO test chu range in a practical example
                     killed = killed || CanUse(RG_BOOMERANG);
                     [[fallthrough]];
                 case ED_HOOKSHOT:
-                    // RANDOTODO test dins, bomb and chu range in a practical example
+                    // RANDOTODO test chu range in a practical example
                     killed = killed || CanUse(RG_HOOKSHOT) || (wallOrFloor && CanUse(RG_BOMBCHU_5));
                     [[fallthrough]];
                 case ED_LONGSHOT:
@@ -629,7 +626,7 @@ bool Logic::CanKillEnemy(RandomizerEnemy enemy, EnemyDistance distance, bool wal
                     [[fallthrough]];
                 case ED_BOOMERANG:
                 case ED_HOOKSHOT:
-                    // RANDOTODO test dins and chu range in a practical example
+                    // RANDOTODO test chu range in a practical example
                     killed = killed || (wallOrFloor && CanUse(RG_BOMBCHU_5));
                     [[fallthrough]];
                 case ED_LONGSHOT:
@@ -710,12 +707,11 @@ bool Logic::CanKillEnemy(RandomizerEnemy enemy, EnemyDistance distance, bool wal
                     killed = killed || CanUse(RG_BIGGORON_SWORD) || CanUse(RG_STICKS);
                     [[fallthrough]];
                 case ED_BOMB_THROW:
-                    // RANDOTODO test dins and chu range in a practical example
                     killed = killed || (!inWater && CanUse(RG_BOMB_BAG));
                     [[fallthrough]];
                 case ED_BOOMERANG:
                 case ED_HOOKSHOT:
-                    // RANDOTODO test dins, bomb and chu range in a practical example
+                    // RANDOTODO test chu range in a practical example
                     killed = killed || CanUse(RG_HOOKSHOT) || (wallOrFloor && CanUse(RG_BOMBCHU_5));
                     [[fallthrough]];
                 case ED_LONGSHOT:
@@ -789,6 +785,33 @@ bool Logic::CanKillEnemy(RandomizerEnemy enemy, EnemyDistance distance, bool wal
         case RE_OCTOROK:
             return CanReflectNuts() || HookshotOrBoomerang() || CanUse(RG_FAIRY_BOW) || CanUse(RG_FAIRY_SLINGSHOT) ||
                    CanUse(RG_BOMB_BAG) || (wallOrFloor && CanUse(RG_BOMBCHU_5));
+        case RE_WALLTULA:
+            switch (distance) {
+                case ED_CLOSE:
+                case ED_SHORT_JUMPSLASH:
+                    killed = CanUse(RG_KOKIRI_SWORD);
+                    [[fallthrough]];
+                case ED_MASTER_SWORD_JUMPSLASH:
+                    killed = killed || CanUse(RG_MASTER_SWORD);
+                    [[fallthrough]];
+                case ED_LONG_JUMPSLASH:
+                    killed = killed || CanUse(RG_BIGGORON_SWORD) || CanUse(RG_STICKS);
+                    [[fallthrough]];
+                case ED_BOMB_THROW:
+                    killed = killed || (!inWater && CanUse(RG_BOMB_BAG)) || CanUse(RG_DINS_FIRE);
+                    [[fallthrough]];
+                case ED_BOOMERANG:
+                case ED_HOOKSHOT:
+                    killed = killed || CanUse(RG_HOOKSHOT) || CanUse(RG_BOMBCHU_5) || CanUse(RG_MEGATON_HAMMER);
+                    [[fallthrough]];
+                case ED_LONGSHOT:
+                    killed = killed || CanUse(RG_LONGSHOT);
+                    [[fallthrough]];
+                case ED_FAR:
+                    killed = killed || CanUse(RG_FAIRY_SLINGSHOT) || CanUse(RG_FAIRY_BOW);
+                    break;
+            }
+            return killed;
         default:
             SPDLOG_ERROR("CanKillEnemy reached `default`.");
             assert(false);
@@ -841,6 +864,7 @@ bool Logic::CanPassEnemy(RandomizerEnemy enemy, EnemyDistance distance, bool wal
             return CanUse(RG_HOOKSHOT) || CanUse(RG_SUNS_SONG);
         case RE_IRON_KNUCKLE:
         case RE_BIG_OCTO:
+        case RE_WALLTULA: //consistent with RT_SPIRIT_WALL
             return false;
         case RE_GREEN_BUBBLE:
             return TakeDamage() || CanUse(RG_NUTS) || CanUse(RG_BOOMERANG) || CanUse(RG_HOOKSHOT);
@@ -887,6 +911,7 @@ bool Logic::CanAvoidEnemy(RandomizerEnemy enemy, bool grounded, uint8_t quantity
         case RE_WALLMASTER:
         case RE_ANUBIS:
         case RE_PURPLE_LEEVER:
+        case RE_WALLTULA:
             return true;
         case RE_BEAMOS:
             return !grounded || CanUse(RG_NUTS) || CanUse(RG_DINS_FIRE) ||
@@ -899,6 +924,8 @@ bool Logic::CanAvoidEnemy(RandomizerEnemy enemy, bool grounded, uint8_t quantity
         case RE_BLUE_BUBBLE:
             // RANDOTODO Trick to use shield hylian shield as child to stun these guys
             return !grounded || CanUse(RG_NUTS) || HookshotOrBoomerang() || CanStandingShield();
+        case RE_TORCH_SLUG:
+            return !grounded || CanUse(RG_NUTS) || CanUse(RG_HOOKSHOT) || CanUse(RG_DINS_FIRE);
         default:
             SPDLOG_ERROR("CanPassEnemy reached `default`.");
             assert(false);
@@ -2331,6 +2358,32 @@ void Logic::SetInLogic(LogicVal logicVal, bool value) {
     inLogic[logicVal] = value;
 }
 
+bool Logic::IsReverseAccessPossible(){
+    return ctx->GetOption(RSK_SHUFFLE_BOSS_ENTRANCES) &&
+           (ctx->GetOption(RSK_DECOUPLED_ENTRANCES) || 
+            ctx->GetOption(RSK_MIX_BOSS_ENTRANCES));
+}
+
+bool Logic::SpiritBrokenWallToStatue() {
+    return /*CanClimbHigh() &&*/ (HasExplosives() || (ctx->GetOption(RSK_SUNLIGHT_ARROWS) && CanUse(RG_LIGHT_ARROWS)));
+}
+
+bool Logic::SpiritEastToSwitch() {
+    return (IsAdult && ctx->GetTrickOption(RT_SPIRIT_LOBBY_JUMP)) || CanUse(RG_HOVER_BOOTS) || (CanUse(RG_ZELDAS_LULLABY) && CanUse(RG_HOOKSHOT));
+}
+
+bool Logic::SpiritWestToSkull() {
+    return (IsAdult && ctx->GetTrickOption(RT_SPIRIT_LOBBY_JUMP)) || CanUse(RG_HOVER_BOOTS) || CanUse(RG_SCARECROW);
+}
+
+bool Logic::MQSpiritStatueToSunBlock() {
+    return IsAdult || ctx->GetTrickOption(RT_SPIRIT_MQ_SUN_BLOCK_SOT) || CanUse(RG_SONG_OF_TIME);
+}
+
+bool Logic::MQSpiritStatueSouthDoor() {
+    return HasFireSource() || (ctx->GetTrickOption(RT_SPIRIT_MQ_FROZEN_EYE) && CanUse(RG_FAIRY_BOW) && CanUse(RG_SONG_OF_TIME)/* && CanClimb()*/);
+}
+
 void Logic::Reset() {
     NewSaveContext();
     StartPerformanceTimer(PT_LOGIC_RESET);
@@ -2520,11 +2573,15 @@ void Logic::Reset() {
     MQSpirit3SunsEnemies = false;
     MQSpiritOpenedBigMirrorCave = false;
     Spirit1FSilverRupees = false;
-    SpiritChildStalfosBridge = false;
-    SpiritChildTorchesBridge = false;
-    SpiritSunBlockTorch = false;
-    SpiritAdultLobbySwitch = false;
+    SpiritChildSwitchBridge = false;
+    SpiritRupeeBridge = false;
+    SpiritBouldersSilvers = false;
+    SpiritPlatformLowered = false;
+    Spirit4FSwitch = false;
+    ReverseSpiritChild = false;
+    ReverseSpiritAdult = false;
 
     StopPerformanceTimer(PT_LOGIC_RESET);
 }
+
 } // namespace Rando
