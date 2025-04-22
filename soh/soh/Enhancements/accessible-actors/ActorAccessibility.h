@@ -1,11 +1,7 @@
 #pragma once
 #include <z64.h>
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 struct AccessibleActor;
-typedef struct AccessibleActor AccessibleActor;
 // A callback that is run regularely as the game progresses in order to provide accessibility services for an actor.
 
 typedef void (*ActorAccessibilityCallback)(AccessibleActor*);
@@ -15,10 +11,8 @@ typedef bool (*ActorAccessibilityUserDataInit)(AccessibleActor*);
 typedef void (*ActorAccessibilityUserDataCleanup)(AccessibleActor*);
 
 struct VirtualActorList;
-typedef struct VirtualActorList VirtualActorList;
 
-typedef struct {
-
+struct ActorAccessibilityPolicy {
     const char* englishName;
 
     ActorAccessibilityCallback callback; // If set, it will be called once every n frames. If null, then sfx will be
@@ -41,8 +35,7 @@ typedef struct {
         f32 tolerance;   // How close to the center of the actor does Link have to aim for aim assist to consider
                          // it lined up.
     } aimAssist;
-
-} ActorAccessibilityPolicy;
+};
 
 // Accessible actor object. This can be a "real" actor (one that corresponds to an actual actor in the game) or a
 // "virtual" actor (which does not actually exist in the game, but is used to create extra sounds for the player).
@@ -85,12 +78,14 @@ struct AccessibleActor {
     ActorAccessibilityPolicy policy; // A copy, so it can be customized on a per-actor basis if needed.
     void* userData;                  // Set by the policy. Can be anything.
 };
+
 // Initialize accessibility.
 void ActorAccessibility_Init();
 void ActorAccessibility_InitActors();
 void ActorAccessibility_Shutdown();
 void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char* englishName,
-                                   ActorAccessibilityCallback callback, s16 sfx);
+                                   ActorAccessibilityCallback callback);
+void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char* englishName, s16 sfx);
 
 void ActorAccessibility_TrackNewActor(Actor* actor);
 void ActorAccessibility_RemoveTrackedActor(Actor* actor);
@@ -159,9 +154,7 @@ typedef enum {
     VA_GENERAL_HELPER, // Room announcements, action icon and other misc help.
     VA_AUDIO_COMPASS,  // Points north.
     VA_STICK_WARNING,  // beep when stick is about to burn out.
-
-    VA_FINAL,
-
+    VA_MAX,
 } VIRTUAL_ACTOR_TABLE;
 
 #define EVERYWHERE -32768 // Denotes a virtual actor that is global
@@ -189,7 +182,3 @@ void ActorAccessibility_HandleSoundExtractionMode(PlayState* play);
 void ActorAccessibility_DoSoundExtractionStep();
 
 void ActorAccessibility_AudioGlossary(PlayState* play);
-#ifdef __cplusplus
-}
-
-#endif

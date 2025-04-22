@@ -809,7 +809,7 @@ class TerrainCueDirection {
         return r;
     }
 
-    float checkForLava(Vec3f_ pos) {
+    bool checkForLava(Vec3f_ pos) {
         CollisionPoly* floorpoly;
         int32_t bgid = BGCHECK_SCENE;
         CollisionContext* colCtx = &actor->play->colCtx;
@@ -821,17 +821,10 @@ class TerrainCueDirection {
             return 0;
         }
         s8 floorparam = func_80041D4C(colCtx, floorpoly, BG_ACTOR_MAX);
-        if (floorparam == 2 || floorparam == 3) {
-
-            return 1;
-        } else {
-
-            return 0;
-        }
+        return floorparam == 2 || floorparam == 3;
     }
 
     void scan() {
-
         Player* player = GET_PLAYER(actor->play);
         CollisionContext* colCtx = &actor->play->colCtx;
 
@@ -1493,9 +1486,8 @@ ActorAccessibility_PlaySpecialSound(actor, wallCueSound);
 */
 
 void ActorAccessibility_InitCues() {
-
     ActorAccessibilityPolicy policy;
-    ActorAccessibility_InitPolicy(&policy, "Terrain cue helper", accessible_va_terrain_cue, 0);
+    ActorAccessibility_InitPolicy(&policy, "Terrain cue helper", accessible_va_terrain_cue);
     policy.n = 1;
     policy.runsAlways = true;
     policy.distance = 500;

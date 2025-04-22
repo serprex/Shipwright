@@ -41,69 +41,6 @@ typedef struct {
     int framesUntilAboveChime;
 } SwitchData;
 
-// Begin actor-specific policy callbacks.
-
-void accessible_en_ishi(AccessibleActor* actor) {
-    ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_OCTAROCK_ROCK, false);
-}
-
-void accessible_en_bombiwa(AccessibleActor* actor) {
-    ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_ROCK_BROKEN, false);
-}
-
-void accessible_en_hamishi(AccessibleActor* actor) {
-    ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_HAMMER_HIT, false);
-}
-
-void accessible_en_NPC_Gen(AccessibleActor* actor) {
-    ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_VO_NB_LAUGH, false);
-}
-void accessible_en_chest(AccessibleActor* actor) {
-
-    Player* player = GET_PLAYER(actor->play);
-    EnBox* chest = (EnBox*)actor->actor;
-    if (chest->actionFunc != EnBox_WaitOpen)
-        return;
-    s32 treasureFlag = actor->actor->params & 0x1F;
-    s8 size;
-    if (chest->type <= 8 && chest->type >= 5) {
-        size = 15; // small
-    } else {
-        size = 30; // large
-    }
-    if (!(treasureFlag >= 20 && treasureFlag < 32)) {
-        ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_TBOX_UNLOCK, false);
-    }
-    // Only chests that are "waiting to be opened" should play a sound. Chests which have not yet appeared (because some
-    // enemy has not been killed, switch has not been hit, etc) will not be in this action mode.
-    f32 leftAngle = actor->actor->world.rot.y - 16384;
-    f32 velocityXRight = Math_SinS(leftAngle);
-    f32 velocityZRight = Math_CosS(leftAngle);
-
-    f32 frontAngle = actor->actor->world.rot.y;
-    f32 velocityXFront = Math_SinS(frontAngle);
-    f32 velocityZFront = Math_CosS(frontAngle);
-
-    f32 xdist = (player->actor.world.pos.x - actor->actor->world.pos.x) * velocityXFront +
-                (player->actor.world.pos.z - actor->actor->world.pos.z) * velocityZFront;
-    f32 zdist = fabs((player->actor.world.pos.x - actor->actor->world.pos.x) * velocityXRight +
-                     (player->actor.world.pos.z - actor->actor->world.pos.z) * velocityZRight);
-
-    if ((xdist - size / 2) < 0) {
-        ActorAccessibility_SetSoundPitch(actor, 0, 0.5);
-    } else if ((xdist + size / 2) > 0 && zdist < size / 2 && xdist < 150.0) {
-        ActorAccessibility_PlaySoundForActor(actor, 1, NA_SE_EV_DIAMOND_SWITCH, false);
-    }
-}
-
-void accessible_en_gerudo(AccessibleActor* actor) {
-    ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_VO_NB_LAUGH, false); // update sound for ones that detect you
-}
-
-void accessible_en_Sign(AccessibleActor* actor) {
-    ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_REFLECTION_WOOD, false);
-}
-
 void accessible_en_pickups(AccessibleActor* actor) {
     ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_NUTS_DAMAGE, false);
 }
@@ -172,7 +109,7 @@ void accessible_hasi(AccessibleActor* actor) {
 }
 bool accessible_switch_init(AccessibleActor* actor) {
     SwitchData* data = (SwitchData*)malloc(sizeof(SwitchData));
-    if (data == NULL)
+    if (data == nullptr)
         return false; // failure to allocate memory.
     data->framesUntilAboveChime = 0;
     actor->userData = (void*)data;
@@ -415,16 +352,13 @@ void accessible_area_change(AccessibleActor* actor) {
 }
 
 void accessible_231_dekus(AccessibleActor* actor) {
-
     if (actor->actor->params == 1) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_NUTS_FAINT, false);
         ActorAccessibility_SetSoundPitch(actor, 0, 1.0);
-    }
-    if (actor->actor->params == 2) {
+    } else if (actor->actor->params == 2) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_NUTS_FAINT, false);
         ActorAccessibility_SetSoundPitch(actor, 0, 0.5);
-    }
-    if (actor->actor->params == 3) {
+    } else if (actor->actor->params == 3) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_NUTS_FAINT, false);
         ActorAccessibility_SetSoundPitch(actor, 0, 1.5);
     } else {
@@ -446,7 +380,7 @@ void accessible_climable(AccessibleActor* actor) {
     if (actor->world.pos.y < waterLoc) {
         actor->world.pos.y = waterLoc;
     }
-    if (actor != NULL && actor->yDistToPlayer < 80)
+    if (actor != nullptr && actor->yDistToPlayer < 80)
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_PL_LAND_LADDER, false);
 }
 
@@ -544,23 +478,6 @@ void accessible_sticks(AccessibleActor* actor) {
     }
 }
 
-void accessible_jabu_switch(AccessibleActor* actor) {
-    int type = actor->actor->params & 0xFF;
-    if (type == YELLOW_TALL_1 || type == YELLOW_TALL_2) {
-        actor->policy.aimAssist.isProvider = true;
-    }
-}
-
-void accessible_jabu_elevator(AccessibleActor* actor) {
-    if ((actor->actor->params & 0xFF) == 2 && actor->xzDistToPlayer > 50) {
-        ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_PL_LAND_LADDER, false);
-    }
-}
-
-void accessible_graveyard_soil(AccessibleActor* actor) {
-    ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_WOODSTICK_BROKEN, false);
-}
-
 void accessible_cucco(AccessibleActor* actor) {
     if (actor->actor->params == 14) {
 
@@ -574,7 +491,7 @@ void accessible_cucco(AccessibleActor* actor) {
 
 bool accessible_general_helper_init(AccessibleActor* actor) {
     GeneralHelperData* data = (GeneralHelperData*)malloc(sizeof(GeneralHelperData));
-    if (data == NULL)
+    if (data == nullptr)
         return false;
     data->currentRoom = -1;
     data->currentRoomClear = false;
@@ -583,10 +500,12 @@ bool accessible_general_helper_init(AccessibleActor* actor) {
     actor->userData = data;
     return true;
 }
+
 void accessible_general_helper_cleanup(AccessibleActor* actor) {
     free(actor->userData);
-    actor->userData = NULL;
+    actor->userData = nullptr;
 }
+
 void accessible_va_general_helper(AccessibleActor* actor) {
     GeneralHelperData* data = (GeneralHelperData*)actor->userData;
     if (data->currentScene == actor->play->sceneNum && data->currentRoom != actor->play->roomCtx.curRoom.num) {
@@ -608,7 +527,7 @@ void accessible_va_general_helper(AccessibleActor* actor) {
 }
 bool accessible_audio_compass_init(AccessibleActor* actor) {
     AudioCompassData* data = (AudioCompassData*)malloc(sizeof(AudioCompassData));
-    if (data == NULL)
+    if (data == nullptr)
         return false;
     data->linearVelocity = 0;
     data->framesUntilChime = 0;
@@ -652,10 +571,10 @@ void accessible_stick_warning(AccessibleActor* actor) {
 void ActorAccessibility_InitActors() {
     const int Npc_Frames = 35;
     ActorAccessibilityPolicy policy;
-    ActorAccessibility_InitPolicy(&policy, "Rock", accessible_en_ishi, 0);
+    ActorAccessibility_InitPolicy(&policy, "Rock", NA_SE_EN_OCTAROCK_ROCK);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_ISHI, policy);
 
-    ActorAccessibility_InitPolicy(&policy, "Story NPCs", NULL, NA_SE_VO_NA_HELLO_0);
+    ActorAccessibility_InitPolicy(&policy, "Story NPCs", NA_SE_VO_NA_HELLO_0);
     policy.englishName = "Mido";
     policy.n = Npc_Frames;
     policy.distance = 1000;
@@ -682,18 +601,18 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_EN_DU, policy);
     policy.englishName = "Owl";
     ActorAccessibility_AddSupportedActor(ACTOR_EN_OWL, policy);
-    ActorAccessibility_InitPolicy(&policy, "Catching Guards", accessible_en_guard, 0);
+    ActorAccessibility_InitPolicy(&policy, "Catching Guards", accessible_en_guard);
     policy.n = 10;
     policy.distance = 500;
     policy.ydist = 300;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_HEISHI1, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_HEISHI3, policy);
 
-    ActorAccessibility_InitPolicy(&policy, "Passive Guards", NULL, NA_SE_IT_SWORD_IMPACT);
+    ActorAccessibility_InitPolicy(&policy, "Passive Guards", NA_SE_IT_SWORD_IMPACT);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_HEISHI2, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_HEISHI4, policy);
 
-    ActorAccessibility_InitPolicy(&policy, "Shopkeepers", NULL, NA_SE_VO_NA_HELLO_1);
+    ActorAccessibility_InitPolicy(&policy, "Shopkeepers", NA_SE_VO_NA_HELLO_1);
     policy.pitch = 0.6;
     policy.n = 30;
     policy.englishName = "Shooting Gallery Man";
@@ -706,7 +625,7 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_EN_DS, policy);
 
     // general NPCs
-    ActorAccessibility_InitPolicy(&policy, "Kokiri Child", accessible_en_NPC_Gen, 0);
+    ActorAccessibility_InitPolicy(&policy, "Kokiri Child", NA_SE_VO_NB_LAUGH);
     policy.n = Npc_Frames;
     policy.pitch = 1.1;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_KO, policy);
@@ -742,28 +661,63 @@ void ActorAccessibility_InitActors() {
     policy.pitch = 0.75;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_GS, policy);
 
-    ActorAccessibility_InitPolicy(&policy, "Dogs", accessible_en_dogs, 0);
+    ActorAccessibility_InitPolicy(&policy, "Dogs", accessible_en_dogs);
     policy.n = 1;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_DOG, policy);
 
-    ActorAccessibility_InitPolicy(&policy, "Horses", NULL, NA_SE_EV_HORSE_NEIGH);
+    ActorAccessibility_InitPolicy(&policy, "Horses", NA_SE_EV_HORSE_NEIGH);
     policy.n = 30;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_HORSE_NORMAL, policy);
-    ActorAccessibility_InitPolicy(&policy, "Cows", NULL, NA_SE_EV_COW_CRY_LV);
+    ActorAccessibility_InitPolicy(&policy, "Cows", NA_SE_EV_COW_CRY_LV);
     policy.n = 30;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_COW, policy);
-    ActorAccessibility_InitPolicy(&policy, "Cuccos", accessible_cucco, 0);
+    ActorAccessibility_InitPolicy(&policy, "Cuccos", accessible_cucco);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_NIW, policy);
-    ActorAccessibility_InitPolicy(&policy, "Bush", NULL, NA_SE_PL_PULL_UP_PLANT);
+    ActorAccessibility_InitPolicy(&policy, "Bush", NA_SE_PL_PULL_UP_PLANT);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_KUSA, policy);
-    ActorAccessibility_InitPolicy(&policy, "Trees", NULL, NA_SE_EV_TREE_CUT);
+    ActorAccessibility_InitPolicy(&policy, "Trees", NA_SE_EV_TREE_CUT);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_WOOD02, policy);
 
-    ActorAccessibility_InitPolicy(&policy, "Chest", accessible_en_chest, 0);
+    ActorAccessibility_InitPolicy(&policy, "Chest", [](AccessibleActor* actor) {
+        Player* player = GET_PLAYER(actor->play);
+        EnBox* chest = (EnBox*)actor->actor;
+        if (chest->actionFunc != EnBox_WaitOpen)
+            return;
+        s32 treasureFlag = actor->actor->params & 0x1F;
+        s8 size;
+        if (chest->type <= 8 && chest->type >= 5) {
+            size = 15; // small
+        } else {
+            size = 30; // large
+        }
+        if (!(treasureFlag >= 20 && treasureFlag < 32)) {
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_TBOX_UNLOCK, false);
+        }
+        // Only chests that are "waiting to be opened" should play a sound. Chests which have not yet appeared (because
+        // some enemy has not been killed, switch has not been hit, etc) will not be in this action mode.
+        f32 leftAngle = actor->actor->world.rot.y - 16384;
+        f32 velocityXRight = Math_SinS(leftAngle);
+        f32 velocityZRight = Math_CosS(leftAngle);
+
+        f32 frontAngle = actor->actor->world.rot.y;
+        f32 velocityXFront = Math_SinS(frontAngle);
+        f32 velocityZFront = Math_CosS(frontAngle);
+
+        f32 xdist = (player->actor.world.pos.x - actor->actor->world.pos.x) * velocityXFront +
+                    (player->actor.world.pos.z - actor->actor->world.pos.z) * velocityZFront;
+        f32 zdist = fabs((player->actor.world.pos.x - actor->actor->world.pos.x) * velocityXRight +
+                         (player->actor.world.pos.z - actor->actor->world.pos.z) * velocityZRight);
+
+        if ((xdist - size / 2) < 0) {
+            ActorAccessibility_SetSoundPitch(actor, 0, 0.5);
+        } else if ((xdist + size / 2) > 0 && zdist < size / 2 && xdist < 150.0) {
+            ActorAccessibility_PlaySoundForActor(actor, 1, NA_SE_EV_DIAMOND_SWITCH, false);
+        }
+    });
     policy.pitch = 1.1;
     policy.distance = 1000;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_BOX, policy);
-    ActorAccessibility_InitPolicy(&policy, "Sign", accessible_en_Sign, 0);
+    ActorAccessibility_InitPolicy(&policy, "Sign", NA_SE_IT_REFLECTION_WOOD);
     policy.n = 40;
     policy.pitch = 1.6;
     policy.distance = 800;
@@ -771,60 +725,61 @@ void ActorAccessibility_InitActors() {
 
     // ACTOR_EN_A_OBJ has exactly the same configuration.
     ActorAccessibility_AddSupportedActor(ACTOR_EN_A_OBJ, policy);
-    ActorAccessibility_InitPolicy(&policy, "Large Crate", NULL, NA_SE_EV_WOODBOX_BREAK);
+    ActorAccessibility_InitPolicy(&policy, "Large Crate", NA_SE_EV_WOODBOX_BREAK);
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_KIBAKO, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_KIBAKO2, policy);
-    ActorAccessibility_InitPolicy(&policy, "deku stick drops", accessible_sticks, 0);
+    ActorAccessibility_InitPolicy(&policy, "deku stick drops", accessible_sticks);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_DEKUBABA, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_KAREBABA, policy);
-    ActorAccessibility_InitPolicy(&policy, "Owl", NULL, NA_SE_EN_OWL_FLUTTER);
+    ActorAccessibility_InitPolicy(&policy, "Owl", NA_SE_EN_OWL_FLUTTER);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_OWL, policy);
     // will probably just get replaced with ghost actors anyways
-    // ActorAccessibility_AddSupporte dActor(ACTOR_EN_HOLL, "Room Changing Plane", NULL, 30, 500, 1.0, 1.0,
+    // ActorAccessibility_AddSupporte dActor(ACTOR_EN_HOLL, "Room Changing Plane", nullptr, 30, 500, 1.0, 1.0,
     //                                      NA_SE_EV_STONEDOOR_STOP /*NOT SURE YET*/);
 
-    ActorAccessibility_InitPolicy(&policy, "Ruto", NULL, NA_SE_VO_RT_LAUGH_0);
+    ActorAccessibility_InitPolicy(&policy, "Ruto", NA_SE_VO_RT_LAUGH_0);
     policy.n = 40;
     policy.pitch = 1.1;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_RU1, policy);
 
-    ActorAccessibility_InitPolicy(&policy, "Bean patch", NULL, NA_SE_EN_MUSI_SINK);
+    ActorAccessibility_InitPolicy(&policy, "Bean patch", NA_SE_EN_MUSI_SINK);
     policy.n = 60;
     policy.distance = 2400;
     policy.pitch = 1.3;
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_BEAN, policy);
-    ActorAccessibility_InitPolicy(&policy, "GraveYard Digging spots", accessible_graveyard_soil, 0);
+    ActorAccessibility_InitPolicy(&policy, "Graveyard Digging Spot", NA_SE_IT_WOODSTICK_BROKEN);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_IT, policy);
-    ActorAccessibility_InitPolicy(&policy, "Collectible", accessible_en_pickups, 0);
+    ActorAccessibility_InitPolicy(&policy, "Collectible", accessible_en_pickups);
     policy.n = 40;
     policy.pitch = 1.4;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_ITEM00, policy);
-    ActorAccessibility_InitPolicy(&policy, "Gerudo Guard", accessible_en_gerudo, 0);
+    // TODO better gerudo guard logic
+    ActorAccessibility_InitPolicy(&policy, "Gerudo Guard", NA_SE_VO_NB_LAUGH);
     policy.n = Npc_Frames;
     policy.pitch = 1.1;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_GE1, policy);
-    ActorAccessibility_InitPolicy(&policy, "Brown Bombable Rock", accessible_en_bombiwa, 0);
-    policy.n = 30;
-    policy.pitch = 0.7;
+    ActorAccessibility_InitPolicy(&policy, "Boulder", NA_SE_EV_ROCK_BROKEN);
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_BOMBIWA, policy);
-    ActorAccessibility_InitPolicy(&policy, "Grotto Door", accessible_grotto, 0);
+    ActorAccessibility_InitPolicy(&policy, "Bronze Boulder", NA_SE_IT_HAMMER_HIT);
+    ActorAccessibility_AddSupportedActor(ACTOR_OBJ_HAMISHI, policy);
+    ActorAccessibility_InitPolicy(&policy, "Grotto Door", accessible_grotto);
     policy.n = 30;
     policy.pitch = 1.0;
     ActorAccessibility_AddSupportedActor(ACTOR_DOOR_ANA, policy);
-    ActorAccessibility_InitPolicy(&policy, "Web", NULL, NA_SE_EV_WEB_BROKEN);
+    ActorAccessibility_InitPolicy(&policy, "Web", NA_SE_EV_WEB_BROKEN);
     policy.n = 40;
     policy.ydist = 2000;
     policy.distance = 2000;
     policy.pitch = 1.2;
     ActorAccessibility_AddSupportedActor(ACTOR_BG_YDAN_SP, policy);
 
-    ActorAccessibility_InitPolicy(&policy, "Shutter Door", accessible_door, 0);
+    ActorAccessibility_InitPolicy(&policy, "Shutter Door", accessible_door);
     policy.n = 30;
     policy.distance = 1000;
     policy.pitch = 1.1;
     ActorAccessibility_AddSupportedActor(ACTOR_DOOR_SHUTTER, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_SPOT18_SHUTTER, policy);
-    ActorAccessibility_InitPolicy(&policy, "Switch", accessible_switch, 0);
+    ActorAccessibility_InitPolicy(&policy, "Switch", accessible_switch);
     policy.distance = 2000;
     policy.cleanupUserData = accessible_switch_cleanup;
     policy.initUserData = accessible_switch_init;
@@ -832,142 +787,155 @@ void ActorAccessibility_InitActors() {
     policy.ydist = 200;
     policy.pitch = 1.1;
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_SWITCH, policy);
-    ActorAccessibility_InitPolicy(&policy, "Jabu Switch", NULL, NA_SE_EV_DIAMOND_SWITCH);
+    ActorAccessibility_InitPolicy(&policy, "Jabu Switch", [](AccessibleActor* actor) {
+        int type = actor->actor->params & 0xFF;
+        if (type == YELLOW_TALL_1 || type == YELLOW_TALL_2) {
+            actor->policy.aimAssist.isProvider = true;
+        }
+        if ((actor->frameCount & 31) == 0) {
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_DIAMOND_SWITCH, false);
+        }
+    });
+    policy.n = 1;
     policy.volume = 0.6;
     policy.distance = 1000;
     policy.ydist = 300;
     ActorAccessibility_AddSupportedActor(ACTOR_BG_BDAN_SWITCH, policy);
-    ActorAccessibility_InitPolicy(&policy, "Jabu Elevator", accessible_jabu_elevator, 0);
+    ActorAccessibility_InitPolicy(&policy, "Jabu Elevator", [](AccessibleActor* actor) {
+        if ((actor->actor->params & 0xFF) == 2 && actor->xzDistToPlayer > 50) {
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_PL_LAND_LADDER, false);
+        }
+    });
     policy.n = 1;
     policy.ydist = 50;
     ActorAccessibility_AddSupportedActor(ACTOR_BG_BDAN_OBJECTS, policy);
-    ActorAccessibility_InitPolicy(&policy, "Ocarina Spots", NULL, NA_SE_EV_DIAMOND_SWITCH);
+    ActorAccessibility_InitPolicy(&policy, "Ocarina Spots", NA_SE_EV_DIAMOND_SWITCH);
     policy.n = 30;
     policy.distance = 800;
     policy.pitch = 1.1;
     policy.ydist = 500;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_OKARINA_TAG, policy);
-    ActorAccessibility_InitPolicy(&policy, "Pushable Block", accessible_test, 0);
+    ActorAccessibility_InitPolicy(&policy, "Pushable Block", accessible_test);
     policy.n = 30;
     policy.distance = 800;
     policy.pitch = 1.1;
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_OSHIHIKI, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_SPOT15_RRBOX, policy);
-    ActorAccessibility_InitPolicy(&policy, "Torch", accessible_torches, 0);
+    ActorAccessibility_InitPolicy(&policy, "Torch", accessible_torches);
     policy.n = 1;
     policy.pitch = 1.1;
     policy.distance = 800;
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_SYOKUDAI, policy);
-    ActorAccessibility_InitPolicy(&policy, "Deku Tree Moving Platform", accessible_hasi, 0);
+    ActorAccessibility_InitPolicy(&policy, "Deku Tree Moving Platform", accessible_hasi);
     // policy.volume = 1.3;
     policy.distance = 1000;
     ActorAccessibility_AddSupportedActor(ACTOR_BG_YDAN_HASI, policy);
-    ActorAccessibility_InitPolicy(&policy, "Pot", NULL, NA_SE_EV_POT_BROKEN);
+    ActorAccessibility_InitPolicy(&policy, "Pot", NA_SE_EV_POT_BROKEN);
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_TSUBO, policy);
-    // ActorAccessibility_InitPolicy(&policy, "Deku Tree Entrance", NULL, NA_SE_EV_FANTOM_WARP_L);
+    // ActorAccessibility_InitPolicy(&policy, "Deku Tree Entrance", NA_SE_EV_FANTOM_WARP_L);
     // policy.distance = 5000;
     // ActorAccessibility_AddSupportedActor(ACTOR_BG_TREEMOUTH, policy);
-    ActorAccessibility_InitPolicy(&policy, "Platform collapsable", NULL, NA_SE_EV_BLOCK_SHAKE);
+    ActorAccessibility_InitPolicy(&policy, "Platform collapsable", NA_SE_EV_BLOCK_SHAKE);
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_LIFT, policy);
-    ActorAccessibility_InitPolicy(&policy, "Ladder in Slingshot Room", accessible_maruta, 0);
+    ActorAccessibility_InitPolicy(&policy, "Ladder in Slingshot Room", accessible_maruta);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_YDAN_MARUTA, policy);
-    ActorAccessibility_InitPolicy(&policy, "bombable wall", NULL, NA_SE_EN_OCTAROCK_ROCK);
+    ActorAccessibility_InitPolicy(&policy, "bombable wall", NA_SE_EN_OCTAROCK_ROCK);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_BREAKWALL, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_BOMBWALL, policy);
-    ActorAccessibility_InitPolicy(&policy, "231 dekus", accessible_231_dekus, 0);
+    ActorAccessibility_InitPolicy(&policy, "231 dekus", accessible_231_dekus);
     policy.distance = 2000;
     policy.n = 50;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_HINTNUTS, policy);
-    ActorAccessibility_InitPolicy(&policy, "Flame Circle", NULL, NA_SE_EV_FIRE_PILLAR);
+    ActorAccessibility_InitPolicy(&policy, "Flame Circle", NA_SE_EV_FIRE_PILLAR);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_HIDAN_CURTAIN, policy);
-    ActorAccessibility_InitPolicy(&policy, "uninteractable rocks in kokiri forest", accessible_hana, 0);
+    ActorAccessibility_InitPolicy(&policy, "uninteractable rocks in kokiri forest", accessible_hana);
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_HANA, policy);
-    ActorAccessibility_InitPolicy(&policy, "gold skulltula token", accessible_en_pickups, 0);
+    ActorAccessibility_InitPolicy(&policy, "gold skulltula token", accessible_en_pickups);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_SI, policy);
-    ActorAccessibility_InitPolicy(&policy, "Gold and Wall skulltulas", NULL, 0);
+    ActorAccessibility_InitPolicy(&policy, "Gold and Wall skulltulas", nullptr);
     policy.aimAssist.isProvider = true;
     policy.n = 1;
     policy.ydist = 500;
     policy.distance = 750;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_SW, policy);
-    ActorAccessibility_InitPolicy(&policy, "goma larva egg", accessible_larva, 0);
+    ActorAccessibility_InitPolicy(&policy, "goma larva egg", accessible_larva);
     policy.distance = 1000;
     policy.ydist = 1000;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_GOMA, policy);
-    ActorAccessibility_InitPolicy(&policy, "small jellyfish", NULL, NA_SE_EN_BIRI_FLY);
+    ActorAccessibility_InitPolicy(&policy, "small jellyfish", NA_SE_EN_BIRI_FLY);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_BILI, policy);
-    ActorAccessibility_InitPolicy(&policy, "stinger", accessible_eiyer, 0);
+    ActorAccessibility_InitPolicy(&policy, "stinger", accessible_eiyer);
     policy.n = 1;
     policy.distance = 1000;
     policy.ydist = 200;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_EIYER, policy);
-    ActorAccessibility_InitPolicy(&policy, "bubble", NULL, NA_SE_EN_DAIOCTA_SPLASH);
+    ActorAccessibility_InitPolicy(&policy, "bubble", NA_SE_EN_DAIOCTA_SPLASH);
     policy.ydist = 200;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_BUBBLE, policy);
-    ActorAccessibility_InitPolicy(&policy, "tentacle", NULL, NA_SE_EN_BALINADE_THUNDER);
+    ActorAccessibility_InitPolicy(&policy, "tentacle", NA_SE_EN_BALINADE_THUNDER);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_BA, policy);
     policy.distance = 100;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_BX, policy);
-    ActorAccessibility_InitPolicy(&policy, "redead", NULL, NA_SE_EN_REDEAD_CRY);
+    ActorAccessibility_InitPolicy(&policy, "redead", NA_SE_EN_REDEAD_CRY);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_RD, policy);
-    ActorAccessibility_InitPolicy(&policy, "Beamos", NULL, NA_SE_EN_BIMOS_AIM);
+    ActorAccessibility_InitPolicy(&policy, "Beamos", NA_SE_EN_BIMOS_AIM);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_VM, policy);
-    ActorAccessibility_InitPolicy(&policy, "heart canister", accessible_en_pickups, 0);
+    ActorAccessibility_InitPolicy(&policy, "heart canister", accessible_en_pickups);
     ActorAccessibility_AddSupportedActor(ACTOR_ITEM_B_HEART, policy);
-    ActorAccessibility_InitPolicy(&policy, "Goma", accessible_goma, 0);
+    ActorAccessibility_InitPolicy(&policy, "Goma", accessible_goma);
     policy.distance = 5000;
     policy.ydist = 2000;
     ActorAccessibility_AddSupportedActor(ACTOR_BOSS_GOMA, policy);
-    ActorAccessibility_InitPolicy(&policy, "bombflowers", NULL, NA_SE_EV_BOMB_BOUND);
+    ActorAccessibility_InitPolicy(&policy, "bombflowers", NA_SE_EV_BOMB_BOUND);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_BOMBF, policy);
-    ActorAccessibility_InitPolicy(&policy, "Amos Statue", NULL, NA_SE_EN_AMOS_WAVE);
+    ActorAccessibility_InitPolicy(&policy, "Amos Statue", NA_SE_EN_AMOS_WAVE);
     policy.n = 30;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_AM, policy);
-    ActorAccessibility_InitPolicy(&policy, "door of time", accessible_door_of_time, 0);
+    ActorAccessibility_InitPolicy(&policy, "door of time", accessible_door_of_time);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_MJIN, policy);
-    ActorAccessibility_InitPolicy(&policy, "shooting gallery rupees", NULL, 0);
+    ActorAccessibility_InitPolicy(&policy, "shooting gallery rupees", nullptr);
     policy.aimAssist.isProvider = true;
     policy.distance = 1000;
     policy.n = 1;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_G_SWITCH, policy);
-    ActorAccessibility_InitPolicy(&policy, "crawlspace", NULL, NA_SE_EN_MUSI_SINK);
+    ActorAccessibility_InitPolicy(&policy, "crawlspace", NA_SE_EN_MUSI_SINK);
     policy.volume = 1.5;
     policy.distance = 2000;
     ActorAccessibility_AddSupportedActor(VA_CRAWLSPACE, policy);
-    ActorAccessibility_InitPolicy(&policy, "Ladder/climable", accessible_climable, 0);
+    ActorAccessibility_InitPolicy(&policy, "Ladder/climable", accessible_climable);
     // policy.volume = 1.5;
     policy.pitch = 1.3;
     // policy.distance = 2000;
     ActorAccessibility_AddSupportedActor(VA_CLIMB, policy);
-    ActorAccessibility_InitPolicy(&policy, "Door", NULL, NA_SE_OC_DOOR_OPEN);
+    ActorAccessibility_InitPolicy(&policy, "Door", NA_SE_OC_DOOR_OPEN);
     policy.n = 30;
     policy.pitch = 1.1;
     policy.distance = 1000;
     ActorAccessibility_AddSupportedActor(VA_DOOR, policy);
 
-    ActorAccessibility_InitPolicy(&policy, "Area Change", accessible_area_change, 0);
+    ActorAccessibility_InitPolicy(&policy, "Area Change", accessible_area_change);
     policy.n = 60;
     policy.distance = 100000;
     ActorAccessibility_AddSupportedActor(VA_AREA_CHANGE, policy);
-    ActorAccessibility_InitPolicy(&policy, "marker", NULL, NA_SE_EV_DIAMOND_SWITCH);
+    ActorAccessibility_InitPolicy(&policy, "marker", NA_SE_EV_DIAMOND_SWITCH);
     policy.distance = 1000;
     policy.pitch = 1.7;
     ActorAccessibility_AddSupportedActor(VA_MARKER, policy);
-    // ActorAccessibility_InitPolicy(&policy, "Spike", NULL, NA_SE_EV_DIAMOND_SWITCH);
+    // ActorAccessibility_InitPolicy(&policy, "Spike", NA_SE_EV_DIAMOND_SWITCH);
     // policy.distance = 200;
     // policy.pitch = 0.5;
     // ActorAccessibility_AddSupportedActor(VA_SPIKE, policy);
-    ActorAccessibility_InitPolicy(&policy, "Stick Burnout Warning", accessible_stick_warning, 0);
+    ActorAccessibility_InitPolicy(&policy, "Stick Burnout Warning", accessible_stick_warning);
     policy.n = 1;
     policy.runsAlways = true;
     ActorAccessibility_AddSupportedActor(VA_STICK_WARNING, policy);
-    ActorAccessibility_InitPolicy(&policy, "System general helper", accessible_va_general_helper, 0);
+    ActorAccessibility_InitPolicy(&policy, "System general helper", accessible_va_general_helper);
     policy.n = 1;
     policy.cleanupUserData = accessible_general_helper_cleanup;
     policy.initUserData = accessible_general_helper_init;
     policy.runsAlways = true;
     ActorAccessibility_AddSupportedActor(VA_GENERAL_HELPER, policy);
-    ActorAccessibility_InitPolicy(&policy, "Audio Compass", accessible_audio_compass, 0);
+    ActorAccessibility_InitPolicy(&policy, "Audio Compass", accessible_audio_compass);
     policy.n = 1;
     policy.cleanupUserData = accessible_audio_compass_cleanup;
     policy.initUserData = accessible_audio_compass_init;
@@ -989,8 +957,8 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -784.0, 120.0, 1046.00 }, { 0, 14702, 0 } });
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2146.5, 1.0, -142.8 } });
 
-    list = ActorAccessibility_GetVirtualActorList(SCENE_KOKIRI_FOREST,
-                                                  2); // Kokiri Forest Room with boulder and kokiri sword
+    // Kokiri Forest Room with boulder and kokiri sword
+    list = ActorAccessibility_GetVirtualActorList(SCENE_KOKIRI_FOREST, 2);
     ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -788.0, 120.0, 1392.00 }, { 0, 14702, 0 } });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_DEKU_TREE, 2); // deku tree slingshot room
@@ -1016,7 +984,7 @@ void ActorAccessibility_InitActors() {
     temp->policy.distance = 200;
     temp->policy.sound = NA_SE_VO_RT_FALL;
 
-    list = ActorAccessibility_GetVirtualActorList(SCENE_CASTLE_COURTYARD_GUARDS_DAY, 0); // hyrule courtyard
+    list = ActorAccessibility_GetVirtualActorList(SCENE_CASTLE_COURTYARD_GUARDS_DAY, 0);
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1734.0, 0.0, 140.514 } });
     temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1734.0, 0.0, 140.514 } });
     temp->policy.pitch = 0.3;

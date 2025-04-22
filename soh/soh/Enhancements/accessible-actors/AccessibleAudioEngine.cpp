@@ -35,7 +35,6 @@ enum AAE_COMMANDS {
     AAE_PREPARE,
     AAE_TERMINATE,
 };
-typedef float f32;
 typedef int8_t s8;
 typedef uint8_t u8;
 // Processing for our custom audio positioning.

@@ -28,12 +28,12 @@ extern bool freezeActors;
 
 const char* GetLanguageCode();
 
-#define MAX_DB_REDUCTION \
-    35 // This is the amount in DB that a sound will be reduced by when it is at the maximum distance
-       // from the player.
+// This is the amount in DB that a sound will be reduced by when it is at the maximum distance from the player.
+#define MAX_DB_REDUCTION 35
+
 extern "C" {
-void CollisionPoly_GetVertices(CollisionPoly* poly, Vec3s* vtxList,
-                               Vec3f* dest); // Used to tell where polygons are located.
+// Used to tell where polygons are located.
+void CollisionPoly_GetVertices(CollisionPoly* poly, Vec3s* vtxList, Vec3f* dest);
 }
 
 typedef struct {
@@ -46,16 +46,18 @@ typedef struct {
     };
 
 } SceneAndRoom;
-typedef std::map<s16, ActorAccessibilityPolicy> SupportedActors_t; // Maps actors to their accessibility policies, which
-                                                                   // describe how accessibility should treat them.
-typedef std::map<Actor*, uint64_t> TrackedActors_t; // Maps real actors to internal IDs specific to accessibility.
-typedef std::map<uint64_t, AccessibleActor>
-    AccessibleActorList_t; // Maps internal IDs to wrapped actor objects. These actors can be real or virtual.
+
+// Maps actors to their accessibility policies, which describe how accessibility should treat them.
+typedef std::map<s16, ActorAccessibilityPolicy> SupportedActors_t;
+typedef std::map<Actor*, uint64_t>
+    TrackedActors_t; // Maps real actors to internal IDs specific to accessibility.
+                     // Maps internal IDs to wrapped actor objects. These actors can be real or virtual.
+typedef std::map<uint64_t, AccessibleActor> AccessibleActorList_t;
 typedef std::vector<AccessibleActor> VAList_t; // Denotes a list of virtual actors specific to a single room.
 typedef std::map<s32, VAList_t> VAZones_t; // Maps room/ scene indices to their corresponding virtual actor collections.
-typedef std::unordered_set<s16>
-    SceneList_t; // A list of scenes which have already been visited (since the game was launched). Used to prevent
-                 // re-creation of terrain VAs every time the player reloads a scene.
+// A list of scenes which have already been visited (since the game was launched). Used to prevent
+// re-creation of terrain VAs every time the player reloads a scene.
+typedef std::unordered_set<s16> SceneList_t;
 
 typedef struct {
     std::string path;
@@ -102,6 +104,8 @@ uint64_t ActorAccessibility_GetNextID() {
     return aa->nextActorID++;
 }
 
+void ActorAccessibility_PrepareNextAudioFrame();
+
 // Hooks for game-interactor.
 void ActorAccessibility_OnActorInit(void* actor) {
     ActorAccessibility_TrackNewActor((Actor*)actor);
@@ -146,8 +150,26 @@ void ActorAccessibility_Shutdown() {
     delete aa;
 }
 void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char* englishName,
-                                   ActorAccessibilityCallback callback, s16 sfx) {
+                                   ActorAccessibilityCallback callback) {
     policy->callback = callback;
+    policy->distance = 500;
+    policy->ydist = 80;
+    policy->englishName = englishName;
+    policy->n = 20;
+    policy->pitch = 1.5;
+    policy->runsAlways = false;
+    policy->sound = 0;
+    policy->volume = 1.0;
+    policy->initUserData = NULL;
+    policy->cleanupUserData = NULL;
+    policy->pitchModifier = 0.1;
+    policy->aimAssist.isProvider = false;
+    policy->aimAssist.sfx = NA_SE_SY_HITPOINT_ALARM;
+    policy->aimAssist.tolerance = 0.0;
+}
+
+void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char* englishName, s16 sfx) {
+    policy->callback = nullptr;
     policy->distance = 500;
     policy->ydist = 80;
     policy->englishName = englishName;
@@ -327,7 +349,7 @@ void ActorAccessibility_CopyParamsFromRealActor(AccessibleActor* actor) {
     actor->isDrawn = actor->actor->isDrawn;
     actor->xyzDistToPlayer = Math_Vec3f_DistXYZ(&actor->actor->world.pos, &player->actor.world.pos);
 }
-void ActorAccessibility_PrepareNextAudioFrame();
+
 void ActorAccessibility_StopAllVirtualActors(VirtualActorList* list) {
     if (list == NULL)
         return;
@@ -336,6 +358,7 @@ void ActorAccessibility_StopAllVirtualActors(VirtualActorList* list) {
     for (auto i = val->begin(); i != val->end(); i++)
         ActorAccessibility_StopAllSounds((void*)&(*i));
 }
+
 void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActor* actor) {
     actor->play = play;
     if (ActorAccessibility_IsRealActor(actor)) {
@@ -394,10 +417,11 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
         }
     }
 
-    if (actor->policy.callback != NULL)
+    if (actor->policy.callback != nullptr) {
         actor->policy.callback(actor);
-    else
+    } else {
         ActorAccessibility_PlaySoundForActor(actor, 0, actor->policy.sound, false);
+    }
 }
 void ActorAccessibility_RunAccessibilityForAllActors(PlayState* play) {
     Player* player = GET_PLAYER(play);
@@ -721,11 +745,12 @@ const char* ActorAccessibility_MapRawSampleToExternalAudio(const char* name) {
 
     return record->path.c_str();
 }
-// Call once per frame to tell the audio engine to start working on the latest batch of queued instructions.
 
+// Call once per frame to tell the audio engine to start working on the latest batch of queued instructions.
 void ActorAccessibility_PrepareNextAudioFrame() {
     aa->audioEngine->prepare();
 }
+
 void ActorAccessibility_HandleSoundExtractionMode(PlayState* play) {
     aa->sfxExtractor.frameCallback();
 }
