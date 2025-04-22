@@ -56,11 +56,11 @@ size_t SfxExtractor::adjustedEndOfInput(size_t endOfInput) {
     return endOfInput;
 }
 
-void SfxExtractor::renderOutput(size_t endOfInput) {
+bool SfxExtractor::renderOutput(size_t endOfInput) {
     size_t startOfInput = adjustedStartOfInput();
     endOfInput = adjustedEndOfInput(endOfInput);
     if (endOfInput <= startOfInput) {
-        return;
+        return true;
     }
 
     ma_channel_converter_config config =
@@ -80,7 +80,7 @@ void SfxExtractor::renderOutput(size_t endOfInput) {
     size_t size = 0;
 
     if (!drwav_init_memory_write(&wav, &mem, &size, &format, NULL))
-        throw std::runtime_error("SFX Extractor: Unable to initialize wave writer.");
+        throw std::runtime_error("SfxExtractor: Unable to initialize wave writer.");
     int16_t chunk[64];
     int16_t* mark = tempBuffer + startOfInput;
     size_t samplesLeft = endOfInput - startOfInput;
@@ -94,7 +94,7 @@ void SfxExtractor::renderOutput(size_t endOfInput) {
     drwav_uninit(&wav);
     std::vector<uint8_t> fileData((uint8_t*)mem, (uint8_t*)mem + size);
     drwav_free(mem, NULL);
-    archive->WriteFile(fileName.c_str(), fileData);
+    return archive->WriteFile(fileName.c_str(), fileData);
 }
 
 void SfxExtractor::setup() {
@@ -240,8 +240,11 @@ void SfxExtractor::captureCallback() {
         endOfInput += (SFX_EXTRACTION_ONE_FRAME * 2);
         samplesLeft -= std::min<size_t>(SFX_EXTRACTION_ONE_FRAME, samplesLeft);
     }
-    renderOutput(endOfInput);
-    captureThreadState = CT_FINISHED; // Go to the next one.
+    if (renderOutput(endOfInput)) {
+        captureThreadState = CT_FINISHED;
+    } else {
+        SPDLOG_ERROR("failed to write file to archive, trying again");
+    }
 }
 std::string SfxExtractor::getExternalFileName(int16_t sfxId) {
     std::stringstream ss;

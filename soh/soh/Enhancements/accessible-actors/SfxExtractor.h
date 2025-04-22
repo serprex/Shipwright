@@ -12,7 +12,7 @@ class SfxExtractor {
     bool isAllZero(int16_t* buffer, size_t count);
     size_t adjustedStartOfInput();
     size_t adjustedEndOfInput(size_t endOfInput);
-    void renderOutput(size_t endOfInput);
+    bool renderOutput(size_t endOfInput);
     void setup();
     void ripNextSfx();
     void finished(); // Also handles failure.
