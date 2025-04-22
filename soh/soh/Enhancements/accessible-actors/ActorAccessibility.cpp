@@ -441,7 +441,7 @@ void ActorAccessibility_RunAccessibilityForAllActors(PlayState* play) {
         aa->currentRoom = play->roomCtx.curRoom.num;
     }
     if (aa->glossary->currentScene != play->sceneNum || aa->glossary->currentRoom != play->roomCtx.curRoom.num) {
-        if (aa->glossary->GlossaryStarted = true) {
+        if (aa->glossary->GlossaryStarted) {
             aa->glossary->cooldown = 0;
             aa->glossary->GlossaryStarted = false;
             freezeActors = false;

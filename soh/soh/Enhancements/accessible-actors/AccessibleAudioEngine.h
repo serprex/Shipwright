@@ -1,5 +1,5 @@
-#ifndef ACCESSIBLE_AUDIO_ENGINE_H
-#define ACCESSIBLE_AUDIO_ENGINE_H
+#pragma once
+
 #include "miniaudio/miniaudio.h"
 #include <stdint.h>
 #include <thread>
@@ -149,4 +149,3 @@ class AccessibleAudioEngine {
     void prepare();
     void cacheDecodedSample(std::string& path, void* data, size_t size);
 };
-#endif
