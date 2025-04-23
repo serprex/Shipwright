@@ -1,5 +1,10 @@
 #pragma once
 
+#define MA_NO_FLAC
+#define MA_NO_MP3
+#define MA_NO_THREADING
+#define MA_NO_DEVICE_IO
+#define MA_NO_GENERATION
 #include "miniaudio/miniaudio.h"
 #include <stdint.h>
 #include <thread>

@@ -1,7 +1,13 @@
 #include "SfxExtractor.h"
-#include "dr_libs/dr_wav.h"
 #include "soh/Enhancements/speechsynthesizer/SpeechSynthesizer.h"
 #include "soh/Enhancements/tts/tts.h"
+#include "dr_libs/dr_wav.h"
+#define MA_NO_FLAC
+#define MA_NO_MP3
+#define MA_NO_THREADING
+#define MA_NO_DEVICE_IO
+#define MA_NO_GENERATION
+#define MA_ENABLE_ONLY_SPECIFIC_BACKENDS
 #include "miniaudio/miniaudio.h"
 #include "soh/OTRGlobals.h"
 #include "SfxTable.h"
