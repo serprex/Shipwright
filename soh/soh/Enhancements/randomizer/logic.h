@@ -180,15 +180,19 @@ class Logic {
     bool MQSpiritCrawlBoulder = false;
     bool MQSpiritMapRoomEnemies = false;
     bool MQSpiritTimeTravelChest = false;
+    bool MQSpiritStatueRoomTorches = false;
     bool MQSpirit3SunsEnemies = false;
-    bool MQSpiritOpenedBigMirrorCave = false;
+    bool MQSpiritSymphonyRoomDoor = false;
+    bool MQSpiritBigWallSilvers = false;
     bool Spirit1FSilverRupees = false;
     bool SpiritChildSwitchBridge = false;
     bool SpiritRupeeBridge = false;
+    bool SpiritSunBlockTorch = false;
     bool SpiritBouldersSilvers = false;
     bool SpiritStatueRoomSouthDoor = false;
     bool SpiritPlatformLowered = false;
     bool Spirit4FSwitch = false;
+    bool SpiritPushed4FMirrors = false;
     bool ReverseSpiritChild = false;
     bool ReverseSpiritAdult = true;
 
@@ -258,6 +262,7 @@ class Logic {
     bool CanBreakSmallCrates();
     bool HasFireSource();
     bool HasFireSourceWithTorch();
+    bool SunlightArrows();
     bool TradeQuestStep(RandomizerGet rg);
     bool CanFinishGerudoFortress();
     bool CanStandingShield();
@@ -299,12 +304,14 @@ class Logic {
     static std::map<uint32_t, uint32_t> RandoGetToDungeonScene;
     static std::map<RandomizerGet, uint32_t> RandoGetToEquipFlag;
     static std::map<RandomizerGet, uint32_t> RandoGetToRandInf;
-    bool Logic::IsReverseAccessPossible();
-    bool Logic::SpiritBrokenWallToStatue();
-    bool Logic::SpiritEastToSwitch();
-    bool Logic::SpiritWestToSkull();
-    bool Logic::MQSpiritStatueToSunBlock();
-    bool Logic::MQSpiritStatueSouthDoor();
+    bool IsReverseAccessPossible();
+    bool SpiritBrokenWallToStatue();
+    bool SpiritEastToSwitch();
+    bool SpiritWestToSkull();
+    bool SpiritSunBlockSouthLedge();
+    bool MQSpiritWestToPots();
+    bool MQSpiritStatueToSunBlock();
+    bool MQSpiritStatueSouthDoor();
 
   private:
     std::shared_ptr<Context> ctx;

@@ -1286,6 +1286,10 @@ bool Logic::HasFireSourceWithTorch() {
     return HasFireSource() || CanUse(RG_STICKS);
 }
 
+bool Logic::SunlightArrows() {
+    return ctx->GetOption(RSK_SUNLIGHT_ARROWS) && CanUse(RG_LIGHT_ARROWS);
+}
+
 // Is this best off signaling what you have already traded, or what step you are currently on?
 bool Logic::TradeQuestStep(RandomizerGet rg) {
     if (ctx->GetOption(RSK_SHUFFLE_ADULT_TRADE)) {
@@ -2376,8 +2380,19 @@ bool Logic::SpiritWestToSkull() {
     return (IsAdult && ctx->GetTrickOption(RT_SPIRIT_LOBBY_JUMP)) || CanUse(RG_HOVER_BOOTS) || CanUse(RG_SCARECROW);
 }
 
+bool Logic::SpiritSunBlockSouthLedge() {
+    return true/*str0 || IsAdult || CanKillEnemy(RE_BEAMOS) || BunnyHovers() ||
+           (CanUse(RG_HOOKSHOT) && (HasFireSource() || 
+                                    (SpiritSunBlockTorch && (logic->CanUse(STICKS) || (ctx->GetTrickOption(RT_SPIRIT_SUN_CHEST) && logic->CanUse(RG_FAIRY_BOW))))))*/;
+}
+
+//Combines crossing the ledge directly and the jump from the hand
+bool Logic::MQSpiritWestToPots() {
+    return (IsAdult && ctx->GetTrickOption(RT_SPIRIT_LOBBY_JUMP)) || CanUse(RG_HOVER_BOOTS) || CanUse(RG_SONG_OF_TIME);
+}
+
 bool Logic::MQSpiritStatueToSunBlock() {
-    return IsAdult || ctx->GetTrickOption(RT_SPIRIT_MQ_SUN_BLOCK_SOT) || CanUse(RG_SONG_OF_TIME);
+    return (IsAdult || ctx->GetTrickOption(RT_SPIRIT_MQ_SUN_BLOCK_SOT) || CanUse(RG_SONG_OF_TIME))/* && str0*/;
 }
 
 bool Logic::MQSpiritStatueSouthDoor() {
@@ -2570,18 +2585,20 @@ void Logic::Reset() {
     MQSpiritCrawlBoulder = false;
     MQSpiritMapRoomEnemies = false;
     MQSpiritTimeTravelChest = false;
+    MQSpiritStatueRoomTorches = false;
     MQSpirit3SunsEnemies = false;
-    MQSpiritOpenedBigMirrorCave = false;
+    MQSpiritSymphonyRoomDoor = false;
+    MQSpiritBigWallSilvers = false;
     Spirit1FSilverRupees = false;
     SpiritChildSwitchBridge = false;
     SpiritRupeeBridge = false;
     SpiritBouldersSilvers = false;
     SpiritPlatformLowered = false;
     Spirit4FSwitch = false;
+    SpiritPushed4FMirrors = false;
     ReverseSpiritChild = false;
     ReverseSpiritAdult = false;
 
     StopPerformanceTimer(PT_LOGIC_RESET);
 }
-
 } // namespace Rando

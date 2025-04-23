@@ -252,9 +252,6 @@ class Region {
     }
     
     static std::map<RandomizerRegion, SpiritLogicData> spiritLogicData;
-      
-    bool SpiritShared(ConditionFn condition, ConditionFn childAccess, ConditionFn adultAccess, ConditionFn ReverseAccess,
-        uint8_t childKeys, uint8_t adultKeys, uint8_t eitherKeys, bool anyAge);
 };
 
 extern std::array<Region, RR_MAX> areaTable;
@@ -264,7 +261,8 @@ bool Here(const RandomizerRegion region,
           ConditionFn
               condition); // RANDOTODO make a less stupid way to check own at either age than self referencing with this
 bool SpiritShared(RandomizerRegion region, ConditionFn condition, bool anyAge = false, 
-                  RandomizerRegion otherRegion = RR_NONE, ConditionFn otherCondition = []{return false;});
+                  RandomizerRegion otherRegion = RR_NONE, ConditionFn otherCondition = []{return false;}, 
+                  RandomizerRegion thirdRegion = RR_NONE, ConditionFn thirdCondition = []{return false;});
 bool CanPlantBean(const RandomizerRegion region);
 bool BothAges(const RandomizerRegion region);
 bool ChildCanAccess(const RandomizerRegion region);
