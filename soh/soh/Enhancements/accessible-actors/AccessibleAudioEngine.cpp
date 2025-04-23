@@ -30,8 +30,7 @@ enum AAE_COMMANDS {
     AAE_PAN,
     AAE_FILTER,
     AAE_SEEK,
-    AAE_LISTENER, // Set the listener's position and direction.
-    AAE_POS,      // Set the sound source's position and direction.
+    AAE_POS,
     AAE_PREPARE,
     AAE_TERMINATE,
 };
@@ -108,11 +107,12 @@ void AccessibleAudioEngine::destroy() {
             ma_resource_manager_uninit(&resourceManager);
     }
 }
+
 void AccessibleAudioEngine::destroyAndThrow(const char* exceptionText) {
     destroy();
-
     throw std::runtime_error(exceptionText);
 }
+
 uint32_t AccessibleAudioEngine::retrieve(float* buffer, uint32_t nFrames) {
     uint32_t framesAvailable = ma_pcm_rb_available_read(&preparedOutput);
     if (nFrames > framesAvailable)
@@ -136,6 +136,7 @@ uint32_t AccessibleAudioEngine::retrieve(float* buffer, uint32_t nFrames) {
 
     return ogNFrames;
 }
+
 void AccessibleAudioEngine::doPrepare(SoundAction& action) {
     framesUntilGC--;
     int nFrames = ma_pcm_rb_available_write(&preparedOutput);
@@ -214,7 +215,6 @@ void AccessibleAudioEngine::runThread() {
                 case AAE_STOP_ALL:
                     doStopAllSounds(action);
                     break;
-
                 case AAE_PITCH:
                     doSetPitch(action);
                     break;
@@ -233,13 +233,9 @@ void AccessibleAudioEngine::runThread() {
                 case AAE_SEEK:
                     doSeekSound(action);
                     break;
-                case AAE_LISTENER:
-                    doSetListenerPos(action);
-                    break;
                 case AAE_POS:
                     doSetSoundPos(action);
                     break;
-
                 case AAE_PREPARE:
                     doPrepare(action);
                     break;
@@ -350,8 +346,6 @@ void AccessibleAudioEngine::doSeekSound(SoundAction& action) {
     if (slot == NULL)
         return;
     ma_sound_seek_to_pcm_frame(&slot->sound, action.offset);
-}
-void AccessibleAudioEngine::doSetListenerPos(SoundAction& action) {
 }
 void AccessibleAudioEngine::doSetSoundPos(SoundAction& action) {
     SoundSlot* slot = findSound(action);
@@ -469,13 +463,12 @@ void AccessibleAudioEngine::mix(int16_t* ogBuffer, uint32_t nFrames) {
     float mixedChunk[AAE_MIX_CHUNK_SIZE * AAE_CHANNELS];
     while (nFrames > 0) {
         uint32_t nextChunk = std::min<uint32_t>(AAE_MIX_CHUNK_SIZE, nFrames);
-        ma_silence_pcm_frames(
-            sourceChunk, nextChunk, ma_format_f32,
-            AAE_CHANNELS); // This is so that it doesn't matter if we have less output available than expected.
+        // This is so that it doesn't matter if we have less output available than expected.
+        ma_silence_pcm_frames(sourceChunk, nextChunk, ma_format_f32, AAE_CHANNELS);
         ma_silence_pcm_frames(mixedChunk, nextChunk, ma_format_f32, AAE_CHANNELS);
         retrieve(sourceChunk, nextChunk);
-        ma_pcm_s16_to_f32(mixedChunk, ogBuffer, nextChunk * AAE_CHANNELS,
-                          ma_dither_mode_none); // The game's output is changed to 32-bit floating point samples.
+        // The game's output is changed to 32-bit floating point samples.
+        ma_pcm_s16_to_f32(mixedChunk, ogBuffer, nextChunk * AAE_CHANNELS, ma_dither_mode_none);
         ma_mix_pcm_frames_f32(mixedChunk, sourceChunk, nextChunk, AAE_CHANNELS, 1.0);
         // If we've gone over 1.0, we'll need to scale back before we go back to 16-bit or we'll distort.
         float scalar = 1.0;
@@ -486,12 +479,13 @@ void AccessibleAudioEngine::mix(int16_t* ogBuffer, uint32_t nFrames) {
             for (int i = 0; i < nextChunk * AAE_CHANNELS; i++)
                 mixedChunk[i] *= scalar;
         }
-        ma_pcm_f32_to_s16(ogBuffer, mixedChunk, nextChunk * AAE_CHANNELS,
-                          ma_dither_mode_triangle); // Chunk is ready to go out via the game's usual channels.
+        // Chunk is ready to go out via the game's usual channels
+        ma_pcm_f32_to_s16(ogBuffer, mixedChunk, nextChunk * AAE_CHANNELS, ma_dither_mode_triangle);
         ogBuffer += nextChunk * AAE_CHANNELS;
         nFrames -= nextChunk;
     }
 }
+
 void AccessibleAudioEngine::playSound(uintptr_t handle, int slot, const char* path, bool looping) {
     if (slot < 0 || slot >= AAE_SLOTS_PER_HANDLE)
         return;
@@ -502,6 +496,7 @@ void AccessibleAudioEngine::playSound(uintptr_t handle, int slot, const char* pa
     action.path = path;
     action.looping = looping;
 }
+
 void AccessibleAudioEngine::stopSound(uintptr_t handle, int slot) {
     if (slot < 0 || slot >= AAE_SLOTS_PER_HANDLE)
         return;
@@ -510,25 +505,26 @@ void AccessibleAudioEngine::stopSound(uintptr_t handle, int slot) {
     action.handle = (uintptr_t)handle;
     action.slot = slot;
 }
+
 void AccessibleAudioEngine::stopAllSounds(uintptr_t handle) {
     SoundAction& action = getNextOutgoingSoundAction();
     action.command = AAE_STOP_ALL;
     action.handle = handle;
 }
+
 void AccessibleAudioEngine::setPitch(uintptr_t handle, int slot, float pitch) {
     if (slot < 0 || slot >= AAE_SLOTS_PER_HANDLE)
         return;
-
     SoundAction& action = getNextOutgoingSoundAction();
     action.command = AAE_PITCH;
     action.handle = handle;
     action.slot = slot;
     action.pitch = pitch;
 }
+
 void AccessibleAudioEngine::setPitchBehindModifier(uintptr_t handle, int slot, float mod) {
     if (slot < 0 || slot >= AAE_SLOTS_PER_HANDLE)
         return;
-
     SoundAction& action = getNextOutgoingSoundAction();
     action.command = AAE_PITCH_BEHIND;
     action.handle = handle;
@@ -537,7 +533,6 @@ void AccessibleAudioEngine::setPitchBehindModifier(uintptr_t handle, int slot, f
 }
 
 void AccessibleAudioEngine::setVolume(uintptr_t handle, int slot, float volume) {
-
     if (slot < 0 || slot >= AAE_SLOTS_PER_HANDLE)
         return;
     SoundAction& action = getNextOutgoingSoundAction();
@@ -546,6 +541,7 @@ void AccessibleAudioEngine::setVolume(uintptr_t handle, int slot, float volume) 
     action.slot = slot;
     action.volume = volume;
 }
+
 void AccessibleAudioEngine::setPan(uintptr_t handle, int slot, float pan) {
     if (slot < 0 || slot >= AAE_SLOTS_PER_HANDLE)
         return;
@@ -576,6 +572,7 @@ void AccessibleAudioEngine::seekSound(uintptr_t handle, int slot, size_t offset)
     action.command = AAE_SEEK;
     action.offset = offset;
 }
+
 void AccessibleAudioEngine::setSoundPosition(uintptr_t handle, int slot, float posX, float posY, float posZ,
                                              float distToPlayer, float maxDistance) {
     if (slot < 0 || slot >= AAE_SLOTS_PER_HANDLE)
@@ -590,14 +587,15 @@ void AccessibleAudioEngine::setSoundPosition(uintptr_t handle, int slot, float p
     action.distToPlayer = distToPlayer;
     action.maxDistance = maxDistance;
 }
+
 void AccessibleAudioEngine::prepare() {
     SoundAction& action = getNextOutgoingSoundAction();
     action.command = AAE_PREPARE;
     // This is called once at the end of every frame, so now is the time to post all of the accumulated commands.
     postSoundActions();
 }
-void AccessibleAudioEngine::cacheDecodedSample(std::string& path, void* data, size_t size) {
-    // The data is stored in wave format, so we register it with MiniAudio as an encoded asset as opposed to a decoded
-    // one.
-    ma_resource_manager_register_encoded_data(&resourceManager, path.c_str(), data, size);
+
+void AccessibleAudioEngine::cacheDecodedSample(const char* path, void* data, size_t size) {
+    // data stored as wave, so we register it with MiniAudio as an encoded asset as opposed to a decoded one
+    ma_resource_manager_register_encoded_data(&resourceManager, path, data, size);
 }

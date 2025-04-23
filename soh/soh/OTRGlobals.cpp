@@ -2567,8 +2567,7 @@ extern "C" void OTRAudio_UninstallSfxCaptureThread() {
 std::unique_lock<std::mutex> OTRAudio_Lock() {
     return std::unique_lock<std::mutex>(audio.mutex);
 }
-// extern "C" void CheckTracker_OnMessageClose() {
-//     CheckTracker::CheckTrackerDialogClosed();
+
 extern "C" void Gfx_UnregisterBlendedTexture(const char* name) {
     gfx_unregister_blended_texture(name);
 }

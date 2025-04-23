@@ -32,7 +32,7 @@ struct SoundAction {
         float distance;
     };
 
-    // Position and rotation vectors for AAE_LISTENER and AAE_POS.
+    // Position and rotation vectors for AAE_POS
     float posX;
     float posY;
     float posZ;
@@ -147,5 +147,5 @@ class AccessibleAudioEngine {
                           float maxDistance);
     // Schedule the preparation of output for delivery.
     void prepare();
-    void cacheDecodedSample(std::string& path, void* data, size_t size);
+    void cacheDecodedSample(const char* path, void* data, size_t size);
 };

@@ -6,7 +6,6 @@
 #include "soh/OTRGlobals.h"
 #include "SfxTable.h"
 #include <sstream>
-const char* GetLanguageCode();
 extern "C" {
 #include "z64.h"
 #include "functions.h"
@@ -93,14 +92,14 @@ bool SfxExtractor::renderOutput(size_t endOfInput) {
     }
     drwav_uninit(&wav);
     std::vector<uint8_t> fileData((uint8_t*)mem, (uint8_t*)mem + size);
-    drwav_free(mem, NULL);
+    drwav_free(mem, nullptr);
     return archive->WriteFile(fileName.c_str(), fileData);
 }
 
 void SfxExtractor::setup() {
     try {
         SpeechSynthesizer::Instance->Speak(
-            "Sfx extraction speedrun initiated. Please wait. This will take a few minutes.", GetLanguageCode());
+            "Sfx extraction speedrun initiated. Please wait. This will take a few minutes.", "en-US");
         // Kill the audio thread so we can take control.
         captureThreadState = CT_WAITING;
         OTRAudio_InstallSfxCaptureThread();
@@ -171,7 +170,7 @@ void SfxExtractor::finished() {
            << std::endl;
         if (currentStep == STEP_ERROR_OTR)
             ss << "In all seriousness, please delete accessibility.o2r and try again.";
-        SpeechSynthesizer::Instance->Speak(ss.str().c_str(), GetLanguageCode());
+        SpeechSynthesizer::Instance->Speak(ss.str().c_str(), "en-US");
     } else
         Audio_PlayFanfare(NA_BGM_ITEM_GET);
 }
@@ -180,7 +179,7 @@ void SfxExtractor::maybeGiveProgressReport() {
         if (sfxToRip == sfxCount * (i + 1) / 10) {
             std::stringstream ss;
             ss << (i + 1) * 10 << " percent complete.";
-            SpeechSynthesizer::Instance->Speak(ss.str().c_str(), GetLanguageCode());
+            SpeechSynthesizer::Instance->Speak(ss.str().c_str(), "en-US");
         }
     }
 }

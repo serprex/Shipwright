@@ -461,13 +461,6 @@ void accessible_goma(AccessibleActor* actor) {
     }
 }
 
-void accessible_door_of_time(AccessibleActor* actor) {
-    ActorAccessibility_PlaySampleForActor(actor, 0, "Chanting", false);
-    ActorAccessibility_SetSoundPitch(actor, 0, 1.0);
-
-    // ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_DIAMOND_SWITCH, false);
-}
-
 void accessible_sticks(AccessibleActor* actor) {
     EnKarebaba* baba = (EnKarebaba*)actor->actor;
 
@@ -891,8 +884,6 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_InitPolicy(&policy, "Amos Statue", NA_SE_EN_AMOS_WAVE);
     policy.n = 30;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_AM, policy);
-    ActorAccessibility_InitPolicy(&policy, "door of time", accessible_door_of_time);
-    ActorAccessibility_AddSupportedActor(ACTOR_BG_MJIN, policy);
     ActorAccessibility_InitPolicy(&policy, "shooting gallery rupees", nullptr);
     policy.aimAssist.isProvider = true;
     policy.distance = 1000;

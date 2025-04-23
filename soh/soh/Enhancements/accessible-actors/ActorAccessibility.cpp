@@ -62,7 +62,6 @@ typedef std::unordered_set<s16> SceneList_t;
 typedef struct {
     std::string path;
     std::shared_ptr<Ship::File> resource;
-    std::shared_ptr<s16*> decodedSample; // Set if the record is for a raw sample as opposed to a SFX.
 } SfxRecord;
 
 class AudioGlossaryData {
@@ -88,9 +87,10 @@ class ActorAccessibility {
     SceneList_t sceneList;
     AccessibleAudioEngine* audioEngine;
     SfxExtractor sfxExtractor;
-    std::unordered_map<s16, SfxRecord> sfxMap; // Maps internal sfx to external (prerendered) resources.
-    std::unordered_map<std::string, SfxRecord>
-        sampleMap; // Similar to above, but this one maps raw audio samples as opposed to SFX.
+    // Maps internal sfx to external (prerendered) resources.
+    std::unordered_map<s16, SfxRecord> sfxMap;
+    // Similar to above, but this one maps raw audio samples as opposed to SFX.
+    std::unordered_set<const char*> sampleMap;
     int extractSfx = 0;
     s16 currentScene = -1;
     s8 currentRoom = -1;
@@ -708,7 +708,7 @@ const char* ActorAccessibility_MapSfxToExternalAudio(s16 sfxId) {
         tempRecord.path = ss.str();
         aa->sfxMap[sfxId] = tempRecord;
         record = &aa->sfxMap[sfxId];
-        aa->audioEngine->cacheDecodedSample(record->path, record->resource->Buffer->data(),
+        aa->audioEngine->cacheDecodedSample(record->path.c_str(), record->resource->Buffer->data(),
                                             record->resource->Buffer->size());
     } else {
         record = &it->second;
@@ -718,32 +718,24 @@ const char* ActorAccessibility_MapSfxToExternalAudio(s16 sfxId) {
 }
 // Map the path to a raw sample to the external audio engine.
 const char* ActorAccessibility_MapRawSampleToExternalAudio(const char* name) {
-    SfxRecord* record;
-    std::string key(name);
-    auto it = aa->sampleMap.find(key);
+    auto it = aa->sampleMap.find(name);
     if (it == aa->sampleMap.end()) {
-        SfxRecord tempRecord;
         std::stringstream ss;
-        ss << "audio/samples/" << key;
+        ss << "audio/samples/" << name;
         std::string fullPath = ss.str();
         auto res = Ship::Context::GetInstance()->GetResourceManager()->LoadResource(fullPath);
         if (res == nullptr)
             return NULL; // Resource doesn't exist, user's gotta run the extractor.
         AudioDecoder decoder;
         decoder.setSample((SOH::AudioSample*)res.get());
+        // TODO track wav somehow & free it with drwav_free
         s16* wav;
         size_t wavSize = decoder.decodeToWav(&wav);
-
-        tempRecord.path = key;
-        tempRecord.decodedSample = std::make_shared<s16*>(wav);
-        aa->sampleMap[key] = tempRecord;
-        record = &aa->sampleMap[key];
-        aa->audioEngine->cacheDecodedSample(record->path, wav, wavSize);
-    } else {
-        record = &it->second;
+        aa->sampleMap.insert(name);
+        aa->audioEngine->cacheDecodedSample(name, wav, wavSize);
     }
 
-    return record->path.c_str();
+    return name;
 }
 
 // Call once per frame to tell the audio engine to start working on the latest batch of queued instructions.
