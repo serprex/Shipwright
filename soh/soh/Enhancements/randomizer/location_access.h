@@ -112,21 +112,21 @@ enum class EntranceType;
 } // namespace Rando
 
 struct SpiritLogicData {
-    uint8_t childKeys; //the number of keys that guarantees Child can reach this region
-    //The number of keys that guarantees Child can reach this region if they have reverse access
-    //This changes for MQ broken wall room as the first child lock can only be opened by Child
-    //guaranteeing access with 6 keys
-    uint8_t childReverseKeys; 
-    uint8_t adultKeys; //the number of keys that guarantees Adult can reach this region
-    //The area access condition to reach this region as Child, from the first lock,
-    //including the minimum number of keys for ambiguous access
-    // 1 key is always assumed to be required
+    uint8_t childKeys; // the number of keys that guarantees Child can reach this region
+    // The number of keys that guarantees Child can reach this region if they have reverse access
+    // This changes for MQ broken wall room as the first child lock can only be opened by Child
+    // guaranteeing access with 6 keys
+    uint8_t childReverseKeys;
+    uint8_t adultKeys; // the number of keys that guarantees Adult can reach this region
+    // The area access condition to reach this region as Child, from the first lock,
+    // including the minimum number of keys for ambiguous access
+    //  1 key is always assumed to be required
     ConditionFn childAccess;
-    //The area access condition to reach this region as Adult, from the first lock
-    //including the minimum number of keys for ambiguous access
-    //1 key is always assumed to be required on vanilla
+    // The area access condition to reach this region as Adult, from the first lock
+    // including the minimum number of keys for ambiguous access
+    // 1 key is always assumed to be required on vanilla
     ConditionFn adultAccess;
-    //The area access condition to reach this region from the boss door,
+    // The area access condition to reach this region from the boss door,
     ConditionFn reverseAccess;
 };
 
@@ -250,7 +250,7 @@ class Region {
                        "Adult Night: " +
                        std::to_string(adultNight);
     }
-    
+
     static std::map<RandomizerRegion, SpiritLogicData> spiritLogicData;
 };
 
@@ -260,9 +260,10 @@ extern std::vector<EventAccess> grottoEvents;
 bool Here(const RandomizerRegion region,
           ConditionFn
               condition); // RANDOTODO make a less stupid way to check own at either age than self referencing with this
-bool SpiritShared(RandomizerRegion region, ConditionFn condition, bool anyAge = false, 
-                  RandomizerRegion otherRegion = RR_NONE, ConditionFn otherCondition = []{return false;}, 
-                  RandomizerRegion thirdRegion = RR_NONE, ConditionFn thirdCondition = []{return false;});
+bool SpiritShared(
+    RandomizerRegion region, ConditionFn condition, bool anyAge = false, RandomizerRegion otherRegion = RR_NONE,
+    ConditionFn otherCondition = [] { return false; }, RandomizerRegion thirdRegion = RR_NONE,
+    ConditionFn thirdCondition = [] { return false; });
 bool CanPlantBean(const RandomizerRegion region);
 bool BothAges(const RandomizerRegion region);
 bool ChildCanAccess(const RandomizerRegion region);

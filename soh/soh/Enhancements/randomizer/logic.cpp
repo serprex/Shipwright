@@ -864,7 +864,7 @@ bool Logic::CanPassEnemy(RandomizerEnemy enemy, EnemyDistance distance, bool wal
             return CanUse(RG_HOOKSHOT) || CanUse(RG_SUNS_SONG);
         case RE_IRON_KNUCKLE:
         case RE_BIG_OCTO:
-        case RE_WALLTULA: //consistent with RT_SPIRIT_WALL
+        case RE_WALLTULA: // consistent with RT_SPIRIT_WALL
             return false;
         case RE_GREEN_BUBBLE:
             return TakeDamage() || CanUse(RG_NUTS) || CanUse(RG_BOOMERANG) || CanUse(RG_HOOKSHOT);
@@ -2362,10 +2362,9 @@ void Logic::SetInLogic(LogicVal logicVal, bool value) {
     inLogic[logicVal] = value;
 }
 
-bool Logic::IsReverseAccessPossible(){
+bool Logic::IsReverseAccessPossible() {
     return ctx->GetOption(RSK_SHUFFLE_BOSS_ENTRANCES) &&
-           (ctx->GetOption(RSK_DECOUPLED_ENTRANCES) || 
-            ctx->GetOption(RSK_MIX_BOSS_ENTRANCES));
+           (ctx->GetOption(RSK_DECOUPLED_ENTRANCES) || ctx->GetOption(RSK_MIX_BOSS_ENTRANCES));
 }
 
 bool Logic::SpiritBrokenWallToStatue() {
@@ -2373,7 +2372,8 @@ bool Logic::SpiritBrokenWallToStatue() {
 }
 
 bool Logic::SpiritEastToSwitch() {
-    return (IsAdult && ctx->GetTrickOption(RT_SPIRIT_LOBBY_JUMP)) || CanUse(RG_HOVER_BOOTS) || (CanUse(RG_ZELDAS_LULLABY) && CanUse(RG_HOOKSHOT));
+    return (IsAdult && ctx->GetTrickOption(RT_SPIRIT_LOBBY_JUMP)) || CanUse(RG_HOVER_BOOTS) ||
+           (CanUse(RG_ZELDAS_LULLABY) && CanUse(RG_HOOKSHOT));
 }
 
 bool Logic::SpiritWestToSkull() {
@@ -2381,22 +2381,25 @@ bool Logic::SpiritWestToSkull() {
 }
 
 bool Logic::SpiritSunBlockSouthLedge() {
-    return true/*str0 || IsAdult || CanKillEnemy(RE_BEAMOS) || BunnyHovers() ||
-           (CanUse(RG_HOOKSHOT) && (HasFireSource() || 
-                                    (SpiritSunBlockTorch && (logic->CanUse(STICKS) || (ctx->GetTrickOption(RT_SPIRIT_SUN_CHEST) && logic->CanUse(RG_FAIRY_BOW))))))*/;
+    return true /*str0 || IsAdult || CanKillEnemy(RE_BEAMOS) || BunnyHovers() ||
+            (CanUse(RG_HOOKSHOT) && (HasFireSource() ||
+                                     (SpiritSunBlockTorch && (logic->CanUse(STICKS) ||
+            (ctx->GetTrickOption(RT_SPIRIT_SUN_CHEST) && logic->CanUse(RG_FAIRY_BOW))))))*/
+        ;
 }
 
-//Combines crossing the ledge directly and the jump from the hand
+// Combines crossing the ledge directly and the jump from the hand
 bool Logic::MQSpiritWestToPots() {
     return (IsAdult && ctx->GetTrickOption(RT_SPIRIT_LOBBY_JUMP)) || CanUse(RG_HOVER_BOOTS) || CanUse(RG_SONG_OF_TIME);
 }
 
 bool Logic::MQSpiritStatueToSunBlock() {
-    return (IsAdult || ctx->GetTrickOption(RT_SPIRIT_MQ_SUN_BLOCK_SOT) || CanUse(RG_SONG_OF_TIME))/* && str0*/;
+    return (IsAdult || ctx->GetTrickOption(RT_SPIRIT_MQ_SUN_BLOCK_SOT) || CanUse(RG_SONG_OF_TIME)) /* && str0*/;
 }
 
 bool Logic::MQSpiritStatueSouthDoor() {
-    return HasFireSource() || (ctx->GetTrickOption(RT_SPIRIT_MQ_FROZEN_EYE) && CanUse(RG_FAIRY_BOW) && CanUse(RG_SONG_OF_TIME)/* && CanClimb()*/);
+    return HasFireSource() || (ctx->GetTrickOption(RT_SPIRIT_MQ_FROZEN_EYE) && CanUse(RG_FAIRY_BOW) &&
+                               CanUse(RG_SONG_OF_TIME) /* && CanClimb()*/);
 }
 
 void Logic::Reset() {

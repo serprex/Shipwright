@@ -26,7 +26,6 @@ enum class GlitchDifficulty {
     HERO,
 };
 
-
 class Logic {
   public:
     bool noVariable = false;

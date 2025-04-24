@@ -219,7 +219,7 @@ uint8_t SpiritExplosiveLogic() {
     * This code will fail if any glitch allows Adult to go in the Child spirit door first or vice versa as it relies on
     specific ages
 
-    * In order to pass a check, we must either determine that Access is certain, 
+    * In order to pass a check, we must either determine that Access is certain,
     or that it is always possible to get a check somehow.
 
     * But first I have to talk about parallel universes.
@@ -231,15 +231,16 @@ uint8_t SpiritExplosiveLogic() {
     * In the third universe, adult enters in reverse, and wastes all the keys so noone can enter through the front
     * In the forth, child manages to do the same, and lock people out of the front
     * All access from the boss door in shared areas is Certain
-    
-    * While other universes exist, such as both ages entering in reverse or 
-    child using their key, getting stuck, then coming back to do the dungeon as adult, these 
+
+    * While other universes exist, such as both ages entering in reverse or
+    child using their key, getting stuck, then coming back to do the dungeon as adult, these
     are all sub-possibilities of these 4 universes
 
     * As we do not know which universe we are in until the player chooses one in-game,
     we must be able to collect the check in both universes
 
-    * When an Age can no longer be kept out by conflicting universes, that age is said to have Certain Access to a region
+    * When an Age can no longer be kept out by conflicting universes, that age is said to have Certain Access to a
+   region
     * If both ages have access to a region with a certain number of keys, but there is no Certain Access,
     * then a check is only in logic if all possible universes can collect the check independently
 
@@ -247,11 +248,11 @@ uint8_t SpiritExplosiveLogic() {
 
     * We must check for these universes manually as we allow technical access with minimum keys for
     * technical reasons as otherwise the logic code will never run
-    
+
     * The first and 3rd column list how many keys are needed for each age to have Certain Access
     * the second column is child keys in case there's Child reverse access, due to an edge case in MQ spirit logic
     * where the broken wall room can be reached with 6 keys if you can hit switches and have reverse Child access
-    
+
     * The first condition is the combined conditions needed to move from the 1F child lock to the area being checks
     * the second condition is the same for adult 1F lock, and the third is the access from the boss door.
 */
@@ -294,9 +295,8 @@ std::map<RandomizerRegion, SpiritLogicData> Region::spiritLogicData = {
     *anyAge is equivalent to a self referencing Here, used for events and any check where that is relevent.
 */
 
-bool SpiritShared(RandomizerRegion region, ConditionFn condition, bool anyAge,
-                  RandomizerRegion otherRegion, ConditionFn otherCondition,
-                  RandomizerRegion thirdRegion, ConditionFn thirdCondition){
+bool SpiritShared(RandomizerRegion region, ConditionFn condition, bool anyAge, RandomizerRegion otherRegion,
+                  ConditionFn otherCondition, RandomizerRegion thirdRegion, ConditionFn thirdCondition) {
     SpiritLogicData curRegionData = Region::spiritLogicData[region];
     bool result = false;
 
@@ -308,20 +308,24 @@ bool SpiritShared(RandomizerRegion region, ConditionFn condition, bool anyAge,
     // without opening the Statue room to Broken Wall Room lock first
     logic->IsChild = true;
     logic->IsAdult = false;
-    uint8_t childKeys = (logic->ReverseSpiritChild && logic->CanHitSwitch()/* && CanClimbHigh()*/) ? curRegionData.childReverseKeys : curRegionData.childKeys;
+    uint8_t childKeys = (logic->ReverseSpiritChild && logic->CanHitSwitch() /* && CanClimbHigh()*/)
+                            ? curRegionData.childReverseKeys
+                            : curRegionData.childKeys;
 
     // If we have enough keys that an age cannot be kept out, we have Certain Access
     // otherwise if we have entered in reverse and can reach from the face, we have Certain Access
-    bool ChildCertainAccess = (logic->ReverseSpiritChild && curRegionData.reverseAccess()) || logic->SmallKeys(RR_SPIRIT_TEMPLE, childKeys);
+    bool ChildCertainAccess =
+        (logic->ReverseSpiritChild && curRegionData.reverseAccess()) || logic->SmallKeys(RR_SPIRIT_TEMPLE, childKeys);
 
-    //Switch back to adult to check adult access
+    // Switch back to adult to check adult access
     logic->IsChild = false;
     logic->IsAdult = true;
 
-    bool AdultCertainAccess = (logic->ReverseSpiritAdult && curRegionData.reverseAccess()) || logic->SmallKeys(RR_SPIRIT_TEMPLE, curRegionData.adultKeys);
+    bool AdultCertainAccess = (logic->ReverseSpiritAdult && curRegionData.reverseAccess()) ||
+                              logic->SmallKeys(RR_SPIRIT_TEMPLE, curRegionData.adultKeys);
     // If we are AnyAge and have any CeratinAccess, then we can check those ages
-    //we don't need to check ambiguity here as if this fails, then 1 of the ages has failed
-    if (anyAge && (ChildCertainAccess || AdultCertainAccess)){
+    // we don't need to check ambiguity here as if this fails, then 1 of the ages has failed
+    if (anyAge && (ChildCertainAccess || AdultCertainAccess)) {
         // set age access to the Certain Access
         logic->IsChild = ChildCertainAccess;
         logic->IsAdult = AdultCertainAccess;
@@ -331,7 +335,7 @@ bool SpiritShared(RandomizerRegion region, ConditionFn condition, bool anyAge,
 
         // otherwise, we have to check the current age and...
     } else if (areaTable[region].Child() && pastChild) {
-        //Switch to Child
+        // Switch to Child
         logic->IsChild = true;
         logic->IsAdult = false;
 
@@ -339,19 +343,21 @@ bool SpiritShared(RandomizerRegion region, ConditionFn condition, bool anyAge,
         // If we have Certain Access, we just run the condition.
         // Otherwise, if we have the keys to know either age can reach, we need to see if we could reach as Adult
         // and if needed, in reverse
-        if (!ChildCertainAccess && result && (!logic->IsReverseAccessPossible() || Region::spiritLogicData[otherRegion].reverseAccess())) {
-            //Switch to Adult
+        if (!ChildCertainAccess && result &&
+            (!logic->IsReverseAccessPossible() || Region::spiritLogicData[otherRegion].reverseAccess())) {
+            // Switch to Adult
             logic->IsChild = false;
             logic->IsAdult = true;
             // If Adult can get there and get the check, we can get the check in logic
             // If reverse spirit is also possible, we need to make sure Adult can get it via reverse entry too
-            result = (curRegionData.adultAccess() && (!logic->IsReverseAccessPossible() || curRegionData.reverseAccess) && condition()) ||
+            result = (curRegionData.adultAccess() &&
+                      (!logic->IsReverseAccessPossible() || curRegionData.reverseAccess) && condition()) ||
                      (otherRegion != RR_NONE &&
-                      (Region::spiritLogicData[otherRegion].adultAccess() && 
+                      (Region::spiritLogicData[otherRegion].adultAccess() &&
                        (!logic->IsReverseAccessPossible() || Region::spiritLogicData[otherRegion].reverseAccess()) &&
                        otherCondition())) ||
                      (thirdRegion != RR_NONE &&
-                      (Region::spiritLogicData[thirdRegion].adultAccess() && 
+                      (Region::spiritLogicData[thirdRegion].adultAccess() &&
                        (!logic->IsReverseAccessPossible() || Region::spiritLogicData[thirdRegion].reverseAccess()) &&
                        thirdCondition()));
         }
@@ -361,22 +367,24 @@ bool SpiritShared(RandomizerRegion region, ConditionFn condition, bool anyAge,
         // Alternatively, if we have entered in reverse and can reach from the face, we have Certain Access
         // Otherwise, if we have the keys to know either age can reach, we need to see if we could reach as Child
         // and if needed, in reverse
-        if (!AdultCertainAccess && result && (!logic->IsReverseAccessPossible() || Region::spiritLogicData[otherRegion].reverseAccess)){
-            //Switch to Child
+        if (!AdultCertainAccess && result &&
+            (!logic->IsReverseAccessPossible() || Region::spiritLogicData[otherRegion].reverseAccess)) {
+            // Switch to Child
             logic->IsChild = true;
             logic->IsAdult = false;
 
             // If Child can get there and get the check, we can get the check in logic
             // If reverse spirit is also possible, we need to make sure Child can get it via reverse entry too
-            result = (curRegionData.childAccess() && (!logic->IsReverseAccessPossible() || curRegionData.reverseAccess()) && condition()) ||
-            (otherRegion != RR_NONE &&
-             (Region::spiritLogicData[otherRegion].childAccess() && 
-              (!logic->IsReverseAccessPossible() || Region::spiritLogicData[otherRegion].reverseAccess()) &&
-              otherCondition())) ||
-            (thirdRegion != RR_NONE &&
-             (Region::spiritLogicData[thirdRegion].childAccess() && 
-              (!logic->IsReverseAccessPossible() || Region::spiritLogicData[thirdRegion].reverseAccess()) &&
-              thirdCondition()));
+            result = (curRegionData.childAccess() &&
+                      (!logic->IsReverseAccessPossible() || curRegionData.reverseAccess()) && condition()) ||
+                     (otherRegion != RR_NONE &&
+                      (Region::spiritLogicData[otherRegion].childAccess() &&
+                       (!logic->IsReverseAccessPossible() || Region::spiritLogicData[otherRegion].reverseAccess()) &&
+                       otherCondition())) ||
+                     (thirdRegion != RR_NONE &&
+                      (Region::spiritLogicData[thirdRegion].childAccess() &&
+                       (!logic->IsReverseAccessPossible() || Region::spiritLogicData[thirdRegion].reverseAccess()) &&
+                       thirdCondition()));
         }
     }
     // set back age variables
