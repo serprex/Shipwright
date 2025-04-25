@@ -1,7 +1,6 @@
+#define MINIAUDIO_IMPLEMENTATION
 #include "AudioDecoder.h"
 #include "z64audio.h"
-#define DR_WAV_IMPLEMENTATION
-#include "dr_libs/dr_wav.h"
 #include <stdexcept>
 #define WAV_DECODE_CHUNK_SIZE 64
 // A handful of definitions need to be copied from mixer.c.
@@ -23,6 +22,7 @@ AudioDecoder::AudioDecoder() {
 }
 AudioDecoder::~AudioDecoder() {
 }
+
 void AudioDecoder::setSample(SOH::AudioSample* sample) {
     this->sample.codec = sample->sample.codec;
     this->sample.loop.start = sample->sample.loop->start;
@@ -40,6 +40,7 @@ void AudioDecoder::setSample(SOH::AudioSample* sample) {
     inStart = in;
     inEnd = in + sample->sample.size;
 }
+
 void AudioDecoder::setSample(SoundFontSample* sample) {
     this->sample.codec = sample->codec;
     this->sample.loop.start = sample->loop->start;
@@ -56,6 +57,7 @@ void AudioDecoder::setSample(SoundFontSample* sample) {
     inStart = in;
     inEnd = in + sample->size;
 }
+
 size_t AudioDecoder::decode(int16_t* out, size_t nSamples) {
     size_t samplesOut = 0;
     size_t nbytes = nSamples * 2;
@@ -101,26 +103,39 @@ size_t AudioDecoder::decode(int16_t* out, size_t nSamples) {
     return samplesOut;
 }
 
-size_t AudioDecoder::decodeToWav(int16_t** buffer) {
-    int16_t* wavOut = nullptr;
+ma_result wavWrite(ma_encoder* pEncoder, const void* pBufferIn, size_t bytesToWrite, size_t* pBytesWritten) {
+    auto fileData = (std::vector<uint8_t>*)pEncoder->pUserData;
+    fileData->insert(fileData->end(), (uint8_t*)pBufferIn, (uint8_t*)pBufferIn + bytesToWrite);
+    if (pBytesWritten != NULL) {
+        *pBytesWritten = bytesToWrite;
+    }
+    return MA_SUCCESS;
+}
 
-    drwav_data_format format;
-    format.bitsPerSample = 16;
-    format.channels = 1;
-    format.container = drwav_container_riff;
-    format.format = DR_WAVE_FORMAT_PCM;
+ma_result wavSeek(ma_encoder* pEncoder, ma_int64 offset, ma_seek_origin origin) {
+    return MA_ERROR;
+}
+
+std::vector<uint8_t> AudioDecoder::decodeToWav() {
+    std::vector<uint8_t> fileData;
+
+    ma_uint32 sampleRate;
     // Todo: figure out how to really determine the sample rate. CODEC_ADPCM tends to stream at higher rates (usually
     // 20KHZ) while CODEC_SMALL_ADPCM is usually around 14000. They're still not consistent though.
     if (sample.codec == CODEC_ADPCM)
-        format.sampleRate = 20000;
+        sampleRate = 20000;
     else if (sample.codec = CODEC_SMALL_ADPCM)
-        format.sampleRate = 14000;
+        sampleRate = 14000;
     else
         throw std::runtime_error("AudioDecoder: Unsupported codec.");
-    drwav wav;
-    size_t wavSize;
-    if (!drwav_init_memory_write(&wav, (void**)&wavOut, &wavSize, &format, nullptr))
-        throw std::runtime_error("AudioDecoder: Unable to initialize wave writer.");
+
+    ma_encoder_config maconfig = ma_encoder_config_init(ma_encoding_format_wav, ma_format_s16, 1, sampleRate);
+    ma_encoder wavEncoder;
+    ma_result init_result = ma_encoder_init(wavWrite, wavSeek, &fileData, &maconfig, &wavEncoder);
+    if (init_result != MA_SUCCESS) {
+        return fileData;
+    }
+
     int16_t chunk[WAV_DECODE_CHUNK_SIZE];
     // Don't decode past the end of the loop.
     size_t samplesLeft = sample.loop.end;
@@ -135,14 +150,9 @@ size_t AudioDecoder::decodeToWav(int16_t** buffer) {
 
         if (samplesRead == 0)
             break;
-        if (drwav_write_pcm_frames(&wav, samplesRead, chunk) != samplesRead) {
-            drwav_uninit(&wav);
-            drwav_free(wavOut, nullptr);
-            throw std::runtime_error("AudioDecoder: Unable to write wave data.");
-        }
+        ma_encoder_write_pcm_frames(&wavEncoder, chunk, samplesRead, NULL);
         samplesLeft -= samplesRead;
     }
-    drwav_uninit(&wav);
-    *buffer = wavOut;
-    return wavSize;
+    ma_encoder_uninit(&wavEncoder);
+    return fileData;
 }

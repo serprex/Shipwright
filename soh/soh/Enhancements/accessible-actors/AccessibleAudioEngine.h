@@ -1,11 +1,4 @@
 #pragma once
-
-#define MA_NO_FLAC
-#define MA_NO_MP3
-#define MA_NO_THREADING
-#define MA_NO_DEVICE_IO
-#define MA_NO_GENERATION
-#include "miniaudio/miniaudio.h"
 #include <stdint.h>
 #include <thread>
 #include <mutex>
@@ -14,6 +7,9 @@
 #include <string>
 #include <unordered_map>
 #include <array>
+
+#include "soh/Enhancements/audio/miniaudio.h"
+
 #define AAE_SOUND_ACTION_BATCH_SIZE 64
 #define AAE_SLOTS_PER_HANDLE 16
 class IResource;
@@ -71,7 +67,6 @@ typedef std::array<SoundSlot, AAE_SLOTS_PER_HANDLE> SoundSlots;
 
 class AccessibleAudioEngine {
     int initialized;
-    ma_resource_manager resourceManager;
     ma_engine engine;
     ma_pcm_rb preparedOutput;             // Lock-free single producer single consumer.
     std::deque<SoundAction> soundActions; // A command cue.
@@ -152,5 +147,6 @@ class AccessibleAudioEngine {
                           float maxDistance);
     // Schedule the preparation of output for delivery.
     void prepare();
-    void cacheDecodedSample(const char* path, void* data, size_t size);
+
+    ma_resource_manager resourceManager;
 };

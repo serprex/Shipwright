@@ -2,6 +2,7 @@
 // A standalone, incremental audio sample decoder.
 // Based on the ADPCM decoding routines in mixer.c.
 
+#include "miniaudio.h"
 #include "libultraship/libultraship.h"
 #include "soh/resource/type/AudioSample.h"
 #include "z64audio.h"
@@ -28,5 +29,5 @@ class AudioDecoder {
     void setSample(SoundFontSample* sample);
 
     size_t decode(int16_t* out, size_t nSamples);
-    size_t decodeToWav(int16_t** buffer);
+    std::vector<uint8_t> decodeToWav();
 };

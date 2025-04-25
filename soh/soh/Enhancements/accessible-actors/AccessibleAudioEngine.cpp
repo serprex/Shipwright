@@ -1,10 +1,3 @@
-#define MINIAUDIO_IMPLEMENTATION
-#define MA_NO_THREADING
-#define MA_NO_DEVICE_IO
-#define MA_NO_GENERATION
-#define MA_NO_FLAC
-#define MA_NO_MP3
-#define MA_ENABLE_ONLY_SPECIFIC_BACKENDS
 #define AAE_CHANNELS 2
 #define AAE_SAMPLE_RATE 44100
 #define AAE_MAX_BUFFER_SIZE AAE_SAMPLE_RATE / 10
@@ -23,6 +16,8 @@ int AudioPlayer_GetDesiredBuffered();
 #include <math.h>
 #include <algorithm>
 #include <stdexcept>
+#include <spdlog/spdlog.h>
+
 enum AAE_COMMANDS {
     AAE_START = 0,
     AAE_STOP,
@@ -123,10 +118,9 @@ uint32_t AccessibleAudioEngine::retrieve(float* buffer, uint32_t nFrames) {
     if (nFrames == 0)
         return 0;
     uint32_t ogNFrames = nFrames;
-    uint32_t framesObtained = 0;
     while (nFrames > 0) {
         void* readBuffer;
-        framesObtained = nFrames;
+        uint32_t framesObtained = nFrames;
         ma_pcm_rb_acquire_read(&preparedOutput, &framesObtained, (void**)&readBuffer);
         if (framesObtained > nFrames)
             framesObtained = nFrames;
@@ -246,6 +240,7 @@ void AccessibleAudioEngine::runThread() {
         }
     }
 }
+
 SoundSlot* AccessibleAudioEngine::findSound(SoundAction& action) {
     if (action.slot < 0 || action.slot >= AAE_SLOTS_PER_HANDLE)
         return NULL;
@@ -257,6 +252,7 @@ SoundSlot* AccessibleAudioEngine::findSound(SoundAction& action) {
         return NULL;
     return &target;
 }
+
 void AccessibleAudioEngine::doPlaySound(SoundAction& action) {
     SoundSlot* sound;
     if (sounds.contains(action.handle)) {
@@ -266,7 +262,6 @@ void AccessibleAudioEngine::doPlaySound(SoundAction& action) {
             destroySound(sound);
         }
     }
-
     else {
         SoundSlots temp;
         for (int i = 0; i < AAE_SLOTS_PER_HANDLE; i++)
@@ -275,10 +270,14 @@ void AccessibleAudioEngine::doPlaySound(SoundAction& action) {
         sounds[action.handle] = temp;
         sound = &sounds[action.handle][action.slot];
     }
-    if (ma_sound_init_from_file(&engine, action.path.c_str(),
+
+    ma_result result = ma_sound_init_from_file(&engine, action.path.c_str(),
                                 MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_NO_DEFAULT_ATTACHMENT, NULL, NULL,
-                                &sound->sound) != MA_SUCCESS)
+                                &sound->sound);
+    if (result != MA_SUCCESS) {
+        SPDLOG_ERROR("failed to play sound: {}", ma_result_description(result));
         return;
+    }
 
     initSoundExtras(sound);
     ma_sound_set_looping(&sound->sound, action.looping);
@@ -289,6 +288,7 @@ void AccessibleAudioEngine::doPlaySound(SoundAction& action) {
 
     sound->active = true;
 }
+
 void AccessibleAudioEngine::doStopSound(SoundAction& action) {
     SoundSlot* slot = findSound(action);
     if (slot == NULL)
@@ -416,6 +416,7 @@ bool AccessibleAudioEngine::initSoundExtras(SoundSlot* slot) {
     ma_node_attach_output_bus(&slot->sound, 0, &slot->extras, 0);
     return true;
 }
+
 void AccessibleAudioEngine::destroySound(SoundSlot* slot) {
     ma_node_detach_all_output_buses(&slot->extras);
     ma_sound_uninit(&slot->sound);
@@ -461,7 +462,6 @@ AccessibleAudioEngine::~AccessibleAudioEngine() {
     destroy();
 }
 void AccessibleAudioEngine::mix(int16_t* ogBuffer, uint32_t nFrames) {
-    uint32_t framesAvailable = ma_pcm_rb_available_read(&preparedOutput);
     float sourceChunk[AAE_MIX_CHUNK_SIZE * AAE_CHANNELS];
     float mixedChunk[AAE_MIX_CHUNK_SIZE * AAE_CHANNELS];
     while (nFrames > 0) {
@@ -596,9 +596,4 @@ void AccessibleAudioEngine::prepare() {
     action.command = AAE_PREPARE;
     // This is called once at the end of every frame, so now is the time to post all of the accumulated commands.
     postSoundActions();
-}
-
-void AccessibleAudioEngine::cacheDecodedSample(const char* path, void* data, size_t size) {
-    // data stored as wave, so we register it with MiniAudio as an encoded asset as opposed to a decoded one
-    ma_resource_manager_register_encoded_data(&resourceManager, path, data, size);
 }

@@ -90,7 +90,7 @@ class ActorAccessibility {
     // Maps internal sfx to external (prerendered) resources.
     std::unordered_map<s16, SfxRecord> sfxMap;
     // Similar to above, but this one maps raw audio samples as opposed to SFX.
-    std::unordered_set<const char*> sampleMap;
+    std::unordered_map<const char*, std::vector<uint8_t>> sampleMap;
     int extractSfx = 0;
     s16 currentScene = -1;
     s8 currentRoom = -1;
@@ -706,16 +706,17 @@ const char* ActorAccessibility_MapSfxToExternalAudio(s16 sfxId) {
         std::stringstream ss;
         ss << std::setw(4) << std::setfill('0') << std::hex << sfxId;
         tempRecord.path = ss.str();
-        aa->sfxMap[sfxId] = tempRecord;
-        record = &aa->sfxMap[sfxId];
-        aa->audioEngine->cacheDecodedSample(record->path.c_str(), record->resource->Buffer->data(),
-                                            record->resource->Buffer->size());
+        auto pair = aa->sfxMap.insert({ sfxId, tempRecord });
+        record = &pair.first->second;
+        ma_resource_manager_register_decoded_data(&aa->audioEngine->resourceManager, record->path.c_str(),
+                record->resource->Buffer->data(), record->resource->Buffer->size() / 2, ma_format_s16, 1, 44100);
     } else {
         record = &it->second;
     }
 
     return record->path.c_str();
 }
+
 // Map the path to a raw sample to the external audio engine.
 const char* ActorAccessibility_MapRawSampleToExternalAudio(const char* name) {
     auto it = aa->sampleMap.find(name);
@@ -728,11 +729,9 @@ const char* ActorAccessibility_MapRawSampleToExternalAudio(const char* name) {
             return NULL; // Resource doesn't exist, user's gotta run the extractor.
         AudioDecoder decoder;
         decoder.setSample((SOH::AudioSample*)res.get());
-        // TODO track wav somehow & free it with drwav_free
-        s16* wav;
-        size_t wavSize = decoder.decodeToWav(&wav);
-        aa->sampleMap.insert(name);
-        aa->audioEngine->cacheDecodedSample(name, wav, wavSize);
+        auto pair = aa->sampleMap.insert({ name, decoder.decodeToWav() });
+        ma_resource_manager_register_encoded_data(&aa->audioEngine->resourceManager, name,
+                pair.first->second.data(), pair.first->second.size());
     }
 
     return name;
