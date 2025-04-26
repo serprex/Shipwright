@@ -18,7 +18,6 @@
 #include "soh/Enhancements/speechsynthesizer/SpeechSynthesizer.h"
 #include "soh/Enhancements/tts/tts.h"
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
-#include "soh/Enhancements/audio/AudioDecoder.h"
 
 extern "C" {
 extern PlayState* gPlayState;
@@ -89,8 +88,6 @@ class ActorAccessibility {
     SfxExtractor sfxExtractor;
     // Maps internal sfx to external (prerendered) resources.
     std::unordered_map<s16, SfxRecord> sfxMap;
-    // Similar to above, but this one maps raw audio samples as opposed to SFX.
-    std::unordered_map<const char*, std::vector<uint8_t>> sampleMap;
     int extractSfx = 0;
     s16 currentScene = -1;
     s8 currentRoom = -1;
@@ -266,14 +263,7 @@ void ActorAccessibility_PlaySound(void* handle, int slot, s16 sfxId, bool loopin
         return;
     aa->audioEngine->playSound((uintptr_t)handle, slot, path, looping);
 }
-const char* ActorAccessibility_MapRawSampleToExternalAudio(const char* name);
 
-void ActorAccessibility_PlayRawSample(void* handle, int slot, const char* name, bool looping) {
-    const char* path = ActorAccessibility_MapRawSampleToExternalAudio(name);
-    if (path == NULL)
-        return;
-    aa->audioEngine->playSound((uintptr_t)handle, slot, path, looping);
-}
 void ActorAccessibility_StopSound(void* handle, int slot) {
     aa->audioEngine->stopSound((uintptr_t)handle, slot);
 }
@@ -317,12 +307,6 @@ void ActorAccessibility_PlaySoundForActor(AccessibleActor* actor, int slot, s16 
     if (slot < 0 || slot > AAE_SLOTS_PER_HANDLE)
         return;
     ActorAccessibility_PlaySound(actor, slot, sfxId, looping);
-    ActorAccessibility_ConfigureSoundForActor(actor, slot);
-}
-void ActorAccessibility_PlaySampleForActor(AccessibleActor* actor, int slot, const char* name, bool looping) {
-    if (slot < 0 || slot > AAE_SLOTS_PER_HANDLE)
-        return;
-    ActorAccessibility_PlayRawSample(actor, slot, name, looping);
     ActorAccessibility_ConfigureSoundForActor(actor, slot);
 }
 void ActorAccessibility_StopSoundForActor(AccessibleActor* actor, int slot) {
@@ -715,26 +699,6 @@ const char* ActorAccessibility_MapSfxToExternalAudio(s16 sfxId) {
     }
 
     return record->path.c_str();
-}
-
-// Map the path to a raw sample to the external audio engine.
-const char* ActorAccessibility_MapRawSampleToExternalAudio(const char* name) {
-    auto it = aa->sampleMap.find(name);
-    if (it == aa->sampleMap.end()) {
-        std::stringstream ss;
-        ss << "audio/samples/" << name;
-        std::string fullPath = ss.str();
-        auto res = Ship::Context::GetInstance()->GetResourceManager()->LoadResource(fullPath);
-        if (res == nullptr)
-            return NULL; // Resource doesn't exist, user's gotta run the extractor.
-        AudioDecoder decoder;
-        decoder.setSample((SOH::AudioSample*)res.get());
-        auto pair = aa->sampleMap.insert({ name, decoder.decodeToWav() });
-        ma_resource_manager_register_encoded_data(&aa->audioEngine->resourceManager, name,
-                pair.first->second.data(), pair.first->second.size());
-    }
-
-    return name;
 }
 
 // Call once per frame to tell the audio engine to start working on the latest batch of queued instructions.

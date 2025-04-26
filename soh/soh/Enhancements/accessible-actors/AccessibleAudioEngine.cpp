@@ -8,6 +8,7 @@
 #define AAE_LPF_ORDER 4
 
 #define NOMINMAX // because Windows is a joke.
+#define MINIAUDIO_IMPLEMENTATION
 #include "AccessibleAudioEngine.h"
 
 extern "C" {

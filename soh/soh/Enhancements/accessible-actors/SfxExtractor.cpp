@@ -1,5 +1,4 @@
 #include "SfxExtractor.h"
-#include "soh/Enhancements/audio/AudioDecoder.h"
 #include "soh/Enhancements/audio/miniaudio.h"
 #include "soh/Enhancements/speechsynthesizer/SpeechSynthesizer.h"
 #include "soh/Enhancements/tts/tts.h"
