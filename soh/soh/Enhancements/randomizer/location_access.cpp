@@ -253,10 +253,10 @@ bool Here(const RandomizerRegion region, ConditionFn condition) {
     * the second condition is the same for adult 1F lock, and the third is the access from the boss door.
 */
 
-
 bool SpiritExplosiveKeyLogic() {
-    return logic->SmallKeys(RR_SPIRIT_TEMPLE, 
-                            logic->SpiritBrokenWallToStatue() ? 1 : ctx->GetOption(RSK_BOMBCHU_BAG) && logic->BombchuRefill() ? 2 : 3);
+    return logic->SmallKeys(RR_SPIRIT_TEMPLE, logic->SpiritBrokenWallToStatue()                           ? 1
+                                              : ctx->GetOption(RSK_BOMBCHU_BAG) && logic->BombchuRefill() ? 2
+                                                                                                          : 3);
 }
 
 // clang-format off
@@ -291,17 +291,17 @@ std::map<RandomizerRegion, SpiritLogicData> Region::spiritLogicData = {
 };
 // clang-format on
 
-bool SpiritCertainAccess(RandomizerRegion region){
+bool SpiritCertainAccess(RandomizerRegion region) {
     SpiritLogicData& curRegionData = Region::spiritLogicData[region];
     uint8_t keys = curRegionData.adultKeys;
     bool reverseAccess = logic->ReverseSpiritAdult;
-    if (logic->IsChild){
+    if (logic->IsChild) {
         // If child enters in reverse, then they have access to Certain Access to Broken Wall room in 6 keys,
         // the ability to hit switches and the ability to climb because only child can reach the initial child lock
         // without opening the Statue room to Broken Wall Room lock first
         keys = (logic->ReverseSpiritChild && logic->CanHitSwitch() /* && CanClimbHigh()*/)
-                            ? curRegionData.childReverseKeys
-                            : curRegionData.childKeys;
+                   ? curRegionData.childReverseKeys
+                   : curRegionData.childKeys;
         reverseAccess = logic->ReverseSpiritChild;
     }
     // If we have enough keys that an age cannot be kept out, we have Certain Access
