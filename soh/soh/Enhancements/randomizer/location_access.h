@@ -128,6 +128,11 @@ struct SpiritLogicData {
     ConditionFn adultAccess;
     // The area access condition to reach this region from the boss door,
     ConditionFn reverseAccess;
+
+    SpiritLogicData(uint8_t childKeys_, uint8_t childReverseKeys_, uint8_t adultKeys_,
+                    ConditionFn childAccess_, ConditionFn adultAccess_, ConditionFn reverseAccess_)
+    : childKeys(childKeys_), childReverseKeys(childReverseKeys_), adultKeys(adultKeys_), 
+      childAccess(childAccess_), adultAccess(adultAccess_), reverseAccess(reverseAccess_) {}
 };
 
 class Region {

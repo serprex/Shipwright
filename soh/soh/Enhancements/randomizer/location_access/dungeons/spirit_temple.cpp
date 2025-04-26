@@ -161,8 +161,6 @@ void RegionTable_Init_SpiritTemple() {
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_ABOVE_BOULDERS, []{return true/*CanClimb()*/;}),
-        //Jump slash is possible as child, but pretty tight. Jumpslash as late as you can
-        //A damage boost off the boulder is also possible, but you need 
         Entrance(RR_SPIRIT_TEMPLE_PAST_BOULDERS,  []{return logic->SpiritBouldersSilvers;}),
     });
 
@@ -286,7 +284,8 @@ void RegionTable_Init_SpiritTemple() {
         //Spawning the chest to get here is accounted for in movement logic, so we only need to confirm it can be spawned here
         LOCATION(RC_SPIRIT_TEMPLE_SUN_BLOCK_ROOM_CHEST, SpiritShared(RR_SPIRIT_TEMPLE_SUN_BLOCK_SOUTH_LEDGE, 
                                                                      []{return logic->HasFireSource() || 
-                                                                               (logic->SpiritSunBlockTorch && (logic->CanUse(RG_STICKS) || (ctx->GetTrickOption(RT_SPIRIT_SUN_CHEST) && logic->CanUse(RG_FAIRY_BOW))));})), 
+                                                                               (logic->SpiritSunBlockTorch && //Possible without str0 by timing a shot during a backflip from the ledge, but it's probably a separate trick
+                                                                                (logic->CanUse(RG_STICKS) || (ctx->GetTrickOption(RT_SPIRIT_SUN_CHEST) && logic->CanUse(RG_FAIRY_BOW)/* && str0*/)));})), 
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_SUN_BLOCK_ROOM, []{return true;}),
