@@ -120,7 +120,7 @@ struct SpiritLogicData {
     uint8_t adultKeys; // the number of keys that guarantees Adult can reach this region
     // The area access condition to reach this region as Child, from the first lock,
     // including the minimum number of keys for ambiguous access
-    //  1 key is always assumed to be required
+    // 1 key is always assumed to be required
     ConditionFn childAccess;
     // The area access condition to reach this region as Adult, from the first lock
     // including the minimum number of keys for ambiguous access
@@ -264,6 +264,7 @@ bool SpiritShared(
     RandomizerRegion region, ConditionFn condition, bool anyAge = false, RandomizerRegion otherRegion = RR_NONE,
     ConditionFn otherCondition = [] { return false; }, RandomizerRegion thirdRegion = RR_NONE,
     ConditionFn thirdCondition = [] { return false; });
+bool SpiritCertainAccess(RandomizerRegion region);
 bool CanPlantBean(const RandomizerRegion region);
 bool BothAges(const RandomizerRegion region);
 bool ChildCanAccess(const RandomizerRegion region);

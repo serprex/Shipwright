@@ -300,24 +300,24 @@ void RegionTable_Init_SpiritTemple() {
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_SUN_BLOCK_ROOM, []{return true;}),
-        Entrance(RR_SPIRIT_TEMPLE_WEST_THRONE,    []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 5);}),
+        Entrance(RR_SPIRIT_TEMPLE_WEST_THRONE,    []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 3);}),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_WEST_THRONE] = Region("Spirit Temple West Throne", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
         //Exits
-        Entrance(RR_SPIRIT_TEMPLE_SKULLTULA_STAIRS, []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 5);}),
+        Entrance(RR_SPIRIT_TEMPLE_SKULLTULA_STAIRS, []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 3);}),
         Entrance(RR_SPIRIT_TEMPLE_WEST_HAND_EXIT,   []{return Here(RR_SPIRIT_TEMPLE_WEST_THRONE, []{return logic->CanKillEnemy(RE_IRON_KNUCKLE);});}),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_WEST_HAND_EXIT] = Region("Spirit Temple West Hand Exit", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
         //Exits
-        Entrance(RR_SPIRIT_TEMPLE_WEST_THRONE, []{return true;}),
-        Entrance(RR_SPIRIT_TEMPLE_OUTER_WEST_HAND,   []{return true;}),
+        Entrance(RR_SPIRIT_TEMPLE_WEST_THRONE,     []{return true;}),
+        Entrance(RR_SPIRIT_TEMPLE_OUTER_WEST_HAND, []{return true;}),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_OUTER_WEST_HAND] = Region("Spirit Temple West Hand", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {
         //Locations
-        LOCATION(RC_SPIRIT_TEMPLE_SILVER_GAUNTLETS_CHEST, true),
+        LOCATION(RC_SPIRIT_TEMPLE_SILVER_GAUNTLETS_CHEST, SpiritShared(RR_SPIRIT_TEMPLE_OUTER_WEST_HAND, []{return true;})),
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_WEST_HAND_EXIT, []{return true;}),
@@ -328,6 +328,7 @@ void RegionTable_Init_SpiritTemple() {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_2F_MIRROR,       []{return true;}),
         Entrance(RR_SPIRIT_TEMPLE_STATUE_ROOM,     []{return true;}),
+        Entrance(RR_SPIRIT_TEMPLE_INNER_EAST_HAND, []{return true;}),
         //(IsAdult && ctx->GetTrickOption(RT_SPIRIT_LOBBY_JUMP)) || CanUse(RG_HOVER_BOOTS) || (CanUse(RG_ZELDAS_LULLABY) && CanUse(RG_HOOKSHOT));
         Entrance(RR_SPIRIT_TEMPLE_SHORTCUT_SWITCH, []{return logic->SpiritEastToSwitch();}),
         Entrance(RR_SPIRIT_TEMPLE_POT_STAIRS,      []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 4);}),
@@ -337,9 +338,6 @@ void RegionTable_Init_SpiritTemple() {
         //This requires that adult can complete both routes
         //Implies CanKillEnemy(RE_IRON_KNUCKLE)
         Entrance(RR_DESERT_COLOSSUS,               []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 3) && logic->CanKillEnemy(RE_BEAMOS)/* && CanClimb() && str0*/;}),
-        //!QUANTUM LOGIC!
-        //Continuing from above, if you also have the Longshot, then you can always reach the outer west hand, as you can longshot from east hand
-        Entrance(RR_SPIRIT_TEMPLE_OUTER_WEST_HAND, []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 3) && logic->CanUse(RG_LONGSHOT) && logic->CanKillEnemy(RE_BEAMOS)/* && CanClimb() && str0*/;}),
         //!QUANTUM LOGIC!
         //A variant of the above, if dungeon entrance randomiser is off, Adult entered spirit in reverse, and they have str 2 to get there from the front,
         //it is always possible for them to reach 1F_EAST with only 2 keys. This is because you can only waste 1 key (on the first child side lock)
@@ -378,6 +376,7 @@ void RegionTable_Init_SpiritTemple() {
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_STATUE_ROOM_EAST, []{return true;}),
+        Entrance(RR_SPIRIT_TEMPLE_INNER_EAST_HAND,  []{return true;}),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_SHORTCUT] = Region("Spirit Temple Shortcut", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
@@ -455,7 +454,8 @@ void RegionTable_Init_SpiritTemple() {
     areaTable[RR_SPIRIT_TEMPLE_BIG_WALL_BASE] = Region("Spirit Temple Big Wall Base", "Spirit Temple", {RA_SPIRIT_TEMPLE}, NO_DAY_NIGHT_CYCLE, {}, {}, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_BEAMOS_PITS,    []{return true;}),
-        Entrance(RR_SPIRIT_TEMPLE_BIG_WALL_UPPER, []{return (ctx->GetTrickOption(RT_SPIRIT_WALL) || (logic->CanAvoidEnemy(RE_BEAMOS, true, 2) && logic->CanPassEnemy(RE_WALLTULA)))
+        Entrance(RR_SPIRIT_TEMPLE_BIG_WALL_UPPER, []{return (ctx->GetTrickOption(RT_SPIRIT_WALL) || 
+                                                             (logic->CanAvoidEnemy(RE_BEAMOS, true, 2) && logic->CanPassEnemy(RE_WALLTULA, ED_BOOMERANG)))
                                                             /*&& CanClimbHigh()*/;}),
     });
 

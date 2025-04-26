@@ -210,10 +210,6 @@ bool Here(const RandomizerRegion region, ConditionFn condition) {
     return areaTable[region].Here(condition);
 }
 
-uint8_t SpiritExplosiveLogic() {
-    return logic->SpiritBrokenWallToStatue() ? 1 : ctx->GetOption(RSK_BOMBCHU_BAG) && logic->BombchuRefill() ? 2 : 3;
-}
-
 /*
     * This logic covers checks that exist in the shared areas of Spirit
     * This code will fail if any glitch allows Adult to go in the Child spirit door first or vice versa as it relies on
@@ -257,36 +253,61 @@ uint8_t SpiritExplosiveLogic() {
     * the second condition is the same for adult 1F lock, and the third is the access from the boss door.
 */
 
+
+bool SpiritExplosiveKeyLogic() {
+    return logic->SmallKeys(RR_SPIRIT_TEMPLE, 
+                            logic->SpiritBrokenWallToStatue() ? 1 : ctx->GetOption(RSK_BOMBCHU_BAG) && logic->BombchuRefill() ? 2 : 3);
+}
+
 // clang-format off
 std::map<RandomizerRegion, SpiritLogicData> Region::spiritLogicData = {
     //Vanilla
-    {RR_SPIRIT_TEMPLE_WEST_CLIMB_BASE,         SpiritLogicData(5, 5, 3, []{return true;},                                                                                           []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, SpiritExplosiveLogic())/* && logic->CanClimbHigh() && str0*/;}, []{return true/*logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS)*/;})},
-    {RR_SPIRIT_TEMPLE_BROKEN_WALL,             SpiritLogicData(5, 5, 3, []{return true /*logic->CanClimbHigh()*/;},                                                                 []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, SpiritExplosiveLogic())/* && logic->CanClimbHigh() && str0*/;}, []{return true/*logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS)*/;})},
-    {RR_SPIRIT_TEMPLE_2F_MIRROR,               SpiritLogicData(5, 5, 3, []{return logic->CanUse(RG_HOOKSHOT) && logic->SpiritBrokenWallToStatue();},                                []{return true/*logic->CanClimbHigh()*/;},                                                                   []{return logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS);})},
-    {RR_SPIRIT_TEMPLE_STATUE_ROOM_WEST,        SpiritLogicData(5, 5, 3, []{return logic->SpiritBrokenWallToStatue()/* && logic->CanClimbHigh()*/;},                                 []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, SpiritExplosiveLogic())/* && logic->CanClimbHigh() && str0*/;}, []{return true/*logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS)*/;})},
-    {RR_SPIRIT_TEMPLE_INNER_WEST_HAND,         SpiritLogicData(5, 5, 3, []{return logic->SpiritBrokenWallToStatue()/* && logic->CanClimbHigh()*/;},                                 []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, SpiritExplosiveLogic())/* && logic->CanClimbHigh() && str0*/;}, []{return true/*logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS)*/;})},
-    {RR_SPIRIT_TEMPLE_GS_LEDGE,                SpiritLogicData(5, 5, 3, []{return logic->SpiritBrokenWallToStatue() && logic->SpiritWestToSkull()/* && logic->CanClimbHigh()*/;},   []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, SpiritExplosiveLogic()) && logic->SpiritWestToSkull()
-                                                                                                                                                                                            /* && logic->CanClimbHigh() && str0*/;},                                                             []{return logic->SpiritWestToSkull()/* && (logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS))*/;})},
-    {RR_SPIRIT_TEMPLE_STATUE_ROOM,             SpiritLogicData(5, 5, 3, []{return logic->SpiritBrokenWallToStatue()/* && logic->CanClimbHigh()*/;},                                 []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, SpiritExplosiveLogic())/* && logic->CanClimbHigh() && str0*/;}, []{return true;})},
+    {RR_SPIRIT_TEMPLE_WEST_CLIMB_BASE,         SpiritLogicData(5, 5, 5, []{return true;},                                                                                    []{return SpiritExplosiveKeyLogic()/* && logic->CanClimbHigh() && str0*/;},                                    []{return true/*logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS)*/;})},
+    {RR_SPIRIT_TEMPLE_BROKEN_WALL,             SpiritLogicData(5, 5, 5, []{return true /*logic->CanClimbHigh()*/;},                                                          []{return SpiritExplosiveKeyLogic()/* && logic->CanClimbHigh() && str0*/;},                                    []{return true/*logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS)*/;})},
+    {RR_SPIRIT_TEMPLE_2F_MIRROR,               SpiritLogicData(5, 5, 3, []{return logic->CanUse(RG_HOOKSHOT) && logic->SpiritBrokenWallToStatue();},                         []{return true/*logic->CanClimbHigh()*/;},                                                                     []{return logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS);})},
+    {RR_SPIRIT_TEMPLE_STATUE_ROOM_WEST,        SpiritLogicData(5, 5, 3, []{return SpiritExplosiveKeyLogic()/* && logic->CanClimbHigh()*/;},                                  []{return true/*logic->CanClimbHigh() && str0*/;},                                                             []{return true/*logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS)*/;})},
+    {RR_SPIRIT_TEMPLE_INNER_WEST_HAND,         SpiritLogicData(5, 5, 3, []{return SpiritExplosiveKeyLogic()/* && logic->CanClimbHigh()*/;},                                  []{return true/*logic->CanClimbHigh() && str0*/;},                                                             []{return true/*logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS)*/;})},
+    {RR_SPIRIT_TEMPLE_GS_LEDGE,                SpiritLogicData(5, 5, 3, []{return SpiritExplosiveKeyLogic() && logic->SpiritWestToSkull()/* && logic->CanClimbHigh()*/;},    []{return logic->SpiritWestToSkull()/* && logic->CanClimbHigh() && str0*/;},                                   []{return logic->SpiritWestToSkull()/* && (logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS))*/;})},
+    {RR_SPIRIT_TEMPLE_STATUE_ROOM,             SpiritLogicData(5, 5, 3, []{return SpiritExplosiveKeyLogic();},                                                               []{return true/*logic->CanClimbHigh() && str0*/;},                                                             []{return true;})},
     //Assumes SpiritSunBlockSouthLedge() for all access
-    {RR_SPIRIT_TEMPLE_SUN_BLOCK_SOUTH_LEDGE,   SpiritLogicData(5, 5, 3, []{return logic->SpiritBrokenWallToStatue()/* && logic->CanClimbHigh() && str0*/;},                         []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, SpiritExplosiveLogic())/* && logic->CanClimbHigh() && str0*/;}, []{return true/*(logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS)) && str0*/;})},
-    {RR_SPIRIT_TEMPLE_SKULLTULA_STAIRS,        SpiritLogicData(5, 5, 3, []{return logic->SpiritBrokenWallToStatue()/* && logic->CanClimbHigh() && str0*/;},                         []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, SpiritExplosiveLogic())/* && logic->CanClimbHigh() && str0*/;}, []{return true/*(logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS)) && str0*/;})},
-    {RR_SPIRIT_TEMPLE_STATUE_ROOM_EAST,        SpiritLogicData(5, 5, 3, []{return logic->CanUse(RG_HOOKSHOT) && logic->SpiritBrokenWallToStatue()/* && logic->CanClimbHigh()*/;},   []{return true/*logic->CanClimbHigh() && str0*/;},                                                           []{return logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS);})},
-    {RR_SPIRIT_TEMPLE_INNER_EAST_HAND,         SpiritLogicData(5, 5, 3, []{return logic->CanUse(RG_HOOKSHOT) && logic->SpiritBrokenWallToStatue()/* && logic->CanClimbHigh()*/;},   []{return true/*logic->CanClimbHigh() && str0*/;},                                                           []{return logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS);})},
-    {RR_SPIRIT_TEMPLE_SHORTCUT_SWITCH,         SpiritLogicData(5, 5, 3, []{return logic->CanUse(RG_HOOKSHOT) && logic->SpiritBrokenWallToStatue() && logic->SpiritEastToSwitch();}, []{return logic->SpiritEastToSwitch()/* && logic->CanClimbHigh() && str0*/;},                                []{return logic->SpiritEastToSwitch() && (logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS));})},
+    {RR_SPIRIT_TEMPLE_SUN_BLOCK_SOUTH_LEDGE,   SpiritLogicData(5, 5, 3, []{return SpiritExplosiveKeyLogic()/* && logic->CanClimbHigh() && str0*/;},                          []{return true/*logic->CanClimbHigh() && str0*/;},                                                             []{return true/*((logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS)) && str0) || (logic->CanKillEnemy(RE_BEAMOS) && logic->CanUse(RG_LONGSHOT))*/;})},
+    {RR_SPIRIT_TEMPLE_SKULLTULA_STAIRS,        SpiritLogicData(5, 5, 3, []{return SpiritExplosiveKeyLogic()/* && logic->CanClimbHigh() && str0*/;},                          []{return true/*logic->CanClimbHigh() && str0*/;},                                                             []{return true/*((logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS)) && str0) || (logic->CanKillEnemy(RE_BEAMOS) && logic->CanUse(RG_LONGSHOT))*/;})},
+    {RR_SPIRIT_TEMPLE_OUTER_WEST_HAND,         SpiritLogicData(5, 5, 3, []{return SpiritExplosiveKeyLogic() && logic->CanKillEnemy(RE_IRON_KNUCKLE)                          //For the purpose of shared, adult needs to get to west side via BOTH possible routes for it to count          //Only using HasItem here is intended so this check can pass as child if adult can do their part. This works because this edge case assumes that you can only waste keys on adult side with adult
+                                                                                  /*&& logic->CanClimbHigh() && str0*/;},                                                    []{return logic->CanKillEnemy(RE_BEAMOS) && logic->CanUse(RG_LONGSHOT)/* && logic->CanClimbHigh() && str0*/;}, []{return logic->CanKillEnemy(RE_BEAMOS) && logic->HasItem(RG_LONGSHOT)/* && logic->CanClimb() && str0*/;})},
+    {RR_SPIRIT_TEMPLE_STATUE_ROOM_EAST,        SpiritLogicData(5, 5, 3, []{return logic->CanUse(RG_HOOKSHOT) && SpiritExplosiveKeyLogic()/* && logic->CanClimbHigh()*/;},    []{return true/*logic->CanClimbHigh() && str0*/;},                                                             []{return logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS);})},
+    {RR_SPIRIT_TEMPLE_INNER_EAST_HAND,         SpiritLogicData(5, 5, 3, []{return logic->CanUse(RG_HOOKSHOT) && SpiritExplosiveKeyLogic()/* && logic->CanClimbHigh()*/;},    []{return true/*logic->CanClimbHigh() && str0*/;},                                                             []{return logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS);})},
+    {RR_SPIRIT_TEMPLE_SHORTCUT_SWITCH,         SpiritLogicData(5, 5, 3, []{return logic->CanUse(RG_HOOKSHOT) && SpiritExplosiveKeyLogic() && logic->SpiritEastToSwitch();},  []{return logic->SpiritEastToSwitch()/* && logic->CanClimbHigh() && str0*/;},                                  []{return logic->SpiritEastToSwitch() && (logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS));})},
     //MQ                                                                          /*&& logic->CanClimbHigh()*/
-    {RR_SPIRIT_TEMPLE_MQ_UNDER_LIKE_LIKE,      SpiritLogicData(7, 6, 7, []{return true;},                                                                                           []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 6) && logic->CanHitSwitch()/* && logic->Climb*/;},              []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 6) && logic->CanHitSwitch()/* && (logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS))*/;})},
-    {RR_SPIRIT_TEMPLE_MQ_BROKEN_WALL_ROOM,     SpiritLogicData(7, 6, 7, []{return logic->CanHitSwitch()/* && logic->CanClimbHigh()*/;},                                             []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 6)/* && logic->Climb*/;},                                       []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 6)/* && (logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS))*/;})},
-    {RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM_WEST,     SpiritLogicData(7, 7, 0, []{return logic->CanHitSwitch()/* && logic->CanClimbHigh()*/;},                                             []{return true/*logic->Climb*/;},                                                                            []{return true/*logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS)*/;})},
-    {RR_SPIRIT_TEMPLE_MQ_POT_LEDGE,            SpiritLogicData(7, 7, 0, []{return logic->CanHitSwitch() && logic->MQSpiritWestToPots()/* && logic->CanClimbHigh()*/;},              []{return logic->MQSpiritWestToPots()/* && logic->Climb*/;},                                                 []{return /*logic->CanUse(RG_HOVER_BOOTS) || (logic->CanClimb() && */logic->MQSpiritWestToPots()/*)*/;})},
-    {RR_SPIRIT_TEMPLE_MQ_INNER_WEST_HAND,      SpiritLogicData(7, 7, 0, []{return logic->CanHitSwitch() && logic->MQSpiritWestToPots()/* && logic->CanClimbHigh()*/;},              []{return logic->MQSpiritWestToPots()/* && logic->Climb*/;},                                                 []{return /*logic->CanUse(RG_HOVER_BOOTS) || (logic->CanClimb() && */logic->MQSpiritWestToPots()/*)*/;})},
-    {RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM,          SpiritLogicData(7, 7, 0, []{return logic->CanHitSwitch()/* && logic->CanClimbHigh()*/;},                                             []{return true;},                                                                                            []{return true;})},
-    {RR_SPIRIT_TEMPLE_MQ_SUN_BLOCK_ROOM,       SpiritLogicData(7, 7, 0, []{return logic->CanHitSwitch() && logic->MQSpiritStatueToSunBlock()/* && logic->CanClimbHigh()*/;} ,       []{return logic->MQSpiritStatueToSunBlock()/* && logic->Climb*/;},                                           []{return logic->MQSpiritStatueToSunBlock()/* && (logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS))*/;})},
+    {RR_SPIRIT_TEMPLE_MQ_UNDER_LIKE_LIKE,      SpiritLogicData(7, 6, 7, []{return true;},                                                                                    []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 6) && logic->CanHitSwitch()/* && logic->Climb*/;},                []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 6) && logic->CanHitSwitch()/* && (logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS))*/;})},
+    {RR_SPIRIT_TEMPLE_MQ_BROKEN_WALL_ROOM,     SpiritLogicData(7, 6, 7, []{return logic->CanHitSwitch()/* && logic->CanClimbHigh()*/;},                                      []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 6)/* && logic->Climb*/;},                                         []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 6)/* && (logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS))*/;})},
+    {RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM_WEST,     SpiritLogicData(7, 7, 0, []{return logic->CanHitSwitch()/* && logic->CanClimbHigh()*/;},                                      []{return true/*logic->Climb*/;},                                                                              []{return true/*logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS)*/;})},
+    {RR_SPIRIT_TEMPLE_MQ_POT_LEDGE,            SpiritLogicData(7, 7, 0, []{return logic->CanHitSwitch() && logic->MQSpiritWestToPots()/* && logic->CanClimbHigh()*/;},       []{return logic->MQSpiritWestToPots()/* && logic->Climb*/;},                                                   []{return /*logic->CanUse(RG_HOVER_BOOTS) || (logic->CanClimb() && */logic->MQSpiritWestToPots()/*)*/;})},
+    {RR_SPIRIT_TEMPLE_MQ_INNER_WEST_HAND,      SpiritLogicData(7, 7, 0, []{return logic->CanHitSwitch() && logic->MQSpiritWestToPots()/* && logic->CanClimbHigh()*/;},       []{return logic->MQSpiritWestToPots()/* && logic->Climb*/;},                                                   []{return /*logic->CanUse(RG_HOVER_BOOTS) || (logic->CanClimb() && */logic->MQSpiritWestToPots()/*)*/;})},
+    {RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM,          SpiritLogicData(7, 7, 0, []{return logic->CanHitSwitch()/* && logic->CanClimbHigh()*/;},                                      []{return true;},                                                                                              []{return true;})},
+    {RR_SPIRIT_TEMPLE_MQ_SUN_BLOCK_ROOM,       SpiritLogicData(7, 7, 0, []{return logic->CanHitSwitch() && logic->MQSpiritStatueToSunBlock()/* && logic->CanClimbHigh()*/;}, []{return logic->MQSpiritStatueToSunBlock()/* && logic->Climb*/;},                                             []{return logic->MQSpiritStatueToSunBlock()/* && (logic->CanClimb() || logic->CanUse(RG_HOVER_BOOTS))*/;})},
     {RR_SPIRIT_TEMPLE_MQ_BIG_BLOCK_ROOM_NORTH, SpiritLogicData(7, 7, 0, []{return logic->CanHitSwitch() && 
                                                                         areaTable[RR_SPIRIT_TEMPLE_MQ_BIG_BLOCK_ROOM_NORTH].Here([]{return logic->MQSpiritStatueSouthDoor();})
-                                                                        /* && logic->CanClimbHigh()*/;},                                                                            []{return true;},                                                                                           []{return areaTable[RR_SPIRIT_TEMPLE_MQ_BIG_BLOCK_ROOM_NORTH].Here([]{return logic->MQSpiritStatueSouthDoor();});})},
+                                                                        /* && logic->CanClimbHigh()*/;},                                                                     []{return true;},                                                                                              []{return areaTable[RR_SPIRIT_TEMPLE_MQ_BIG_BLOCK_ROOM_NORTH].Here([]{return logic->MQSpiritStatueSouthDoor();});})},
 };
 // clang-format on
+
+bool SpiritCertainAccess(RandomizerRegion region){
+    SpiritLogicData& curRegionData = Region::spiritLogicData[region];
+    uint8_t keys = curRegionData.adultKeys;
+    bool reverseAccess = logic->ReverseSpiritAdult;
+    if (logic->IsChild){
+        // If child enters in reverse, then they have access to Certain Access to Broken Wall room in 6 keys,
+        // the ability to hit switches and the ability to climb because only child can reach the initial child lock
+        // without opening the Statue room to Broken Wall Room lock first
+        keys = (logic->ReverseSpiritChild && logic->CanHitSwitch() /* && CanClimbHigh()*/)
+                            ? curRegionData.childReverseKeys
+                            : curRegionData.childKeys;
+        reverseAccess = logic->ReverseSpiritChild;
+    }
+    // If we have enough keys that an age cannot be kept out, we have Certain Access
+    // otherwise if we have entered in reverse and can reach from the face, we have Certain Access
+    return logic->SmallKeys(RR_SPIRIT_TEMPLE, keys) || (reverseAccess && curRegionData.reverseAccess());
+}
 
 /*
     * Spirit Shared can take up to 3 regions, this is because checks can exist in many regions at the same time
@@ -297,32 +318,23 @@ std::map<RandomizerRegion, SpiritLogicData> Region::spiritLogicData = {
 
 bool SpiritShared(RandomizerRegion region, ConditionFn condition, bool anyAge, RandomizerRegion otherRegion,
                   ConditionFn otherCondition, RandomizerRegion thirdRegion, ConditionFn thirdCondition) {
-    SpiritLogicData curRegionData = Region::spiritLogicData[region];
+    SpiritLogicData& curRegionData = Region::spiritLogicData[region];
     bool result = false;
 
     // store current age variables
     bool pastAdult = logic->IsAdult;
     bool pastChild = logic->IsChild;
-    // If child enters in reverse, then they have access to Certain Access to Broken Wall room in 6 keys,
-    // the ability to hit switches and the ability to climb because only child can reach the initial child lock
-    // without opening the Statue room to Broken Wall Room lock first
+
     logic->IsChild = true;
     logic->IsAdult = false;
-    uint8_t childKeys = (logic->ReverseSpiritChild && logic->CanHitSwitch() /* && CanClimbHigh()*/)
-                            ? curRegionData.childReverseKeys
-                            : curRegionData.childKeys;
 
-    // If we have enough keys that an age cannot be kept out, we have Certain Access
-    // otherwise if we have entered in reverse and can reach from the face, we have Certain Access
-    bool ChildCertainAccess =
-        (logic->ReverseSpiritChild && curRegionData.reverseAccess()) || logic->SmallKeys(RR_SPIRIT_TEMPLE, childKeys);
+    bool ChildCertainAccess = SpiritCertainAccess(region);
 
     // Switch back to adult to check adult access
     logic->IsChild = false;
     logic->IsAdult = true;
 
-    bool AdultCertainAccess = (logic->ReverseSpiritAdult && curRegionData.reverseAccess()) ||
-                              logic->SmallKeys(RR_SPIRIT_TEMPLE, curRegionData.adultKeys);
+    bool AdultCertainAccess = SpiritCertainAccess(region);
     // If we are AnyAge and have any CeratinAccess, then we can check those ages
     // we don't need to check ambiguity here as if this fails, then 1 of the ages has failed
     if (anyAge && (ChildCertainAccess || AdultCertainAccess)) {
