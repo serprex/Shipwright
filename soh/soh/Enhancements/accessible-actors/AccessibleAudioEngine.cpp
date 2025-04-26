@@ -262,8 +262,7 @@ void AccessibleAudioEngine::doPlaySound(SoundAction& action) {
             ma_sound_stop(&sound->sound);
             destroySound(sound);
         }
-    }
-    else {
+    } else {
         SoundSlots temp;
         for (int i = 0; i < AAE_SLOTS_PER_HANDLE; i++)
             temp[i].active = false;
@@ -273,8 +272,8 @@ void AccessibleAudioEngine::doPlaySound(SoundAction& action) {
     }
 
     ma_result result = ma_sound_init_from_file(&engine, action.path.c_str(),
-                                MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_NO_DEFAULT_ATTACHMENT, NULL, NULL,
-                                &sound->sound);
+                                               MA_SOUND_FLAG_NO_SPATIALIZATION | MA_SOUND_FLAG_NO_DEFAULT_ATTACHMENT,
+                                               NULL, NULL, &sound->sound);
     if (result != MA_SUCCESS) {
         SPDLOG_ERROR("failed to play sound: {}", ma_result_description(result));
         return;

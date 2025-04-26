@@ -204,7 +204,7 @@ void SfxExtractor::captureCallback() {
         outputStarted = true;
         size_t samples = std::min<size_t>(SFX_EXTRACTION_ONE_FRAME, samplesLeft);
         mark += samples * 2;
-        samplesLeft -= samples; 
+        samplesLeft -= samples;
     }
     if (renderOutput(mark - tempBuffer)) {
         captureThreadState = CT_FINISHED;

@@ -693,7 +693,8 @@ const char* ActorAccessibility_MapSfxToExternalAudio(s16 sfxId) {
         auto pair = aa->sfxMap.insert({ sfxId, tempRecord });
         record = &pair.first->second;
         ma_resource_manager_register_decoded_data(&aa->audioEngine->resourceManager, record->path.c_str(),
-                record->resource->Buffer->data(), record->resource->Buffer->size() / 2, ma_format_s16, 1, 44100);
+                                                  record->resource->Buffer->data(),
+                                                  record->resource->Buffer->size() / 2, ma_format_s16, 1, 44100);
     } else {
         record = &it->second;
     }
