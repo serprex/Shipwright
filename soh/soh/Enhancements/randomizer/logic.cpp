@@ -801,6 +801,8 @@ bool Logic::CanKillEnemy(RandomizerEnemy enemy, EnemyDistance distance, bool wal
                     killed = killed || (!inWater && CanUse(RG_BOMB_BAG)) || CanUse(RG_DINS_FIRE);
                     [[fallthrough]];
                 case ED_BOOMERANG:
+                    killed = killed || CanUse(RG_BOOMERANG);
+                    [[fallthrough]];
                 case ED_HOOKSHOT:
                     killed = killed || CanUse(RG_HOOKSHOT) || CanUse(RG_BOMBCHU_5) || CanUse(RG_MEGATON_HAMMER);
                     [[fallthrough]];
