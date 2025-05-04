@@ -3,7 +3,7 @@
 // All of the "DUMMY's" and "YOBI's" have been removed as they produce duplicate sounds at best, and cause errors or
 // even crashes at worst.
 
-const s16 sfxTable[1207] = {
+const s16 sfxTable[] = {
     NA_SE_PL_WALK_GROUND,
     NA_SE_PL_WALK_SAND,
     NA_SE_PL_WALK_CONCRETE,
@@ -1212,4 +1212,4 @@ const s16 sfxTable[1207] = {
     NA_SE_VO_IN_LAUGH,
     NA_SE_VO_LI_AUTO_JUMP_DARKLINK,
 };
-const int sfxCount = 1207;
+const int sfxCount = sizeof(sfxTable) / sizeof(s16);
