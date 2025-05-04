@@ -1345,7 +1345,6 @@ class TerrainCueDirection {
 
 typedef struct {
     TerrainCueDirection directions[3]; // Directly ahead of Link, 90 degrees to his left and 90 degrees to his right.
-    int previousAction;                // previous action icon state
 } TerrainCueState;
 
 // Callback for initialization of terrain cue state.
@@ -1354,9 +1353,8 @@ bool ActorAccessibility_InitTerrainCueState(AccessibleActor* actor) {
     if (state == NULL)
         return false;
     state->directions[0].init(actor, { 0, 0, 0 });
-    state->directions[1].init(actor, { 0, 16384, 0 });  //, PLAYER_BODYPART_L_SHOULDER);
-    state->directions[2].init(actor, { 0, -16384, 0 }); //, PLAYER_BODYPART_R_SHOULDER);
-    state->previousAction = DO_ACTION_NONE;
+    state->directions[1].init(actor, { 0, 16384, 0 });
+    state->directions[2].init(actor, { 0, -16384, 0 });
 
     actor->userData = state;
     return true;
@@ -1379,39 +1377,6 @@ void accessible_va_terrain_cue(AccessibleActor* actor) {
 
     for (int i = 0; i < 3; i++)
         state->directions[i].scan();
-
-    int currentState = actor->play->interfaceCtx.unk_1F0;
-    Player* player = GET_PLAYER(actor->play);
-
-    if (state->previousAction != currentState) {
-        switch (currentState) {
-            case DO_ACTION_CHECK:
-                SpeechSynthesizer::Instance->Speak("Check", GetLanguageCode());
-                break;
-            case DO_ACTION_CLIMB:
-                SpeechSynthesizer::Instance->Speak("Climb", GetLanguageCode());
-                break;
-            case DO_ACTION_ENTER:
-                SpeechSynthesizer::Instance->Speak("Enter", GetLanguageCode());
-                break;
-            case DO_ACTION_GRAB:
-                SpeechSynthesizer::Instance->Speak("Grab", GetLanguageCode());
-                break;
-            case DO_ACTION_OPEN:
-                SpeechSynthesizer::Instance->Speak("Open", GetLanguageCode());
-                break;
-            case DO_ACTION_SPEAK:
-                SpeechSynthesizer::Instance->Speak("Speak", GetLanguageCode());
-                break;
-            case DO_ACTION_STOP:
-                SpeechSynthesizer::Instance->Speak("Stop", GetLanguageCode());
-                break;
-        }
-
-        state->previousAction = currentState;
-    } else {
-        state->previousAction = currentState;
-    }
 }
 
 /*
