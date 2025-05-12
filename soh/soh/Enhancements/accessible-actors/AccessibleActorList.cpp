@@ -947,13 +947,20 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddVirtualActor(list, VA_AUDIO_COMPASS, { { 0.0, 0.0, 0.0 }, { 0, 0, 0 } });
     ActorAccessibility_AddVirtualActor(list, VA_STICK_WARNING, { { 0.0, 0.0, 0.0 }, { 0, 0, 0 } });
 
-    list = ActorAccessibility_GetVirtualActorList(SCENE_KOKIRI_FOREST, 0); // Kokiri Forest
+    list = ActorAccessibility_GetVirtualActorList(SCENE_KOKIRI_FOREST, 0);
     ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -784.0, 120.0, 1046.00 }, { 0, 14702, 0 } });
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2146.5, 1.0, -142.8 } });
 
     // Kokiri Forest Room with boulder and kokiri sword
     list = ActorAccessibility_GetVirtualActorList(SCENE_KOKIRI_FOREST, 2);
     ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -788.0, 120.0, 1392.00 }, { 0, 14702, 0 } });
+
+    list = ActorAccessibility_GetVirtualActorList(SCENE_LOST_WOODS, 1);
+    AccessibleActor* temp =
+        ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1348.0, 25.0, -25.00 } });
+    temp->policy.aimAssist.isProvider = true;
+    temp->policy.distance = 700;
+    temp->policy.n = 1;
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_DEKU_TREE, 2); // deku tree slingshot room
 
@@ -970,8 +977,7 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -1958, 20, -1297 } });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_JABU_JABU, 2);
-    AccessibleActor* temp =
-        ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -260, -400, -3377 } }); // green tentacle hole
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -260, -400, -3377 } }); // green tentacle hole
     temp->policy.distance = 200;
     temp->policy.sound = NA_SE_EN_DAIOCTA_DEAD;
     temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 230, -400, -3211 } }); // ruto hole

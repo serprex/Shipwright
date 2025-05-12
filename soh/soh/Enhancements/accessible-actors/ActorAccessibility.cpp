@@ -331,6 +331,7 @@ void ActorAccessibility_CopyParamsFromRealActor(AccessibleActor* actor) {
     actor->projectedPos = actor->actor->projectedPos;
     actor->xzDistToPlayer = actor->actor->xzDistToPlayer;
     actor->isDrawn = actor->actor->isDrawn;
+    actor->world = actor->actor->world;
     actor->xyzDistToPlayer = Math_Vec3f_DistXYZ(&actor->actor->world.pos, &player->actor.world.pos);
 }
 
@@ -629,7 +630,7 @@ void ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* actor) {
     angle = angle / -14000.0 * 16384;
     f32 slope = Math_SinS(angle) / Math_CosS(angle) * 1.0;
     s32 yIntercept = (slope * (actor->xzDistToPlayer)) + player->actor.focus.pos.y;
-    s32 yHight = actor->actor->world.pos.y + 25;
+    s32 yHight = actor->world.pos.y + 25;
     if (slope < 1) {
         slope = 1;
     }
