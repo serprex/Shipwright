@@ -717,6 +717,8 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_BOMBIWA, policy);
     ActorAccessibility_InitPolicy(&policy, "Bronze Boulder", NA_SE_IT_HAMMER_HIT);
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_HAMISHI, policy);
+    ActorAccessibility_InitPolicy(&policy, "Time Block", NA_SE_EV_TIMETRIP_LIGHT);
+    ActorAccessibility_AddSupportedActor(ACTOR_OBJ_TIMEBLOCK, policy);
     ActorAccessibility_InitPolicy(&policy, "Grotto Door", accessible_grotto);
     policy.n = 30;
     policy.pitch = 1.0;
@@ -956,8 +958,7 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -788.0, 120.0, 1392.00 }, { 0, 14702, 0 } });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_LOST_WOODS, 1);
-    AccessibleActor* temp =
-        ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1348.0, 25.0, -25.00 } });
+    AccessibleActor* temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1348.0, 25.0, -25.00 } });
     temp->policy.aimAssist.isProvider = true;
     temp->policy.distance = 700;
     temp->policy.n = 1;
@@ -1009,6 +1010,48 @@ void ActorAccessibility_InitActors() {
     temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1734.0, 0.0, 140.514 } });
     temp->policy.pitch = 1.8;
     temp->policy.volume = 0.5;
+
+    list = ActorAccessibility_GetVirtualActorList(SCENE_WINDMILL_AND_DAMPES_GRAVE, 0);
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -50, -530, -2300 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 25, -530, -2875 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 300, -530, -3020 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 370, -500, -3430 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 410, -530, -3770 } });
+
+    list = ActorAccessibility_GetVirtualActorList(SCENE_WINDMILL_AND_DAMPES_GRAVE, 1);
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 280, -535, -3960 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 290, -610, -4300 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 660, -570, -3930 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 675, -610, -4300 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 560, -600, -4500 } });
+
+    list = ActorAccessibility_GetVirtualActorList(SCENE_WINDMILL_AND_DAMPES_GRAVE, 2);
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 470, -570, -4775 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 300, -570, -4910 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 230, -570, -5300 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 300, -570, -5400 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 500, -570, -5400 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 650, -570, -5275 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1200, -730, -5125 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1345, -730, -4930 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1560, -730, -4765 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1590, -730, -4885 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1730, -730, -4550 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1940, -730, -4430 } });
+
+    list = ActorAccessibility_GetVirtualActorList(SCENE_WINDMILL_AND_DAMPES_GRAVE, 3);
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1990, -730, -4185 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1800, -730, -3950 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1720, -730, -3850 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1690, -730, -3145 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1710, -668, -2660 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2100, -668, -3085 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2285, -610, -2650 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2625, -610, -2700 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 3080, -530, -2700 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 3230, -470, -2515 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 3170, -420, -2300 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2960, -410, -2000 } });
 
     ActorAccessibility_InitCues();
 }
