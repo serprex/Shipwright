@@ -2575,7 +2575,7 @@ void Actor_UpdateAll(PlayState* play, ActorContext* actorCtx) {
     unkFlag = 0;
 
     if (freezeActors) {
-        GameInteractor_ExecuteOnPlayerUpdate(player);
+        GameInteractor_ExecuteOnPlayerUpdate();
         return; // for AudioGlossary
     }
 
