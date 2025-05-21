@@ -591,12 +591,17 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_EN_GO2, policy);
     policy.englishName = "Saria";
     ActorAccessibility_AddSupportedActor(ACTOR_EN_SA, policy);
+    policy.englishName = "King Zora";
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_KZ, policy);
     policy.englishName = "Graveyard Kid";
     ActorAccessibility_AddSupportedActor(ACTOR_EN_CS, policy);
     policy.englishName = "Dampe (Alive)";
     ActorAccessibility_AddSupportedActor(ACTOR_EN_TK, policy);
     policy.englishName = "Happy Mask Shop Customer";
     ActorAccessibility_AddSupportedActor(ACTOR_EN_GUEST, policy);
+    policy.englishName = "Running Man";
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_MM, policy);
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_MM2, policy);
     policy.englishName = "Market Npc";
     ActorAccessibility_AddSupportedActor(ACTOR_EN_HY, policy);
     policy.englishName = "Girl Chassing Cucco";
@@ -708,7 +713,7 @@ void ActorAccessibility_InitActors() {
     policy.n = 40;
     policy.pitch = 1.4;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_ITEM00, policy);
-    
+
     ActorAccessibility_InitPolicy(&policy, "big poe spawn", NA_SE_EN_PO_BIG_GET);
     policy.distance = 1500;
     policy.n = 60;
@@ -821,6 +826,9 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_EN_HINTNUTS, policy);
     ActorAccessibility_InitPolicy(&policy, "Flame Circle", NA_SE_EV_FIRE_PILLAR);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_HIDAN_CURTAIN, policy);
+    ActorAccessibility_InitPolicy(&policy, "Iceberg", NA_SE_EV_ICE_FREEZE);
+    policy.distance = 1500;
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_SPOT08_ICEBLOCK, policy);
     ActorAccessibility_InitPolicy(&policy, "uninteractable rocks in kokiri forest", [](AccessibleActor* actor) {
         if (actor->actor->params == 1) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_OCTAROCK_ROCK, false);
