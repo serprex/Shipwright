@@ -137,10 +137,10 @@ static const std::unordered_map<int32_t, const char*> bonkDamageValues = {
 
 static const std::unordered_map<int32_t, const char*> dampeDropRates = {
     { DAMPE_NONE, "None" },
-    { DAMPE_NORMAL, "Normal" },
+    { DAMPE_NORMAL, "Vanilla" },
     { DAMPE_JALAPENO, "Jalapeño" },
-    { DAMPE_CHIPOTLE, "Chipotle" },
-    { DAMPE_SCOTCH_BONNET, "Scotch Bonnet" },
+    { DAMPE_CHIPOTLE, "Serrano" },
+    { DAMPE_SCOTCH_BONNET, "Habanero" },
     { DAMPE_GHOST_PEPPER, "Ghost Pepper" },
     { DAMPE_INFERNO, "Dampe's Inferno" },
 };
