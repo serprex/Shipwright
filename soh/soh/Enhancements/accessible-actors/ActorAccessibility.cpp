@@ -332,7 +332,7 @@ void ActorAccessibility_CopyParamsFromRealActor(AccessibleActor* actor) {
     actor->xzDistToPlayer = actor->actor->xzDistToPlayer;
     actor->isDrawn = actor->actor->isDrawn;
     actor->world = actor->actor->world;
-    actor->xyzDistToPlayer = Math_Vec3f_DistXYZ(&actor->actor->world.pos, &player->actor.world.pos);
+    actor->xyzDistToPlayer = sqrtf(actor->actor->xyzDistToPlayerSq);
 }
 
 void ActorAccessibility_StopAllVirtualActors(VirtualActorList* list) {

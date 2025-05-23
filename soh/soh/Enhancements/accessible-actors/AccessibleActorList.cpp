@@ -20,6 +20,7 @@ extern "C" {
 #include "overlays/actors/ovl_En_Dog/z_en_dog.h"
 #include "overlays/actors/ovl_En_Ba/z_en_ba.h"
 #include "overlays/actors/ovl_En_Eiyer/z_en_eiyer.h"
+#include "overlays/actors/ovl_En_G_Switch/z_en_g_switch.h"
 
 void EnBox_WaitOpen(EnBox*, PlayState*);
 void EnKarebaba_DeadItemDrop(EnKarebaba*, PlayState*);
@@ -27,6 +28,7 @@ void EnDog_FollowPlayer(EnDog*, PlayState*);
 s8 EnDog_CanFollow(EnDog*, PlayState*);
 void EnEiyer_Die(EnEiyer*, PlayState*);
 void EnEiyer_Dead(EnEiyer*, PlayState*);
+void EnGSwitch_SilverRupeeIdle(EnGSwitch*, PlayState*);
 }
 
 // User data for the general helper VA.
@@ -190,14 +192,6 @@ void accessible_area_change(AccessibleActor* actor) {
         actor->play->sceneNum != 82) {
         return;
     }
-    /*switch (actor->sceneIndex) {
-        case 85 || 91:
-            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_SARIA_MELODY, false);
-        case 81:
-            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_INGO_HORSE_NEIGH, false);
-        case 0:
-            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_FANTOM_WARP_L, false);
-    }*/
 
     // hyrule field attenuation
     if (actor->play->sceneNum == 81) {
@@ -250,11 +244,7 @@ void accessible_area_change(AccessibleActor* actor) {
         if (actor->xzDistToPlayer > 1000) {
             return;
         }
-    }
-    /* if (actor->play->sceneNum <= 11) {
-         actor->policy.distance = 500;
-          }*/
-    else {
+    } else {
         if (actor->xzDistToPlayer > 1500) {
             return;
         }
@@ -264,7 +254,6 @@ void accessible_area_change(AccessibleActor* actor) {
             return;
         }
         if (actor->play->sceneNum == 85 && actor->world.pos.y < 0) {
-
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_HORSE_RUN_LEVEL, false);
         } else {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_SARIA_MELODY, false);
@@ -826,9 +815,19 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_EN_HINTNUTS, policy);
     ActorAccessibility_InitPolicy(&policy, "Flame Circle", NA_SE_EV_FIRE_PILLAR);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_HIDAN_CURTAIN, policy);
+
+    ActorAccessibility_InitPolicy(&policy, "Ice Barred", NA_SE_EV_CHAIN_KEY_UNLOCK);
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_ICE_SHUTTER, policy);
+    ActorAccessibility_InitPolicy(&policy, "Ice Block", NA_SE_PL_SLIP_ICE_LELEL);
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_GND_ICEBLOCK, policy);
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_ICE_OBJECTS, policy);
     ActorAccessibility_InitPolicy(&policy, "Iceberg", NA_SE_EV_ICE_FREEZE);
     policy.distance = 1500;
     ActorAccessibility_AddSupportedActor(ACTOR_BG_SPOT08_ICEBLOCK, policy);
+    policy.englishName = "Red Ice";
+    policy.distance = 300;
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_ICE_SHELTER, policy);
+
     ActorAccessibility_InitPolicy(&policy, "uninteractable rocks in kokiri forest", [](AccessibleActor* actor) {
         if (actor->actor->params == 1) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_OCTAROCK_ROCK, false);
@@ -899,7 +898,14 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_InitPolicy(&policy, "Amos Statue", NA_SE_EN_AMOS_WAVE);
     policy.n = 30;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_AM, policy);
-    ActorAccessibility_InitPolicy(&policy, "shooting gallery rupees", nullptr);
+    ActorAccessibility_InitPolicy(&policy, "Big Rupee", [](AccessibleActor* actor) {
+        if ((actor->frameCount & 31) == 0) {
+            EnGSwitch* gswitch = (EnGSwitch*)actor->actor;
+            if (gswitch->actionFunc == EnGSwitch_SilverRupeeIdle) {
+                ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_FIVE_COUNT_LUPY, false);
+            }
+        }
+    });
     policy.aimAssist.isProvider = true;
     policy.distance = 1000;
     policy.n = 1;
