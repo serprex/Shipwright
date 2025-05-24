@@ -2257,7 +2257,7 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
     s16 actorParams = 0;
     if (IS_RANDO) {
         auto ctx = Rando::Context::GetInstance();
-        if (ctx->GetOption(RSK_SHUFFLE_OVERWORLD_ENTRANCES)) {
+        if (ctx->GetOption(RSK_SHUFFLE_ENTRANCES)) {
             s16 entrance = -1;
             switch (textId) {
                 case TEXT_WATERFALL:
