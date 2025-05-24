@@ -2295,7 +2295,7 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
                     entrance = ENTR_DEATH_MOUNTAIN_TRAIL_BOTTOM_EXIT;
                     break;
                 case TEXT_DMT_DC:
-                    entrance = ENTR_DEATH_MOUNTAIN_CRATER_UPPER_EXIT;
+                    entrance = ENTR_DEATH_MOUNTAIN_TRAIL_OUTSIDE_DODONGOS_CAVERN;
                     break;
                 case TEXT_GC_SIGN:
                     if (gPlayState->sceneNum == SCENE_DEATH_MOUNTAIN_TRAIL) {
@@ -2371,12 +2371,19 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
                     break;
             }
             if (entrance != -1) {
-                auto data = GetEntranceData(Entrance_GetOverride(entrance));
-                if (data != nullptr) {
-                    Entrance_SetEntranceDiscovered(entrance, false);
-                    font->charTexBuf[0] = (TEXTBOX_TYPE_WOODEN << 4) | TEXTBOX_POS_BOTTOM;
-                    return msgCtx->msgLength = font->msgLength = SohUtils::CopyStringToCharBuffer(
-                               buffer, data->destination + CustomMessage::MESSAGE_END(), maxBufferSize);
+                auto entranceCtx = ctx->GetEntranceShuffler();
+                for (size_t i = 0; i < ENTRANCE_OVERRIDES_MAX_COUNT; i++) {
+                    if (Entrance_EntranceIsNull(&entranceCtx->entranceOverrides[i])) {
+                        break;
+                    }
+                    if (entranceCtx->entranceOverrides[i].index == entrance) {
+                        s16 overrideIndex = entranceCtx->entranceOverrides[i].override;
+                        Entrance_SetEntranceDiscovered(entrance, false);
+                        auto data = GetEntranceData(overrideIndex);
+                        font->charTexBuf[0] = (TEXTBOX_TYPE_WOODEN << 4) | TEXTBOX_POS_BOTTOM;
+                        return msgCtx->msgLength = font->msgLength = SohUtils::CopyStringToCharBuffer(
+                                   buffer, data->source + CustomMessage::MESSAGE_END(), maxBufferSize);
+                    }
                 }
             }
         }
