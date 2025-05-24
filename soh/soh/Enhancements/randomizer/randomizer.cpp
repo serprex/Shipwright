@@ -423,46 +423,33 @@ std::unordered_map<std::string, SceneID> spoilerFileDungeonToScene = {
     { "Ganon's Castle", SCENE_INSIDE_GANONS_CASTLE }
 };
 
-std::unordered_map<s16, s16> getItemIdToItemId = {
-    { GI_BOW, ITEM_BOW },
-    { GI_ARROW_FIRE, ITEM_ARROW_FIRE },
-    { GI_DINS_FIRE, ITEM_DINS_FIRE },
-    { GI_SLINGSHOT, ITEM_SLINGSHOT },
-    { GI_OCARINA_FAIRY, ITEM_OCARINA_FAIRY },
-    { GI_OCARINA_OOT, ITEM_OCARINA_TIME },
-    { GI_HOOKSHOT, ITEM_HOOKSHOT },
-    { GI_LONGSHOT, ITEM_LONGSHOT },
-    { GI_ARROW_ICE, ITEM_ARROW_ICE },
-    { GI_FARORES_WIND, ITEM_FARORES_WIND },
-    { GI_BOOMERANG, ITEM_BOOMERANG },
-    { GI_LENS, ITEM_LENS },
-    { GI_HAMMER, ITEM_HAMMER },
-    { GI_ARROW_LIGHT, ITEM_ARROW_LIGHT },
-    { GI_NAYRUS_LOVE, ITEM_NAYRUS_LOVE },
-    { GI_BOTTLE, ITEM_BOTTLE },
-    { GI_POTION_RED, ITEM_POTION_RED },
-    { GI_POTION_GREEN, ITEM_POTION_GREEN },
-    { GI_POTION_BLUE, ITEM_POTION_BLUE },
-    { GI_FAIRY, ITEM_FAIRY },
-    { GI_FISH, ITEM_FISH },
-    { GI_MILK_BOTTLE, ITEM_MILK_BOTTLE },
-    { GI_LETTER_RUTO, ITEM_LETTER_RUTO },
-    { GI_BLUE_FIRE, ITEM_BLUE_FIRE },
-    { GI_BUGS, ITEM_BUG },
-    { GI_BIG_POE, ITEM_BIG_POE },
-    { GI_POE, ITEM_POE },
-    { GI_WEIRD_EGG, ITEM_WEIRD_EGG },
-    { GI_LETTER_ZELDA, ITEM_LETTER_ZELDA },
-    { GI_POCKET_EGG, ITEM_POCKET_EGG },
-    { GI_COJIRO, ITEM_COJIRO },
-    { GI_ODD_MUSHROOM, ITEM_ODD_MUSHROOM },
-    { GI_ODD_POTION, ITEM_ODD_POTION },
-    { GI_SAW, ITEM_SAW },
-    { GI_SWORD_BROKEN, ITEM_SWORD_BROKEN },
-    { GI_PRESCRIPTION, ITEM_PRESCRIPTION },
-    { GI_FROG, ITEM_FROG },
-    { GI_EYEDROPS, ITEM_EYEDROPS },
-    { GI_CLAIM_CHECK, ITEM_CLAIM_CHECK },
+// used for items that only set a rand inf when obtained
+std::map<RandomizerGet, RandomizerInf> randomizerGetToRandInf = {
+    { RG_FISHING_POLE, RAND_INF_FISHING_POLE_FOUND },
+    { RG_BRONZE_SCALE, RAND_INF_CAN_SWIM },
+    { RG_QUIVER_INF, RAND_INF_HAS_INFINITE_QUIVER },
+    { RG_BOMB_BAG_INF, RAND_INF_HAS_INFINITE_BOMB_BAG },
+    { RG_BULLET_BAG_INF, RAND_INF_HAS_INFINITE_BULLET_BAG },
+    { RG_STICK_UPGRADE_INF, RAND_INF_HAS_INFINITE_STICK_UPGRADE },
+    { RG_NUT_UPGRADE_INF, RAND_INF_HAS_INFINITE_NUT_UPGRADE },
+    { RG_MAGIC_INF, RAND_INF_HAS_INFINITE_MAGIC_METER },
+    { RG_BOMBCHU_INF, RAND_INF_HAS_INFINITE_BOMBCHUS },
+    { RG_WALLET_INF, RAND_INF_HAS_INFINITE_MONEY },
+    { RG_SKELETON_KEY, RAND_INF_HAS_SKELETON_KEY },
+    { RG_OCARINA_A_BUTTON, RAND_INF_HAS_OCARINA_A },
+    { RG_OCARINA_C_UP_BUTTON, RAND_INF_HAS_OCARINA_C_UP },
+    { RG_OCARINA_C_DOWN_BUTTON, RAND_INF_HAS_OCARINA_C_DOWN },
+    { RG_OCARINA_C_LEFT_BUTTON, RAND_INF_HAS_OCARINA_C_LEFT },
+    { RG_OCARINA_C_RIGHT_BUTTON, RAND_INF_HAS_OCARINA_C_RIGHT },
+    { RG_GOHMA_SOUL, RAND_INF_GOHMA_SOUL },
+    { RG_KING_DODONGO_SOUL, RAND_INF_KING_DODONGO_SOUL },
+    { RG_BARINADE_SOUL, RAND_INF_BARINADE_SOUL },
+    { RG_PHANTOM_GANON_SOUL, RAND_INF_PHANTOM_GANON_SOUL },
+    { RG_VOLVAGIA_SOUL, RAND_INF_VOLVAGIA_SOUL },
+    { RG_MORPHA_SOUL, RAND_INF_MORPHA_SOUL },
+    { RG_BONGO_BONGO_SOUL, RAND_INF_BONGO_BONGO_SOUL },
+    { RG_TWINROVA_SOUL, RAND_INF_TWINROVA_SOUL },
+    { RG_GANON_SOUL, RAND_INF_GANON_SOUL },
 };
 
 #ifdef _MSC_VER
@@ -776,6 +763,10 @@ ItemObtainability Randomizer::GetItemObtainabilityFromRandomizerCheck(Randomizer
 }
 
 ItemObtainability Randomizer::GetItemObtainabilityFromRandomizerGet(RandomizerGet randoGet) {
+    if (randomizerGetToRandInf.find(randoGet) != randomizerGetToRandInf.end()) {
+        return Flags_GetRandomizerInf(randomizerGetToRandInf.find(randoGet)->second) ? CANT_OBTAIN_ALREADY_HAVE
+                                                                                     : CAN_OBTAIN;
+    }
 
     // This is needed since Plentiful item pool also adds a third progressive wallet
     // but we should not get Tycoon's Wallet from it if it is off.
@@ -1145,18 +1136,6 @@ ItemObtainability Randomizer::GetItemObtainabilityFromRandomizerGet(RandomizerGe
             return !CHECK_QUEST_ITEM(QUEST_MEDALLION_SHADOW) ? CAN_OBTAIN : CANT_OBTAIN_ALREADY_HAVE;
         case RG_LIGHT_MEDALLION:
             return !CHECK_QUEST_ITEM(QUEST_MEDALLION_LIGHT) ? CAN_OBTAIN : CANT_OBTAIN_ALREADY_HAVE;
-
-        // Ocarina Buttons
-        case RG_OCARINA_A_BUTTON:
-            return Flags_GetRandomizerInf(RAND_INF_HAS_OCARINA_A) ? CANT_OBTAIN_ALREADY_HAVE : CAN_OBTAIN;
-        case RG_OCARINA_C_LEFT_BUTTON:
-            return Flags_GetRandomizerInf(RAND_INF_HAS_OCARINA_C_LEFT) ? CANT_OBTAIN_ALREADY_HAVE : CAN_OBTAIN;
-        case RG_OCARINA_C_RIGHT_BUTTON:
-            return Flags_GetRandomizerInf(RAND_INF_HAS_OCARINA_C_RIGHT) ? CANT_OBTAIN_ALREADY_HAVE : CAN_OBTAIN;
-        case RG_OCARINA_C_UP_BUTTON:
-            return Flags_GetRandomizerInf(RAND_INF_HAS_OCARINA_C_UP) ? CANT_OBTAIN_ALREADY_HAVE : CAN_OBTAIN;
-        case RG_OCARINA_C_DOWN_BUTTON:
-            return Flags_GetRandomizerInf(RAND_INF_HAS_OCARINA_C_DOWN) ? CANT_OBTAIN_ALREADY_HAVE : CAN_OBTAIN;
 
         case RG_RECOVERY_HEART:
         case RG_GREEN_RUPEE:
@@ -5391,7 +5370,7 @@ CustomMessage Randomizer::GetGoronMessage(u16 index) {
 void Randomizer::CreateCustomMessages() {
     // RANDTODO: Translate into french and german and replace GIMESSAGE_UNTRANSLATED
     // with GIMESSAGE(getItemID, itemID, english, german, french).
-    const std::array<GetItemMessage, 112> getItemMessages = { {
+    const std::array<GetItemMessage, 120> getItemMessages = { {
         GIMESSAGE(RG_GREG_RUPEE, ITEM_MASK_GORON, "You found %gGreg%w!", "%gGreg%w! Du hast ihn&wirklich gefunden!",
                   "Félicitation! Vous avez trouvé %gGreg%w!"),
         GIMESSAGE(RG_MASTER_SWORD, ITEM_SWORD_MASTER, "You found the %gMaster Sword%w!",
@@ -5712,6 +5691,15 @@ void Randomizer::CreateCustomMessages() {
                   "Vous obtenez la %rtouche %y\xa6%r de&l'Ocarina%w! Vous pouvez&maintenant l'utiliser lorsque&vous en "
                   "jouez!"),
 
+        GIMESSAGE(RG_MASK_KEATON, ITEM_MASK_KEATON, "You found the Keaton Mask!", "!!!", "!!!"),
+        GIMESSAGE(RG_MASK_SKULL, ITEM_MASK_SKULL, "You found the Skull Mask!", "!!!", "!!!"),
+        GIMESSAGE(RG_MASK_SPOOKY, ITEM_MASK_SPOOKY, "You found the Spooky Mask!", "!!!", "!!!"),
+        GIMESSAGE(RG_MASK_BUNNY, ITEM_MASK_BUNNY, "You found the Bunny Mask!", "!!!", "!!!"),
+        GIMESSAGE(RG_MASK_GORON, ITEM_MASK_GORON, "You found the Goron Mask!", "!!!", "!!!"),
+        GIMESSAGE(RG_MASK_ZORA, ITEM_MASK_ZORA, "You found the Zora Mask!", "!!!", "!!!"),
+        GIMESSAGE(RG_MASK_GERUDO, ITEM_MASK_GERUDO, "You found the Gerudo Mask!", "!!!", "!!!"),
+        GIMESSAGE(RG_MASK_TRUTH, ITEM_MASK_TRUTH, "You found the Mask of Truth!", "!!!", "!!!"),
+
         GIMESSAGE(RG_BRONZE_SCALE, ITEM_SCALE_SILVER, "You got the %rBronze Scale%w!&The power of buoyancy is yours!",
                   "Du hast die %rBronzene Schuppe%w&erhalten! Die Fähigkeit zu&Schwimmen ist nun dein!",
                   "Vous obtenez l'%rÉcaille de Bronze%w!&Le pouvoir de la flottabilité est&à vous!"),
@@ -5822,35 +5810,6 @@ void Randomizer_GameplayStats_SetTimestamp(uint16_t item) {
 }
 
 extern "C" u8 Return_Item_Entry(GetItemEntry itemEntry, u8 returnItem);
-
-// used for items that only set a rand inf when obtained
-std::map<RandomizerGet, RandomizerInf> randomizerGetToRandInf = {
-    { RG_FISHING_POLE, RAND_INF_FISHING_POLE_FOUND },
-    { RG_BRONZE_SCALE, RAND_INF_CAN_SWIM },
-    { RG_QUIVER_INF, RAND_INF_HAS_INFINITE_QUIVER },
-    { RG_BOMB_BAG_INF, RAND_INF_HAS_INFINITE_BOMB_BAG },
-    { RG_BULLET_BAG_INF, RAND_INF_HAS_INFINITE_BULLET_BAG },
-    { RG_STICK_UPGRADE_INF, RAND_INF_HAS_INFINITE_STICK_UPGRADE },
-    { RG_NUT_UPGRADE_INF, RAND_INF_HAS_INFINITE_NUT_UPGRADE },
-    { RG_MAGIC_INF, RAND_INF_HAS_INFINITE_MAGIC_METER },
-    { RG_BOMBCHU_INF, RAND_INF_HAS_INFINITE_BOMBCHUS },
-    { RG_WALLET_INF, RAND_INF_HAS_INFINITE_MONEY },
-    { RG_SKELETON_KEY, RAND_INF_HAS_SKELETON_KEY },
-    { RG_OCARINA_A_BUTTON, RAND_INF_HAS_OCARINA_A },
-    { RG_OCARINA_C_UP_BUTTON, RAND_INF_HAS_OCARINA_C_UP },
-    { RG_OCARINA_C_DOWN_BUTTON, RAND_INF_HAS_OCARINA_C_DOWN },
-    { RG_OCARINA_C_LEFT_BUTTON, RAND_INF_HAS_OCARINA_C_LEFT },
-    { RG_OCARINA_C_RIGHT_BUTTON, RAND_INF_HAS_OCARINA_C_RIGHT },
-    { RG_GOHMA_SOUL, RAND_INF_GOHMA_SOUL },
-    { RG_KING_DODONGO_SOUL, RAND_INF_KING_DODONGO_SOUL },
-    { RG_BARINADE_SOUL, RAND_INF_BARINADE_SOUL },
-    { RG_PHANTOM_GANON_SOUL, RAND_INF_PHANTOM_GANON_SOUL },
-    { RG_VOLVAGIA_SOUL, RAND_INF_VOLVAGIA_SOUL },
-    { RG_MORPHA_SOUL, RAND_INF_MORPHA_SOUL },
-    { RG_BONGO_BONGO_SOUL, RAND_INF_BONGO_BONGO_SOUL },
-    { RG_TWINROVA_SOUL, RAND_INF_TWINROVA_SOUL },
-    { RG_GANON_SOUL, RAND_INF_GANON_SOUL },
-};
 
 extern "C" u16 Randomizer_Item_Give(PlayState* play, GetItemEntry giEntry) {
     if (giEntry.modIndex != MOD_RANDOMIZER) {
@@ -6039,6 +5998,12 @@ extern "C" u16 Randomizer_Item_Give(PlayState* play, GetItemEntry giEntry) {
     } else if (item >= RG_GUARD_HOUSE_KEY && item <= RG_FISHING_HOLE_KEY) {
         Flags_SetRandomizerInf(
             (RandomizerInf)((int)RAND_INF_GUARD_HOUSE_UNLOCKED + ((item - RG_GUARD_HOUSE_KEY) * 2) + 1));
+        return Return_Item_Entry(giEntry, RG_NONE);
+    } else if (item >= RG_MASK_KEATON && item <= RG_MASK_TRUTH) {
+        Flags_SetRandomizerInf((RandomizerInf)((int)RAND_INF_CHILD_TRADES_HAS_MASK_KEATON + (item - RG_MASK_KEATON)));
+        if (INV_CONTENT(ITEM_TRADE_CHILD) == ITEM_NONE) {
+            INV_CONTENT(ITEM_TRADE_CHILD) = (int)ITEM_MASK_KEATON + (item - RG_MASK_KEATON);
+        }
         return Return_Item_Entry(giEntry, RG_NONE);
     }
 

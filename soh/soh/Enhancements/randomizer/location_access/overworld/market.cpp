@@ -142,10 +142,10 @@ void RegionTable_Init_Market() {
         //If it is forced on/a setting, a copy of these events should be added to root
         //it also doesn't need you to open kak gate, but that might be best treated as a bug
         EventAccess(&logic->CanBorrowMasks,   []{return logic->HasItem(RG_ZELDAS_LETTER) && logic->KakarikoVillageGateOpen;}),
-        EventAccess(&logic->BorrowSkullMask,  []{return ctx->GetOption(RSK_COMPLETE_MASK_QUEST) && logic->CanBorrowMasks;}),
-        EventAccess(&logic->BorrowSpookyMask, []{return ctx->GetOption(RSK_COMPLETE_MASK_QUEST) && logic->CanBorrowMasks;}),
-        EventAccess(&logic->BorrowBunnyHood,  []{return ctx->GetOption(RSK_COMPLETE_MASK_QUEST) && logic->CanBorrowMasks;}),
-        EventAccess(&logic->BorrowRightMasks, []{return ctx->GetOption(RSK_COMPLETE_MASK_QUEST) && logic->CanBorrowMasks;}),
+        EventAccess(&logic->BorrowSkullMask,  []{return ctx->GetOption(RSK_MASK_QUEST).Is(RO_MASK_QUEST_COMPLETED) && logic->CanBorrowMasks;}),
+        EventAccess(&logic->BorrowSpookyMask, []{return ctx->GetOption(RSK_MASK_QUEST).Is(RO_MASK_QUEST_COMPLETED) && logic->CanBorrowMasks;}),
+        EventAccess(&logic->BorrowBunnyHood,  []{return ctx->GetOption(RSK_MASK_QUEST).Is(RO_MASK_QUEST_COMPLETED) && logic->CanBorrowMasks;}),
+        EventAccess(&logic->BorrowRightMasks, []{return ctx->GetOption(RSK_MASK_QUEST).Is(RO_MASK_QUEST_COMPLETED) && logic->CanBorrowMasks;}),
     }, {
         //Locations
         LOCATION(RC_MASK_SHOP_HINT, true),
