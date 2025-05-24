@@ -125,6 +125,31 @@ bool Logic::HasItem(RandomizerGet itemName) {
             return CheckQuestItem(RandoGetToQuestItem.at(itemName));
         case RG_DOUBLE_DEFENSE:
             return GetSaveContext()->isDoubleDefenseAcquired;
+            // Masks
+        case RG_MASK_SKULL:
+            switch (ctx->GetOption(RSK_MASK_QUEST).Get()) {
+                case RO_MASK_QUEST_VANILLA:
+                    return Get(LOGIC_BORROW_SKULL_MASK);
+                case RO_MASK_QUEST_COMPLETED:
+                    return HasItem(RG_ZELDAS_LETTER);
+                case RO_MASK_QUEST_SHUFFLE:
+                    return HasItem(RG_ZELDAS_LETTER) && CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_SKULL);
+                default:
+                    assert(false);
+                    return false;
+            }
+        case RG_MASK_TRUTH:
+            switch (ctx->GetOption(RSK_MASK_QUEST).Get()) {
+                case RO_MASK_QUEST_VANILLA:
+                    return Get(LOGIC_BORROW_RIGHT_MASKS);
+                case RO_MASK_QUEST_COMPLETED:
+                    return HasItem(RG_ZELDAS_LETTER);
+                case RO_MASK_QUEST_SHUFFLE:
+                    return HasItem(RG_ZELDAS_LETTER) && CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_TRUTH);
+                default:
+                    assert(false);
+                    return false;
+            }
         case RG_FISHING_POLE:
         case RG_ZELDAS_LETTER:
         case RG_WEIRD_EGG:
@@ -353,6 +378,9 @@ bool Logic::CanUse(RandomizerGet itemName) {
         case RG_RUTOS_LETTER:
             return IsChild;
         case RG_MAGIC_BEAN:
+            return IsChild;
+        case RG_MASK_SKULL:
+        case RG_MASK_TRUTH:
             return IsChild;
 
         // Songs
@@ -1557,6 +1585,14 @@ std::map<RandomizerGet, uint32_t> Logic::RandoGetToRandInf = {
     { RG_OCARINA_C_DOWN_BUTTON, RAND_INF_HAS_OCARINA_C_DOWN },
     { RG_OCARINA_C_LEFT_BUTTON, RAND_INF_HAS_OCARINA_C_LEFT },
     { RG_OCARINA_C_RIGHT_BUTTON, RAND_INF_HAS_OCARINA_C_RIGHT },
+    { RG_MASK_KEATON, RAND_INF_CHILD_TRADES_HAS_MASK_KEATON },
+    { RG_MASK_SKULL, RAND_INF_CHILD_TRADES_HAS_MASK_SKULL },
+    { RG_MASK_SPOOKY, RAND_INF_CHILD_TRADES_HAS_MASK_SPOOKY },
+    { RG_MASK_BUNNY, RAND_INF_CHILD_TRADES_HAS_MASK_BUNNY },
+    { RG_MASK_GORON, RAND_INF_CHILD_TRADES_HAS_MASK_GORON },
+    { RG_MASK_ZORA, RAND_INF_CHILD_TRADES_HAS_MASK_ZORA },
+    { RG_MASK_GERUDO, RAND_INF_CHILD_TRADES_HAS_MASK_GERUDO },
+    { RG_MASK_TRUTH, RAND_INF_CHILD_TRADES_HAS_MASK_TRUTH },
     { RG_SKELETON_KEY, RAND_INF_HAS_SKELETON_KEY },
     { RG_GREG_RUPEE, RAND_INF_GREG_FOUND },
     { RG_FISHING_POLE, RAND_INF_FISHING_POLE_FOUND },
@@ -1933,6 +1969,14 @@ void Logic::ApplyItemEffect(Item& item, bool state) {
                 case RG_OCARINA_C_DOWN_BUTTON:
                 case RG_OCARINA_C_LEFT_BUTTON:
                 case RG_OCARINA_C_RIGHT_BUTTON:
+                case RG_MASK_KEATON:
+                case RG_MASK_SKULL:
+                case RG_MASK_SPOOKY:
+                case RG_MASK_BUNNY:
+                case RG_MASK_GORON:
+                case RG_MASK_ZORA:
+                case RG_MASK_GERUDO:
+                case RG_MASK_TRUTH:
                 case RG_GREG_RUPEE:
                 case RG_FISHING_POLE:
                 case RG_GUARD_HOUSE_KEY:
