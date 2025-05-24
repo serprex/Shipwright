@@ -54,7 +54,6 @@ void EnGe2_Walk(EnGe2* this, PlayState* play);
 void EnGe2_Stand(EnGe2* this, PlayState* play);
 void EnGe2_WaitLookAtPlayer(EnGe2* this, PlayState* play);
 void EnGe2_ForceTalk(EnGe2* this, PlayState* play);
-void EnGe2_SetupCapturePlayer(EnGe2* this, PlayState* play);
 
 // Update functions
 void EnGe2_UpdateFriendly(Actor* thisx, PlayState* play);
