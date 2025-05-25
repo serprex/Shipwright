@@ -2159,6 +2159,22 @@ typedef enum {
     // true
     // ```
     // #### `args`
+    // - `*ObjWood02`
+    VB_TREE_SETUP_DRAW,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*ObjWood02`
+    VB_TREE_DROP_ITEM,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
     // - `int32_t` (button - promoted from `u8`)
     // - `int32_t` (item - promoted from `u8`)
     VB_UPDATE_BOTTLE_ITEM,

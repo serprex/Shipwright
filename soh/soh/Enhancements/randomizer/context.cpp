@@ -192,6 +192,7 @@ void Context::GenerateLocationPool() {
                                                         !mOptions[RSK_LOGIC_RULES].Is(RO_LOGIC_NO_LOGIC))) ||
             (location.GetRCType() == RCTYPE_SMALL_CRATE && mOptions[RSK_SHUFFLE_CRATES].Is(RO_SHUFFLE_CRATES_OFF)) ||
             (location.GetRCType() == RCTYPE_FAIRY && !mOptions[RSK_SHUFFLE_FAIRIES]) ||
+            (location.GetRCType() == RCTYPE_TREE && !mOptions[RSK_SHUFFLE_TREES]) ||
             (location.GetRCType() == RCTYPE_FREESTANDING &&
              mOptions[RSK_SHUFFLE_FREESTANDING].Is(RO_SHUFFLE_FREESTANDING_OFF)) ||
             (location.GetRCType() == RCTYPE_BEEHIVE && !mOptions[RSK_SHUFFLE_BEEHIVES])) {
