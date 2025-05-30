@@ -58,10 +58,10 @@ typedef std::map<s32, VAList_t> VAZones_t; // Maps room/ scene indices to their 
 // re-creation of terrain VAs every time the player reloads a scene.
 typedef std::unordered_set<s16> SceneList_t;
 
-typedef struct {
+struct SfxRecord {
     std::string path;
     std::shared_ptr<Ship::File> resource;
-} SfxRecord;
+};
 
 class AudioGlossaryData {
   public:
@@ -219,7 +219,6 @@ void ActorAccessibility_TrackNewActor(Actor* actor) {
     accessibleActor.managedSoundSlots = 0;
     accessibleActor.aimAssist.framesSinceAimAssist = 32768;
     accessibleActor.aimAssist.frequency = 10;
-    accessibleActor.aimAssist.pitch = 1.0;
 
     aa->trackedActors[actor] = accessibleActor.instanceID;
     aa->accessibleActorList[accessibleActor.instanceID] = accessibleActor;
@@ -282,12 +281,7 @@ void ActorAccessibility_SetSoundPos(void* handle, int slot, Vec3f* pos, f32 dist
 void ActorAccessibility_SetSoundVolume(void* handle, int slot, float volume) {
     aa->audioEngine->setVolume((uintptr_t)handle, slot, volume);
 }
-void ActorAccessibility_SetSoundPan(void* handle, int slot, Vec3f* projectedPos) {
-    float pan = projectedPos->x / 270;
-    if (pan < -1.0)
-        pan = -1.0;
-    if (pan > 1.0)
-        pan = 1.0;
+void ActorAccessibility_SetSoundPan(void* handle, int slot, float pan) {
     aa->audioEngine->setPan((uintptr_t)handle, slot, pan);
 }
 void ActorAccessibility_SetSoundFilter(void* handle, int slot, float cutoff) {
@@ -363,6 +357,8 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
     }
     // Send sound parameters to the new audio engine. Eventually remove the old stuff once all actors are carried over.
     for (int i = 0; i < AAE_SLOTS_PER_HANDLE; i++) {
+        if (i == 9)
+            continue;
         if (actor->managedSoundSlots & (1 << i)) {
             ActorAccessibility_SetSoundPos(actor, i, &actor->projectedPos, actor->xyzDistToPlayer,
                                            actor->policy.distance);
@@ -386,13 +382,14 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
         Player* player = GET_PLAYER(play);
         if (player->stateFlags1 & PLAYER_STATE1_FIRST_PERSON &&
             (player->stateFlags1 & PLAYER_STATE1_USING_BOOMERANG || player->stateFlags1 & PLAYER_STATE1_ITEM_IN_HAND)) {
-            ActorAccessibility_SetSoundPitch(actor, 9, actor->aimAssist.pitch);
-            actor->aimAssist.framesSinceAimAssist++;
-            ActorAccessibility_ProvideAimAssistForActor(actor);
+            auto aimAssistProps = ActorAccessibility_ProvideAimAssistForActor(actor);
+            ActorAccessibility_SetSoundPitch(actor, 9, aimAssistProps.pitch);
+            ActorAccessibility_SetSoundVolume(actor, 9, aimAssistProps.volume);
+            ActorAccessibility_SetSoundPan(actor, 9, aimAssistProps.pan);
+
             // The above will have taken care of setting the appropriate frequency and pitch, so we'll take care of the
             // audio here based on those results.
-            if (actor->aimAssist.framesSinceAimAssist >= actor->aimAssist.frequency) {
-
+            if (++actor->aimAssist.framesSinceAimAssist >= actor->aimAssist.frequency) {
                 actor->aimAssist.framesSinceAimAssist = 0;
                 ActorAccessibility_PlaySoundForActor(actor, 9, actor->policy.aimAssist.sfx, false);
             }
@@ -552,7 +549,6 @@ AccessibleActor* ActorAccessibility_AddVirtualActor(VirtualActorList* list, VIRT
     actor.managedSoundSlots = 0;
     actor.aimAssist.framesSinceAimAssist = 0;
     actor.aimAssist.frequency = 10;
-    actor.aimAssist.pitch = 1.0;
 
     actor.policy = *policy;
     VAList_t* l = (VAList_t*)list;
@@ -623,25 +619,26 @@ void ActorAccessibility_AnnounceRoomNumber(PlayState* play) {
         ss << "." << std::endl;
     SpeechSynthesizer::Instance->Speak(ss.str().c_str(), GetLanguageCode());
 }
-// Aim cue support.
-void ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* actor) {
+
+AimAssistProps ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* actor) {
     Player* player = GET_PLAYER(actor->play);
     s32 angle = player->actor.focus.rot.x;
     angle = angle / -14000.0 * 16384;
     f32 slope = Math_SinS(angle) / Math_CosS(angle) * 1.0;
-    s32 yIntercept = (slope * (actor->xzDistToPlayer)) + player->actor.focus.pos.y;
-    s32 yHight = actor->world.pos.y + 25;
+    s32 yIntercept = slope * actor->xzDistToPlayer + player->actor.focus.pos.y;
+    s32 yHeight = actor->world.pos.y + 25;
     if (slope < 1) {
         slope = 1;
     }
     s32 correction = (1 - 1 / slope) * 100;
-    if ((yIntercept) > yHight + 25) {
-        actor->aimAssist.pitch = 1.5;
-    } else if ((yIntercept) < yHight - 25) {
-        actor->aimAssist.pitch = 0.5;
+    AimAssistProps aimAssistProps;
+    if (yIntercept > yHeight + 25) {
+        aimAssistProps.pitch = 1.5;
+    } else if (yIntercept < yHeight - 25) {
+        aimAssistProps.pitch = 0.5;
     }
-    s32 yDiff = fabs(yIntercept - yHight);
-    if (yIntercept - yHight > 0) {
+    s32 yDiff = fabs(yIntercept - yHeight);
+    if (yIntercept - yHeight > 0) {
         yDiff -= correction;
         if (yDiff < 0) {
             yDiff = 0;
@@ -652,6 +649,17 @@ void ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* actor) {
     } else {
         actor->aimAssist.frequency = 1 + (uint8_t)(yDiff / 5);
     }
+    s16 yawdiff = player->yaw - Math_Atan2S(actor->world.pos.z - player->actor.world.pos.z,
+                                            actor->world.pos.x - player->actor.world.pos.x);
+    if (yawdiff > -0x1000 && yawdiff < 0x1000) {
+        aimAssistProps.volume = 1.0 - (yawdiff * yawdiff) / (float)0x2000000;
+    } else if (yawdiff > -0x2000 && yawdiff < 0x2000) {
+        aimAssistProps.volume = 0.4;
+    } else {
+        aimAssistProps.volume = 0.2;
+    }
+    aimAssistProps.pan = std::min(std::max(yawdiff / (float)0x1000, -1.0f), 1.0f);
+    return aimAssistProps;
 }
 
 // External audio engine stuff.

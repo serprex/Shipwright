@@ -56,7 +56,7 @@ struct AccessibleActor {
     PlayState* play;
     u8 isDrawn; // Do we just never play accessibility sounds for actors that aren't drawn?
 
-    int frameCount; // Incremented every time the callback is called. The callback is free to modify this. Can be used
+    u16 frameCount; // Incremented every time the callback is called. The callback is free to modify this. Can be used
                     // to implement playback of sounds at regular intervals.
     f32 baseVolume;
     f32 currentVolume;
@@ -69,7 +69,6 @@ struct AccessibleActor {
     struct {
         u16 framesSinceAimAssist; // Allows rate-based vertical aim assist. Incremented every frame for aim assist
                                   // actors. Manually reset by aim assist provider.
-        f32 pitch;                // Used to report whether Link is aiming higher or lower than the actor.
         u8 frequency; // How often the sound will be played. Lower frequencies indicate that Link's vertical aim is
                       // closer to the actor.
     } aimAssist;
@@ -77,6 +76,12 @@ struct AccessibleActor {
     // Add more state as needed.
     ActorAccessibilityPolicy policy; // A copy, so it can be customized on a per-actor basis if needed.
     void* userData;                  // Set by the policy. Can be anything.
+};
+
+struct AimAssistProps {
+    f32 pitch;
+    f32 volume;
+    f32 pan;
 };
 
 // Initialize accessibility.
@@ -116,7 +121,7 @@ void ActorAccessibility_SetListenerPos(Vec3f* pos, Vec3f* rot);
 void ActorAccessibility_SetSoundPos(void* handle, int slot, Vec3f* pos, f32 distToPlayer, f32 maxDistance);
 
 void ActorAccessibility_SetSoundVolume(void* handle, int slot, float volume);
-void ActorAccessibility_SetSoundPan(void* handle, int slot, Vec3f* projectedPos);
+void ActorAccessibility_SetSoundPan(void* handle, int slot, float pan);
 void ActorAccessibility_SetSoundFilter(void* handle, int slot, float cutoff);
 void ActorAccessibility_SeekSound(void* handle, int slot, size_t offset);
 
@@ -166,7 +171,7 @@ void ActorAccessibility_PolyToVirtualActor(PlayState* play, CollisionPoly* poly,
 // Report which room of a dungeon the player is in.
 void ActorAccessibility_AnnounceRoomNumber(PlayState* play);
 // Aim cue support.
-void ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* actor);
+AimAssistProps ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* actor);
 // External audio engine stuff.
 //  Initialize the accessible audio engine.
 bool ActorAccessibility_InitAudio();
