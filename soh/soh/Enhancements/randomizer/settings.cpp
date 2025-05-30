@@ -561,7 +561,7 @@ void Settings::CreateOptions() {
               "A precise jump slash can kill the Skulltula and recoil back onto the top of the frozen waterfall. To "
               "kill it, the logic normally guarantees one of Hookshot, Bow, or Magic.");
     OPT_TRICK(RT_ZF_GREAT_FAIRY_WITHOUT_EXPLOSIVES, RCQUEST_BOTH, RA_ZORAS_FOUNTAIN, { Tricks::Tag::NOVICE },
-              "Zora\'s Fountain Great Fairy Without Explosives",
+              "Zora\'s Fountain Great Fairy without Explosives",
               "It's possible to use silver gauntlets to pick up the silver rock and hammer to break the rock below it, "
               "allowing you to ledge grab the edge of the hole and get past the breakable wall (hammer can't break the "
               "wall itself).");
