@@ -11,7 +11,7 @@
 #include "soh/Enhancements/audio/miniaudio.h"
 
 #define AAE_SOUND_ACTION_BATCH_SIZE 64
-#define AAE_SLOTS_PER_HANDLE 16
+#define AAE_SLOTS_PER_HANDLE 8
 class IResource;
 struct DecodedSample {
     void* data; // A wav file.

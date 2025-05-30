@@ -65,7 +65,7 @@ struct AccessibleActor {
     f32 currentPitch;
     s16 sceneIndex; // If this actor represents a scene transition, then this will contain the destination scene index.
                     // Zero otherwise.
-    u16 managedSoundSlots; // These have their attenuation and panning parameters updated every frame automatically.
+    u8 managedSoundSlots; // These have their attenuation and panning parameters updated every frame automatically.
     struct {
         u16 framesSinceAimAssist; // Allows rate-based vertical aim assist. Incremented every frame for aim assist
                                   // actors. Manually reset by aim assist provider.

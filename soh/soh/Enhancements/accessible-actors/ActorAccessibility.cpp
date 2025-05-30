@@ -383,15 +383,15 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
         if (player->stateFlags1 & PLAYER_STATE1_FIRST_PERSON &&
             (player->stateFlags1 & PLAYER_STATE1_USING_BOOMERANG || player->stateFlags1 & PLAYER_STATE1_ITEM_IN_HAND)) {
             auto aimAssistProps = ActorAccessibility_ProvideAimAssistForActor(actor);
-            ActorAccessibility_SetSoundPitch(actor, 9, aimAssistProps.pitch);
-            ActorAccessibility_SetSoundVolume(actor, 9, aimAssistProps.volume);
-            ActorAccessibility_SetSoundPan(actor, 9, aimAssistProps.pan);
+            ActorAccessibility_SetSoundPitch(actor, 7, aimAssistProps.pitch);
+            ActorAccessibility_SetSoundVolume(actor, 7, aimAssistProps.volume);
+            ActorAccessibility_SetSoundPan(actor, 7, aimAssistProps.pan);
 
             // The above will have taken care of setting the appropriate frequency and pitch, so we'll take care of the
             // audio here based on those results.
             if (++actor->aimAssist.framesSinceAimAssist >= actor->aimAssist.frequency) {
                 actor->aimAssist.framesSinceAimAssist = 0;
-                ActorAccessibility_PlaySoundForActor(actor, 9, actor->policy.aimAssist.sfx, false);
+                ActorAccessibility_PlaySoundForActor(actor, 7, actor->policy.aimAssist.sfx, false);
             }
         } else {
             // Make sure there's no delay the next time you draw your bow or whatever.
