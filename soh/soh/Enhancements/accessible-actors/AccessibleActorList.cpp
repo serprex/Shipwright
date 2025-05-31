@@ -23,6 +23,7 @@ extern "C" {
 #include "overlays/actors/ovl_En_Ice_Hono/z_en_ice_hono.h"
 #include "overlays/actors/ovl_En_Eiyer/z_en_eiyer.h"
 #include "overlays/actors/ovl_En_G_Switch/z_en_g_switch.h"
+#include "overlays/actors/ovl_Door_Shutter/z_door_shutter.h"
 
 void EnBox_WaitOpen(EnBox*, PlayState*);
 void EnKarebaba_DeadItemDrop(EnKarebaba*, PlayState*);
@@ -163,10 +164,6 @@ void accessible_larva(AccessibleActor* actor) {
     if (actor->actor->bgCheckFlags == 0) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_GOMA_BJR_EGG1, false);
     }
-}
-
-void accessible_door(AccessibleActor* actor) {
-    ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_OC_DOOR_OPEN, false);
 }
 
 void accessible_area_change(AccessibleActor* actor) {
@@ -456,6 +453,7 @@ void accessible_va_general_helper(AccessibleActor* actor) {
         ActorAccessibility_AnnounceRoomNumber(actor->play);
     }
 }
+
 bool accessible_audio_compass_init(AccessibleActor* actor) {
     AudioCompassData* data = (AudioCompassData*)malloc(sizeof(AudioCompassData));
     if (data == nullptr)
@@ -466,9 +464,11 @@ bool accessible_audio_compass_init(AccessibleActor* actor) {
     actor->userData = data;
     return true;
 }
+
 void accessible_audio_compass_cleanup(AccessibleActor* actor) {
     free(actor->userData);
 }
+
 void accessible_audio_compass(AccessibleActor* actor) {
     Player* player = GET_PLAYER(actor->play);
     OSContPad* trackerButtonsPressed =
@@ -493,6 +493,29 @@ void accessible_stick_warning(AccessibleActor* actor) {
     actor->world.pos.z -= 50;
     if (fabs(player->unk_860 - 25) < 24.0 && player->heldItemId == 0) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_SY_WARNING_COUNT_N, false);
+    }
+
+    if (Player_HoldsHookshot(player) && player->heldActor != NULL && player->actor.scale.y >= 0.0f &&
+        (player->stateFlags1 & PLAYER_STATE1_FIRST_PERSON)) {
+        CollisionPoly* colPoly;
+        s32 bgId;
+        Vec3f hookshotEnd;
+        Vec3f firstHit;
+        f32 hookshotLength = ((player->heldItemAction == PLAYER_IA_HOOKSHOT) ? 380.0f : 770.0f) *
+                             CVarGetFloat(CVAR_CHEAT("HookshotReachMultiplier"), 1.0f);
+        hookshotEnd.x = player->heldActor->world.pos.x + Math_SinS(player->heldActor->world.rot.y) *
+                                                             Math_CosS(-player->heldActor->world.rot.x) *
+                                                             hookshotLength;
+        hookshotEnd.y = player->heldActor->world.pos.y + Math_SinS(-player->heldActor->world.rot.x) * hookshotLength;
+        hookshotEnd.z = player->heldActor->world.pos.z + Math_CosS(player->heldActor->world.rot.y) *
+                                                             Math_CosS(-player->heldActor->world.rot.x) *
+                                                             hookshotLength;
+        if (BgCheck_AnyLineTest3(&actor->play->colCtx, &player->heldActor->world.pos, &hookshotEnd, &firstHit, &colPoly,
+                                 1, 1, 1, 1, &bgId)) {
+            if (SurfaceType_IsHookshotSurface(&actor->play->colCtx, colPoly, bgId)) {
+                ActorAccessibility_PlaySoundForActor(actor, 1, NA_SE_IT_HOOKSHOT_STICK_OBJ, false);
+            }
+        }
     }
 }
 
@@ -690,6 +713,14 @@ void ActorAccessibility_InitActors() {
     policy.distance = 1500;
     policy.n = 60;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_PO_FIELD, policy);
+    ActorAccessibility_InitPolicy(&policy, "poe puzzle", [](AccessibleActor* actor) {
+        if ((actor->frameCount & 31) == 0) {
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_PO_CRY, false);
+        }
+    });
+    policy.aimAssist.isProvider = true;
+    policy.n = 1;
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_PO_EVENT, policy);
 
     // TODO better gerudo guard logic
     ActorAccessibility_InitPolicy(&policy, "Gerudo Guard", NA_SE_VO_NB_LAUGH);
@@ -713,11 +744,19 @@ void ActorAccessibility_InitActors() {
     policy.pitch = 1.2;
     ActorAccessibility_AddSupportedActor(ACTOR_BG_YDAN_SP, policy);
 
-    ActorAccessibility_InitPolicy(&policy, "Shutter Door", accessible_door);
+    ActorAccessibility_InitPolicy(&policy, "Shutter Door", [](AccessibleActor* actor) {
+        DoorShutter* doorShutter = (DoorShutter*)actor->actor;
+        if (doorShutter->doorType == SHUTTER_KEY_LOCKED) {
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_CHAIN_KEY_UNLOCK_B, false);
+        } else {
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_OC_DOOR_OPEN, false);
+        }
+    });
     policy.n = 30;
     policy.distance = 1000;
     policy.pitch = 1.1;
     ActorAccessibility_AddSupportedActor(ACTOR_DOOR_SHUTTER, policy);
+    ActorAccessibility_InitPolicy(&policy, "Ice Shutter Door", NA_SE_OC_DOOR_OPEN);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_SPOT18_SHUTTER, policy);
     ActorAccessibility_InitPolicy(&policy, "Switch", accessible_switch);
     policy.distance = 2000;
@@ -779,6 +818,8 @@ void ActorAccessibility_InitActors() {
     });
     policy.distance = 1000;
     ActorAccessibility_AddSupportedActor(ACTOR_BG_YDAN_HASI, policy);
+    ActorAccessibility_InitPolicy(&policy, "Po Object", [](AccessibleActor* actor) {});
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_PO_EVENT, policy);
     ActorAccessibility_InitPolicy(&policy, "Pot", NA_SE_EV_POT_BROKEN);
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_TSUBO, policy);
     ActorAccessibility_InitPolicy(&policy, "Platform collapsible", NA_SE_EV_BLOCK_SHAKE);
@@ -940,7 +981,7 @@ void ActorAccessibility_InitActors() {
     policy.pitch = 1.1;
     policy.distance = 1000;
     ActorAccessibility_AddSupportedActor(VA_DOOR, policy);
-
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_DOOR, policy);
     ActorAccessibility_InitPolicy(&policy, "Area Change", accessible_area_change);
     policy.n = 60;
     policy.distance = 100000;
@@ -975,22 +1016,23 @@ void ActorAccessibility_InitActors() {
 
     // Now query a list of virtual actors for a given location (scene and room number).
     VirtualActorList* list = (VirtualActorList*)ActorAccessibility_GetVirtualActorList(EVERYWHERE, 0);
+    AccessibleActor* temp;
 
     // Now place the actor.
-    ActorAccessibility_AddVirtualActor(list, VA_GENERAL_HELPER, { { 0.0, 0.0, 0.0 }, { 0, 0, 0 } });
-    ActorAccessibility_AddVirtualActor(list, VA_AUDIO_COMPASS, { { 0.0, 0.0, 0.0 }, { 0, 0, 0 } });
-    ActorAccessibility_AddVirtualActor(list, VA_STICK_WARNING, { { 0.0, 0.0, 0.0 }, { 0, 0, 0 } });
+    ActorAccessibility_AddVirtualActor(list, VA_GENERAL_HELPER, { { 0, 0, 0 }, { 0, 0, 0 } });
+    ActorAccessibility_AddVirtualActor(list, VA_AUDIO_COMPASS, { { 0, 0, 0 }, { 0, 0, 0 } });
+    ActorAccessibility_AddVirtualActor(list, VA_STICK_WARNING, { { 0, 0, 0 }, { 0, 0, 0 } });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_KOKIRI_FOREST, 0);
-    ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -784.0, 120.0, 1046.00 }, { 0, 14702, 0 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2146.5, 1.0, -142.8 } });
+    ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -784, 120, 1046 }, { 0, 14702, 0 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2146, 1, -142.8 } });
 
     // Kokiri Forest Room with boulder and kokiri sword
     list = ActorAccessibility_GetVirtualActorList(SCENE_KOKIRI_FOREST, 2);
-    ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -788.0, 120.0, 1392.00 }, { 0, 14702, 0 } });
+    ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -788, 120, 1392 }, { 0, 14702, 0 } });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_LOST_WOODS, 1);
-    AccessibleActor* temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1348.0, 25.0, -25.00 } });
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1348, 25, -25 } });
     temp->policy.aimAssist.isProvider = true;
     temp->policy.distance = 700;
     temp->policy.n = 1;
@@ -1003,8 +1045,8 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -1209, -820.0, 3.5 } });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_DEKU_TREE, 3); // basement 1 lobby
-    ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -901, -820.0, 0.5 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -181.761, -905.0, -28.3 } });
+    ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -901, -820, 0.5 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -181.76, -905, -28.3 } });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_DODONGOS_CAVERN, 2); // dodongo bombflower stairs room
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -1958, 20, -1297 } });

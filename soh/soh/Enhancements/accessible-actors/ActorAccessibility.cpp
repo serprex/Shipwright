@@ -146,16 +146,14 @@ void ActorAccessibility_Shutdown() {
     ActorAccessibility_ShutdownAudio();
     delete aa;
 }
-void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char* englishName,
-                                   ActorAccessibilityCallback callback) {
-    policy->callback = callback;
+
+void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char* englishName) {
     policy->distance = 500;
     policy->ydist = 80;
     policy->englishName = englishName;
     policy->n = 20;
     policy->pitch = 1.5;
     policy->runsAlways = false;
-    policy->sound = 0;
     policy->volume = 1.0;
     policy->initUserData = NULL;
     policy->cleanupUserData = NULL;
@@ -165,22 +163,17 @@ void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char*
     policy->aimAssist.tolerance = 0.0;
 }
 
+void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char* englishName,
+                                   ActorAccessibilityCallback callback) {
+    policy->callback = callback;
+    policy->sound = 0;
+    ActorAccessibility_InitPolicy(policy, englishName);
+}
+
 void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char* englishName, s16 sfx) {
     policy->callback = nullptr;
-    policy->distance = 500;
-    policy->ydist = 80;
-    policy->englishName = englishName;
-    policy->n = 20;
-    policy->pitch = 1.5;
-    policy->runsAlways = false;
     policy->sound = sfx;
-    policy->volume = 1.0;
-    policy->initUserData = NULL;
-    policy->cleanupUserData = NULL;
-    policy->pitchModifier = 0.1;
-    policy->aimAssist.isProvider = false;
-    policy->aimAssist.sfx = NA_SE_SY_HITPOINT_ALARM;
-    policy->aimAssist.tolerance = 0.0;
+    ActorAccessibility_InitPolicy(policy, englishName);
 }
 
 void ActorAccessibility_AddSupportedActor(s16 type, ActorAccessibilityPolicy policy) {
@@ -191,8 +184,9 @@ ActorAccessibilityPolicy* ActorAccessibility_GetPolicyForActor(s16 type) {
     SupportedActors_t::iterator i = aa->supportedActors.find(type);
     if (i == aa->supportedActors.end())
         return NULL;
-    return &(i->second);
+    return &i->second;
 }
+
 int ActorAccessibility_GetRandomStartingFrameCount(int min, int max) {
     static std::mt19937 gen;
     std::uniform_int_distribution<> dist(min, max);

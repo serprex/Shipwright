@@ -88,6 +88,7 @@ struct AimAssistProps {
 void ActorAccessibility_Init();
 void ActorAccessibility_InitActors();
 void ActorAccessibility_Shutdown();
+void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char* englishName);
 void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char* englishName,
                                    ActorAccessibilityCallback callback);
 void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char* englishName, s16 sfx);
