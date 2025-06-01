@@ -534,6 +534,8 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_EN_DU, policy);
     policy.englishName = "Owl";
     ActorAccessibility_AddSupportedActor(ACTOR_EN_OWL, policy);
+    ActorAccessibility_InitPolicy(&policy, "Cursed Skulltula Person", NA_SE_VO_ST_DAMAGE);
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_SSH, policy);
     ActorAccessibility_InitPolicy(&policy, "Catching Guards", accessible_en_guard);
     policy.n = 10;
     policy.distance = 500;
@@ -595,8 +597,8 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_EN_DAIKU_KAKARIKO, policy);
     policy.englishName = "Kakariko Rooftop Man";
     ActorAccessibility_AddSupportedActor(ACTOR_EN_ANI, policy);
-    policy.englishName = "Cursed Skulltula People";
-    ActorAccessibility_AddSupportedActor(ACTOR_EN_SSH, policy);
+    policy.englishName = "Uncursed Skulltula Person";
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_STH, policy);
     policy.englishName = "Gossip Stone";
     policy.pitch = 0.75;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_GS, policy);
@@ -910,6 +912,16 @@ void ActorAccessibility_InitActors() {
     policy.ydist = 500;
     policy.distance = 750;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_SW, policy);
+    ActorAccessibility_InitPolicy(&policy, "Big Skulltula", [](AccessibleActor* actor) {
+        s16 angleTowardsLink = ABS((s16)(actor->actor->yawTowardsPlayer - actor->actor->shape.rot.y));
+        if (angleTowardsLink >= 0x3FFC) {
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_VO_ST_DAMAGE, false);
+        } else if ((actor->frameCount & 63) == 0) {
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_STALTU_LAUGH, false);
+        }
+    });
+    policy.ydist = 100;
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_ST, policy);
     ActorAccessibility_InitPolicy(&policy, "goma larva egg", accessible_larva);
     policy.distance = 1000;
     policy.ydist = 1000;
