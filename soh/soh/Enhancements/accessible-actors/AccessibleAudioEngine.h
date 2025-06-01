@@ -12,18 +12,14 @@
 
 #define AAE_SOUND_ACTION_BATCH_SIZE 64
 #define AAE_SLOTS_PER_HANDLE 8
-class IResource;
-struct DecodedSample {
-    void* data; // A wav file.
-    size_t dataSize;
-};
+
 struct SoundAction {
     uintptr_t handle; // This handle is user-defined and uniquely identifies a sound source. It can be anything, but the
                       // address of an object with which the sound is associated is recommended.
-    int slot;         // Allows multiple sounds per handle. The exact number is controlled by AAE_SOUNDS_PER_HANDLE.
-    int command;      // One of the items belonging to AAE_COMMANDS.
-    std::string path; // If command is AAE_START, this is the path to the desired resource.
+    uint8_t slot;     // Allows multiple sounds per handle. The exact number is controlled by AAE_SOUNDS_PER_HANDLE.
+    uint8_t command;  // One of the items belonging to AAE_COMMANDS.
     bool looping;     // If command is AAE_START, specifies whether or not the sound should loop.
+    std::string path; // If command is AAE_START, this is the path to the desired resource.
     union {
         float pitch;
         float volume;
