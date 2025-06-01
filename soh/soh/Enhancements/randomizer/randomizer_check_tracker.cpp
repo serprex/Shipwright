@@ -51,6 +51,7 @@ bool showBeans;
 bool showScrubs;
 bool showMajorScrubs;
 bool showMerchants;
+bool showSongs;
 bool showBeehives;
 bool showCows;
 bool showOverworldFreestanding;
@@ -90,6 +91,10 @@ bool doAreaScroll;
 bool previousShowHidden = false;
 bool hideShopUnshuffledChecks = false;
 bool alwaysShowGS = false;
+
+static bool presetLoaded = false;
+static ImVec2 presetPos;
+static ImVec2 presetSize;
 
 std::map<uint32_t, RandomizerCheck> startingShopItem = {
     { SCENE_KOKIRI_SHOP, RC_KF_SHOP_ITEM_1 },
@@ -979,7 +984,13 @@ void CheckTrackerWindow::DrawElement() {
         }
     }
 
-    ImGui::SetNextWindowSize(ImVec2(400, 540), ImGuiCond_FirstUseEver);
+    if (presetLoaded) {
+        ImGui::SetNextWindowSize(presetSize);
+        ImGui::SetNextWindowPos(presetPos);
+        presetLoaded = false;
+    } else {
+        ImGui::SetNextWindowSize(ImVec2(400, 540), ImGuiCond_FirstUseEver);
+    }
     BeginFloatWindows("Check Tracker", mIsVisible, ImGuiWindowFlags_NoScrollbar);
 
     if (!GameInteractor::IsSaveLoaded() || !initialized) {
@@ -1296,6 +1307,9 @@ void LoadSettings() {
                                    OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_MERCHANTS) ==
                                        RO_SHUFFLE_MERCHANTS_ALL
                              : true;
+    showSongs = IS_RANDO
+                    ? OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SONGS) != RO_SONG_SHUFFLE_OFF
+                    : false;
     showBeehives = IS_RANDO
                        ? OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_BEEHIVES) == RO_GENERIC_YES
                        : false;
@@ -1506,6 +1520,7 @@ bool IsCheckShuffled(RandomizerCheck rc) {
                 (showMajorScrubs && (rc == RC_LW_DEKU_SCRUB_NEAR_BRIDGE || // The 3 scrubs that are always randomized
                                      rc == RC_HF_DEKU_SCRUB_GROTTO || rc == RC_LW_DEKU_SCRUB_GROTTO_FRONT))) &&
                (loc->GetRCType() != RCTYPE_MERCHANT || showMerchants) &&
+               (loc->GetRCType() != RCTYPE_SONG_LOCATION || showSongs) &&
                (loc->GetRCType() != RCTYPE_BEEHIVE || showBeehives) &&
                (loc->GetRCType() != RCTYPE_OCARINA || showOcarinas) &&
                (loc->GetRCType() != RCTYPE_SKULL_TOKEN || alwaysShowGS ||
@@ -1998,6 +2013,12 @@ void RecalculateAvailableChecks() {
     StopPerformanceTimer(PT_RECALCULATE_AVAILABLE_CHECKS);
     SPDLOG_INFO("Recalculate Available Checks Time: {}ms",
                 GetPerformanceTimer(PT_RECALCULATE_AVAILABLE_CHECKS).count());
+}
+
+void CheckTracker_LoadFromPreset(nlohmann::json info) {
+    presetLoaded = true;
+    presetPos = { info["pos"]["x"], info["pos"]["y"] };
+    presetSize = { info["size"]["width"], info["size"]["height"] };
 }
 
 void CheckTrackerWindow::Draw() {
