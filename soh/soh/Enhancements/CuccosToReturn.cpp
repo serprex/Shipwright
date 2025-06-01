@@ -10,13 +10,16 @@ extern PlayState* gPlayState;
 }
 
 void RegisterCuccosToReturn() {
-    COND_VB_SHOULD(VB_SET_CUCCO_COUNT, IS_RANDO || CVarGetInteger(CVAR_ENHANCEMENT("CuccosToReturn"), 7) != 7, {
+    COND_VB_SHOULD(VB_SET_CUCCO_COUNT, CVarGetInteger(CVAR_ENHANCEMENT("CuccosToReturn"), 7) != 7, {
         EnNiwLady* enNiwLady = va_arg(args, EnNiwLady*);
         // Override starting Cucco count using setting value
-        enNiwLady->cuccosInPen =
-            7 - (IS_RANDO ? RAND_GET_OPTION(RSK_CUCCO_COUNT) : CVarGetInteger(CVAR_ENHANCEMENT("CuccosToReturn"), 7));
+        enNiwLady->cuccosInPen = 7 - CVarGetInteger(CVAR_ENHANCEMENT("CuccosToReturn"), 7);
+        if (IS_RANDO && enNiwLady->cuccosInPen == 7) {
+            // force at least 1 in rando to test str0
+            enNiwLady->cuccosInPen = 6;
+        }
         *should = false;
     });
 }
 
-static RegisterShipInitFunc initFunc(RegisterCuccosToReturn, { "IS_RANDO", CVAR_ENHANCEMENT("CuccosToReturn") });
+static RegisterShipInitFunc initFunc(RegisterCuccosToReturn, { CVAR_ENHANCEMENT("CuccosToReturn") });
