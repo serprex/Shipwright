@@ -637,8 +637,8 @@ AimAssistProps ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* acto
     } else {
         actor->aimAssist.frequency = 1 + (uint8_t)(yDiff / 5);
     }
-    s16 yawdiff = player->yaw - Math_Atan2S(actor->pos.z - player->actor.world.pos.z,
-                                            actor->pos.x - player->actor.world.pos.x);
+    s16 yawdiff =
+        player->yaw - Math_Atan2S(actor->pos.z - player->actor.world.pos.z, actor->pos.x - player->actor.world.pos.x);
     if (yawdiff > -0x1000 && yawdiff < 0x1000) {
         aimAssistProps.volume = 1.0 - (yawdiff * yawdiff) / (float)0x2000000;
     } else if (yawdiff > -0x2000 && yawdiff < 0x2000) {
