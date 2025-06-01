@@ -24,6 +24,8 @@ extern "C" {
 #include "overlays/actors/ovl_En_Eiyer/z_en_eiyer.h"
 #include "overlays/actors/ovl_En_G_Switch/z_en_g_switch.h"
 #include "overlays/actors/ovl_Door_Shutter/z_door_shutter.h"
+#include "overlays/actors/ovl_Bg_Po_Event/z_bg_po_event.h"
+#include "overlays/actors/ovl_En_Kakasi2/z_en_kakasi2.h"
 
 void EnBox_WaitOpen(EnBox*, PlayState*);
 void EnKarebaba_DeadItemDrop(EnKarebaba*, PlayState*);
@@ -32,6 +34,8 @@ s8 EnDog_CanFollow(EnDog*, PlayState*);
 void EnEiyer_Die(EnEiyer*, PlayState*);
 void EnEiyer_Dead(EnEiyer*, PlayState*);
 void EnGSwitch_SilverRupeeIdle(EnGSwitch*, PlayState*);
+
+extern u8 sBgPoEventPuzzleState;
 }
 
 // User data for the general helper VA.
@@ -52,10 +56,6 @@ typedef struct {
 
 void accessible_en_pickups(AccessibleActor* actor) {
     ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_NUTS_DAMAGE, false);
-}
-
-void accessible_test(AccessibleActor* actor) {
-    ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_TRAP_BOUND, false);
 }
 
 void accessible_grotto(AccessibleActor* actor) {
@@ -504,7 +504,7 @@ void accessible_stick_warning(AccessibleActor* actor) {
         f32 hookshotLength = ((player->heldItemAction == PLAYER_IA_HOOKSHOT) ? 380.0f : 770.0f) *
                              CVarGetFloat(CVAR_CHEAT("HookshotReachMultiplier"), 1.0f);
         hookshotEnd.x = player->heldActor->world.pos.x + Math_SinS(player->heldActor->world.rot.y) *
-                                                             Math_CosS(-player->heldActor->world.rot.x) *
+                                                             Math_SinS(-player->heldActor->world.rot.x) *
                                                              hookshotLength;
         hookshotEnd.y = player->heldActor->world.pos.y + Math_SinS(-player->heldActor->world.rot.x) * hookshotLength;
         hookshotEnd.z = player->heldActor->world.pos.z + Math_CosS(player->heldActor->world.rot.y) *
@@ -570,7 +570,7 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_EN_SYATEKI_MAN, policy);
     policy.englishName = "Bombchu Bowling Alley Lady";
     ActorAccessibility_AddSupportedActor(ACTOR_EN_BOM_BOWL_MAN, policy);
-    policy.englishName = "ShopKeeper";
+    policy.englishName = "Shop Keeper";
     ActorAccessibility_AddSupportedActor(ACTOR_EN_OSSAN, policy);
     policy.englishName = "Potion Shop Granny";
     ActorAccessibility_AddSupportedActor(ACTOR_EN_DS, policy);
@@ -618,6 +618,9 @@ void ActorAccessibility_InitActors() {
     policy.englishName = "Gossip Stone";
     policy.pitch = 0.75;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_GS, policy);
+    ActorAccessibility_InitPolicy(&policy, "Scarecrow", NA_SE_EV_KAKASHI_SWING);
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_KAKASI, policy);
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_KAKASI3, policy);
 
     ActorAccessibility_InitPolicy(&policy, "Dogs", accessible_en_dogs);
     policy.n = 1;
@@ -635,6 +638,18 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_EN_KUSA, policy);
     ActorAccessibility_InitPolicy(&policy, "Trees", NA_SE_EV_TREE_CUT);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_WOOD02, policy);
+    ActorAccessibility_InitPolicy(&policy, "Scarecrow Spawn", [](AccessibleActor* actor) {
+        if ((actor->frameCount & 63) == 0) {
+            EnKakasi2* kakasi = (EnKakasi2*)actor->actor;
+            actor->policy.distance = kakasi->maxSpawnDistance.x;
+            actor->policy.ydist = kakasi->maxSpawnDistance.y;
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_KAKASHI_SWING, false);
+        }
+    });
+    policy.distance = 2000;
+    policy.n = 1;
+    policy.aimAssist.isProvider = true;
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_KAKASI2, policy);
 
     ActorAccessibility_InitPolicy(&policy, "Chest", [](AccessibleActor* actor) {
         Player* player = GET_PLAYER(actor->play);
@@ -713,14 +728,6 @@ void ActorAccessibility_InitActors() {
     policy.distance = 1500;
     policy.n = 60;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_PO_FIELD, policy);
-    ActorAccessibility_InitPolicy(&policy, "poe puzzle", [](AccessibleActor* actor) {
-        if ((actor->frameCount & 31) == 0) {
-            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_PO_CRY, false);
-        }
-    });
-    policy.aimAssist.isProvider = true;
-    policy.n = 1;
-    ActorAccessibility_AddSupportedActor(ACTOR_BG_PO_EVENT, policy);
 
     // TODO better gerudo guard logic
     ActorAccessibility_InitPolicy(&policy, "Gerudo Guard", NA_SE_VO_NB_LAUGH);
@@ -732,6 +739,7 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_InitPolicy(&policy, "Bronze Boulder", NA_SE_IT_HAMMER_HIT);
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_HAMISHI, policy);
     ActorAccessibility_InitPolicy(&policy, "Time Block", NA_SE_EV_TIMETRIP_LIGHT);
+    policy.distance = 800;
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_TIMEBLOCK, policy);
     ActorAccessibility_InitPolicy(&policy, "Grotto Door", accessible_grotto);
     policy.n = 30;
@@ -795,7 +803,7 @@ void ActorAccessibility_InitActors() {
     policy.pitch = 1.1;
     policy.ydist = 500;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_OKARINA_TAG, policy);
-    ActorAccessibility_InitPolicy(&policy, "Pushable Block", accessible_test);
+    ActorAccessibility_InitPolicy(&policy, "Pushable Block", NA_SE_EV_TRAP_BOUND);
     policy.n = 30;
     policy.distance = 800;
     policy.pitch = 1.1;
@@ -818,8 +826,44 @@ void ActorAccessibility_InitActors() {
     });
     policy.distance = 1000;
     ActorAccessibility_AddSupportedActor(ACTOR_BG_YDAN_HASI, policy);
-    ActorAccessibility_InitPolicy(&policy, "Po Object", [](AccessibleActor* actor) {});
+    ActorAccessibility_InitPolicy(&policy, "Poe Object", [](AccessibleActor* actor) {
+        BgPoEvent* po = (BgPoEvent*)actor->actor;
+        if (po->type == 0) {
+            actor->policy.distance = 400;
+            if ((actor->frameCount & 31) == 0) {
+                ActorAccessibility_SetSoundPitch(actor, 0, 0.5f + 1.0f * po->index);
+                ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_PO_APPEAR, false);
+            }
+        } else if (po->type == 1) {
+            actor->policy.distance = 300;
+            if ((actor->frameCount & 31) == 0) {
+                ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_TRAP_BOUND, false);
+            }
+        } else if (po->index == sBgPoEventPuzzleState && (actor->frameCount & 63) == 0) {
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_PO_CRY, false);
+        }
+    });
+    policy.aimAssist.isProvider = true;
+    policy.aimAssist.tolerance = 50.0f;
+    policy.n = 1;
+    policy.ydist = 1000;
+    policy.distance = 1000;
     ActorAccessibility_AddSupportedActor(ACTOR_BG_PO_EVENT, policy);
+    ActorAccessibility_InitPolicy(&policy, "Poe Sister", [](AccessibleActor* actor) {
+        if (actor->actor->category == ACTORCAT_PROP) {
+            actor->policy.aimAssist.isProvider = false;
+        }
+    });
+    policy.aimAssist.isProvider = true;
+    policy.aimAssist.tolerance = 20.0f;
+    policy.n = 1;
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_PO_SISTERS, policy);
+    ActorAccessibility_InitPolicy(&policy, "Lake Hylia Object", nullptr);
+    policy.aimAssist.isProvider = true;
+    policy.n = 1;
+    policy.ydist = 600;
+    policy.distance = 600;
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_SPOT06_OBJECTS, policy);
     ActorAccessibility_InitPolicy(&policy, "Pot", NA_SE_EV_POT_BROKEN);
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_TSUBO, policy);
     ActorAccessibility_InitPolicy(&policy, "Platform collapsible", NA_SE_EV_BLOCK_SHAKE);
@@ -990,10 +1034,6 @@ void ActorAccessibility_InitActors() {
     policy.distance = 1000;
     policy.pitch = 1.7;
     ActorAccessibility_AddSupportedActor(VA_MARKER, policy);
-    // ActorAccessibility_InitPolicy(&policy, "Spike", NA_SE_EV_DIAMOND_SWITCH);
-    // policy.distance = 200;
-    // policy.pitch = 0.5;
-    // ActorAccessibility_AddSupportedActor(VA_SPIKE, policy);
     ActorAccessibility_InitPolicy(&policy, "Stick Burnout Warning", accessible_stick_warning);
     policy.n = 1;
     policy.runsAlways = true;
@@ -1123,6 +1163,21 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 3230, -470, -2515 } });
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 3170, -420, -2300 } });
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2960, -410, -2000 } });
+
+    list = ActorAccessibility_GetVirtualActorList(SCENE_FOREST_TEMPLE, 15);
+    // falling ceiling safe spots
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2070, -403, -3000 } });
+    temp->policy.volume = 0.5;
+    temp->policy.distance = 1500;
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2150, -403, -2560 } });
+    temp->policy.volume = 0.5;
+    temp->policy.distance = 1500;
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2070, -403, -3000 } });
+    temp->policy.volume = 0.5;
+    temp->policy.distance = 1500;
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1990, -403, -1850 } });
+    temp->policy.volume = 0.5;
+    temp->policy.distance = 1500;
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_ICE_CAVERN, 9);
     temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 860, 180, -2400 } });

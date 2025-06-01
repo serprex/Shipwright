@@ -43,7 +43,6 @@ typedef struct {
         } values;
         s32 raw; // Combination of the two which can be used for dictionary lookups.
     };
-
 } SceneAndRoom;
 
 // Maps actors to their accessibility policies, which describe how accessibility should treat them.
@@ -53,7 +52,7 @@ typedef std::map<Actor*, uint64_t>
                      // Maps internal IDs to wrapped actor objects. These actors can be real or virtual.
 typedef std::map<uint64_t, AccessibleActor> AccessibleActorList_t;
 typedef std::vector<AccessibleActor> VAList_t; // Denotes a list of virtual actors specific to a single room.
-typedef std::map<s32, VAList_t> VAZones_t; // Maps room/ scene indices to their corresponding virtual actor collections.
+typedef std::map<s32, VAList_t> VAZones_t; // Maps room/scene indices to their corresponding virtual actor collections.
 // A list of scenes which have already been visited (since the game was launched). Used to prevent
 // re-creation of terrain VAs every time the player reloads a scene.
 typedef std::unordered_set<s16> SceneList_t;
@@ -519,8 +518,7 @@ VirtualActorList* ActorAccessibility_GetVirtualActorList(s16 sceneNum, s8 roomNu
     if (sceneNum == EVERYWHERE)
         sr.values.sceneIndex = EVERYWHERE;
 
-    VAList_t* l = &aa->vaZones[sr.raw];
-    return (VirtualActorList*)l;
+    return (VirtualActorList*)&aa->vaZones[sr.raw];
 }
 AccessibleActor* ActorAccessibility_AddVirtualActor(VirtualActorList* list, VIRTUAL_ACTOR_TABLE type, PosRot where) {
     ActorAccessibilityPolicy* policy = ActorAccessibility_GetPolicyForActor(type);
@@ -551,7 +549,6 @@ AccessibleActor* ActorAccessibility_AddVirtualActor(VirtualActorList* list, VIRT
     AccessibleActor* savedActor = &(*l)[l->size() - 1];
     if (policy->initUserData && !policy->initUserData(savedActor)) {
         l->pop_back();
-
         return NULL; // Probably a malloc error preventing user data initialization.
     }
     return savedActor;
@@ -573,12 +570,9 @@ void ActorAccessibility_InterpretCurrentScene(PlayState* play) {
         if (SurfaceType_IsWallDamage(&play->colCtx, poly, BGCHECK_SCENE)) {
             ActorAccessibility_PolyToVirtualActor(play, poly, VA_SPIKE, list);
         }
-        if (SurfaceType_GetSceneExitIndex(&play->colCtx, poly, BGCHECK_SCENE) != 0)
+        if (SurfaceType_GetSceneExitIndex(&play->colCtx, poly, BGCHECK_SCENE) != 0) {
             ActorAccessibility_PolyToVirtualActor(play, poly, VA_AREA_CHANGE, list);
-        /*s8 floorparam = func_80041D4C(&play->colCtx, poly, BGCHECK_SCENE);
-        if (floorparam == 2) {
-        ActorAccessibility_PolyToVirtualActor(play, poly, VA_SPIKE, list);
-        }*/
+        }
     }
 }
 // Convert poly to VA.
@@ -604,6 +598,7 @@ void ActorAccessibility_PolyToVirtualActor(PlayState* play, CollisionPoly* poly,
         actor->sceneIndex = gEntranceTable[nextEntranceIndex].scene;
     }
 }
+
 void ActorAccessibility_AnnounceRoomNumber(PlayState* play) {
     std::stringstream ss;
     ss << "Room" << (int)play->roomCtx.curRoom.num;
