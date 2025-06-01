@@ -50,10 +50,6 @@ typedef struct {
     int framesUntilChime;
 } AudioCompassData;
 
-typedef struct {
-    int framesUntilAboveChime;
-} SwitchData;
-
 void accessible_en_pickups(AccessibleActor* actor) {
     ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_NUTS_DAMAGE, false);
 }
@@ -106,21 +102,7 @@ void accessible_torches(AccessibleActor* actor) {
     }
 }
 
-bool accessible_switch_init(AccessibleActor* actor) {
-    SwitchData* data = (SwitchData*)malloc(sizeof(SwitchData));
-    if (data == nullptr)
-        return false; // failure to allocate memory.
-    data->framesUntilAboveChime = 0;
-    actor->userData = (void*)data;
-    return true;
-}
-void accessible_switch_cleanup(AccessibleActor* actor) {
-    free(actor->userData);
-}
-
 void accessible_switch(AccessibleActor* actor) {
-    SwitchData* data = (SwitchData*)actor->userData;
-
     Player* player = GET_PLAYER(actor->play);
     ObjSwitch* sw = (ObjSwitch*)actor->actor;
     Vec3f& scale = actor->actor->scale;
@@ -147,9 +129,9 @@ void accessible_switch(AccessibleActor* actor) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_HAMMER_HIT, false);
         }
     } else if ((actor->actor->params & 7) == 2) {
-        if (sw->eyeTexIndex == 0) { //(!(Flags_GetSwitch(actor->play, (actor->params >> 8 & 0x3F))))
-                                    // make it only play for open eye
+        if (sw->eyeTexIndex == 0) {
             actor->policy.aimAssist.isProvider = true;
+            actor->policy.ydist = 1000;
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_FOOT_SWITCH, false);
         }
     } else {
@@ -754,7 +736,7 @@ void ActorAccessibility_InitActors() {
 
     ActorAccessibility_InitPolicy(&policy, "Shutter Door", [](AccessibleActor* actor) {
         DoorShutter* doorShutter = (DoorShutter*)actor->actor;
-        if (doorShutter->doorType == SHUTTER_KEY_LOCKED) {
+        if (doorShutter->doorType == SHUTTER_KEY_LOCKED && !Flags_GetSwitch(actor->play, actor->actor->params & 0x3F)) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_CHAIN_KEY_UNLOCK_B, false);
         } else {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_OC_DOOR_OPEN, false);
@@ -768,8 +750,6 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_BG_SPOT18_SHUTTER, policy);
     ActorAccessibility_InitPolicy(&policy, "Switch", accessible_switch);
     policy.distance = 2000;
-    policy.cleanupUserData = accessible_switch_cleanup;
-    policy.initUserData = accessible_switch_init;
     policy.n = 1;
     policy.ydist = 200;
     policy.pitch = 1.1;
