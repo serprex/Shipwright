@@ -318,7 +318,7 @@ void ActorAccessibility_CopyParamsFromRealActor(AccessibleActor* actor) {
     actor->projectedPos = actor->actor->projectedPos;
     actor->xzDistToPlayer = actor->actor->xzDistToPlayer;
     actor->isDrawn = actor->actor->isDrawn;
-    actor->world = actor->actor->world;
+    actor->pos = actor->actor->world.pos;
     actor->xyzDistToPlayer = sqrtf(actor->actor->xyzDistToPlayerSq);
 }
 
@@ -339,10 +339,10 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
         Player* player = GET_PLAYER(play);
         f32 w = 0.0f;
         // Set actor->projectedPos.
-        SkinMatrix_Vec3fMtxFMultXYZW(&play->viewProjectionMtxF, &actor->world.pos, &actor->projectedPos, &w);
-        actor->xzDistToPlayer = Math_Vec3f_DistXZ(&actor->world.pos, &player->actor.world.pos);
-        actor->xyzDistToPlayer = Math_Vec3f_DistXYZ(&actor->world.pos, &player->actor.world.pos);
-        actor->yDistToPlayer = fabs((actor->world.pos.y) - (player->actor.world.pos.y));
+        SkinMatrix_Vec3fMtxFMultXYZW(&play->viewProjectionMtxF, &actor->pos, &actor->projectedPos, &w);
+        actor->xzDistToPlayer = Math_Vec3f_DistXZ(&actor->pos, &player->actor.world.pos);
+        actor->xyzDistToPlayer = Math_Vec3f_DistXYZ(&actor->pos, &player->actor.world.pos);
+        actor->yDistToPlayer = fabs((actor->pos.y) - (player->actor.world.pos.y));
     }
 
     if (actor->actor != NULL && fabs(actor->actor->yDistToPlayer) > actor->policy.ydist) {
@@ -520,7 +520,7 @@ VirtualActorList* ActorAccessibility_GetVirtualActorList(s16 sceneNum, s8 roomNu
 
     return (VirtualActorList*)&aa->vaZones[sr.raw];
 }
-AccessibleActor* ActorAccessibility_AddVirtualActor(VirtualActorList* list, VIRTUAL_ACTOR_TABLE type, PosRot where) {
+AccessibleActor* ActorAccessibility_AddVirtualActor(VirtualActorList* list, VIRTUAL_ACTOR_TABLE type, Vec3f where) {
     ActorAccessibilityPolicy* policy = ActorAccessibility_GetPolicyForActor(type);
     if (policy == NULL)
         return NULL;
@@ -536,7 +536,7 @@ AccessibleActor* ActorAccessibility_AddVirtualActor(VirtualActorList* list, VIRT
     actor.instanceID = ActorAccessibility_GetNextID();
     actor.isDrawn = 1;
     actor.play = NULL;
-    actor.world = where;
+    actor.pos = where;
     actor.sceneIndex = 0;
     actor.managedSoundSlots = 0;
     actor.aimAssist.framesSinceAimAssist = 0;
@@ -580,15 +580,14 @@ void ActorAccessibility_PolyToVirtualActor(PlayState* play, CollisionPoly* poly,
                                            VirtualActorList* destination) {
     Vec3f polyVerts[3];
     CollisionPoly_GetVertices(poly, play->colCtx.colHeader->vtxList, polyVerts);
-    PosRot where;
-    where.pos.y = std::min(polyVerts[0].y, std::min(polyVerts[1].y, polyVerts[2].y));
+    Vec3f where;
+    where.y = std::min(polyVerts[0].y, std::min(polyVerts[1].y, polyVerts[2].y));
     f32 minX = std::min(polyVerts[0].x, std::min(polyVerts[1].x, polyVerts[2].x));
     f32 maxX = std::max(polyVerts[0].x, std::max(polyVerts[1].x, polyVerts[2].x));
     f32 minZ = std::min(polyVerts[0].z, std::min(polyVerts[1].z, polyVerts[2].z));
     f32 maxZ = std::max(polyVerts[0].z, std::max(polyVerts[1].z, polyVerts[2].z));
-    where.pos.x = maxX - ((maxX - minX) / 2);
-    where.pos.z = maxZ - ((maxZ - minZ) / 2);
-    where.rot = { 0, 0, 0 };
+    where.x = maxX - ((maxX - minX) / 2);
+    where.z = maxZ - ((maxZ - minZ) / 2);
     AccessibleActor* actor = ActorAccessibility_AddVirtualActor(destination, va, where);
     if (actor == NULL)
         return;
@@ -615,7 +614,7 @@ AimAssistProps ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* acto
     angle = angle / -14000.0 * 16384;
     f32 slope = Math_SinS(angle) / Math_CosS(angle) * 1.0;
     s32 yIntercept = slope * actor->xzDistToPlayer + player->actor.focus.pos.y;
-    s32 yHeight = actor->world.pos.y + 25;
+    s32 yHeight = actor->pos.y + 25;
     if (slope < 1) {
         slope = 1;
     }
@@ -638,8 +637,8 @@ AimAssistProps ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* acto
     } else {
         actor->aimAssist.frequency = 1 + (uint8_t)(yDiff / 5);
     }
-    s16 yawdiff = player->yaw - Math_Atan2S(actor->world.pos.z - player->actor.world.pos.z,
-                                            actor->world.pos.x - player->actor.world.pos.x);
+    s16 yawdiff = player->yaw - Math_Atan2S(actor->pos.z - player->actor.world.pos.z,
+                                            actor->pos.x - player->actor.world.pos.x);
     if (yawdiff > -0x1000 && yawdiff < 0x1000) {
         aimAssistProps.volume = 1.0 - (yawdiff * yawdiff) / (float)0x2000000;
     } else if (yawdiff > -0x2000 && yawdiff < 0x2000) {

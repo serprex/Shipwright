@@ -218,7 +218,7 @@ void accessible_area_change(AccessibleActor* actor) {
         if (actor->play->sceneNum == 91 && gSaveContext.entranceIndex != 1504 && gSaveContext.entranceIndex != 1246) {
             return;
         }
-        if (actor->play->sceneNum == 85 && actor->world.pos.y < 0) {
+        if (actor->play->sceneNum == 85 && actor->pos.y < 0) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_HORSE_RUN_LEVEL, false);
         } else {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_SARIA_MELODY, false);
@@ -458,8 +458,8 @@ void accessible_audio_compass(AccessibleActor* actor) {
     AudioCompassData* data = (AudioCompassData*)actor->userData;
     bool compassCombo = trackerButtonsPressed != nullptr && trackerButtonsPressed[0].button & BTN_DDOWN &&
                         trackerButtonsPressed[0].button & BTN_L;
-    actor->world.pos = player->actor.world.pos;
-    actor->world.pos.z -= 50;
+    actor->pos = player->actor.world.pos;
+    actor->pos.z -= 50;
 
     if (data->framesUntilChime > 0)
         data->framesUntilChime--;
@@ -471,8 +471,8 @@ void accessible_audio_compass(AccessibleActor* actor) {
 
 void accessible_stick_warning(AccessibleActor* actor) {
     Player* player = GET_PLAYER(actor->play);
-    actor->world.pos = player->actor.world.pos;
-    actor->world.pos.z -= 50;
+    actor->pos = player->actor.world.pos;
+    actor->pos.z -= 50;
     if (fabs(player->unk_860 - 25) < 24.0 && player->heldItemId == 0) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_SY_WARNING_COUNT_N, false);
     }
@@ -581,6 +581,8 @@ void ActorAccessibility_InitActors() {
     policy.englishName = "Running Man";
     ActorAccessibility_AddSupportedActor(ACTOR_EN_MM, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_MM2, policy);
+    policy.englishName = "Sheik";
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_XC, policy);
     policy.englishName = "Market Npc";
     ActorAccessibility_AddSupportedActor(ACTOR_EN_HY, policy);
     policy.englishName = "Girl Chassing Cucco";
@@ -634,7 +636,6 @@ void ActorAccessibility_InitActors() {
     policy.n = 1;
     policy.aimAssist.isProvider = true;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_KAKASI2, policy);
-
     ActorAccessibility_InitPolicy(&policy, "Chest", [](AccessibleActor* actor) {
         Player* player = GET_PLAYER(actor->play);
         EnBox* chest = (EnBox*)actor->actor;
@@ -1004,8 +1005,8 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_InitPolicy(&policy, "Ladder/climable", [](AccessibleActor* actor) {
         Player* player = GET_PLAYER(actor->play);
         f32 waterLoc = player->actor.yDistToWater + player->actor.world.pos.y;
-        if (actor->world.pos.y < waterLoc) {
-            actor->world.pos.y = waterLoc;
+        if (actor->pos.y < waterLoc) {
+            actor->pos.y = waterLoc;
         }
         if (actor->yDistToPlayer < 80)
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_PL_LAND_LADDER, false);
@@ -1051,20 +1052,20 @@ void ActorAccessibility_InitActors() {
     AccessibleActor* temp;
 
     // Now place the actor.
-    ActorAccessibility_AddVirtualActor(list, VA_GENERAL_HELPER, { { 0, 0, 0 }, { 0, 0, 0 } });
-    ActorAccessibility_AddVirtualActor(list, VA_AUDIO_COMPASS, { { 0, 0, 0 }, { 0, 0, 0 } });
-    ActorAccessibility_AddVirtualActor(list, VA_STICK_WARNING, { { 0, 0, 0 }, { 0, 0, 0 } });
+    ActorAccessibility_AddVirtualActor(list, VA_GENERAL_HELPER, { 0, 0, 0 });
+    ActorAccessibility_AddVirtualActor(list, VA_AUDIO_COMPASS, { 0, 0, 0 });
+    ActorAccessibility_AddVirtualActor(list, VA_STICK_WARNING, { 0, 0, 0 });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_KOKIRI_FOREST, 0);
-    ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -784, 120, 1046 }, { 0, 14702, 0 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2146, 1, -142.8 } });
+    ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { -784, 120, 1046 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 2146, 1, -142.8 });
 
     // Kokiri Forest Room with boulder and kokiri sword
     list = ActorAccessibility_GetVirtualActorList(SCENE_KOKIRI_FOREST, 2);
-    ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -788, 120, 1392 }, { 0, 14702, 0 } });
+    ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { -788, 120, 1392 });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_LOST_WOODS, 1);
-    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1348, 25, -25 } });
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1348, 25, -25 });
     temp->policy.aimAssist.isProvider = true;
     temp->policy.distance = 700;
     temp->policy.n = 1;
@@ -1074,105 +1075,111 @@ void ActorAccessibility_InitActors() {
     list = ActorAccessibility_GetVirtualActorList(SCENE_DEKU_TREE, 10); // deku tree compass room
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_DEKU_TREE, 7); // bombable wall room
-    ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -1209, -820.0, 3.5 } });
+    ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { -1209, -820.0, 3.5 });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_DEKU_TREE, 3); // basement 1 lobby
-    ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { { -901, -820, 0.5 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -181.76, -905, -28.3 } });
+    ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { -901, -820, 0.5 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { -181.76, -905, -28.3 });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_DODONGOS_CAVERN, 2); // dodongo bombflower stairs room
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -1958, 20, -1297 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { -1958, 20, -1297 });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_JABU_JABU, 2);
-    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -260, -400, -3377 } }); // green tentacle hole
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { -260, -400, -3377 }); // green tentacle hole
     temp->policy.distance = 200;
     temp->policy.sound = NA_SE_EN_DAIOCTA_DEAD;
-    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 230, -400, -3211 } }); // ruto hole
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 230, -400, -3211 }); // ruto hole
     temp->policy.distance = 200;
     temp->policy.sound = NA_SE_VO_RT_FALL;
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_CASTLE_COURTYARD_GUARDS_DAY, 0);
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1734.0, 0.0, 140.514 } });
-    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1734.0, 0.0, 140.514 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1734.0, 0.0, 140.514 });
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1734.0, 0.0, 140.514 });
     temp->policy.pitch = 0.3;
     temp->policy.volume = 0.5;
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1040.0, 0.0, 140.514 } });
-    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1734.0, 0.0, 140.514 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1040.0, 0.0, 140.514 });
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1734.0, 0.0, 140.514 });
     temp->policy.pitch = 0.6;
     temp->policy.volume = 0.5;
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 230.0, 0.0, 188.514 } });
-    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1734.0, 0.0, 140.514 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 230.0, 0.0, 188.514 });
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1734.0, 0.0, 140.514 });
     temp->policy.pitch = 0.9;
     temp->policy.volume = 0.5;
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -426.0, 0.0, 130.514 } });
-    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1734.0, 0.0, 140.514 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { -426.0, 0.0, 130.514 });
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1734.0, 0.0, 140.514 });
     temp->policy.pitch = 1.2;
     temp->policy.volume = 0.5;
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -1206.0, 0.0, 133.514 } });
-    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1734.0, 0.0, 140.514 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { -1206.0, 0.0, 133.514 });
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1734.0, 0.0, 140.514 });
     temp->policy.pitch = 1.5;
     temp->policy.volume = 0.5;
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -1571.0, 0.0, -834.514 } });
-    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1734.0, 0.0, 140.514 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { -1571.0, 0.0, -834.514 });
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1734.0, 0.0, 140.514 });
     temp->policy.pitch = 1.8;
     temp->policy.volume = 0.5;
 
+    list = ActorAccessibility_GetVirtualActorList(SCENE_TEMPLE_OF_TIME, 0);
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 0, 0, 0 });
+    temp->policy.englishName = "Master Sword Pedestal";
+    temp->policy.distance = 1500;
+    temp->policy.sound = NA_SE_PL_SWORD_CHARGE;
+
     list = ActorAccessibility_GetVirtualActorList(SCENE_WINDMILL_AND_DAMPES_GRAVE, 0);
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { -50, -530, -2300 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 25, -530, -2875 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 300, -530, -3020 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { -50, -530, -2300 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 25, -530, -2875 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 300, -530, -3020 });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_WINDMILL_AND_DAMPES_GRAVE, 1);
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 370, -500, -3430 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 410, -530, -3770 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 675, -570, -3930 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 675, -610, -4300 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 560, -600, -4500 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 470, -570, -4775 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 300, -570, -4910 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 230, -570, -5300 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 370, -500, -3430 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 410, -530, -3770 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 675, -570, -3930 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 675, -610, -4300 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 560, -600, -4500 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 470, -570, -4775 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 300, -570, -4910 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 230, -570, -5300 });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_WINDMILL_AND_DAMPES_GRAVE, 2);
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 300, -570, -5400 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 500, -570, -5400 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 650, -570, -5275 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1200, -730, -5125 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1345, -730, -4930 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1560, -730, -4765 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1730, -730, -4550 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1940, -730, -4430 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 300, -570, -5400 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 500, -570, -5400 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 650, -570, -5275 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1200, -730, -5125 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1345, -730, -4930 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1560, -730, -4765 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1730, -730, -4550 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1940, -730, -4430 });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_WINDMILL_AND_DAMPES_GRAVE, 3);
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1990, -730, -4185 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1800, -730, -3950 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1720, -730, -3850 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1690, -730, -3145 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1655, -668, -3035 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1710, -668, -2660 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2285, -610, -2650 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2625, -610, -2700 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 3080, -530, -2700 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 3230, -470, -2515 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 3170, -420, -2300 } });
-    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2960, -410, -2000 } });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1990, -730, -4185 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1800, -730, -3950 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1720, -730, -3850 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1690, -730, -3145 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1655, -668, -3035 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1710, -668, -2660 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 2285, -610, -2650 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 2625, -610, -2700 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 3080, -530, -2700 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 3230, -470, -2515 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 3170, -420, -2300 });
+    ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 2960, -410, -2000 });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_FOREST_TEMPLE, 15);
     // falling ceiling safe spots
-    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2070, -403, -3000 } });
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 2070, -403, -3000 });
     temp->policy.volume = 0.5;
     temp->policy.distance = 1500;
-    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2150, -403, -2560 } });
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 2150, -403, -2560 });
     temp->policy.volume = 0.5;
     temp->policy.distance = 1500;
-    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 2070, -403, -3000 } });
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 2070, -403, -3000 });
     temp->policy.volume = 0.5;
     temp->policy.distance = 1500;
-    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 1990, -403, -1850 } });
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1990, -403, -1850 });
     temp->policy.volume = 0.5;
     temp->policy.distance = 1500;
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_ICE_CAVERN, 9);
-    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { { 860, 180, -2400 } });
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 860, 180, -2400 });
     temp->policy.distance = 300;
     temp->policy.ydist = 100;
     temp->policy.sound = NA_SE_EV_BLOCK_SHAKE;

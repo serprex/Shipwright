@@ -51,7 +51,7 @@ struct AccessibleActor {
     f32 yDistToPlayer;
     f32 xzDistToPlayer;
     f32 xyzDistToPlayer;
-    PosRot world;
+    Vec3f pos;
     Vec3f projectedPos;
     PlayState* play;
     u8 isDrawn; // Do we just never play accessibility sounds for actors that aren't drawn?
@@ -163,7 +163,7 @@ typedef enum {
 
 // Get the list of virtual actors for a given scene and room index.
 VirtualActorList* ActorAccessibility_GetVirtualActorList(s16 sceneNum, s8 roomNum);
-AccessibleActor* ActorAccessibility_AddVirtualActor(VirtualActorList* list, VIRTUAL_ACTOR_TABLE type, PosRot where);
+AccessibleActor* ActorAccessibility_AddVirtualActor(VirtualActorList* list, VIRTUAL_ACTOR_TABLE type, Vec3f where);
 // Parses the loaded seen and converts select polygons (like ladders, spikes and scene exits) into virtual actors.
 void ActorAccessibility_InterpretCurrentScene(PlayState* play);
 // Convert a collision polygon into a virtual actor.
