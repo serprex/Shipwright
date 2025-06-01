@@ -1081,6 +1081,20 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { -901, -820, 0.5 });
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { -181.76, -905, -28.3 });
 
+    list = ActorAccessibility_GetVirtualActorList(SCENE_DODONGOS_CAVERN, 0);
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { -80, 310, -1540 });
+    temp->policy.distance = 150;
+    temp->policy.ydist = 100;
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 80, 310, -1540 });
+    temp->policy.distance = 150;
+    temp->policy.ydist = 100;
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { -80, 510, -1540 });
+    temp->policy.distance = 150;
+    temp->policy.ydist = 100;
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 80, 510, -1540 });
+    temp->policy.distance = 150;
+    temp->policy.ydist = 100;
+
     list = ActorAccessibility_GetVirtualActorList(SCENE_DODONGOS_CAVERN, 2); // dodongo bombflower stairs room
     ActorAccessibility_AddVirtualActor(list, VA_MARKER, { -1958, 20, -1297 });
 
