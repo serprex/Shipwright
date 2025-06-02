@@ -18,6 +18,7 @@ extern "C" {
 #include "overlays/actors/ovl_En_Box/z_en_box.h"
 #include "overlays/actors/ovl_Obj_Syokudai/z_obj_syokudai.h"
 #include "overlays/actors/ovl_En_Dog/z_en_dog.h"
+#include "overlays/actors/ovl_En_Door/z_en_door.h"
 #include "overlays/actors/ovl_En_Ba/z_en_ba.h"
 #include "overlays/actors/ovl_En_Fz/z_en_fz.h"
 #include "overlays/actors/ovl_En_Ice_Hono/z_en_ice_hono.h"
@@ -102,7 +103,7 @@ void accessible_switch(AccessibleActor* actor) {
     Player* player = GET_PLAYER(actor->play);
     ObjSwitch* sw = (ObjSwitch*)actor->actor;
     Vec3f& scale = actor->actor->scale;
-    if ((actor->actor->params & 7) == 0) {
+    if ((actor->actor->params & 7) == OBJSWITCH_TYPE_FLOOR) {
         if (actor->xyzDistToPlayer > 800) {
             return;
         }
@@ -117,23 +118,19 @@ void accessible_switch(AccessibleActor* actor) {
         }
     } else if ((actor->frameCount & 31) != 0) {
         return;
-    } else if ((actor->actor->params & 7) == 1) {
-        if (actor->xyzDistToPlayer > 800) {
-            return;
-        }
-        if (scale.y >= 33.0f / 200.0f) { //(!(Flags_GetSwitch(actor->play, (actor->params >> 8 & 0x3F)))) {
+    } else if ((actor->actor->params & 7) == OBJSWITCH_TYPE_FLOOR_RUSTY) {
+        if (actor->xyzDistToPlayer < 800 && scale.y >= 33.0f / 200.0f) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_HAMMER_HIT, false);
         }
-    } else if ((actor->actor->params & 7) == 2) {
+    } else if ((actor->actor->params & 7) == OBJSWITCH_TYPE_EYE) {
         if (sw->eyeTexIndex == 0) {
             actor->policy.aimAssist.isProvider = true;
             actor->policy.ydist = 1000;
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_FOOT_SWITCH, false);
         }
-    } else {
-        if (actor->xyzDistToPlayer > 800) {
-            return;
-        }
+    } else if (actor->xyzDistToPlayer < 1000) {
+        actor->policy.aimAssist.isProvider = true;
+        actor->policy.ydist = 1000;
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_DIAMOND_SWITCH, false);
     }
 }
@@ -698,6 +695,7 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_EN_GE1, policy);
     ActorAccessibility_InitPolicy(&policy, "Boulder", NA_SE_EV_ROCK_BROKEN);
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_BOMBIWA, policy);
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_HIDAN_KOWARERUKABE, policy);
     ActorAccessibility_InitPolicy(&policy, "Bronze Boulder", NA_SE_IT_HAMMER_HIT);
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_HAMISHI, policy);
     ActorAccessibility_InitPolicy(&policy, "Time Block", NA_SE_EV_TIMETRIP_LIGHT);
@@ -726,6 +724,8 @@ void ActorAccessibility_InitActors() {
     policy.distance = 1000;
     policy.pitch = 1.1;
     ActorAccessibility_AddSupportedActor(ACTOR_DOOR_SHUTTER, policy);
+    ActorAccessibility_InitPolicy(&policy, "Killer Door", NA_SE_EN_KDOOR_WAVE);
+    ActorAccessibility_AddSupportedActor(ACTOR_DOOR_KILLER, policy);
     ActorAccessibility_InitPolicy(&policy, "Ice Shutter Door", NA_SE_OC_DOOR_OPEN);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_SPOT18_SHUTTER, policy);
     ActorAccessibility_InitPolicy(&policy, "Switch", accessible_switch);
@@ -769,6 +769,7 @@ void ActorAccessibility_InitActors() {
     policy.pitch = 1.1;
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_OSHIHIKI, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_SPOT15_RRBOX, policy);
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_HIDAN_ROCK, policy);
     ActorAccessibility_InitPolicy(&policy, "Torch", accessible_torches);
     policy.n = 1;
     policy.pitch = 1.1;
@@ -854,6 +855,10 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_EN_HINTNUTS, policy);
     ActorAccessibility_InitPolicy(&policy, "Flame Circle", NA_SE_EV_FIRE_PILLAR);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_HIDAN_CURTAIN, policy);
+    ActorAccessibility_InitPolicy(&policy, "Totem Pole", NA_SE_IT_HAMMER_HIT);
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_HIDAN_DALM, policy);
+    policy.englishName = "Hammer Platform";
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_HIDAN_HROCK, policy);
 
     ActorAccessibility_InitPolicy(&policy, "Blue Fire", [](AccessibleActor* actor) {
         if (actor->actor->params == -1) {
@@ -1011,7 +1016,13 @@ void ActorAccessibility_InitActors() {
     });
     policy.pitch = 1.3;
     ActorAccessibility_AddSupportedActor(VA_CLIMB, policy);
-    ActorAccessibility_InitPolicy(&policy, "Door", NA_SE_OC_DOOR_OPEN);
+    ActorAccessibility_InitPolicy(&policy, "Door", [](AccessibleActor* actor) {
+        if (((actor->actor->params >> 7) & 7) == DOOR_LOCKED) {
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_CHAIN_KEY_UNLOCK_B, false);
+        } else {
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_OC_DOOR_OPEN, false);
+        }
+    });
     policy.n = 30;
     policy.pitch = 1.1;
     policy.distance = 1000;
@@ -1189,6 +1200,11 @@ void ActorAccessibility_InitActors() {
     temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1990, -403, -1850 });
     temp->policy.volume = 0.5;
     temp->policy.distance = 1500;
+
+    list = ActorAccessibility_GetVirtualActorList(SCENE_FIRE_TEMPLE, 10);
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { -2350, 2840, 475 });
+    list = ActorAccessibility_GetVirtualActorList(SCENE_FIRE_TEMPLE, 16);
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 475, 2840, -30 });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_ICE_CAVERN, 9);
     temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 860, 180, -2400 });
