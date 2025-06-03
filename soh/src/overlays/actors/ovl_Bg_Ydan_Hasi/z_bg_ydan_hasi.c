@@ -6,6 +6,7 @@
 
 #include "z_bg_ydan_hasi.h"
 #include "objects/object_ydan_objects/object_ydan_objects.h"
+#include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
 #define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
 
@@ -145,9 +146,12 @@ void BgYdanHasi_SetupThreeBlocks(BgYdanHasi* this, PlayState* play) {
 }
 
 void BgYdanHasi_UpdateThreeBlocks(BgYdanHasi* this, PlayState* play) {
-    if (this->timer != 0) {
-        this->timer--;
+    if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, &this->timer)) {
+        if (this->timer != 0) {
+            this->timer--;
+        }
     }
+
     if (this->timer == 0) {
         if (Math_StepToF(&this->dyna.actor.world.pos.y, this->dyna.actor.home.pos.y, 3.0f) != 0) {
             Flags_UnsetSwitch(play, this->type);

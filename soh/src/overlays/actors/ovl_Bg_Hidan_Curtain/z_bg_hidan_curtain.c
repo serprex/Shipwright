@@ -192,7 +192,7 @@ void BgHidanCurtain_TurnOff(BgHidanCurtain* this, PlayState* play) {
 }
 
 void BgHidanCurtain_WaitForTimer(BgHidanCurtain* this, PlayState* play) {
-    if (GameInteractor_Should(VB_FIRE_TIMER_TICK, true, &this->timer)) {
+    if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, &this->timer)) {
         DECR(this->timer);
     }
 

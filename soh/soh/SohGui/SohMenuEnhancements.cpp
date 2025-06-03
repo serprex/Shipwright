@@ -1123,8 +1123,8 @@ void SohMenu::AddMenuEnhancements() {
         .Options(CheckboxOptions().Tooltip("Dying will delete your file.\n\n" ICON_FA_EXCLAMATION_TRIANGLE
                                            " WARNING " ICON_FA_EXCLAMATION_TRIANGLE
                                            "\nTHIS IS NOT REVERSIBLE!\nUSE AT YOUR OWN RISK!"));
-    AddWidget(path, "Fire Timer Multiplier", WIDGET_CVAR_SLIDER_INT)
-        .CVar(CVAR_ENHANCEMENT("FireTimerMultiplier"))
+    AddWidget(path, "Switch Timer Multiplier", WIDGET_CVAR_SLIDER_INT)
+        .CVar(CVAR_ENHANCEMENT("SwitchTimerMultiplier"))
         .Options(IntSliderOptions().Min(-5).Max(5).DefaultValue(0).Format("%+d").Tooltip(
             "-5 will be half as much time, +5 will be 6x as much time"));
     AddWidget(path, "Always Win Goron Pot", WIDGET_CVAR_CHECKBOX)

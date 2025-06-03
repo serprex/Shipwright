@@ -529,14 +529,6 @@ typedef enum {
 
     // #### `result`
     // ```c
-    // true
-    // ```
-    // #### `args`
-    // - `*s16`
-    VB_FIRE_TIMER_TICK,
-
-    // #### `result`
-    // ```c
     // false
     // ```
     // #### `args`
@@ -1999,6 +1991,14 @@ typedef enum {
     // #### `args`
     // - `*ShotSun`
     VB_SPAWN_SONG_FAIRY,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*s16`
+    VB_SWITCH_TIMER_TICK,
 
     // #### `result`
     // ```c
