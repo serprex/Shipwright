@@ -25,6 +25,7 @@ extern "C" {
 #include "soh/Enhancements/randomizer/randomizer_entrance.h"
 #include "soh/Enhancements/randomizer/randomizer_grotto.h"
 #include "src/overlays/actors/ovl_Bg_Treemouth/z_bg_treemouth.h"
+#include "src/overlays/actors/ovl_Bg_Spot06_Objects/z_bg_spot06_objects.h"
 #include "src/overlays/actors/ovl_En_Si/z_en_si.h"
 #include "src/overlays/actors/ovl_En_Shopnuts/z_en_shopnuts.h"
 #include "src/overlays/actors/ovl_En_Dns/z_en_dns.h"
@@ -2144,10 +2145,14 @@ void RandomizerOnActorUpdateHandler(void* refActor) {
                 shutterDoor->unk_16E = 0;
             }
         } else if (actor->id == ACTOR_DOOR_GERUDO) {
-            DoorGerudo* gerudoDoor = (DoorGerudo*)actor;
+            DoorGerudo* gerudoDoor = reinterpret_cast<DoorGerudo*>(actor);
             gerudoDoor->actionFunc = func_8099485C;
             gerudoDoor->dyna.actor.world.pos.y = gerudoDoor->dyna.actor.home.pos.y + 200.0f;
         }
+    }
+
+    if (actor->id == ACTOR_BG_SPOT06_OBJECTS && actor->params == 0) {
+        reinterpret_cast<BgSpot06Objects*>(actor)->timer = 0;
     }
 
     // In ER, override the warp song locations. Also removes the warp song cutscene
