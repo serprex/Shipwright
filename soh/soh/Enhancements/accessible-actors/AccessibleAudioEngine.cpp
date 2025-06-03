@@ -153,7 +153,7 @@ void AccessibleAudioEngine::doPrepare(SoundAction& action) {
         // Even if we get fewer frames than expected, we should still submit a full buffer of silence.
         if (framesRead < nextChunk)
             ma_silence_pcm_frames(chunk + (framesRead * 2), (nextChunk - framesRead), ma_format_f32, 2);
-        ma_pcm_rb_commit_write(&preparedOutput, (uint32_t)nextChunk);
+        ma_pcm_rb_commit_write(&preparedOutput, nextChunk);
         nFrames -= nextChunk;
     }
 }
@@ -243,7 +243,7 @@ void AccessibleAudioEngine::runThread() {
 }
 
 SoundSlot* AccessibleAudioEngine::findSound(SoundAction& action) {
-    if (action.slot < 0 || action.slot >= AAE_SLOTS_PER_HANDLE)
+    if (action.slot >= AAE_SLOTS_PER_HANDLE)
         return NULL;
     auto i = sounds.find(action.handle);
     if (i == sounds.end())
@@ -475,11 +475,11 @@ void AccessibleAudioEngine::mix(int16_t* ogBuffer, uint32_t nFrames) {
         ma_mix_pcm_frames_f32(mixedChunk, sourceChunk, nextChunk, AAE_CHANNELS, 1.0);
         // If we've gone over 1.0, we'll need to scale back before we go back to 16-bit or we'll distort.
         float scalar = 1.0;
-        for (int i = 0; i < nextChunk * AAE_CHANNELS; i++)
+        for (uint32_t i = 0; i < nextChunk * AAE_CHANNELS; i++)
             scalar = std::max(scalar, mixedChunk[i]);
         if (scalar > 1.0) {
             scalar = 1.0 / scalar;
-            for (int i = 0; i < nextChunk * AAE_CHANNELS; i++)
+            for (uint32_t i = 0; i < nextChunk * AAE_CHANNELS; i++)
                 mixedChunk[i] *= scalar;
         }
         // Chunk is ready to go out via the game's usual channels

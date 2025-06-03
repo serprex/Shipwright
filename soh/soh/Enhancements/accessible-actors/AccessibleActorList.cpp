@@ -696,6 +696,11 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_InitPolicy(&policy, "Boulder", NA_SE_EV_ROCK_BROKEN);
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_BOMBIWA, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_HIDAN_KOWARERUKABE, policy);
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_MIZU_BWALL, policy);
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_JYA_BOMBIWA, policy);
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_BOMBWALL, policy);
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_BREAKWALL, policy);
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_SPOT17_BAKUDANKABE, policy);
     ActorAccessibility_InitPolicy(&policy, "Bronze Boulder", NA_SE_IT_HAMMER_HIT);
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_HAMISHI, policy);
     ActorAccessibility_InitPolicy(&policy, "Time Block", NA_SE_EV_TIMETRIP_LIGHT);
@@ -835,9 +840,6 @@ void ActorAccessibility_InitActors() {
         }
     });
     ActorAccessibility_AddSupportedActor(ACTOR_BG_YDAN_MARUTA, policy);
-    ActorAccessibility_InitPolicy(&policy, "bombable wall", NA_SE_EN_OCTAROCK_ROCK);
-    ActorAccessibility_AddSupportedActor(ACTOR_BG_BREAKWALL, policy);
-    ActorAccessibility_AddSupportedActor(ACTOR_BG_BOMBWALL, policy);
     ActorAccessibility_InitPolicy(&policy, "231 dekus", [](AccessibleActor* actor) {
         if (actor->actor->params == 1) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_NUTS_FAINT, false);
