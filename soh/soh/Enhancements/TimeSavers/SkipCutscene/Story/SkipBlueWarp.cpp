@@ -174,6 +174,6 @@ void RegisterShouldPlayBlueWarp() {
     REGISTER_VB_SHOULD(VB_PLAY_BLUE_WARP_CS, { sEnteredBlueWarp = true; });
 }
 
-static RegisterShipInitFunc initFunc(RegisterSkipBlueWarp,
-                                     { CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Story"), "IS_RANDO" });
-static RegisterShipInitFunc initFunc2(RegisterShouldPlayBlueWarp);
+static RegisterShipInitFunc initHooks(RegisterSkipBlueWarp,
+                                      { CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Story"), "IS_RANDO" });
+static RegisterShipInitFunc initUnconditionalHooks(RegisterShouldPlayBlueWarp);
