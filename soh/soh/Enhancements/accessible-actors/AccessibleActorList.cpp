@@ -988,7 +988,7 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_BOSS_GOMA, policy);
     ActorAccessibility_InitPolicy(&policy, "bombflowers", NA_SE_EV_BOMB_BOUND);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_BOMBF, policy);
-    ActorAccessibility_InitPolicy(&policy, "Amos Statue", NA_SE_EN_AMOS_WAVE);
+    ActorAccessibility_InitPolicy(&policy, "Armos Statue", NA_SE_EN_AMOS_WAVE);
     policy.n = 30;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_AM, policy);
     ActorAccessibility_InitPolicy(&policy, "Big Rupee", [](AccessibleActor* actor) {
