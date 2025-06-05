@@ -13,7 +13,7 @@ void RegisterSwitchTimerMultiplier() {
                 *should = false;
             } else if (gPlayState->gameplayFrames % (6 + multiplier) == 0) {
                 s16* timer = va_arg(args, s16*);
-                *timer -= *timer > 0;
+                *timer -= *timer > 1;
             }
         }
     });
