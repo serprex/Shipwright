@@ -127,9 +127,12 @@ void BgYdanHasi_MoveWater(BgYdanHasi* this, PlayState* play) {
 }
 
 void BgYdanHasi_DecWaterTimer(BgYdanHasi* this, PlayState* play) {
-    if (this->timer != 0) {
-        this->timer--;
+    if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, &this->timer)) {
+        if (this->timer != 0) {
+            this->timer--;
+        }
     }
+
     func_8002F994(&this->dyna.actor, this->timer);
     if (this->timer == 0) {
         this->actionFunc = BgYdanHasi_MoveWater;

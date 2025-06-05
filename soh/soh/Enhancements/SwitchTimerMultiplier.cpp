@@ -7,11 +7,11 @@ extern PlayState* gPlayState;
 
 void RegisterSwitchTimerMultiplier() {
     COND_VB_SHOULD(VB_SWITCH_TIMER_TICK, CVarGetInteger(CVAR_ENHANCEMENT("SwitchTimerMultiplier"), 0) != 0, {
-        int factor = CVarGetInteger(CVAR_ENHANCEMENT("SwitchTimerMultiplier"), 0);
-        if (factor != 0) {
-            if (factor > 0 && gPlayState->gameplayFrames % (factor + 1) != 0) {
+        int multiplier = CVarGetInteger(CVAR_ENHANCEMENT("SwitchTimerMultiplier"), 0);
+        if (multiplier != 0) {
+            if (multiplier > 0 && gPlayState->gameplayFrames % (multiplier + 1) != 0) {
                 *should = false;
-            } else if (gPlayState->gameplayFrames % (6 + factor) == 0) {
+            } else if (gPlayState->gameplayFrames % (6 + multiplier) == 0) {
                 s16* timer = va_arg(args, s16*);
                 *timer -= *timer > 0;
             }
