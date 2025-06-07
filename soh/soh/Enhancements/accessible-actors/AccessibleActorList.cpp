@@ -530,6 +530,8 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_EN_OSSAN, policy);
     policy.englishName = "Potion Shop Granny";
     ActorAccessibility_AddSupportedActor(ACTOR_EN_DS, policy);
+    policy.englishName = "Magic Carpet Man";
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_JS, policy);
 
     // general NPCs
     ActorAccessibility_InitPolicy(&policy, "Kokiri Child", NA_SE_VO_NB_LAUGH);
@@ -688,6 +690,25 @@ void ActorAccessibility_InitActors() {
     policy.n = 60;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_PO_FIELD, policy);
 
+    ActorAccessibility_InitPolicy(&policy, "haunted wasteland poe", NA_SE_EN_PO_CRY);
+    policy.distance = 600;
+    policy.ydist = 1000;
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_PO_DESERT, policy);
+    ActorAccessibility_InitPolicy(&policy, "flag pole", [](AccessibleActor* actor) {
+        if ((actor->frameCount & 31) == 0) {
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_FLUTTER_FLAG, false);
+        }
+    });
+    policy.aimAssist.isProvider = true;
+    policy.distance = 1000;
+    policy.volume = 1.5;
+    policy.n = 1;
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_HATA, policy);
+    ActorAccessibility_InitPolicy(&policy, "oasis", NA_SE_EV_SCOOPUP_WATER);
+    policy.distance = 2000;
+    policy.ydist = 500;
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_SPOT11_OASIS, policy);
+
     // TODO better gerudo guard logic
     ActorAccessibility_InitPolicy(&policy, "Gerudo Guard", NA_SE_VO_NB_LAUGH);
     policy.n = Npc_Frames;
@@ -700,6 +721,7 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_BG_JYA_BOMBIWA, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_BOMBWALL, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_BREAKWALL, policy);
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_SPOT08_BAKUDANKABE, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_SPOT17_BAKUDANKABE, policy);
     ActorAccessibility_InitPolicy(&policy, "Bronze Boulder", NA_SE_IT_HAMMER_HIT);
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_HAMISHI, policy);
@@ -1075,15 +1097,15 @@ void ActorAccessibility_InitActors() {
     list = ActorAccessibility_GetVirtualActorList(SCENE_KOKIRI_FOREST, 2);
     ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { -788, 120, 1392 });
 
+    list = ActorAccessibility_GetVirtualActorList(SCENE_DESERT_COLOSSUS, 0);
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 2259, 108, -1550 });
+    temp->policy.sound = NA_SE_EV_ROCK_BROKEN;
+
     list = ActorAccessibility_GetVirtualActorList(SCENE_LOST_WOODS, 1);
     temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1348, 25, -25 });
     temp->policy.aimAssist.isProvider = true;
     temp->policy.distance = 700;
     temp->policy.n = 1;
-
-    list = ActorAccessibility_GetVirtualActorList(SCENE_DEKU_TREE, 2); // deku tree slingshot room
-
-    list = ActorAccessibility_GetVirtualActorList(SCENE_DEKU_TREE, 10); // deku tree compass room
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_DEKU_TREE, 7); // bombable wall room
     ActorAccessibility_AddVirtualActor(list, VA_CRAWLSPACE, { -1209, -820.0, 3.5 });
