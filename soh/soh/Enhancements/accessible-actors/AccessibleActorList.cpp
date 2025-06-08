@@ -15,11 +15,12 @@ extern "C" {
 #include "overlays/actors/ovl_Bg_Bdan_Switch/z_bg_bdan_switch.h"
 #include "overlays/actors/ovl_Boss_Goma/z_boss_goma.h"
 #include "overlays/actors/ovl_En_Karebaba/z_en_karebaba.h"
+#include "overlays/actors/ovl_En_Ba/z_en_ba.h"
 #include "overlays/actors/ovl_En_Box/z_en_box.h"
 #include "overlays/actors/ovl_Obj_Syokudai/z_obj_syokudai.h"
 #include "overlays/actors/ovl_En_Dog/z_en_dog.h"
 #include "overlays/actors/ovl_En_Door/z_en_door.h"
-#include "overlays/actors/ovl_En_Ba/z_en_ba.h"
+#include "overlays/actors/ovl_En_Elf/z_en_elf.h"
 #include "overlays/actors/ovl_En_Fz/z_en_fz.h"
 #include "overlays/actors/ovl_En_Ice_Hono/z_en_ice_hono.h"
 #include "overlays/actors/ovl_En_Eiyer/z_en_eiyer.h"
@@ -147,7 +148,7 @@ void accessible_area_change(AccessibleActor* actor) {
     actor->policy.ydist = 2000;
 
     if (actor->yDistToPlayer > 500.0 && actor->sceneIndex != SCENE_DEATH_MOUNTAIN_TRAIL &&
-        actor->play->sceneNum != SCENE_HYRULE_FIELD && actor->play->sceneNum != 82) {
+        actor->play->sceneNum != SCENE_HYRULE_FIELD && actor->play->sceneNum != SCENE_KAKARIKO_VILLAGE) {
         return;
     }
 
@@ -184,7 +185,7 @@ void accessible_area_change(AccessibleActor* actor) {
                 }
             }
         } else if (actor->sceneIndex == SCENE_BOTTOM_OF_THE_WELL) {
-            if (!(((gSaveContext.eventChkInf[6]) >> (7)) & 1))
+            if (!Flags_GetEventChkInf(EVENTCHKINF_DRAINED_WELL_IN_KAKARIKO))
                 return;
         } else {
             actor->policy.ydist = 500;
@@ -219,6 +220,9 @@ void accessible_area_change(AccessibleActor* actor) {
         // kokiri forest and lost woods
     } else if (actor->play->sceneNum >= SCENE_DEKU_TREE_BOSS && actor->play->sceneNum <= SCENE_GANONDORF_BOSS) {
         return; // dont check for entrances while in boss rooms
+    } else if (actor->play->sceneNum == SCENE_GROTTOS || actor->play->sceneNum == SCENE_FAIRYS_FOUNTAIN) {
+        actor->policy.volume = 0.1;
+        ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_WARP_HOLE, false);
     } else if (actor->sceneIndex == SCENE_HYRULE_FIELD) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_HORSE_RUN_LEVEL, false);
     } else if (actor->sceneIndex <= SCENE_GERUDO_TRAINING_GROUND) {
@@ -249,7 +253,7 @@ void accessible_area_change(AccessibleActor* actor) {
     } else if (actor->sceneIndex == SCENE_LAKE_HYLIA) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_WATER_WALL, false);
     } else if (actor->sceneIndex == SCENE_GERUDO_VALLEY || actor->sceneIndex == SCENE_GERUDOS_FORTRESS) {
-        ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_GERUDOFT_BREATH, false);
+        ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_PL_CRAWL_SAND, false);
     } else if (actor->sceneIndex == SCENE_DESERT_COLOSSUS || actor->sceneIndex == SCENE_HAUNTED_WASTELAND) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_SAND_STORM, false);
     } else if (actor->sceneIndex == SCENE_OUTSIDE_GANONS_CASTLE || actor->sceneIndex == SCENE_HYRULE_CASTLE) {
@@ -684,6 +688,16 @@ void ActorAccessibility_InitActors() {
     policy.n = 40;
     policy.pitch = 1.4;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_ITEM00, policy);
+    ActorAccessibility_InitPolicy(&policy, "Collectible", [](AccessibleActor* actor) {
+        if (actor->actor->category == ACTORCAT_ITEMACTION) {
+            s16 params = actor->actor->params;
+            if (params == FAIRY_HEAL || params == FAIRY_HEAL_TIMED || params == FAIRY_HEAL_BIG) {
+                ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_BUTTERFRY_TO_FAIRY, false);
+            }
+        }
+    });
+    policy.n = 40;
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_ELF, policy);
 
     ActorAccessibility_InitPolicy(&policy, "big poe spawn", NA_SE_EN_PO_BIG_GET);
     policy.distance = 1500;

@@ -593,9 +593,11 @@ void ActorAccessibility_PolyToVirtualActor(PlayState* play, CollisionPoly* poly,
     if (actor == NULL)
         return;
     if (va == VA_AREA_CHANGE) {
-        actor->sceneIndex = SurfaceType_GetSceneExitIndex(&play->colCtx, poly, BGCHECK_SCENE);
-        s16 nextEntranceIndex = play->setupExitList[actor->sceneIndex - 1];
-        actor->sceneIndex = gEntranceTable[nextEntranceIndex].scene;
+        if (play->sceneNum != SCENE_GROTTOS && play->sceneNum != SCENE_FAIRYS_FOUNTAIN) {
+            u32 sceneIndex = SurfaceType_GetSceneExitIndex(&play->colCtx, poly, BGCHECK_SCENE);
+            s16 nextEntranceIndex = play->setupExitList[sceneIndex - 1];
+            actor->sceneIndex = gEntranceTable[nextEntranceIndex].scene;
+        }
     }
 }
 
@@ -603,9 +605,7 @@ void ActorAccessibility_AnnounceRoomNumber(PlayState* play) {
     std::stringstream ss;
     ss << "Room" << (int)play->roomCtx.curRoom.num;
     if (Flags_GetClear(play, play->roomCtx.curRoom.num))
-        ss << ", completed." << std::endl;
-    else
-        ss << "." << std::endl;
+        ss << " completed" << std::endl;
     SpeechSynthesizer::Instance->Speak(ss.str().c_str(), GetLanguageCode());
 }
 
