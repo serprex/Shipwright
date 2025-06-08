@@ -903,6 +903,14 @@ void ActorAccessibility_InitActors() {
     policy.distance = 300;
     ActorAccessibility_AddSupportedActor(ACTOR_BG_ICE_SHELTER, policy);
 
+    ActorAccessibility_InitPolicy(&policy, "Statue Eye", [](AccessibleActor* actor) {
+        actor->policy.aimAssist.isProvider = ABS((s16)(actor->actor->yawTowardsPlayer - actor->actor->shape.rot.y)) < 0x2000;
+    });
+    policy.n = 1;
+    policy.ydist = 500;
+    policy.distance = 1000;
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_MENKURI_EYE, policy);
+
     ActorAccessibility_InitPolicy(&policy, "uninteractable rocks in kokiri forest", [](AccessibleActor* actor) {
         if (actor->actor->params == 1) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_OCTAROCK_ROCK, false);
