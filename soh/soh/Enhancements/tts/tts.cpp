@@ -147,7 +147,7 @@ void RegisterOnInterfaceUpdateHook() {
             timer = gSaveContext.subTimerSeconds;
         }
 
-        if (timer > 0 && timer % 30 == 0 && timer != prevTimer) {
+        if (timer > 0 && timer % (timer < 60 ? 10 : 30) == 0 && timer != prevTimer) {
             uint32_t minutes = timer / 60;
             uint32_t seconds = timer % 60;
             char* announceBuf = ttsAnnounceBuf;
