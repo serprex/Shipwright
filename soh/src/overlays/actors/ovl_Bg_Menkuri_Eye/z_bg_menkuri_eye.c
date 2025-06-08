@@ -6,6 +6,7 @@
 
 #include "z_bg_menkuri_eye.h"
 #include "objects/object_menkuri_objects/object_menkuri_objects.h"
+#include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 
 #define FLAGS ACTOR_FLAG_DRAW_CULLING_DISABLED
 
@@ -91,7 +92,9 @@ void BgMenkuriEye_Update(Actor* thisx, PlayState* play) {
     if (!Flags_GetSwitch(play, this->actor.params)) {
         if (this->framesUntilDisable != -1) {
             if (this->framesUntilDisable != 0) {
-                this->framesUntilDisable -= 1;
+                if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, &this->framesUntilDisable)) {
+                    this->framesUntilDisable -= 1;
+                }
             }
             if (this->framesUntilDisable == 0) {
                 this->framesUntilDisable = -1;
