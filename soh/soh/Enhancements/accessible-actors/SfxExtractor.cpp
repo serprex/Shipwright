@@ -120,8 +120,6 @@ void SfxExtractor::ripNextSfx() {
 }
 void SfxExtractor::finished() {
     OTRAudio_UninstallSfxCaptureThread(); // Returns to normal audio opperation.
-    CVarClear("gExtractSfx");
-    CVarSave();
     archive->Close();
     archive = nullptr;
     freezeGame = false;

@@ -202,12 +202,6 @@ void SohMenu::AddMenuSettings() {
         .RaceDisable(false)
         .Options(CheckboxOptions().Tooltip("Enables accessibility audio cues"));
 
-    AddWidget(path, "Extract Sfx", WIDGET_CVAR_CHECKBOX)
-        .CVar("gExtractSfx")
-        .RaceDisable(false)
-        .Options(CheckboxOptions().Tooltip("Extracts the sfx to be used in accessible audio cues, must be run once for "
-                                           "the audio cues to play then restart game"));
-
     AddWidget(path, "EXPERIMENTAL", WIDGET_SEPARATOR_TEXT).Options(TextOptions().Color(Colors::Orange));
     AddWidget(path, "ImGui Menu Scaling", WIDGET_CVAR_COMBOBOX)
         .CVar(CVAR_SETTING("ImGuiScale"))

@@ -130,7 +130,7 @@ void ActorAccessibility_Init() {
     aa->isOn = CVarGetInteger(CVAR_SETTING("A11yAudioInteraction"), 0);
     if (!aa->isOn)
         return;
-    aa->extractSfx = CVarGetInteger("gExtractSfx", 0);
+    aa->extractSfx = !std::filesystem::exists(Ship::Context::GetPathRelativeToAppBundle("accessibility.o2r"));
     if (aa->extractSfx)
         freezeGame = true;
     ActorAccessibility_InitAudio();
@@ -141,6 +141,7 @@ void ActorAccessibility_Init() {
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnPlayerUpdate>(ActorAccessibility_OnGameFrameUpdate);
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnGameStillFrozen>(ActorAccessibility_OnGameStillFrozen);
 }
+
 void ActorAccessibility_Shutdown() {
     ActorAccessibility_ShutdownAudio();
     delete aa;
