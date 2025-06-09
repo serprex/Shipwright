@@ -102,9 +102,6 @@ void EnWood02_RandomizerInit(void* actorRef) {
     if (treeActor->actor.params <= WOOD_TREE_KAKARIKO_ADULT) {
         treeActor->treeId = OTRGlobals::Instance->gRandomizer->IdentifyTree(
             gPlayState->sceneNum, (s16)treeActor->actor.world.pos.x, (s16)treeActor->actor.world.pos.z);
-        if (treeActor->treeId.randomizerCheck == RC_UNKNOWN_CHECK) {
-            LUSLOG_WARN("TREE %d,%d", (int)treeActor->actor.world.pos.x, (int)treeActor->actor.world.pos.z);
-        }
     }
 }
 
