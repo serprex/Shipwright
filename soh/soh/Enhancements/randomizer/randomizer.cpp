@@ -3267,11 +3267,13 @@ std::map<RandomizerCheck, RandomizerInf> rcToRandomizerInf = {
     { RC_HC_NEAR_GUARDS_TREE_6, RAND_INF_HC_NEAR_GUARDS_TREE_6 },
     { RC_HC_SKULLTULA_TREE, RAND_INF_HC_SKULLTULA_TREE },
     { RC_HC_GROTTO_TREE, RAND_INF_HC_GROTTO_TREE },
+    { RC_HC_NL_TREE_1, RAND_INF_HC_NL_TREE_1 },
+    { RC_HC_NL_TREE_2, RAND_INF_HC_NL_TREE_2 },
     { RC_HF_NEAR_KAK_TREE, RAND_INF_HF_NEAR_KAK_TREE },
     { RC_HF_NEAR_KAK_SMALL_TREE, RAND_INF_HF_NEAR_KAK_SMALL_TREE },
-    { RC_HF_TREE_NEAR_HC_GROTTO_1, RAND_INF_HF_TREE_NEAR_HC_GROTTO_1 },
-    { RC_HF_TREE_NEAR_HC_GROTTO_2, RAND_INF_HF_TREE_NEAR_HC_GROTTO_2 },
-    { RC_HF_TREE_NEAR_HC_GROTTO_3, RAND_INF_HF_TREE_NEAR_HC_GROTTO_3 },
+    { RC_HF_NEAR_MARKET_TREE_1, RAND_INF_HF_NEAR_MARKET_TREE_1 },
+    { RC_HF_NEAR_MARKET_TREE_2, RAND_INF_HF_NEAR_MARKET_TREE_2 },
+    { RC_HF_NEAR_MARKET_TREE_3, RAND_INF_HF_NEAR_MARKET_TREE_3 },
     { RC_HF_NEAR_LLR_TREE, RAND_INF_HF_NEAR_LLR_TREE },
     { RC_HF_NEAR_LH_TREE, RAND_INF_HF_NEAR_LH_TREE },
     { RC_HF_CHILD_NEAR_GV_TREE, RAND_INF_HF_CHILD_NEAR_GV_TREE },
@@ -3752,6 +3754,10 @@ TreeIdentity Randomizer::IdentifyTree(s32 sceneNum, s32 posX, s32 posZ) {
             s32 actorParams = TWO_ACTOR_PARAMS(posX + x, posZ + z);
             Rando::Location* location = GetCheckObjectFromActor(ACTOR_EN_WOOD02, sceneNum, actorParams);
             if (location->GetRandomizerCheck() != RC_UNKNOWN_CHECK) {
+                if (location->GetRCType() == RCTYPE_NLTREE &&
+                    CVarGetInteger(CVAR_RANDOMIZER_SETTING("LogicRules"), RO_LOGIC_GLITCHLESS) != RO_LOGIC_NO_LOGIC) {
+                    break;
+                }
                 treeIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
                 treeIdentity.randomizerCheck = location->GetRandomizerCheck();
                 return treeIdentity;

@@ -1533,69 +1533,74 @@ bool IsCheckShuffled(RandomizerCheck rc) {
         auto identity = OTRGlobals::Instance->gRandomizer->IdentifyShopItem(loc->GetScene(), loc->GetActorParams() + 1);
     }
     if (IS_RANDO && OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_LOGIC_RULES) != RO_LOGIC_VANILLA) {
-        return (loc->GetArea() != RCAREA_INVALID) &&        // don't show Invalid locations
-               (loc->GetRCType() != RCTYPE_GOSSIP_STONE) && // TODO: Don't show hints until tracker supports them
-               (loc->GetRCType() != RCTYPE_STATIC_HINT) &&  // TODO: Don't show hints until tracker supports them
-               (loc->GetRCType() !=
-                RCTYPE_CHEST_GAME) && // don't show non final reward chest game checks until we support shuffling them
-               (rc != RC_HC_ZELDAS_LETTER) && // don't show zeldas letter until we support shuffling it
-               (rc != RC_LINKS_POCKET || showLinksPocket) &&
-               OTRGlobals::Instance->gRandoContext->IsQuestOfLocationActive(rc) &&
-               (loc->GetRCType() != RCTYPE_SHOP ||
-                (showShops &&
-                 OTRGlobals::Instance->gRandomizer->IdentifyShopItem(loc->GetScene(), loc->GetActorParams() + 1)
-                         .enGirlAShopItem == 50)) &&
-               (rc != RC_TRIFORCE_COMPLETED) && (rc != RC_GANON) &&
-               (loc->GetRCType() != RCTYPE_SCRUB || showScrubs ||
-                (showMajorScrubs && (rc == RC_LW_DEKU_SCRUB_NEAR_BRIDGE || // The 3 scrubs that are always randomized
-                                     rc == RC_HF_DEKU_SCRUB_GROTTO || rc == RC_LW_DEKU_SCRUB_GROTTO_FRONT))) &&
-               (loc->GetRCType() != RCTYPE_MERCHANT || showMerchants) &&
-               (loc->GetRCType() != RCTYPE_SONG_LOCATION || showSongs) &&
-               (loc->GetRCType() != RCTYPE_BEEHIVE || showBeehives) &&
-               (loc->GetRCType() != RCTYPE_OCARINA || showOcarinas) &&
-               (loc->GetRCType() != RCTYPE_SKULL_TOKEN || alwaysShowGS ||
-                (showOverworldTokens && RandomizerCheckObjects::AreaIsOverworld(loc->GetArea())) ||
-                (showDungeonTokens && RandomizerCheckObjects::AreaIsDungeon(loc->GetArea()))) &&
-               (loc->GetRCType() != RCTYPE_POT ||
-                (showOverworldPots && RandomizerCheckObjects::AreaIsOverworld(loc->GetArea())) ||
-                (showDungeonPots && RandomizerCheckObjects::AreaIsDungeon(loc->GetArea()))) &&
-               (loc->GetRCType() != RCTYPE_GRASS ||
-                (showOverworldGrass && RandomizerCheckObjects::AreaIsOverworld(loc->GetArea())) ||
-                (showDungeonGrass && RandomizerCheckObjects::AreaIsDungeon(loc->GetArea()))) &&
-               (loc->GetRCType() != RCTYPE_CRATE ||
-                (showOverworldCrates && RandomizerCheckObjects::AreaIsOverworld(loc->GetArea())) ||
-                (showDungeonCrates && RandomizerCheckObjects::AreaIsDungeon(loc->GetArea()))) &&
-               (loc->GetRCType() != RCTYPE_NLCRATE ||
-                (showOverworldCrates && RandomizerCheckObjects::AreaIsOverworld(loc->GetArea()) &&
-                 OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_LOGIC_RULES) == RO_LOGIC_NO_LOGIC) ||
-                (showDungeonCrates && RandomizerCheckObjects::AreaIsDungeon(loc->GetArea()))) &&
-               (loc->GetRCType() != RCTYPE_SMALL_CRATE ||
-                (showOverworldCrates && RandomizerCheckObjects::AreaIsOverworld(loc->GetArea())) ||
-                (showDungeonCrates && RandomizerCheckObjects::AreaIsDungeon(loc->GetArea()))) &&
-               (loc->GetRCType() != RCTYPE_TREE || showTrees) && (loc->GetRCType() != RCTYPE_COW || showCows) &&
+        return (loc->GetArea() != RCAREA_INVALID) &&            // don't show Invalid locations
+                   (loc->GetRCType() != RCTYPE_GOSSIP_STONE) && // TODO: Don't show hints until tracker supports them
+                   (loc->GetRCType() != RCTYPE_STATIC_HINT) &&  // TODO: Don't show hints until tracker supports them
+                   (loc->GetRCType() != RCTYPE_CHEST_GAME) && // don't show non final reward chest game checks until we
+                                                              // support shuffling them
+                   (rc != RC_HC_ZELDAS_LETTER) &&             // don't show zeldas letter until we support shuffling it
+                   (rc != RC_LINKS_POCKET || showLinksPocket) &&
+                   OTRGlobals::Instance->gRandoContext->IsQuestOfLocationActive(rc) &&
+                   (loc->GetRCType() != RCTYPE_SHOP ||
+                    (showShops &&
+                     OTRGlobals::Instance->gRandomizer->IdentifyShopItem(loc->GetScene(), loc->GetActorParams() + 1)
+                             .enGirlAShopItem == 50)) &&
+                   (rc != RC_TRIFORCE_COMPLETED) && (rc != RC_GANON) &&
+                   (loc->GetRCType() != RCTYPE_SCRUB || showScrubs ||
+                    (showMajorScrubs &&
+                     (rc == RC_LW_DEKU_SCRUB_NEAR_BRIDGE || // The 3 scrubs that are always randomized
+                      rc == RC_HF_DEKU_SCRUB_GROTTO || rc == RC_LW_DEKU_SCRUB_GROTTO_FRONT))) &&
+                   (loc->GetRCType() != RCTYPE_MERCHANT || showMerchants) &&
+                   (loc->GetRCType() != RCTYPE_SONG_LOCATION || showSongs) &&
+                   (loc->GetRCType() != RCTYPE_BEEHIVE || showBeehives) &&
+                   (loc->GetRCType() != RCTYPE_OCARINA || showOcarinas) &&
+                   (loc->GetRCType() != RCTYPE_SKULL_TOKEN || alwaysShowGS ||
+                    (showOverworldTokens && RandomizerCheckObjects::AreaIsOverworld(loc->GetArea())) ||
+                    (showDungeonTokens && RandomizerCheckObjects::AreaIsDungeon(loc->GetArea()))) &&
+                   (loc->GetRCType() != RCTYPE_POT ||
+                    (showOverworldPots && RandomizerCheckObjects::AreaIsOverworld(loc->GetArea())) ||
+                    (showDungeonPots && RandomizerCheckObjects::AreaIsDungeon(loc->GetArea()))) &&
+                   (loc->GetRCType() != RCTYPE_GRASS ||
+                    (showOverworldGrass && RandomizerCheckObjects::AreaIsOverworld(loc->GetArea())) ||
+                    (showDungeonGrass && RandomizerCheckObjects::AreaIsDungeon(loc->GetArea()))) &&
+                   (loc->GetRCType() != RCTYPE_CRATE ||
+                    (showOverworldCrates && RandomizerCheckObjects::AreaIsOverworld(loc->GetArea())) ||
+                    (showDungeonCrates && RandomizerCheckObjects::AreaIsDungeon(loc->GetArea()))) &&
+                   (loc->GetRCType() != RCTYPE_NLCRATE ||
+                    (showOverworldCrates && RandomizerCheckObjects::AreaIsOverworld(loc->GetArea()) &&
+                     OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_LOGIC_RULES) == RO_LOGIC_NO_LOGIC) ||
+                    (showDungeonCrates && RandomizerCheckObjects::AreaIsDungeon(loc->GetArea()))) &&
+                   (loc->GetRCType() != RCTYPE_SMALL_CRATE ||
+                    (showOverworldCrates && RandomizerCheckObjects::AreaIsOverworld(loc->GetArea())) ||
+                    (showDungeonCrates && RandomizerCheckObjects::AreaIsDungeon(loc->GetArea()))) &&
+                   (loc->GetRCType() != RCTYPE_TREE || showTrees) && (loc->GetRCType() != RCTYPE_COW || showCows) &&
+                   (loc->GetRCType() != RCTYPE_NLTREE ||
+                    (showTrees &&
+                     OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_LOGIC_RULES) == RO_LOGIC_NO_LOGIC)) ||
                (loc->GetRCType() != RCTYPE_FISH ||
                 OTRGlobals::Instance->gRandoContext->GetFishsanity()->GetFishLocationIncluded(loc)) &&
-               (loc->GetRCType() != RCTYPE_FREESTANDING ||
-                (showOverworldFreestanding && RandomizerCheckObjects::AreaIsOverworld(loc->GetArea())) ||
-                (showDungeonFreestanding && RandomizerCheckObjects::AreaIsDungeon(loc->GetArea()))) &&
-               (loc->GetRCType() != RCTYPE_ADULT_TRADE || showAdultTrade ||
-                rc == RC_KAK_ANJU_AS_ADULT ||  // adult trade checks that are always shuffled
-                rc == RC_DMT_TRADE_CLAIM_CHECK // even when shuffle adult trade is off
-                ) &&
-               (rc != RC_KF_KOKIRI_SWORD_CHEST || showKokiriSword) && (rc != RC_TOT_MASTER_SWORD || showMasterSword) &&
-               (rc != RC_LH_HYRULE_LOACH || showHyruleLoach) && (rc != RC_ZR_MAGIC_BEAN_SALESMAN || showBeans) &&
-               (rc != RC_HC_MALON_EGG || showWeirdEgg) &&
-               (loc->GetRCType() != RCTYPE_FROG_SONG || showFrogSongRupees) &&
-               ((loc->GetRCType() != RCTYPE_MAP && loc->GetRCType() != RCTYPE_COMPASS) || showStartingMapsCompasses) &&
-               (loc->GetRCType() != RCTYPE_FAIRY || showFairies) &&
-               (loc->GetRCType() != RCTYPE_SMALL_KEY || showKeysanity) &&
-               (loc->GetRCType() != RCTYPE_BOSS_KEY || showBossKeysanity) &&
-               (loc->GetRCType() != RCTYPE_GANON_BOSS_KEY || showGanonBossKey) &&
-               (rc != RC_KAK_100_GOLD_SKULLTULA_REWARD || show100SkullReward) &&
-               (loc->GetRCType() != RCTYPE_GF_KEY && rc != RC_TH_FREED_CARPENTERS ||
-                (showGerudoCard && rc == RC_TH_FREED_CARPENTERS) ||
-                (fortressNormal && showGerudoFortressKeys && loc->GetRCType() == RCTYPE_GF_KEY) ||
-                (fortressFast && showGerudoFortressKeys && rc == RC_TH_1_TORCH_CARPENTER));
+                   (loc->GetRCType() != RCTYPE_FREESTANDING ||
+                    (showOverworldFreestanding && RandomizerCheckObjects::AreaIsOverworld(loc->GetArea())) ||
+                    (showDungeonFreestanding && RandomizerCheckObjects::AreaIsDungeon(loc->GetArea()))) &&
+                   (loc->GetRCType() != RCTYPE_ADULT_TRADE || showAdultTrade ||
+                    rc == RC_KAK_ANJU_AS_ADULT ||  // adult trade checks that are always shuffled
+                    rc == RC_DMT_TRADE_CLAIM_CHECK // even when shuffle adult trade is off
+                    ) &&
+                   (rc != RC_KF_KOKIRI_SWORD_CHEST || showKokiriSword) &&
+                   (rc != RC_TOT_MASTER_SWORD || showMasterSword) && (rc != RC_LH_HYRULE_LOACH || showHyruleLoach) &&
+                   (rc != RC_ZR_MAGIC_BEAN_SALESMAN || showBeans) && (rc != RC_HC_MALON_EGG || showWeirdEgg) &&
+                   (loc->GetRCType() != RCTYPE_FROG_SONG || showFrogSongRupees) &&
+                   ((loc->GetRCType() != RCTYPE_MAP && loc->GetRCType() != RCTYPE_COMPASS) ||
+                    showStartingMapsCompasses) &&
+                   (loc->GetRCType() != RCTYPE_FAIRY || showFairies) &&
+                   (loc->GetRCType() != RCTYPE_SMALL_KEY || showKeysanity) &&
+                   (loc->GetRCType() != RCTYPE_BOSS_KEY || showBossKeysanity) &&
+                   (loc->GetRCType() != RCTYPE_GANON_BOSS_KEY || showGanonBossKey) &&
+                   (rc != RC_KAK_100_GOLD_SKULLTULA_REWARD || show100SkullReward) &&
+                   (loc->GetRCType() != RCTYPE_GF_KEY && rc != RC_TH_FREED_CARPENTERS ||
+                    (showGerudoCard && rc == RC_TH_FREED_CARPENTERS) ||
+                    (fortressNormal && showGerudoFortressKeys && loc->GetRCType() == RCTYPE_GF_KEY) ||
+                    (fortressFast && showGerudoFortressKeys && rc == RC_TH_1_TORCH_CARPENTER));
     } else if (loc->IsVanillaCompletion()) {
         return (OTRGlobals::Instance->gRandoContext->IsQuestOfLocationActive(rc) || rc == RC_GIFT_FROM_RAURU) &&
                rc != RC_LINKS_POCKET;
