@@ -59,7 +59,7 @@ void RegionTable_Init_Kakariko() {
         LOCATION(RC_KAK_NEAR_FENCE_CHILD_CRATE,            logic->IsChild && logic->CanBreakCrates()),
         LOCATION(RC_KAK_NEAR_BOARDING_HOUSE_CHILD_CRATE,   logic->IsChild && logic->CanBreakCrates()),
         LOCATION(RC_KAK_NEAR_BAZAAR_CHILD_CRATE,           logic->IsChild && logic->CanBreakCrates()),
-        LOCATION(RC_KAK_TREE, logic->IsChild && logic->CanBonkTrees()),
+        LOCATION(RC_KAK_TREE,                              logic->CanBonkTrees()),
     }, {
         //Exits
         Entrance(RR_HYRULE_FIELD,             []{return true;}),
