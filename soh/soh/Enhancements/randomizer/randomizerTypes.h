@@ -2647,7 +2647,7 @@ typedef enum {
     // End Crates
 
     // Start Trees
-    RC_MARKET_DAY_TREE,
+    RC_MARKET_TREE,
     RC_HC_NEAR_GUARDS_TREE_1,
     RC_HC_NEAR_GUARDS_TREE_2,
     RC_HC_NEAR_GUARDS_TREE_3,
