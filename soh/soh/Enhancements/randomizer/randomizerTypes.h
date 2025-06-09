@@ -417,6 +417,7 @@ typedef enum {
     RCTYPE_NLCRATE,                    // NL Crates
     RCTYPE_SMALL_CRATE,                // Small crates
     RCTYPE_TREE,                       // Trees
+    RCTYPE_NLTREE,                     // NL Trees
     RCTYPE_DUNGEON_REWARD,             // Dungeon rewards (blue warps)
     RCTYPE_OCARINA,                    // Ocarina locations
     RCTYPE_BEEHIVE,                    // Beehives
@@ -2761,6 +2762,8 @@ typedef enum {
     RC_HC_NEAR_GUARDS_TREE_6,
     RC_HC_SKULLTULA_TREE,
     RC_HC_GROTTO_TREE,
+    RC_HC_NL_TREE_1,
+    RC_HC_NL_TREE_2,
     RC_HF_NEAR_LLR_TREE,
     RC_HF_NEAR_LH_TREE,
     RC_HF_CHILD_NEAR_GV_TREE,
@@ -2768,9 +2771,9 @@ typedef enum {
     RC_HF_NEAR_ZR_TREE,
     RC_HF_NEAR_KAK_TREE,
     RC_HF_NEAR_KAK_SMALL_TREE,
-    RC_HF_TREE_NEAR_HC_GROTTO_1,
-    RC_HF_TREE_NEAR_HC_GROTTO_2,
-    RC_HF_TREE_NEAR_HC_GROTTO_3,
+    RC_HF_NEAR_MARKET_TREE_1,
+    RC_HF_NEAR_MARKET_TREE_2,
+    RC_HF_NEAR_MARKET_TREE_3,
     RC_HF_NORTHWEST_TREE_1,
     RC_HF_NORTHWEST_TREE_2,
     RC_HF_NORTHWEST_TREE_3,
