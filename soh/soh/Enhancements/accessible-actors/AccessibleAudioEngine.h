@@ -18,7 +18,6 @@ struct SoundAction {
                       // address of an object with which the sound is associated is recommended.
     uint8_t slot;     // Allows multiple sounds per handle. The exact number is controlled by AAE_SOUNDS_PER_HANDLE.
     uint8_t command;  // One of the items belonging to AAE_COMMANDS.
-    bool looping;     // If command is AAE_START, specifies whether or not the sound should loop.
     std::string path; // If command is AAE_START, this is the path to the desired resource.
     union {
         float pitch;
@@ -126,20 +125,20 @@ class AccessibleAudioEngine {
     // content).
     void mix(int16_t* ogBuffer, uint32_t nFrames);
     // Start playing a sound.
-    void playSound(uintptr_t handle, int slot, const char* path, bool looping);
-    void stopSound(uintptr_t handle, int slot);
+    void playSound(uintptr_t handle, uint8_t slot, const char* path);
+    void stopSound(uintptr_t handle, uint8_t slot);
     // Stop all sounds belonging to a handle.
     void stopAllSounds(uintptr_t handle);
 
-    void setPitch(uintptr_t handle, int slot, float pitch);
-    void setPitchBehindModifier(uintptr_t handle, int slot, float mod);
-    void setVolume(uintptr_t handle, int slot, float volume);
-    void setPan(uintptr_t handle, int slot, float pan);
+    void setPitch(uintptr_t handle, uint8_t slot, float pitch);
+    void setPitchBehindModifier(uintptr_t handle, uint8_t slot, float mod);
+    void setVolume(uintptr_t handle, uint8_t slot, float volume);
+    void setPan(uintptr_t handle, uint8_t slot, float pan);
     // Set the lowpass filter cutoff. Set to 1.0 for no filtering.
-    void setFilter(uintptr_t handle, int slot, float cutoff);
+    void setFilter(uintptr_t handle, uint8_t slot, float cutoff);
     // Seek the sound to a particular PCM frame.
-    void seekSound(uintptr_t handle, int slot, size_t offset);
-    void setSoundPosition(uintptr_t handle, int slot, float posX, float posY, float posZ, float distToPlayer,
+    void seekSound(uintptr_t handle, uint8_t slot, size_t offset);
+    void setSoundPosition(uintptr_t handle, uint8_t slot, float posX, float posY, float posZ, float distToPlayer,
                           float maxDistance);
     // Schedule the preparation of output for delivery.
     void prepare();

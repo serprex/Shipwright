@@ -75,7 +75,7 @@ class AudioGlossaryData {
 
 class ActorAccessibility {
   public:
-    int isOn = 0;
+    bool isOn = false;
     uint64_t nextActorID = 0;
     SupportedActors_t supportedActors;
     TrackedActors_t trackedActors;
@@ -87,10 +87,13 @@ class ActorAccessibility {
     SfxExtractor sfxExtractor;
     // Maps internal sfx to external (prerendered) resources.
     std::unordered_map<s16, SfxRecord> sfxMap;
-    int extractSfx = 0;
+    int framesUntilChime = 0;
     s16 currentScene = -1;
     s8 currentRoom = -1;
-    VirtualActorList* currentEverywhere = NULL;
+    bool currentRoomClear = false;
+    Vec3f prevPos = { 0, 0, 0 };
+    s16 prevYaw = 0;
+    bool extractSfx = false;
     VirtualActorList* currentSceneGlobal = NULL;
     VirtualActorList* currentRoomLocal = NULL;
 };
@@ -216,11 +219,9 @@ void ActorAccessibility_TrackNewActor(Actor* actor) {
 
     aa->trackedActors[actor] = accessibleActor.instanceID;
     aa->accessibleActorList[accessibleActor.instanceID] = accessibleActor;
-    AccessibleActor& savedActor = aa->accessibleActorList[accessibleActor.instanceID];
-    if (policy->initUserData && !policy->initUserData(&savedActor)) {
-        ActorAccessibility_RemoveTrackedActor(actor);
-
-        return; // Probably a malloc error preventing user data initialization.
+    if (policy->initUserData) {
+        AccessibleActor& savedActor = aa->accessibleActorList[accessibleActor.instanceID];
+        policy->initUserData(&savedActor);
     }
 }
 void ActorAccessibility_RemoveTrackedActor(Actor* actor) {
@@ -250,11 +251,11 @@ f32 ActorAccessibility_ComputeCurrentVolume(f32 maxDistance, f32 xzDistToPlayer)
     return ActorAccessibility_DBToLinear(db);
 }
 const char* ActorAccessibility_MapSfxToExternalAudio(s16 sfxId);
-void ActorAccessibility_PlaySound(void* handle, int slot, s16 sfxId, bool looping) {
+void ActorAccessibility_PlaySound(void* handle, int slot, s16 sfxId) {
     const char* path = ActorAccessibility_MapSfxToExternalAudio(sfxId);
     if (path == NULL)
         return;
-    aa->audioEngine->playSound((uintptr_t)handle, slot, path, looping);
+    aa->audioEngine->playSound((uintptr_t)handle, slot, path);
 }
 
 void ActorAccessibility_StopSound(void* handle, int slot) {
@@ -291,10 +292,10 @@ void ActorAccessibility_ConfigureSoundForActor(AccessibleActor* actor, int slot)
     ActorAccessibility_SetSoundVolume(actor, slot, actor->policy.volume);
     actor->managedSoundSlots |= 1 << slot;
 }
-void ActorAccessibility_PlaySoundForActor(AccessibleActor* actor, int slot, s16 sfxId, bool looping) {
+void ActorAccessibility_PlaySoundForActor(AccessibleActor* actor, int slot, s16 sfxId) {
     if (slot < 0 || slot > AAE_SLOTS_PER_HANDLE)
         return;
-    ActorAccessibility_PlaySound(actor, slot, sfxId, looping);
+    ActorAccessibility_PlaySound(actor, slot, sfxId);
     ActorAccessibility_ConfigureSoundForActor(actor, slot);
 }
 void ActorAccessibility_StopSoundForActor(AccessibleActor* actor, int slot) {
@@ -351,8 +352,6 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
     }
     // Send sound parameters to the new audio engine. Eventually remove the old stuff once all actors are carried over.
     for (int i = 0; i < AAE_SLOTS_PER_HANDLE; i++) {
-        if (i == 9)
-            continue;
         if (actor->managedSoundSlots & (1 << i)) {
             ActorAccessibility_SetSoundPos(actor, i, &actor->projectedPos, actor->xyzDistToPlayer,
                                            actor->policy.distance);
@@ -377,16 +376,13 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
         if (player->stateFlags1 & PLAYER_STATE1_FIRST_PERSON &&
             (player->stateFlags1 & PLAYER_STATE1_USING_BOOMERANG || player->stateFlags1 & PLAYER_STATE1_ITEM_IN_HAND)) {
             auto aimAssistProps = ActorAccessibility_ProvideAimAssistForActor(actor);
+            if (++actor->aimAssist.framesSinceAimAssist >= actor->aimAssist.frequency) {
+                actor->aimAssist.framesSinceAimAssist = 0;
+                ActorAccessibility_PlaySound(actor, 7, actor->policy.aimAssist.sfx);
+            }
             ActorAccessibility_SetSoundPitch(actor, 7, aimAssistProps.pitch);
             ActorAccessibility_SetSoundVolume(actor, 7, aimAssistProps.volume);
             ActorAccessibility_SetSoundPan(actor, 7, aimAssistProps.pan);
-
-            // The above will have taken care of setting the appropriate frequency and pitch, so we'll take care of the
-            // audio here based on those results.
-            if (++actor->aimAssist.framesSinceAimAssist >= actor->aimAssist.frequency) {
-                actor->aimAssist.framesSinceAimAssist = 0;
-                ActorAccessibility_PlaySoundForActor(actor, 7, actor->policy.aimAssist.sfx, false);
-            }
         } else {
             // Make sure there's no delay the next time you draw your bow or whatever.
             actor->aimAssist.framesSinceAimAssist = 32768;
@@ -396,16 +392,15 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
     if (actor->policy.callback != nullptr) {
         actor->policy.callback(actor);
     } else {
-        ActorAccessibility_PlaySoundForActor(actor, 0, actor->policy.sound, false);
+        ActorAccessibility_PlaySoundForActor(actor, 0, actor->policy.sound);
     }
 }
+
 void ActorAccessibility_RunAccessibilityForAllActors(PlayState* play) {
     Player* player = GET_PLAYER(play);
     if (play->sceneNum != aa->currentScene) {
-        ActorAccessibility_StopAllVirtualActors(aa->currentEverywhere);
         ActorAccessibility_StopAllVirtualActors(aa->currentSceneGlobal);
         ActorAccessibility_StopAllVirtualActors(aa->currentRoomLocal);
-        aa->currentEverywhere = ActorAccessibility_GetVirtualActorList(EVERYWHERE, 0);
         aa->currentSceneGlobal = ActorAccessibility_GetVirtualActorList(play->sceneNum, -1);
         aa->currentScene = play->sceneNum;
         aa->currentRoomLocal = NULL;
@@ -428,19 +423,17 @@ void ActorAccessibility_RunAccessibilityForAllActors(PlayState* play) {
     }
     ActorAccessibility_AudioGlossary(play);
     if (aa->glossary->GlossaryStarted) {
-
         return;
     }
+
+    ActorAccessibility_GeneralHelper(play);
+
     // Real actors.
     for (AccessibleActorList_t::iterator i = aa->accessibleActorList.begin(); i != aa->accessibleActorList.end(); i++)
         ActorAccessibility_RunAccessibilityForActor(play, &i->second);
-    // Virtual actors in the "everywhere" group.
-    VAList_t* list = (VAList_t*)aa->currentEverywhere;
 
-    for (VAList_t::iterator i = list->begin(); i != list->end(); i++)
-        ActorAccessibility_RunAccessibilityForActor(play, &(*i));
     // Virtual actors for the current room and scene.
-    list = (VAList_t*)aa->currentRoomLocal;
+    VAList_t* list = (VAList_t*)aa->currentRoomLocal;
     for (VAList_t::iterator i = list->begin(); i != list->end(); i++)
         ActorAccessibility_RunAccessibilityForActor(play, &(*i));
     // Scene-global virtual actors. Most of these are automatically generated VAs from polygons, because there's no way
@@ -451,6 +444,96 @@ void ActorAccessibility_RunAccessibilityForAllActors(PlayState* play) {
 
     // Processes external audio engine.
     ActorAccessibility_PrepareNextAudioFrame();
+}
+
+void ActorAccessibility_GeneralHelper(PlayState* play) {
+    Player* player = GET_PLAYER(play);
+    if (player == NULL)
+        return;
+
+    if (aa->currentScene == play->sceneNum && aa->currentRoom != play->roomCtx.curRoom.num) {
+        ActorAccessibility_AnnounceRoomNumber(play);
+        aa->currentRoom = play->roomCtx.curRoom.num;
+        aa->currentRoomClear = Flags_GetClear(play, aa->currentRoom);
+    }
+    if (aa->currentScene != play->sceneNum) {
+        ActorAccessibility_InterpretCurrentScene(play);
+        aa->currentScene = play->sceneNum;
+        aa->currentRoom = play->roomCtx.curRoom.num;
+        aa->currentRoomClear = Flags_GetClear(play, aa->currentRoom);
+    }
+    // Report when a room is completed.
+    if (!aa->currentRoomClear && Flags_GetClear(play, aa->currentRoom)) {
+        aa->currentRoomClear = Flags_GetClear(play, aa->currentRoom);
+        ActorAccessibility_AnnounceRoomNumber(play);
+    }
+
+    if (player->actor.wallPoly && player->actor.speedXZ > 0 && player->yDistToLedge >= 79.0f) {
+        f32 movedsq = SQ(aa->prevPos.x - player->actor.world.pos.x) + SQ(aa->prevPos.z - player->actor.world.pos.z);
+        if (movedsq < 0.125) {
+            ActorAccessibility_PlaySound(nullptr, 3, NA_SE_IT_WALL_HIT_SOFT);
+            ActorAccessibility_SetSoundVolume(nullptr, 3, 0.5);
+        } else if (movedsq < 9) {
+            ActorAccessibility_PlaySound(nullptr, 3, NA_SE_IT_SHIELD_POSTURE);
+            ActorAccessibility_SetSoundVolume(nullptr, 3, 0.6);
+        } else {
+            ActorAccessibility_PlaySound(nullptr, 3, NA_SE_PL_WALK_WALL);
+            ActorAccessibility_SetSoundVolume(nullptr, 3, std::max(0.3f, 10.0f / movedsq));
+        }
+    }
+
+    bool compassOn = false;
+    if (aa->prevPos.x == player->actor.world.pos.x && aa->prevPos.z == player->actor.world.pos.z) {
+        if (aa->prevYaw != player->yaw) {
+            compassOn = true;
+            aa->prevYaw = player->yaw;
+        }
+    } else {
+        aa->prevPos = player->actor.world.pos;
+    }
+
+    if (aa->framesUntilChime > 0) {
+        aa->framesUntilChime--;
+    } else {
+        if (!compassOn) {
+            OSContPad* trackerButtonsPressed =
+                std::dynamic_pointer_cast<LUS::ControlDeck>(Ship::Context::GetInstance()->GetControlDeck())->GetPads();
+            compassOn = trackerButtonsPressed != nullptr && (trackerButtonsPressed[0].button & BTN_DDOWN) &&
+                        (trackerButtonsPressed[0].button & BTN_L);
+        }
+        if (compassOn) {
+            ActorAccessibility_PlaySound(nullptr, 0, NA_SE_EV_SHIP_BELL);
+            ActorAccessibility_SetSoundPitch(nullptr, 0, 1.5f + Math_CosS(player->yaw) / 2);
+            ActorAccessibility_SetSoundPan(nullptr, 0, -Math_SinS(player->yaw));
+            s16 range = ABS((player->yaw & 0x1FFF) - 0x1000);
+            aa->framesUntilChime = range < 0x800 ? 10 : range < 0x1000 ? 20 : 30;
+        }
+    }
+
+    if (fabs(player->unk_860 - 25) < 24.0 && player->heldItemId == 0) {
+        ActorAccessibility_PlaySound(nullptr, 1, NA_SE_SY_WARNING_COUNT_N);
+    }
+
+    if (Player_HoldsHookshot(player) && player->heldActor != NULL && player->actor.scale.y >= 0.0f &&
+        (player->stateFlags1 & PLAYER_STATE1_FIRST_PERSON)) {
+        CollisionPoly* colPoly;
+        s32 bgId;
+        Vec3f firstHit;
+        f32 hookshotLength = ((player->heldItemAction == PLAYER_IA_HOOKSHOT) ? 380.0f : 770.0f) *
+                             CVarGetFloat(CVAR_CHEAT("HookshotReachMultiplier"), 1.0f);
+        Vec3f hookshotEnd = player->heldActor->world.pos;
+        hookshotEnd.x +=
+            Math_SinS(player->heldActor->world.rot.y) * Math_SinS(-player->heldActor->world.rot.x) * hookshotLength;
+        hookshotEnd.y += Math_SinS(-player->heldActor->world.rot.x) * hookshotLength;
+        hookshotEnd.z +=
+            Math_CosS(player->heldActor->world.rot.y) * Math_CosS(-player->heldActor->world.rot.x) * hookshotLength;
+        if (BgCheck_AnyLineTest3(&play->colCtx, &player->heldActor->world.pos, &hookshotEnd, &firstHit, &colPoly, 1, 1,
+                                 1, 1, &bgId)) {
+            if (SurfaceType_IsHookshotSurface(&play->colCtx, colPoly, bgId)) {
+                ActorAccessibility_PlaySound(nullptr, 2, NA_SE_IT_HOOKSHOT_STICK_OBJ);
+            }
+        }
+    }
 }
 
 void ActorAccessibility_AudioGlossary(PlayState* play) {
@@ -548,10 +631,8 @@ AccessibleActor* ActorAccessibility_AddVirtualActor(VirtualActorList* list, VIRT
     l->push_back(actor);
     size_t index = l->size() - 1;
     AccessibleActor* savedActor = &(*l)[l->size() - 1];
-    if (policy->initUserData && !policy->initUserData(savedActor)) {
-        l->pop_back();
-        return NULL; // Probably a malloc error preventing user data initialization.
-    }
+    if (policy->initUserData)
+        policy->initUserData(savedActor);
     return savedActor;
 }
 void ActorAccessibility_InterpretCurrentScene(PlayState* play) {
@@ -664,7 +745,7 @@ bool ActorAccessibility_InitAudio() {
 void ActorAccessibility_ShutdownAudio() {
     if (aa->isOn) {
         delete aa->audioEngine;
-        aa->isOn = 0;
+        aa->isOn = false;
     }
 }
 void ActorAccessibility_MixAccessibleAudioWithGameAudio(int16_t* ogBuffer, uint32_t nFrames) {

@@ -6,7 +6,7 @@ struct AccessibleActor;
 
 typedef void (*ActorAccessibilityCallback)(AccessibleActor*);
 // A callback which allows AccessibleActor instances to initialize custom user data (called once per instantiation).
-typedef bool (*ActorAccessibilityUserDataInit)(AccessibleActor*);
+typedef void (*ActorAccessibilityUserDataInit)(AccessibleActor*);
 // A callback that can be used to clean up user data when an actor is destroyed.
 typedef void (*ActorAccessibilityUserDataCleanup)(AccessibleActor*);
 
@@ -108,7 +108,7 @@ void ActorAccessibility_RunAccessibilityForAllActors(PlayState* play);
  *modifying AAE_SLOTS_PER_HANDLE). sfxId: one of the game's sfx IDs. Note that this plays prerendered sounds which you
  *must have previously prepared. looping: whether to play the sound just once or on a continuous loop.
  */
-void ActorAccessibility_PlaySound(void* actor, int slot, s16 sfxId, bool looping);
+void ActorAccessibility_PlaySound(void* actor, int slot, s16 sfxId);
 // Stop a sound. Todo: consider making this a short fade instead of just cutting it off.
 void ActorAccessibility_StopSound(void* handle, int slot);
 void ActorAccessibility_StopAllSounds(void* handle);
@@ -132,7 +132,7 @@ void ActorAccessibility_SeekSound(void* handle, int slot, size_t offset);
  * automatically based on the actor's position.
  *
  */
-void ActorAccessibility_PlaySoundForActor(AccessibleActor* actor, int slot, s16 sfxId, bool looping);
+void ActorAccessibility_PlaySoundForActor(AccessibleActor* actor, int slot, s16 sfxId);
 
 void ActorAccessibility_StopSoundForActor(AccessibleActor* actor, int slot);
 void ActorAccessibility_StopAllSoundsForActor(AccessibleActor* actor);
@@ -142,9 +142,8 @@ Vec3s ActorAccessibility_ComputeRelativeAngle(Vec3s* origin, Vec3s* offset);
 void ActorAccessibility_InitCues();
 // Stuff related to lists of virtual actors.
 typedef enum {
-    // Similar to the game's actual actor table. Values here start at 10000 just to be extra safe.
+    // Similar to the game's actual actor table
     VA_INITIAL = 1000,
-    VA_PROTOTYPE, // Remove this one once this thing is working.
     VA_CRAWLSPACE,
     VA_TERRAIN_CUE,
     VA_WALL_CUE,
@@ -153,9 +152,6 @@ typedef enum {
     VA_AREA_CHANGE,
     VA_MARKER,
     VA_SPIKE,
-    VA_GENERAL_HELPER, // Room announcements, action icon and other misc help.
-    VA_AUDIO_COMPASS,  // Points north.
-    VA_STICK_WARNING,  // beep when stick is about to burn out.
     VA_MAX,
 } VIRTUAL_ACTOR_TABLE;
 
@@ -183,4 +179,5 @@ void ActorAccessibility_HandleSoundExtractionMode(PlayState* play);
 // This is called by the audio thread when it's ready to try to pull sfx from the game.
 void ActorAccessibility_DoSoundExtractionStep();
 
+void ActorAccessibility_GeneralHelper(PlayState* play);
 void ActorAccessibility_AudioGlossary(PlayState* play);
