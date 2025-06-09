@@ -1576,7 +1576,7 @@ bool IsCheckShuffled(RandomizerCheck rc) {
                    (loc->GetRCType() != RCTYPE_TREE || showTrees) && (loc->GetRCType() != RCTYPE_COW || showCows) &&
                    (loc->GetRCType() != RCTYPE_NLTREE ||
                     (showTrees &&
-                     OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_LOGIC_RULES) == RO_LOGIC_NO_LOGIC)) ||
+                     OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_LOGIC_RULES) == RO_LOGIC_NO_LOGIC)) &&
                (loc->GetRCType() != RCTYPE_FISH ||
                 OTRGlobals::Instance->gRandoContext->GetFishsanity()->GetFishLocationIncluded(loc)) &&
                    (loc->GetRCType() != RCTYPE_FREESTANDING ||
