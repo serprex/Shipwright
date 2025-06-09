@@ -3332,7 +3332,7 @@ std::map<RandomizerCheck, RandomizerInf> rcToRandomizerInf = {
         RC_SPIRIT_TEMPLE_MQ_BEAMOS_SMALL_CRATE,
         RAND_INF_SPIRIT_TEMPLE_MQ_BEAMOS_SMALL_CRATE,
     },
-    { RC_MARKET_DAY_TREE, RAND_INF_MARKET_DAY_TREE },
+    { RC_MARKET_TREE, RAND_INF_MARKET_TREE },
     { RC_HC_NEAR_GUARDS_TREE_1, RAND_INF_HC_NEAR_GUARDS_TREE_1 },
     { RC_HC_NEAR_GUARDS_TREE_2, RAND_INF_HC_NEAR_GUARDS_TREE_2 },
     { RC_HC_NEAR_GUARDS_TREE_3, RAND_INF_HC_NEAR_GUARDS_TREE_3 },
@@ -3816,6 +3816,10 @@ SmallCrateIdentity Randomizer::IdentifySmallCrate(s32 sceneNum, s32 posX, s32 po
 
 TreeIdentity Randomizer::IdentifyTree(s32 sceneNum, s32 posX, s32 posZ) {
     struct TreeIdentity treeIdentity;
+
+    if (sceneNum == SCENE_MARKET_NIGHT) {
+        sceneNum = SCENE_MARKET_DAY;
+    }
 
     for (int x = -1; x <= 1; x++) {
         for (int z = -1; z <= 1; z++) {
