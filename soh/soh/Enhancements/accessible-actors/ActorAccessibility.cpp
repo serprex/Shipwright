@@ -505,8 +505,8 @@ void ActorAccessibility_GeneralHelper(PlayState* play) {
             ActorAccessibility_PlaySound(nullptr, 0, NA_SE_EV_SHIP_BELL);
             ActorAccessibility_SetSoundPitch(nullptr, 0, 1.5f + Math_CosS(player->yaw) / 2);
             ActorAccessibility_SetSoundPan(nullptr, 0, -Math_SinS(player->yaw));
-            s16 range = ABS((player->yaw & 0x1FFF) - 0x1000);
-            aa->framesUntilChime = range < 0x800 ? 10 : range < 0x1000 ? 20 : 30;
+            s16 range = ABS(((player->yaw + 0xA000) & 0x3FFF) - 0x2000);
+            aa->framesUntilChime = range <= 0x400 ? 10 : range <= 0x1000 ? 20 : 30;
         }
     }
 
