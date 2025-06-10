@@ -1375,17 +1375,3 @@ void accessible_va_terrain_cue(AccessibleActor* actor) {
     for (int i = 0; i < 3; i++)
         state->directions[i].scan();
 }
-
-void ActorAccessibility_InitCues() {
-    ActorAccessibilityPolicy policy;
-    ActorAccessibility_InitPolicy(&policy, "Terrain cue helper", accessible_va_terrain_cue);
-    policy.n = 1;
-    policy.runsAlways = true;
-    policy.distance = 500;
-    policy.initUserData = ActorAccessibility_InitTerrainCueState;
-    policy.cleanupUserData = ActorAccessibility_CleanupTerrainCueState;
-
-    ActorAccessibility_AddSupportedActor(VA_TERRAIN_CUE, policy);
-    VirtualActorList* list = ActorAccessibility_GetVirtualActorList(EVERYWHERE, 0);
-    ActorAccessibility_AddVirtualActor(list, VA_TERRAIN_CUE, { 0, 0, 0 });
-}

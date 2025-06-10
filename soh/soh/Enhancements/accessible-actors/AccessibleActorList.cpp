@@ -979,7 +979,7 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(VA_MARKER, policy);
 
     // Virtual actors for a given location (scene and room number).
-    VirtualActorList* list = (VirtualActorList*)ActorAccessibility_GetVirtualActorList(EVERYWHERE, 0);
+    VirtualActorList* list;
     AccessibleActor* temp;
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_KOKIRI_FOREST, 0);
@@ -1160,5 +1160,31 @@ void ActorAccessibility_InitActors() {
     temp->policy.ydist = 100;
     temp->policy.sound = NA_SE_EV_BLOCK_SHAKE;
 
-    ActorAccessibility_InitCues();
+    ActorAccessibility_InitPolicy(&policy, "Terrain cue helper", accessible_va_terrain_cue);
+    policy.n = 1;
+    policy.runsAlways = true;
+    policy.distance = 500;
+    policy.initUserData = ActorAccessibility_InitTerrainCueState;
+    policy.cleanupUserData = ActorAccessibility_CleanupTerrainCueState;
+    ActorAccessibility_AddSupportedActor(VA_TERRAIN_CUE, policy);
+
+    AccessibleActor* actor = new AccessibleActor;
+    actor->actor = nullptr;
+    actor->basePitch = 1.0;
+    actor->baseVolume = 1.0;
+    actor->currentPitch = 1.0;
+    actor->currentVolume = 1.0;
+    actor->frameCount = 0;
+    actor->id = VA_TERRAIN_CUE;
+    actor->instanceID = ActorAccessibility_GetNextID();
+    actor->isDrawn = 1;
+    actor->play = nullptr;
+    actor->pos = { 0, 0, 0 };
+    actor->sceneIndex = 0;
+    actor->managedSoundSlots = 0;
+    actor->aimAssist.framesSinceAimAssist = 0;
+    actor->aimAssist.frequency = 10;
+    actor->policy = policy;
+    ActorAccessibility_InitTerrainCueState(actor);
+    ActorAccessibility_AddTerrainCues(actor);
 }

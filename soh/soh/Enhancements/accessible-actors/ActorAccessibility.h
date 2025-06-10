@@ -92,10 +92,15 @@ void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char*
 void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char* englishName,
                                    ActorAccessibilityCallback callback);
 void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char* englishName, s16 sfx);
+void ActorAccessibility_InitTerrainCueState(AccessibleActor* actor);
+void ActorAccessibility_CleanupTerrainCueState(AccessibleActor* actor);
+void accessible_va_terrain_cue(AccessibleActor* actor);
 
+uint64_t ActorAccessibility_GetNextID();
 void ActorAccessibility_TrackNewActor(Actor* actor);
 void ActorAccessibility_RemoveTrackedActor(Actor* actor);
 void ActorAccessibility_AddSupportedActor(s16 type, ActorAccessibilityPolicy policy);
+void ActorAccessibility_AddTerrainCues(AccessibleActor* actor);
 
 void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActor* actor);
 void ActorAccessibility_RunAccessibilityForAllActors(PlayState* play);
@@ -139,7 +144,6 @@ void ActorAccessibility_StopAllSoundsForActor(AccessibleActor* actor);
 f32 ActorAccessibility_ComputeCurrentVolume(f32 maxDistance, f32 xzDistToPlayer);
 // Computes a relative angle based on Link's (or some other actor's) current angle.
 Vec3s ActorAccessibility_ComputeRelativeAngle(Vec3s* origin, Vec3s* offset);
-void ActorAccessibility_InitCues();
 // Stuff related to lists of virtual actors.
 typedef enum {
     // Similar to the game's actual actor table
@@ -154,8 +158,6 @@ typedef enum {
     VA_SPIKE,
     VA_MAX,
 } VIRTUAL_ACTOR_TABLE;
-
-#define EVERYWHERE -32768 // Denotes a virtual actor that is global
 
 // Get the list of virtual actors for a given scene and room index.
 VirtualActorList* ActorAccessibility_GetVirtualActorList(s16 sceneNum, s8 roomNum);
