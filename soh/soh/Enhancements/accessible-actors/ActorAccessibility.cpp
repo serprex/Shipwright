@@ -485,7 +485,7 @@ void ActorAccessibility_GeneralHelper(PlayState* play) {
         ActorAccessibility_AnnounceRoomNumber(play);
     }
 
-    if (player->actor.wallPoly && player->actor.speedXZ > 0 && player->yDistToLedge >= 79.0f) {
+    if (player->actor.wallPoly && player->actor.speedXZ > 0 && (player->yDistToLedge == 0 || player->yDistToLedge >= 79.0f)) {
         f32 movedsq = SQ(aa->prevPos.x - player->actor.world.pos.x) + SQ(aa->prevPos.z - player->actor.world.pos.z);
         if (movedsq < 0.125) {
             ActorAccessibility_PlaySound(nullptr, 3, NA_SE_IT_WALL_HIT_SOFT);
