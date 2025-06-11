@@ -127,7 +127,7 @@ void BgYdanHasi_MoveWater(BgYdanHasi* this, PlayState* play) {
 }
 
 void BgYdanHasi_DecWaterTimer(BgYdanHasi* this, PlayState* play) {
-    if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, &this->timer)) {
+    if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, this, &this->timer)) {
         if (this->timer != 0) {
             this->timer--;
         }
@@ -149,7 +149,7 @@ void BgYdanHasi_SetupThreeBlocks(BgYdanHasi* this, PlayState* play) {
 }
 
 void BgYdanHasi_UpdateThreeBlocks(BgYdanHasi* this, PlayState* play) {
-    if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, &this->timer)) {
+    if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, this, &this->timer)) {
         if (this->timer != 0) {
             this->timer--;
         }

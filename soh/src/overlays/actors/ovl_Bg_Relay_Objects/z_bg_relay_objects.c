@@ -134,7 +134,7 @@ void func_808A90F4(BgRelayObjects* this, PlayState* play) {
 
 void func_808A91AC(BgRelayObjects* this, PlayState* play) {
     if (this->unk_169 != 5) {
-        if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, &this->timer)) {
+        if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, this, &this->timer)) {
             if (this->timer != 0) {
                 this->timer--;
             }

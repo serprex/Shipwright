@@ -1997,7 +1997,8 @@ typedef enum {
     // true
     // ```
     // #### `args`
-    // - `*s16`
+    // - `*Actor`
+    // - `*s16` - timer value
     VB_SWITCH_TIMER_TICK,
 
     // #### `result`

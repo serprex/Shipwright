@@ -189,7 +189,7 @@ void func_80AFC218(EnSiofuki* this, PlayState* play) {
     func_80AFBE8C(this, play);
     func_80AFC1D0(this, play);
 
-    if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, &this->timer)) {
+    if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, this, &this->timer)) {
         this->timer--;
     }
 

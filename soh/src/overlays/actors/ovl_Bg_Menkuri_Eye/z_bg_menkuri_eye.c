@@ -92,7 +92,7 @@ void BgMenkuriEye_Update(Actor* thisx, PlayState* play) {
     if (!Flags_GetSwitch(play, this->actor.params)) {
         if (this->framesUntilDisable != -1) {
             if (this->framesUntilDisable != 0) {
-                if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, &this->framesUntilDisable)) {
+                if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, this, &this->framesUntilDisable)) {
                     this->framesUntilDisable -= 1;
                 }
             }

@@ -138,7 +138,7 @@ void BgMizuShutter_Move(BgMizuShutter* this, PlayState* play) {
 
 void BgMizuShutter_WaitForTimer(BgMizuShutter* this, PlayState* play) {
     if (this->timerMax != 0x3F * 20) {
-        if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, &this->timer)) {
+        if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, this, &this->timer)) {
             this->timer--;
         }
         func_8002F994(&this->dyna.actor, this->timer);

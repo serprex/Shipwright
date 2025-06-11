@@ -116,7 +116,7 @@ void BgGndDarkmeiro_UpdateBlockTimer(BgGndDarkmeiro* this, PlayState* play) {
     if (Flags_GetSwitch(play, ((this->dyna.actor.params >> 8) & 0x3F) + 1)) {
         if (this->actionFlags & 4) {
             if (this->timer1 > 0) {
-                if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, &this->timer1)) {
+                if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, this, &this->timer1)) {
                     this->timer1--;
                 }
             } else {
