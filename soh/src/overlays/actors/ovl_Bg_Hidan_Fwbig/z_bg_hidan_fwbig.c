@@ -166,10 +166,8 @@ void BgHidanFwbig_Lower(BgHidanFwbig* this, PlayState* play) {
 }
 
 void BgHidanFwbig_WaitForTimer(BgHidanFwbig* this, PlayState* play) {
-    if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, this, &this->timer)) {
-        if (this->timer != 0) {
-            this->timer--;
-        }
+    if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, this->timer != 0, this, &this->timer)) {
+        this->timer--;
     }
 
     if (this->timer == 0) {

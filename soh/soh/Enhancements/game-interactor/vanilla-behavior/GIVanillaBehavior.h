@@ -1994,7 +1994,7 @@ typedef enum {
 
     // #### `result`
     // ```c
-    // true
+    // varies, never set should to true
     // ```
     // #### `args`
     // - `*Actor`

@@ -240,10 +240,8 @@ void ObjSyokudai_Update(Actor* thisx, PlayState* play2) {
     Collider_UpdateCylinder(&this->actor, &this->colliderFlame);
     CollisionCheck_SetAC(play, &play->colChkCtx, &this->colliderFlame.base);
 
-    if (this->litTimer > 0) {
-        if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, this, &this->litTimer)) {
-            this->litTimer--;
-        }
+    if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, this->litTimer > 0, this, &this->litTimer)) {
+        this->litTimer--;
         if ((this->litTimer == 0) && (torchType != 0)) {
             sLitTorchCount--;
         }

@@ -134,10 +134,8 @@ void func_808A90F4(BgRelayObjects* this, PlayState* play) {
 
 void func_808A91AC(BgRelayObjects* this, PlayState* play) {
     if (this->unk_169 != 5) {
-        if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, this, &this->timer)) {
-            if (this->timer != 0) {
-                this->timer--;
-            }
+        if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, this->timer != 0, this, &this->timer)) {
+            this->timer--;
         }
         func_8002F994(&this->dyna.actor, this->timer);
     }
@@ -171,10 +169,8 @@ void BgRelayObjects_DoNothing(BgRelayObjects* this, PlayState* play) {
 }
 
 void func_808A932C(BgRelayObjects* this, PlayState* play) {
-    if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, true, &this->timer)) {
-        if (this->timer != 0) {
-            this->timer--;
-        }
+    if (GameInteractor_Should(VB_SWITCH_TIMER_TICK, this->timer != 0, &this->timer)) {
+        this->timer--;
     }
     if (this->timer == 0) {
         if (!Player_InCsMode(play)) {
