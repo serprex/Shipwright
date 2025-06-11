@@ -15,7 +15,7 @@ void RegisterTreesDropSticks() {
             dropsSpawnPt.y += 200.0f;
 
             *should = false;
-            for (s32 numDrops = Rand_Next() % 4; numDrops >= 0; numDrops--) {
+            for (s32 numDrops = Rand_Next() % 4; numDrops > 0; numDrops--) {
                 Item_DropCollectible(gPlayState, &dropsSpawnPt, ITEM00_STICK);
             }
         }
