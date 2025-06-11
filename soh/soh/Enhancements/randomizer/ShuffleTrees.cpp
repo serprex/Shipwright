@@ -122,6 +122,16 @@ void RegisterShuffleTrees() {
         EnWood02* treeActor = va_arg(args, EnWood02*);
         if (EnWood02_RandomizerHoldsItem(treeActor, gPlayState)) {
             EnWood02_RandomizerSpawnCollectible(treeActor, gPlayState);
+            // QoL, drop golden skulltula alongside item
+            if ((treeActor->unk_14C < 0 || treeActor->unk_14C >= 0x64) && treeActor->actor.home.rot.z != 0) {
+                Vec3f dropsSpawnPt = treeActor->actor.world.pos;
+                dropsSpawnPt.y += 200.0f;
+                treeActor->actor.home.rot.z &= 0x1FFF;
+                treeActor->actor.home.rot.z |= 0xE000;
+                Actor_Spawn(&gPlayState->actorCtx, gPlayState, ACTOR_EN_SW, dropsSpawnPt.x, dropsSpawnPt.y,
+                            dropsSpawnPt.z, 0, treeActor->actor.world.rot.y, 0, treeActor->actor.home.rot.z, true);
+                treeActor->actor.home.rot.z = 0;
+            }
             *should = false;
         }
     });
