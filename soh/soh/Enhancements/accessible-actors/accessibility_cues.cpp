@@ -10,8 +10,8 @@ void Player_GetSlopeDirection(CollisionPoly* floorPoly, Vec3f* slopeNormal, s16*
 void CollisionPoly_GetVertices(CollisionPoly* poly, Vec3s* vtxList, Vec3f* dest);
 f32 BgCheck_RaycastFloorImpl(PlayState* play, CollisionContext* colCtx, u16 xpFlags, CollisionPoly** outPoly,
                              s32* outBgId, Vec3f* pos, Actor* actor, u32 arg7, f32 chkDist);
-#include "soh/Enhancements/speechsynthesizer/SpeechSynthesizer.h"
-#include "soh/Enhancements/tts/tts.h"
+//#include "soh/Enhancements/speechsynthesizer/SpeechSynthesizer.h"
+//#include "soh/Enhancements/tts/tts.h"
 }
 #define DETECTION_DISTANCE 500.0
 #define MIN_INCLINE_DISTANCE 5.0
@@ -34,6 +34,7 @@ enum DiscoveredTerrain {
     DISCOVERED_GROUND,
     DISCOVERED_LAVA,
 };
+
 // Abstract class for terrain cue sound handling. Implementations should not allocate memory. These are always in-place
 // constructed in static memory owned by the TerrainCueDirection object.
 class TerrainCueSound {
@@ -91,6 +92,7 @@ class TerrainCueSound {
         run();
     }
 };
+
 class Incline : protected TerrainCueSound {
     float pitchModifier;
 
@@ -151,6 +153,7 @@ class Decline : protected TerrainCueSound {
         pitchModifier = mod;
     }
 };
+
 class Ledge : protected TerrainCueSound {
     s8 savedType; // Distinguishes between a ledge link can fall from and one he can climb up.
     Vec3s probeRot;
@@ -195,6 +198,7 @@ class Ledge : protected TerrainCueSound {
         }
     }
 };
+
 class Platform : protected TerrainCueSound {
   public:
     Platform(AccessibleActor* actor, Vec3f pos) : TerrainCueSound(actor, pos) {
@@ -259,6 +263,7 @@ class Wall : protected TerrainCueSound {
         ActorAccessibility_SetSoundPitch(this, 0, pitchModifier);
     }
 };
+
 class Spike : protected TerrainCueSound {
   public:
     Spike(AccessibleActor* actor, Vec3f pos) : TerrainCueSound(actor, pos) {
@@ -276,6 +281,7 @@ class Spike : protected TerrainCueSound {
         restFrames--;
     }
 };
+
 class Water : protected TerrainCueSound {
   public:
     Water(AccessibleActor* actor, Vec3f pos) : TerrainCueSound(actor, pos) {
@@ -394,8 +400,8 @@ class TerrainCueDirection final {
         currentSound = NULL;
         terrainDiscovered = DISCOVERED_NOTHING;
     }
-    // Play a sound from the position of a previously discovered incline.
 
+    // Play a sound from the position of a previously discovered incline.
     void discoverIncline(Vec3f pos, float pitchModifier = 0) {
         if (terrainDiscovered == DISCOVERED_INCLINE) {
             incline.setPitchModifier(pitchModifier);
@@ -409,8 +415,8 @@ class TerrainCueDirection final {
         currentSound = (TerrainCueSound*)&incline;
         terrainDiscovered = DISCOVERED_INCLINE;
     }
-    // Play a sound from the position of a previously discovered decline.
 
+    // Play a sound from the position of a previously discovered decline.
     void discoverDecline(Vec3f pos, float pitchModifier = 0) {
         if (terrainDiscovered == DISCOVERED_DECLINE) {
             incline.setPitchModifier(pitchModifier);
@@ -424,8 +430,8 @@ class TerrainCueDirection final {
         currentSound = (TerrainCueSound*)&decline;
         terrainDiscovered = DISCOVERED_DECLINE;
     }
-    // Play a sound from the position of a previously discovered ledge.
 
+    // Play a sound from the position of a previously discovered ledge.
     void discoverLedge(Vec3f pos, s8 type = 0) {
         if (terrainDiscovered == DISCOVERED_LEDGE && ledge.type() == type)
             return;
@@ -436,8 +442,8 @@ class TerrainCueDirection final {
         currentSound = (TerrainCueSound*)&ledge;
         terrainDiscovered = DISCOVERED_LEDGE;
     }
-    // Play a sound from the position of a previously discovered wall.
 
+    // Play a sound from the position of a previously discovered wall.
     void discoverWall(Vec3f pos) {
         Player* player = GET_PLAYER(actor->play);
         if (player->stateFlags1 & PLAYER_STATE1_FIRST_PERSON) {
@@ -454,6 +460,7 @@ class TerrainCueDirection final {
         currentSound = (TerrainCueSound*)&wall;
         terrainDiscovered = DISCOVERED_WALL;
     }
+
     void discoverSpike(Vec3f pos) {
         if (terrainDiscovered == DISCOVERED_SPIKE)
             return;
@@ -494,6 +501,7 @@ class TerrainCueDirection final {
         currentSound = (TerrainCueSound*)&lava;
         terrainDiscovered = DISCOVERED_LAVA;
     }
+
     // Find out how high a wall goes.
     f32 findWallHeight(Vec3f& pos, CollisionPoly* poly) {
         Player* player = GET_PLAYER(actor->play);
@@ -552,9 +560,9 @@ class TerrainCueDirection final {
                                  &wallBgId, NULL, wallCheckHeight);
         return wallPoly;
     }
+
     // Another copy/modify job from z_player.c. This function sets windspeed and wind direction, which are used for
     // pushing the player up and down slopes. "Inspired" by func_8083E318.
-
     s32 computePushedSpeedEtc() {
         s32 pad;
         s16 sp4A;
@@ -662,6 +670,7 @@ class TerrainCueDirection final {
         }
         return false;
     }
+
     // Check if we're being pushed away from our intended destination.
     bool isPushedAway() {
         f32 dist = Math_Vec3f_DistXZ(&velocity, &expectedVelocity);
@@ -669,6 +678,7 @@ class TerrainCueDirection final {
             return true;
         return false;
     }
+
     bool proveClimbableStep() {
         setVelocity();
         if (!move())
@@ -680,6 +690,7 @@ class TerrainCueDirection final {
             return false;
         return true;
     }
+
     bool proveClimbable() {
         Vec3s ogRot = rot;
         Vec3f ogPos = pos;
@@ -796,6 +807,7 @@ class TerrainCueDirection final {
 
         return true;
     }
+
     bool isHeadOnCollision(Vec3f& wallPos, Vec3f& velocity) {
         return true;
 
@@ -810,7 +822,6 @@ class TerrainCueDirection final {
     }
 
     // Perform all terrain detection and sound book keeping. Call once per frame.
-
     float rdist(Vec3f pos) {
         Player* player = GET_PLAYER(actor->play);
         float xdist = fabs(pos.x - player->actor.world.pos.x);
@@ -879,9 +890,9 @@ class TerrainCueDirection final {
             distToTravel = 1.0;
         Vec3f collisionResult;
         s32 bgId = 0;
+
         // Don't be fooled: link being in the air does not mean we've found a dropoff. I mean... it could mean that, but
         // it's a little too late to do anything about it at that point anyway.
-
         if (player->stateFlags3 & PLAYER_STATE3_MIDAIR || player->stateFlags2 & PLAYER_STATE2_HOPPING) {
             f32 floorHeight = 0;
             floorHeight = BgCheck_EntityRaycastFloor3(&actor->play->colCtx, &floorPoly, &floorBgId, &pos);
@@ -1033,7 +1044,6 @@ class TerrainCueDirection final {
                 }
                 // this means that either the wall poly found above is not a vine or is NULL
                 // the next three secections check infront and behind the probe for wall polys
-                //
                 if (moveMethod != 2) {
                     prevPos = pos;
                     rot.y = player->actor.shape.rot.y;
@@ -1157,7 +1167,6 @@ class TerrainCueDirection final {
                 }
 
                 if (isPushedAway() && player->stateFlags1 != PLAYER_STATE1_CLIMBING_LADDER) {
-                    // Call this a wall for now.
                     discoverWall(pos);
                     break;
                 }
@@ -1272,16 +1281,16 @@ class TerrainCueDirection final {
                 CollisionPoly* wallPoly = checkWall(pos, prevPos, wallPos);
                 if (wallPoly == NULL)
                     continue;
-                // Is this a spiked wall?
                 Vec3f polyVerts[3];
 
+                // Is this a spiked wall?
                 CollisionPoly_GetVertices(wallPoly, colCtx->colHeader->vtxList, polyVerts);
                 if (SurfaceType_IsWallDamage(&actor->play->colCtx, wallPoly, BGCHECK_SCENE)) {
                     discoverSpike(pos);
                     break;
                 }
-                // is this a ladder or vine wall?
 
+                // is this a ladder or vine wall?
                 wallHeight = findWallHeight(pos, wallPoly);
                 if (wallHeight <= player->ageProperties->unk_0C &&
                     player->stateFlags1 != PLAYER_STATE1_CLIMBING_LADDER) {
@@ -1342,24 +1351,6 @@ class TerrainCueDirection final {
     }
 };
 
-typedef struct {
-    TerrainCueDirection directions[3]; // Directly ahead of Link, 90 degrees to his left and 90 degrees to his right.
-} TerrainCueState;
-
-// Callback for initialization of terrain cue state.
-void ActorAccessibility_InitTerrainCueState(AccessibleActor* actor) {
-    TerrainCueState* state = new TerrainCueState{ {
-        { actor, { 0, 0, 0 } },
-        { actor, { 0, 16384, 0 } },
-        { actor, { 0, -16384, 0 } },
-    } };
-
-    actor->userData = state;
-}
-void ActorAccessibility_CleanupTerrainCueState(AccessibleActor* actor) {
-    delete (TerrainCueState*)actor->userData;
-    actor->userData = NULL;
-}
 // Computes a relative angle based on Link's (or some other actor's) current angle.
 Vec3s ActorAccessibility_ComputeRelativeAngle(Vec3s* origin, Vec3s* offset) {
     Vec3s rot = *origin;
@@ -1369,9 +1360,36 @@ Vec3s ActorAccessibility_ComputeRelativeAngle(Vec3s* origin, Vec3s* offset) {
     return rot;
 }
 
-void accessible_va_terrain_cue(AccessibleActor* actor) {
-    TerrainCueState* state = (TerrainCueState*)actor->userData;
+struct TerrainCueState {
+    AccessibleActor* actor;
+    TerrainCueDirection directions[3]; // Directly ahead of Link, 90 degrees to his left and 90 degrees to his right
 
-    for (int i = 0; i < 3; i++)
-        state->directions[i].scan();
+    TerrainCueState(AccessibleActor* actor) : actor(actor), directions{ 
+        { actor, { 0, 0, 0 } },
+        { actor, { 0, 16384, 0 } },
+        { actor, { 0, -16384, 0 } },
+    } {}
+
+    ~TerrainCueState() {
+        delete actor;
+    }
+
+    void Run(PlayState* play) {
+        ActorAccessibility_RunAccessibilityForActor(play, actor);
+        for (int i = 0; i < 3; i++) {
+            directions[i].scan();
+        }
+    }
+};
+
+TerrainCueState* InitTerrainCueState(AccessibleActor* actor) {
+    return new TerrainCueState(actor);
+}
+
+void DeleteTerrainCueState(TerrainCueState* terrainCues) {
+    delete terrainCues;
+}
+
+void RunTerrainCueState(TerrainCueState* terrainCues, PlayState* play) {
+    terrainCues->Run(play);
 }

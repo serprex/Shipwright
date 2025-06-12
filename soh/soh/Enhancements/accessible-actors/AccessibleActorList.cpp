@@ -1160,12 +1160,10 @@ void ActorAccessibility_InitActors() {
     temp->policy.ydist = 100;
     temp->policy.sound = NA_SE_EV_BLOCK_SHAKE;
 
-    ActorAccessibility_InitPolicy(&policy, "Terrain cue helper", accessible_va_terrain_cue);
+    ActorAccessibility_InitPolicy(&policy, "Terrain cue helper", nullptr);
     policy.n = 1;
     policy.runsAlways = true;
     policy.distance = 500;
-    policy.initUserData = ActorAccessibility_InitTerrainCueState;
-    policy.cleanupUserData = ActorAccessibility_CleanupTerrainCueState;
     ActorAccessibility_AddSupportedActor(VA_TERRAIN_CUE, policy);
 
     AccessibleActor* actor = new AccessibleActor;
@@ -1185,6 +1183,5 @@ void ActorAccessibility_InitActors() {
     actor->aimAssist.framesSinceAimAssist = 0;
     actor->aimAssist.frequency = 10;
     actor->policy = policy;
-    ActorAccessibility_InitTerrainCueState(actor);
     ActorAccessibility_AddTerrainCues(actor);
 }

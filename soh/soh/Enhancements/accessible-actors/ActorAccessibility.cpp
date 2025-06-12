@@ -94,7 +94,7 @@ class ActorAccessibility {
     Vec3f prevPos = { 0, 0, 0 };
     s16 prevYaw = 0;
     bool extractSfx = false;
-    AccessibleActor* terrainCues = nullptr;
+    TerrainCueState* terrainCues = nullptr;
     VirtualActorList* currentSceneGlobal = nullptr;
     VirtualActorList* currentRoomLocal = nullptr;
 };
@@ -161,8 +161,6 @@ void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char*
     policy->pitch = 1.5;
     policy->runsAlways = false;
     policy->volume = 1.0;
-    policy->initUserData = NULL;
-    policy->cleanupUserData = NULL;
     policy->pitchModifier = 0.1;
     policy->aimAssist.isProvider = false;
     policy->aimAssist.sfx = NA_SE_SY_HITPOINT_ALARM;
@@ -187,7 +185,7 @@ void ActorAccessibility_AddSupportedActor(s16 type, ActorAccessibilityPolicy pol
 }
 
 void ActorAccessibility_AddTerrainCues(AccessibleActor* actor) {
-    aa->terrainCues = actor;
+    aa->terrainCues = InitTerrainCueState(actor);
 }
 
 ActorAccessibilityPolicy* ActorAccessibility_GetPolicyForActor(s16 type) {
@@ -226,10 +224,6 @@ void ActorAccessibility_TrackNewActor(Actor* actor) {
 
     aa->trackedActors[actor] = accessibleActor.instanceID;
     aa->accessibleActorList[accessibleActor.instanceID] = accessibleActor;
-    if (policy->initUserData) {
-        AccessibleActor& savedActor = aa->accessibleActorList[accessibleActor.instanceID];
-        policy->initUserData(&savedActor);
-    }
 }
 
 void ActorAccessibility_RemoveTrackedActor(Actor* actor) {
@@ -241,8 +235,6 @@ void ActorAccessibility_RemoveTrackedActor(Actor* actor) {
     AccessibleActorList_t::iterator i2 = aa->accessibleActorList.find(id);
     if (i2 == aa->accessibleActorList.end())
         return;
-    if (i2->second.policy.cleanupUserData)
-        i2->second.policy.cleanupUserData(&i2->second);
     ActorAccessibility_StopAllSoundsForActor(&i2->second);
     aa->accessibleActorList.erase(i2);
 }
@@ -446,7 +438,7 @@ void ActorAccessibility_RunAccessibilityForAllActors(PlayState* play) {
         ActorAccessibility_RunAccessibilityForActor(play, &i->second);
 
     if (aa->terrainCues) {
-        ActorAccessibility_RunAccessibilityForActor(play, aa->terrainCues);
+        RunTerrainCueState(aa->terrainCues, play);
     }
 
     // Virtual actors for the current room and scene.
@@ -642,11 +634,7 @@ AccessibleActor* ActorAccessibility_AddVirtualActor(VirtualActorList* list, VIRT
 
     VAList_t* l = (VAList_t*)list;
     l->push_back(actor);
-    size_t index = l->size() - 1;
-    AccessibleActor* savedActor = &(*l)[l->size() - 1];
-    if (policy->initUserData)
-        policy->initUserData(savedActor);
-    return savedActor;
+    return &(*l)[l->size() - 1];
 }
 
 void ActorAccessibility_InterpretCurrentScene(PlayState* play) {
@@ -760,9 +748,8 @@ bool ActorAccessibility_InitAudio() {
 void ActorAccessibility_ShutdownAudio() {
     if (aa->isOn) {
         delete aa->audioEngine;
-        if (aa->terrainCues) {
-            ActorAccessibility_CleanupTerrainCueState(aa->terrainCues);
-            delete aa->terrainCues;
+                if (aa->terrainCues) {
+            DeleteTerrainCueState(aa->terrainCues);
         }
         aa->isOn = false;
     }

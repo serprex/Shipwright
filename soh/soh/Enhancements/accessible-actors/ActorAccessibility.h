@@ -5,10 +5,6 @@ struct AccessibleActor;
 // A callback that is run regularely as the game progresses in order to provide accessibility services for an actor.
 
 typedef void (*ActorAccessibilityCallback)(AccessibleActor*);
-// A callback which allows AccessibleActor instances to initialize custom user data (called once per instantiation).
-typedef void (*ActorAccessibilityUserDataInit)(AccessibleActor*);
-// A callback that can be used to clean up user data when an actor is destroyed.
-typedef void (*ActorAccessibilityUserDataCleanup)(AccessibleActor*);
 
 struct VirtualActorList;
 
@@ -26,8 +22,6 @@ struct ActorAccessibilityPolicy {
     f32 volume;
     f32 pitchModifier;
     bool runsAlways; // If set, then the distance policy is ignored.
-    ActorAccessibilityUserDataInit initUserData;
-    ActorAccessibilityUserDataCleanup cleanupUserData;
     // Aim assist settings.
     struct {
         bool isProvider; // determines whether or not this actor supports aim assist.
@@ -45,8 +39,8 @@ struct ActorAccessibilityPolicy {
 struct AccessibleActor {
     uint64_t instanceID;
 
-    Actor* actor; // This can be null for a virtual actor.
-    s16 id; // For real actors, we copy the ID of the actor. For virtual actors we have our own table of values which
+    Actor* actor; // null for virtual actors
+    s16 id; // For real actors, copy actor ID. For virtual actors we have our own table of values which
             // are out of range for real actors.
     f32 yDistToPlayer;
     f32 xzDistToPlayer;
@@ -75,7 +69,6 @@ struct AccessibleActor {
 
     // Add more state as needed.
     ActorAccessibilityPolicy policy; // A copy, so it can be customized on a per-actor basis if needed.
-    void* userData;                  // Set by the policy. Can be anything.
 };
 
 struct AimAssistProps {
@@ -83,6 +76,11 @@ struct AimAssistProps {
     f32 volume;
     f32 pan;
 };
+
+struct TerrainCueState;
+void DeleteTerrainCueState(TerrainCueState*);
+TerrainCueState* InitTerrainCueState(AccessibleActor*);
+void RunTerrainCueState(TerrainCueState*, PlayState*);
 
 // Initialize accessibility.
 void ActorAccessibility_Init();
@@ -92,9 +90,6 @@ void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char*
 void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char* englishName,
                                    ActorAccessibilityCallback callback);
 void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char* englishName, s16 sfx);
-void ActorAccessibility_InitTerrainCueState(AccessibleActor* actor);
-void ActorAccessibility_CleanupTerrainCueState(AccessibleActor* actor);
-void accessible_va_terrain_cue(AccessibleActor* actor);
 
 uint64_t ActorAccessibility_GetNextID();
 void ActorAccessibility_TrackNewActor(Actor* actor);
