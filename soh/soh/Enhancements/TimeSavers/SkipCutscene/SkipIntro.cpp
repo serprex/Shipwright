@@ -11,7 +11,8 @@ extern SaveContext gSaveContext;
 }
 
 void RegisterSkipIntro() {
-    REGISTER_VB_SHOULD(VB_PLAY_TRANSITION_CS, {
+    bool shouldRegister = CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Intro"), 0) || IS_RANDO;
+    COND_VB_SHOULD(VB_PLAY_TRANSITION_CS, shouldRegister, {
         // If we're playing rando and if starting age is adult and/or overworld spawns are shuffled we need to skip
         // the cutscene regardless of the enhancement being on.
         bool adultStart = gSaveContext.linkAge == LINK_AGE_ADULT;
@@ -46,4 +47,5 @@ void RegisterSkipIntro() {
     });
 }
 
-static RegisterShipInitFunc initFunc(RegisterSkipIntro);
+static RegisterShipInitFunc initFunc(RegisterSkipIntro,
+                                     { CVAR_ENHANCEMENT("TimeSavers.SkipCutscene.Intro"), "IS_RANDO" });
