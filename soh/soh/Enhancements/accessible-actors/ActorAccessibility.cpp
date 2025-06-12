@@ -394,7 +394,7 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
 
     if (actor->policy.callback != nullptr) {
         actor->policy.callback(actor);
-    } else {
+    } else if (actor->policy.sound != 0) {
         ActorAccessibility_PlaySoundForActor(actor, 0, actor->policy.sound);
     }
 }
