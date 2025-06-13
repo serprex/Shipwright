@@ -3749,20 +3749,13 @@ TreeIdentity Randomizer::IdentifyTree(s32 sceneNum, s32 posX, s32 posZ) {
         sceneNum = SCENE_MARKET_DAY;
     }
 
-    for (int x = -1; x <= 1; x++) {
-        for (int z = -1; z <= 1; z++) {
-            s32 actorParams = TWO_ACTOR_PARAMS(posX + x, posZ + z);
-            Rando::Location* location = GetCheckObjectFromActor(ACTOR_EN_WOOD02, sceneNum, actorParams);
-            if (location->GetRandomizerCheck() != RC_UNKNOWN_CHECK) {
-                if (location->GetRCType() == RCTYPE_NLTREE &&
-                    CVarGetInteger(CVAR_RANDOMIZER_SETTING("LogicRules"), RO_LOGIC_GLITCHLESS) != RO_LOGIC_NO_LOGIC) {
-                    break;
-                }
-                treeIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
-                treeIdentity.randomizerCheck = location->GetRandomizerCheck();
-                return treeIdentity;
-            }
-        }
+    s32 actorParams = TWO_ACTOR_PARAMS(posX, posZ);
+    Rando::Location* location = GetCheckObjectFromActor(ACTOR_EN_WOOD02, sceneNum, actorParams);
+    if (location->GetRandomizerCheck() != RC_UNKNOWN_CHECK &&
+        (location->GetRCType() != RCTYPE_NLTREE || GetRandoSettingValue(RSK_LOGIC_RULES) == RO_LOGIC_NO_LOGIC)) {
+        treeIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
+        treeIdentity.randomizerCheck = location->GetRandomizerCheck();
+        return treeIdentity;
     }
 
     treeIdentity.randomizerInf = RAND_INF_MAX;
