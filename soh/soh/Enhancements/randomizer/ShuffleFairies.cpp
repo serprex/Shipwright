@@ -1,18 +1,19 @@
-#include "ShuffleFairies.h"
 #include "randomizer_grotto.h"
 #include "draw.h"
 #include "src/overlays/actors/ovl_En_Elf/z_en_elf.h"
 #include "src/overlays/actors/ovl_Obj_Bean/z_obj_bean.h"
 #include "src/overlays/actors/ovl_En_Gs/z_en_gs.h"
 #include "src/overlays/actors/ovl_Shot_Sun/z_shot_sun.h"
-#include "../../OTRGlobals.h"
-#include "../../cvar_prefixes.h"
+#include "soh/OTRGlobals.h"
+#include "soh/cvar_prefixes.h"
+#include "soh/Enhancements/item-tables/ItemTableTypes.h"
 #include "static_data.h"
 
 #define FAIRY_FLAG_TIMED (1 << 8)
 
 void ShuffleFairies_DrawRandomizedItem(EnElf* enElf, PlayState* play) {
-    GetItemEntry randoGetItem = enElf->sohFairyIdentity.itemEntry;
+    GetItemEntry randoGetItem =
+        Rando::Context::GetInstance()->GetFinalGIEntry(enElf->sohFairyIdentity.randomizerCheck, true, GI_FAIRY);
     if (CVarGetInteger(CVAR_RANDOMIZER_ENHANCEMENT("MysteriousShuffle"), 0)) {
         randoGetItem = GET_ITEM_MYSTERY;
     }
@@ -60,8 +61,7 @@ FairyIdentity ShuffleFairies_GetFairyIdentity(int32_t params) {
         assert(false);
     } else {
         fairyIdentity.randomizerInf = static_cast<RandomizerInf>(location->GetCollectionCheck().flag);
-        fairyIdentity.itemEntry =
-            Rando::Context::GetInstance()->GetFinalGIEntry(location->GetRandomizerCheck(), true, GI_FAIRY);
+        fairyIdentity.randomizerCheck = location->GetRandomizerCheck();
     }
 
     return fairyIdentity;
@@ -79,22 +79,20 @@ bool ShuffleFairies_SpawnFairy(f32 posX, f32 posY, f32 posZ, int32_t params) {
     return false;
 }
 
-void ShuffleFairies_OnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_list originalArgs) {
-    va_list args;
-    va_copy(args, originalArgs);
-
-    Actor* actor = va_arg(args, Actor*);
-
-    va_end(args);
+void RegisterShuffleFairies() {
+    bool shouldRegister = IS_RANDO && RAND_GET_OPTION(RSK_SHUFFLE_FAIRIES);
 
     // Grant item when picking up fairy.
-    if (id == VB_FAIRY_HEAL) {
-        EnElf* enElf = (EnElf*)(actor);
+    COND_VB_SHOULD(VB_FAIRY_HEAL, shouldRegister, {
+        EnElf* enElf = va_arg(args, EnElf*);
         if (enElf->sohFairyIdentity.randomizerInf && enElf->sohFairyIdentity.randomizerInf != RAND_INF_MAX) {
             Flags_SetRandomizerInf(enElf->sohFairyIdentity.randomizerInf);
         }
-        // Spawn fairies in fairy fountains
-    } else if (id == VB_SPAWN_FOUNTAIN_FAIRIES) {
+    });
+
+    // Spawn fairies in fairy fountains
+    COND_VB_SHOULD(VB_SPAWN_FOUNTAIN_FAIRIES, shouldRegister, {
+        Actor* actor = va_arg(args, Actor*);
         bool fairySpawned = false;
         s16 grottoId = (gPlayState->sceneNum == SCENE_FAIRYS_FOUNTAIN) ? Grotto_CurrentGrotto() : 0;
         for (s16 index = 0; index < 8; index++) {
@@ -106,9 +104,11 @@ void ShuffleFairies_OnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should,
         if (fairySpawned) {
             *should = false;
         }
-        // Spawn 3 fairies when playing Song of Storms next to a planted bean
-    } else if (id == VB_SPAWN_BEAN_STALK_FAIRIES) {
-        ObjBean* objBean = (ObjBean*)(actor);
+    });
+
+    // Spawn 3 fairies when playing Song of Storms next to a planted bean
+    COND_VB_SHOULD(VB_SPAWN_BEAN_STALK_FAIRIES, shouldRegister, {
+        ObjBean* objBean = va_arg(args, ObjBean*);
         bool fairySpawned = false;
         for (s16 index = 0; index < 3; index++) {
             int32_t params = ((objBean->dyna.actor.params & 0x3F) << 8) | index;
@@ -120,17 +120,21 @@ void ShuffleFairies_OnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should,
         if (fairySpawned) {
             *should = false;
         }
-        // Spawn a fairy from a ShotSun when playing the right song near it
-    } else if (id == VB_SPAWN_SONG_FAIRY) {
-        ShotSun* shotSun = (ShotSun*)(actor);
+    });
+
+    // Spawn a fairy from a ShotSun when playing the right song near it
+    COND_VB_SHOULD(VB_SPAWN_SONG_FAIRY, shouldRegister, {
+        ShotSun* shotSun = va_arg(args, ShotSun*);
         if (ShuffleFairies_SpawnFairy(shotSun->actor.world.pos.x, shotSun->actor.world.pos.y,
                                       shotSun->actor.world.pos.z,
                                       TWO_ACTOR_PARAMS(0x1000, (int32_t)shotSun->actor.world.pos.z))) {
             *should = false;
         }
-        // Handle playing both misc songs and song of storms in front of a gossip stone.
-    } else if (id == VB_SPAWN_GOSSIP_STONE_FAIRY) {
-        EnGs* gossipStone = (EnGs*)(actor);
+    });
+
+    // Handle playing both misc songs and song of storms in front of a gossip stone.
+    COND_VB_SHOULD(VB_SPAWN_GOSSIP_STONE_FAIRY, shouldRegister, {
+        EnGs* gossipStone = va_arg(args, EnGs*);
 
         // Mimic vanilla behaviour, only go into this path if song played is one of the ones normally spawning a fairy.
         // Otherwise fall back to vanilla behaviour.
@@ -167,20 +171,7 @@ void ShuffleFairies_OnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should,
                 *should = false;
             }
         }
-    }
-}
-
-uint32_t onVanillaBehaviorHook = 0;
-
-void ShuffleFairies_RegisterHooks() {
-    onVanillaBehaviorHook = GameInteractor::Instance->RegisterGameHook<GameInteractor::OnVanillaBehavior>(
-        ShuffleFairies_OnVanillaBehaviorHandler);
-}
-
-void ShuffleFairies_UnregisterHooks() {
-    GameInteractor::Instance->UnregisterGameHook<GameInteractor::OnVanillaBehavior>(onVanillaBehaviorHook);
-
-    onVanillaBehaviorHook = 0;
+    });
 }
 
 void Rando::StaticData::RegisterFairyLocations() {
@@ -412,4 +403,5 @@ void Rando::StaticData::RegisterFairyLocations() {
     // clang-format on
 }
 
-static RegisterShipInitFunc initFunc(Rando::StaticData::RegisterFairyLocations);
+static RegisterShipInitFunc registerShuffleFairies(RegisterShuffleFairies, { "IS_RANDO" });
+static RegisterShipInitFunc registerShuffleFairiesLocations(Rando::StaticData::RegisterFairyLocations);

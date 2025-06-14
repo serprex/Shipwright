@@ -6354,6 +6354,11 @@ typedef struct FishIdentity {
     RandomizerCheck randomizerCheck;
 } FishIdentity;
 
+typedef struct FairyIdentity {
+    RandomizerInf randomizerInf;
+    RandomizerCheck randomizerCheck;
+} FairyIdentity;
+
 typedef struct GrassIdentity {
     RandomizerInf randomizerInf;
     RandomizerCheck randomizerCheck;
