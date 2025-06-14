@@ -50,11 +50,10 @@ extern "C" void EnWood02_RandomizerDraw(Actor* thisx, PlayState* play) {
     GetItemCategory getItemCategory;
     GetItemEntry smallCrateItem;
     auto treeActor = (EnWood02*)thisx;
-    int csmc = CVarGetInteger(CVAR_ENHANCEMENT("ChestSizeAndTextureMatchContents"), CSMC_DISABLED);
+    bool csmc = CVarGetInteger(CVAR_ENHANCEMENT("ChestSizeAndTextureMatchContents"), 0);
     int requiresStoneAgony = CVarGetInteger(CVAR_ENHANCEMENT("ChestSizeDependsStoneOfAgony"), 0);
 
-    int isVanilla =
-        csmc == CSMC_DISABLED || csmc == CSMC_SIZE || (requiresStoneAgony && !CHECK_QUEST_ITEM(QUEST_STONE_OF_AGONY));
+    int isVanilla = !csmc || (requiresStoneAgony && !CHECK_QUEST_ITEM(QUEST_STONE_OF_AGONY));
 
     const auto treeIdentity = ObjectExtension::GetInstance().Get<TreeIdentity>(&treeActor->actor);
     if (treeIdentity == nullptr) {
