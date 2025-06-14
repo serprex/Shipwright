@@ -38,6 +38,12 @@ static const ALIGN_ASSET(2) char gSkullTreasureChestFrontTex[] = dgSkullTreasure
 #define dgSkullTreasureChestSideAndTopTex "__OTR__objects/object_box/gSkullTreasureChestSideAndTopTex"
 static const ALIGN_ASSET(2) char gSkullTreasureChestSideAndTopTex[] = dgSkullTreasureChestSideAndTopTex;
 
+#define dgHealthTreasureChestFrontTex "__OTR__objects/object_box/gHealthTreasureChestFrontTex"
+static const ALIGN_ASSET(2) char gHealthTreasureChestFrontTex[] = dgHealthTreasureChestFrontTex;
+
+#define dgHealthTreasureChestSideAndTopTex "__OTR__objects/object_box/gHealthTreasureChestSideAndTopTex"
+static const ALIGN_ASSET(2) char gHealthTreasureChestSideAndTopTex[] = dgHealthTreasureChestSideAndTopTex;
+
 #define dgTitleRandomizerSubtitleTex "__OTR__objects/object_mag/gTitleRandomizerSubtitleTex"
 static const ALIGN_ASSET(2) char gTitleRandomizerSubtitleTex[] = dgTitleRandomizerSubtitleTex;
 

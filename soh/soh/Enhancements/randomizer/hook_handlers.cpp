@@ -327,6 +327,7 @@ void RandomizerOnPlayerUpdateForRCQueueHandler() {
                     getItemEntry.modIndex == MOD_RANDOMIZER) &&
                   (getItemEntry.getItemCategory == ITEM_CATEGORY_JUNK ||
                    getItemEntry.getItemCategory == ITEM_CATEGORY_SKULLTULA_TOKEN ||
+                   getItemEntry.getItemCategory == ITEM_CATEGORY_HEALTH ||
                    getItemEntry.getItemCategory == ITEM_CATEGORY_LESSER))))) {
             Item_DropCollectible(gPlayState, &spawnPos, static_cast<int16_t>(ITEM00_SOH_GIVE_ITEM_ENTRY | 0x8000));
         }

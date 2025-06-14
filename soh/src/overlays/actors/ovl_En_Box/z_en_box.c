@@ -84,11 +84,13 @@ Gfx gGoldTreasureChestChestSideAndLidDL[116] = { 0 };
 Gfx gKeyTreasureChestChestSideAndLidDL[116] = { 0 };
 Gfx gChristmasRedTreasureChestChestSideAndLidDL[116] = { 0 };
 Gfx gChristmasGreenTreasureChestChestSideAndLidDL[116] = { 0 };
+Gfx gHealthTreasureChestChestSideAndLidDL[116] = { 0 };
 Gfx gSkullTreasureChestChestFrontDL[128] = { 0 };
 Gfx gGoldTreasureChestChestFrontDL[128] = { 0 };
 Gfx gKeyTreasureChestChestFrontDL[128] = { 0 };
 Gfx gChristmasRedTreasureChestChestFrontDL[128] = { 0 };
 Gfx gChristmasGreenTreasureChestChestFrontDL[128] = { 0 };
+Gfx gHealthTreasureChestChestFrontDL[128] = { 0 };
 u8 hasCreatedRandoChestTextures = 0;
 u8 hasCustomChestDLs = 0;
 u8 hasChristmasChestTexturesAvailable = 0;
@@ -655,6 +657,10 @@ void EnBox_UpdateSizeAndTexture(EnBox* this, PlayState* play) {
                 this->boxBodyDL = gTreasureChestBossKeyChestFrontDL;
                 this->boxLidDL = gTreasureChestBossKeyChestSideAndTopDL;
                 break;
+            case ITEM_CATEGORY_HEALTH:
+                this->boxBodyDL = gHealthTreasureChestChestFrontDL;
+                this->boxLidDL = gHealthTreasureChestChestSideAndLidDL;
+                break;
             case ITEM_CATEGORY_LESSER:
             case ITEM_CATEGORY_JUNK:
             default:
@@ -740,6 +746,8 @@ void EnBox_CreateExtraChestTextures() {
         gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, gChristmasRedTreasureChestSideAndTopTex),
         gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, gChristmasGreenTreasureChestFrontTex),
         gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, gChristmasGreenTreasureChestSideAndTopTex),
+        gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, gHealthTreasureChestFrontTex),
+        gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, gHealthTreasureChestSideAndTopTex),
     };
 
     Gfx gNoOp[] = { gsDPNoOp() };
@@ -752,6 +760,7 @@ void EnBox_CreateExtraChestTextures() {
         gKeyTreasureChestChestFrontDL[frontIndex] = *frontCmd;
         gChristmasRedTreasureChestChestFrontDL[frontIndex] = *frontCmd;
         gChristmasGreenTreasureChestChestFrontDL[frontIndex] = *frontCmd;
+        gHealthTreasureChestChestFrontDL[frontIndex] = *frontCmd;
 
         // Set the second instruction of img OTR hash opcode to noop, since we will replace it with the
         // OTR filepath opcode below
@@ -764,6 +773,7 @@ void EnBox_CreateExtraChestTextures() {
             gKeyTreasureChestChestFrontDL[frontIndex] = gNoOp[0];
             gChristmasRedTreasureChestChestFrontDL[frontIndex] = gNoOp[0];
             gChristmasGreenTreasureChestChestFrontDL[frontIndex] = gNoOp[0];
+            gHealthTreasureChestChestFrontDL[frontIndex] = gNoOp[0];
         }
 
         frontIndex++;
@@ -774,6 +784,7 @@ void EnBox_CreateExtraChestTextures() {
     gKeyTreasureChestChestFrontDL[frontIndex] = *frontCmd;
     gChristmasRedTreasureChestChestFrontDL[frontIndex] = *frontCmd;
     gChristmasGreenTreasureChestChestFrontDL[frontIndex] = *frontCmd;
+    gHealthTreasureChestChestFrontDL[frontIndex] = *frontCmd;
 
     gSkullTreasureChestChestFrontDL[5] = gTreasureChestChestTextures[0];
     gSkullTreasureChestChestFrontDL[23] = gTreasureChestChestTextures[1];
@@ -795,6 +806,10 @@ void EnBox_CreateExtraChestTextures() {
     gChristmasGreenTreasureChestChestFrontDL[23] = gTreasureChestChestTextures[9];
     gChristmasGreenTreasureChestChestFrontDL[37] = gTreasureChestChestTextures[8];
     gChristmasGreenTreasureChestChestFrontDL[50] = gTreasureChestChestTextures[9];
+    gHealthTreasureChestChestFrontDL[5] = gTreasureChestChestTextures[10];
+    gHealthTreasureChestChestFrontDL[23] = gTreasureChestChestTextures[11];
+    gHealthTreasureChestChestFrontDL[37] = gTreasureChestChestTextures[10];
+    gHealthTreasureChestChestFrontDL[50] = gTreasureChestChestTextures[11];
 
     Gfx* sideCmd = ResourceMgr_LoadGfxByName(gTreasureChestChestSideAndLidDL);
     int sideIndex = 0;
@@ -804,6 +819,7 @@ void EnBox_CreateExtraChestTextures() {
         gKeyTreasureChestChestSideAndLidDL[sideIndex] = *sideCmd;
         gChristmasRedTreasureChestChestSideAndLidDL[sideIndex] = *sideCmd;
         gChristmasGreenTreasureChestChestSideAndLidDL[sideIndex] = *sideCmd;
+        gHealthTreasureChestChestSideAndLidDL[sideIndex] = *sideCmd;
 
         // Set the second instruction of img OTR hash opcode to noop, since we will replace it with the
         // OTR filepath opcode below
@@ -816,6 +832,7 @@ void EnBox_CreateExtraChestTextures() {
             gKeyTreasureChestChestSideAndLidDL[sideIndex] = gNoOp[0];
             gChristmasRedTreasureChestChestSideAndLidDL[sideIndex] = gNoOp[0];
             gChristmasGreenTreasureChestChestSideAndLidDL[sideIndex] = gNoOp[0];
+            gHealthTreasureChestChestSideAndLidDL[sideIndex] = gNoOp[0];
         }
 
         sideIndex++;
@@ -826,6 +843,7 @@ void EnBox_CreateExtraChestTextures() {
     gKeyTreasureChestChestSideAndLidDL[sideIndex] = *sideCmd;
     gChristmasRedTreasureChestChestSideAndLidDL[sideIndex] = *sideCmd;
     gChristmasGreenTreasureChestChestSideAndLidDL[sideIndex] = *sideCmd;
+    gHealthTreasureChestChestSideAndLidDL[sideIndex] = *sideCmd;
 
     gSkullTreasureChestChestSideAndLidDL[5] = gTreasureChestChestTextures[0];
     gSkullTreasureChestChestSideAndLidDL[29] = gTreasureChestChestTextures[1];
@@ -842,6 +860,9 @@ void EnBox_CreateExtraChestTextures() {
     gChristmasGreenTreasureChestChestSideAndLidDL[5] = gTreasureChestChestTextures[8];
     gChristmasGreenTreasureChestChestSideAndLidDL[29] = gTreasureChestChestTextures[9];
     gChristmasGreenTreasureChestChestSideAndLidDL[45] = gTreasureChestChestTextures[8];
+    gHealthTreasureChestChestSideAndLidDL[5] = gTreasureChestChestTextures[10];
+    gHealthTreasureChestChestSideAndLidDL[29] = gTreasureChestChestTextures[11];
+    gHealthTreasureChestChestSideAndLidDL[45] = gTreasureChestChestTextures[10];
 
     ResourceMgr_ListFiles("objects/object_box/gChristmas*", &hasChristmasChestTexturesAvailable);
     hasCreatedRandoChestTextures = 1;
