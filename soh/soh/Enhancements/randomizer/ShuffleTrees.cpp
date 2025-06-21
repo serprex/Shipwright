@@ -6,6 +6,7 @@ extern "C" {
 #include "variables.h"
 #include "src/overlays/actors/ovl_En_Wood02/z_en_wood02.h"
 #include "objects/object_wood02/object_wood02.h"
+#include "soh/Enhancements/enhancementTypes.h"
 extern PlayState* gPlayState;
 void EnWood02_Draw(Actor*, PlayState*);
 }
@@ -41,45 +42,82 @@ uint8_t EnWood02_RandomizerHoldsItem(EnWood02* treeActor, PlayState* play) {
 }
 
 extern "C" void EnWood02_RandomizerDraw(Actor* thisx, PlayState* play) {
-    EnWood02* thisy = (EnWood02*)thisx;
-    s16 type = thisy->actor.params;
-    u8 red;
-    u8 green;
-    u8 blue;
+    GetItemCategory getItemCategory;
+    auto treeActor = (EnWood02*)thisx;
+    int csmc = CVarGetInteger(CVAR_ENHANCEMENT("ChestSizeAndTextureMatchContents"), CSMC_DISABLED);
+    int requiresStoneAgony = CVarGetInteger(CVAR_ENHANCEMENT("ChestSizeDependsStoneOfAgony"), 0);
 
-    if ((type == WOOD_TREE_OVAL_GREEN_SPAWNER) || (type == WOOD_TREE_OVAL_GREEN_SPAWNED) ||
-        (type == WOOD_TREE_OVAL_GREEN) || (type == WOOD_LEAF_GREEN)) {
-        red = 50;
-        green = 170;
-        blue = 70;
-    } else if ((type == WOOD_TREE_OVAL_YELLOW_SPAWNER) || (type == WOOD_TREE_OVAL_YELLOW_SPAWNED) ||
-               (type == WOOD_LEAF_YELLOW)) {
-        red = 180;
-        green = 155;
-        blue = 0;
-    } else {
-        red = green = blue = 255;
+    int isVanilla =
+        csmc == CSMC_DISABLED || csmc == CSMC_SIZE || (requiresStoneAgony && !CHECK_QUEST_ITEM(QUEST_STONE_OF_AGONY));
+
+    if (isVanilla || treeActor->treeId.randomizerCheck == RC_UNKNOWN_CHECK) {
+        return;
     }
 
-    OPEN_DISPS(play->state.gfxCtx);
-    Gfx_SetupDL_25Xlu(play->state.gfxCtx);
-    if ((thisy->actor.params == WOOD_LEAF_GREEN) || (thisy->actor.params == WOOD_LEAF_YELLOW)) {
-        Gfx_SetupDL_25Opa(play->state.gfxCtx);
-        gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, red, green, blue, 127);
-        Gfx_DrawDListOpa(play, (Gfx*)gRandoTreeDL);
-    } else if (D_80B3BF70[thisy->drawType & 0xF] != NULL) {
-        gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, red, green, blue, 0);
-        Gfx_DrawDListOpa(play, (Gfx*)gRandoTreeDL);
-        gDPSetEnvColor(POLY_XLU_DISP++, red, green, blue, 0);
-        gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(play->state.gfxCtx, (char*)__FILE__, __LINE__),
-                  G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
-        gSPDisplayList(POLY_XLU_DISP++, D_80B3BF70[thisy->drawType & 0xF]);
-    }
-    CLOSE_DISPS(play->state.gfxCtx);
+    GetItemEntry smallCrateItem =
+        Rando::Context::GetInstance()->GetFinalGIEntry(treeActor->treeId.randomizerCheck, true, GI_NONE);
+    getItemCategory = smallCrateItem.getItemCategory;
 
-    if (!EnWood02_RandomizerHoldsItem(thisy, gPlayState)) {
-        thisy->actor.draw = (ActorFunc)EnWood02_Draw;
+    // If they have bombchus, don't consider the bombchu item major
+    if (INV_CONTENT(ITEM_BOMBCHU) == ITEM_BOMBCHU &&
+        ((smallCrateItem.modIndex == MOD_RANDOMIZER && smallCrateItem.getItemId == RG_PROGRESSIVE_BOMBCHUS) ||
+         (smallCrateItem.modIndex == MOD_NONE &&
+          (smallCrateItem.getItemId == GI_BOMBCHUS_5 || smallCrateItem.getItemId == GI_BOMBCHUS_10 ||
+           smallCrateItem.getItemId == GI_BOMBCHUS_20)))) {
+        getItemCategory = ITEM_CATEGORY_JUNK;
+        // If it's a bottle and they already have one, consider the item lesser
+    } else if ((smallCrateItem.modIndex == MOD_RANDOMIZER && smallCrateItem.getItemId >= RG_BOTTLE_WITH_RED_POTION &&
+                smallCrateItem.getItemId <= RG_BOTTLE_WITH_POE) ||
+               (smallCrateItem.modIndex == MOD_NONE &&
+                (smallCrateItem.getItemId == GI_BOTTLE || smallCrateItem.getItemId == GI_MILK_BOTTLE))) {
+        if (gSaveContext.inventory.items[SLOT_BOTTLE_1] != ITEM_NONE) {
+            getItemCategory = ITEM_CATEGORY_LESSER;
+        }
     }
+
+    GraphicsContext* gfxCtx = play->state.gfxCtx;
+    OPEN_DISPS(gfxCtx);
+    Matrix_Push();
+
+    // Change texture
+    switch (getItemCategory) {
+        case ITEM_CATEGORY_MAJOR:
+            Matrix_Scale(0.1, 0.05, 0.1, MTXMODE_APPLY);
+            Gfx_DrawDListOpa(play, (Gfx*)gSmallMajorCrateDL);
+            break;
+        case ITEM_CATEGORY_SKULLTULA_TOKEN:
+            Matrix_Scale(0.1, 0.05, 0.1, MTXMODE_APPLY);
+            Gfx_DrawDListOpa(play, (Gfx*)gSmallTokenCrateDL);
+            break;
+        case ITEM_CATEGORY_SMALL_KEY:
+            Matrix_Scale(0.1, 0.05, 0.1, MTXMODE_APPLY);
+            Gfx_DrawDListOpa(play, (Gfx*)gSmallSmallKeyCrateDL);
+            break;
+        case ITEM_CATEGORY_BOSS_KEY:
+            Matrix_Scale(0.1, 0.05, 0.1, MTXMODE_APPLY);
+            Gfx_DrawDListOpa(play, (Gfx*)gSmallBossKeyCrateDL);
+            break;
+        case ITEM_CATEGORY_LESSER:
+            Matrix_Scale(0.1, 0.05, 0.1, MTXMODE_APPLY);
+            switch (smallCrateItem.itemId) {
+                case ITEM_HEART_PIECE:
+                case ITEM_HEART_PIECE_2:
+                case ITEM_HEART_CONTAINER:
+                    Gfx_DrawDListOpa(play, (Gfx*)gSmallHeartCrateDL);
+                    break;
+                default:
+                    Gfx_DrawDListOpa(play, (Gfx*)gSmallMinorCrateDL);
+                    break;
+            }
+        case ITEM_CATEGORY_JUNK:
+        default:
+            Matrix_Scale(0.04, 0.02, 0.04, MTXMODE_APPLY);
+            Gfx_DrawDListOpa(play, (Gfx*)gLargeJunkCrateDL);
+            break;
+    }
+
+    Matrix_Pop();
+    CLOSE_DISPS(gfxCtx);
 }
 
 void EnWood02_RandomizerSpawnCollectible(EnWood02* treeActor, PlayState* play) {
@@ -113,8 +151,7 @@ void RegisterShuffleTrees() {
     COND_VB_SHOULD(VB_TREE_SETUP_DRAW, shouldRegister, {
         EnWood02* treeActor = va_arg(args, EnWood02*);
         if (EnWood02_RandomizerHoldsItem(treeActor, gPlayState)) {
-            treeActor->actor.draw = (ActorFunc)EnWood02_RandomizerDraw;
-            *should = false;
+            EnWood02_RandomizerDraw(&treeActor->actor, gPlayState);
         }
     });
 
