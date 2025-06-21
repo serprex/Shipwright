@@ -77,9 +77,6 @@ static const ALIGN_ASSET(2) char gBossSoulSkullDL[] = dgBossSoulSkullDL;
 #define dgRandoPotDL "__OTR__objects/gameplay_dangeon_keep/gRandoPotDL"
 static const ALIGN_ASSET(2) char gRandoPotDL[] = dgRandoPotDL;
 
-#define dgRandoTreeDL "__OTR__objects/object_rando_tree/gRandoTreeDL"
-static const ALIGN_ASSET(2) char gRandoTreeDL[] = dgRandoTreeDL;
-
 #define dgRandoBushDL "__OTR__objects/gameplay_field_keep/gFieldBushRandomDL"
 static const ALIGN_ASSET(2) char gRandoBushDL[] = dgRandoBushDL;
 
