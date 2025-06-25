@@ -310,10 +310,12 @@ bool IsCheckHidden(RandomizerCheck rc) {
     bool seen = status == RCSHOW_SEEN || status == RCSHOW_IDENTIFIED;
     bool scummed = status == RCSHOW_SCUMMED;
     bool unchecked = status == RCSHOW_UNCHECKED;
-    bool isJunk = itemLoc->GetPlacedRandomizerGet() != RG_ICE_TRAP && itemLocation->GetPlacedItem().GetGIEntry()->getItemCategory == ITEM_CATEGORY_JUNK;
+    bool isJunk = itemLoc->GetPlacedRandomizerGet() != RG_ICE_TRAP &&
+                  itemLocation->GetPlacedItem().GetGIEntry()->getItemCategory == ITEM_CATEGORY_JUNK;
     bool knownJunk = (seen || scummed) && isJunk;
 
-    return (skipped && hideSkipped) || (seen && hideSeen) || (scummed && hideScummed) || (unchecked && hideUnchecked) || (knownJunk && hideJunk);
+    return (skipped && hideSkipped) || (seen && hideSeen) || (scummed && hideScummed) || (unchecked && hideUnchecked) ||
+           (knownJunk && hideJunk);
 }
 
 void RecalculateAreaTotals(RandomizerCheckArea rcArea) {
@@ -1232,11 +1234,10 @@ bool ShouldShowCheck(RandomizerCheck check) {
     Rando::ItemLocation* itemLoc = Rando::Context::GetInstance()->GetItemLocation(check);
     RandomizerCheckStatus status = itemLoc->GetCheckStatus();
 
-    if (
-        hideJunk &&
-        ((status == RCSHOW_SEEN && itemLoc->GetPlacedRandomizerGet() != RG_ICE_TRAP) || status == RCSHOW_IDENTIFIED || status == RCSHOW_SCUMMED) &&
-        itemLoc->GetPlacedItem().GetGIEntry()->getItemCategory == ITEM_CATEGORY_JUNK
-    ) {
+    if (hideJunk &&
+        ((status == RCSHOW_SEEN && itemLoc->GetPlacedRandomizerGet() != RG_ICE_TRAP) || status == RCSHOW_IDENTIFIED ||
+         status == RCSHOW_SCUMMED) &&
+        itemLoc->GetPlacedItem().GetGIEntry()->getItemCategory == ITEM_CATEGORY_JUNK) {
         return false;
     }
 
@@ -1606,11 +1607,10 @@ bool IsVisibleInCheckTracker(RandomizerCheck rc) {
     Rando::ItemLocation* itemLoc = Rando::Context::GetInstance()->GetItemLocation(rc);
     RandomizerCheckStatus status = itemLoc->GetCheckStatus();
 
-    if (
-        hideJunk &&
-        ((status == RCSHOW_SEEN && itemLoc->GetPlacedRandomizerGet() != RG_ICE_TRAP) || status == RCSHOW_IDENTIFIED || status == RCSHOW_SCUMMED) &&
-        itemLoc->GetPlacedItem().GetGIEntry()->getItemCategory == ITEM_CATEGORY_JUNK
-    ) {
+    if (hideJunk &&
+        ((status == RCSHOW_SEEN && itemLoc->GetPlacedRandomizerGet() != RG_ICE_TRAP) || status == RCSHOW_IDENTIFIED ||
+         status == RCSHOW_SCUMMED) &&
+        itemLoc->GetPlacedItem().GetGIEntry()->getItemCategory == ITEM_CATEGORY_JUNK) {
         return false;
     }
 
@@ -1732,12 +1732,10 @@ void DrawLocation(RandomizerCheck rc) {
         return;
     }
 
-    if (
-        !showHidden &&
-        hideJunk &&
-        ((status == RCSHOW_SEEN && itemLoc->GetPlacedRandomizerGet() != RG_ICE_TRAP) || status == RCSHOW_IDENTIFIED || status == RCSHOW_SCUMMED) &&
-        itemLoc->GetPlacedItem().GetGIEntry()->getItemCategory == ITEM_CATEGORY_JUNK
-    ) {
+    if (!showHidden && hideJunk &&
+        ((status == RCSHOW_SEEN && itemLoc->GetPlacedRandomizerGet() != RG_ICE_TRAP) || status == RCSHOW_IDENTIFIED ||
+         status == RCSHOW_SCUMMED) &&
+        itemLoc->GetPlacedItem().GetGIEntry()->getItemCategory == ITEM_CATEGORY_JUNK) {
         return;
     }
 
@@ -2253,8 +2251,8 @@ void RegisterCheckTrackerWidgets() {
     hideJunkWidget = { .name = "Hide Junk", .type = WidgetType::WIDGET_CVAR_CHECKBOX };
     hideJunkWidget.CVar(CVAR_TRACKER_CHECK("Junk.Hide"))
         .Options(CheckboxOptions()
-                .Color(THEME_COLOR)
-                .Tooltip("If enabled, checks that are known to be junk will be hidden."));
+                     .Color(THEME_COLOR)
+                     .Tooltip("If enabled, checks that are known to be junk will be hidden."));
     SohGui::mSohMenu->AddSearchWidget({ hideJunkWidget, "Randomizer", "Check Tracker", "General Settings" });
 
     hideUnshuffledShopWidget = { .name = "Hide Unshuffled Shop Item Checks", .type = WidgetType::WIDGET_CVAR_CHECKBOX };
