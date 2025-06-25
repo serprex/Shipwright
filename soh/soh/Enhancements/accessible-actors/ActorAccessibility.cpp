@@ -401,21 +401,27 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
 
 void ActorAccessibility_RunAccessibilityForAllActors(PlayState* play) {
     Player* player = GET_PLAYER(play);
-    if (play->sceneNum != aa->currentScene) {
+
+    if (aa->currentScene != play->sceneNum) {
         if (aa->terrainCues)
             ActorAccessibility_StopAllSounds(aa->terrainCues);
         ActorAccessibility_StopAllVirtualActors(aa->currentSceneGlobal);
         ActorAccessibility_StopAllVirtualActors(aa->currentRoomLocal);
+        ActorAccessibility_InterpretCurrentScene(play);
         aa->currentSceneGlobal = ActorAccessibility_GetVirtualActorList(play->sceneNum, -1);
+        aa->currentRoomLocal = ActorAccessibility_GetVirtualActorList(play->sceneNum, play->roomCtx.curRoom.num);
+
         aa->currentScene = play->sceneNum;
-        aa->currentRoomLocal = NULL;
-        aa->currentRoom = -1;
-    }
-    if (aa->currentRoom != play->roomCtx.curRoom.num) {
+        aa->currentRoom = play->roomCtx.curRoom.num;
+        aa->currentRoomClear = Flags_GetClear(play, aa->currentRoom);
+    } else if (aa->currentRoom != play->roomCtx.curRoom.num) {
         ActorAccessibility_StopAllVirtualActors(aa->currentRoomLocal);
+        ActorAccessibility_AnnounceRoomNumber(play);
         aa->currentRoomLocal = ActorAccessibility_GetVirtualActorList(play->sceneNum, play->roomCtx.curRoom.num);
         aa->currentRoom = play->roomCtx.curRoom.num;
+        aa->currentRoomClear = Flags_GetClear(play, aa->currentRoom);
     }
+
     if (aa->glossary->currentScene != play->sceneNum || aa->glossary->currentRoom != play->roomCtx.curRoom.num) {
         if (aa->glossary->GlossaryStarted) {
             aa->glossary->cooldown = 0;
@@ -457,20 +463,9 @@ void ActorAccessibility_RunAccessibilityForAllActors(PlayState* play) {
 
 void ActorAccessibility_GeneralHelper(PlayState* play) {
     Player* player = GET_PLAYER(play);
-    if (player == NULL)
+    if (player == nullptr)
         return;
 
-    if (aa->currentScene == play->sceneNum && aa->currentRoom != play->roomCtx.curRoom.num) {
-        ActorAccessibility_AnnounceRoomNumber(play);
-        aa->currentRoom = play->roomCtx.curRoom.num;
-        aa->currentRoomClear = Flags_GetClear(play, aa->currentRoom);
-    }
-    if (aa->currentScene != play->sceneNum) {
-        ActorAccessibility_InterpretCurrentScene(play);
-        aa->currentScene = play->sceneNum;
-        aa->currentRoom = play->roomCtx.curRoom.num;
-        aa->currentRoomClear = Flags_GetClear(play, aa->currentRoom);
-    }
     // Report when a room is completed.
     if (!aa->currentRoomClear && Flags_GetClear(play, aa->currentRoom)) {
         aa->currentRoomClear = Flags_GetClear(play, aa->currentRoom);
@@ -639,9 +634,9 @@ AccessibleActor* ActorAccessibility_AddVirtualActor(VirtualActorList* list, VIRT
 
 void ActorAccessibility_InterpretCurrentScene(PlayState* play) {
     if (aa->sceneList.contains(play->sceneNum))
-        return; // Scene interpretation already complete for this scene.
+        return; // Scene interpretation already complete for this scene
     aa->sceneList.insert(play->sceneNum);
-    VirtualActorList* list = ActorAccessibility_GetVirtualActorList(play->sceneNum, -1); // Scene-global VAs.
+    VirtualActorList* list = ActorAccessibility_GetVirtualActorList(play->sceneNum, -1); // Scene-global VAs
     if (list == NULL)
         return;
     for (int i = 0; i < play->colCtx.colHeader->numPolygons; i++) {
@@ -745,6 +740,7 @@ bool ActorAccessibility_InitAudio() {
     }
     return true;
 }
+
 void ActorAccessibility_ShutdownAudio() {
     if (aa->isOn) {
         delete aa->audioEngine;
@@ -754,11 +750,13 @@ void ActorAccessibility_ShutdownAudio() {
         aa->isOn = false;
     }
 }
+
 void ActorAccessibility_MixAccessibleAudioWithGameAudio(int16_t* ogBuffer, uint32_t nFrames) {
     if (aa->isOn) {
         aa->audioEngine->mix(ogBuffer, nFrames);
     }
 }
+
 // Map one of the game's sfx to a path which as understood by the external audio engine. The returned token is a
 // short hex string that can be passed directly to the audio engine.
 const char* ActorAccessibility_MapSfxToExternalAudio(s16 sfxId) {

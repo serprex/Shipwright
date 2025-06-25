@@ -184,6 +184,7 @@ void accessible_area_change(AccessibleActor* actor) {
             return;
         }
     }
+
     if (actor->sceneIndex == SCENE_KOKIRI_FOREST || actor->sceneIndex == SCENE_LOST_WOODS) {
         if (actor->play->sceneNum == SCENE_LOST_WOODS &&
             gSaveContext.entranceIndex != ENTR_LOST_WOODS_BRIDGE_EAST_EXIT &&
