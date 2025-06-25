@@ -51,6 +51,7 @@ namespace CheckTracker {
 static WidgetInfo backgroundColorWidget;
 static WidgetInfo windowTypeWidget;
 static WidgetInfo dungeonSpoilerWidget;
+static WidgetInfo hideJunkWidget;
 static WidgetInfo hideUnshuffledShopWidget;
 static WidgetInfo showGSWidget;
 static WidgetInfo showLogicWidget;
@@ -189,6 +190,7 @@ bool hideSeen = false;
 bool hideSkipped = false;
 bool hideSaved = false;
 bool hideCollected = false;
+bool hideJunk = false;
 bool showHidden = true;
 bool mystery = false;
 bool showLogicTooltip = false;
@@ -296,6 +298,10 @@ uint16_t GetTotalChecksGotten() {
 }
 
 bool IsCheckHidden(RandomizerCheck rc) {
+    if (showHidden) {
+        return false;
+    }
+
     Rando::ItemLocation* itemLocation = OTRGlobals::Instance->gRandoContext->GetItemLocation(rc);
     RandomizerCheckStatus status = itemLocation->GetCheckStatus();
     bool available = itemLocation->IsAvailable();
@@ -304,9 +310,10 @@ bool IsCheckHidden(RandomizerCheck rc) {
     bool seen = status == RCSHOW_SEEN || status == RCSHOW_IDENTIFIED;
     bool scummed = status == RCSHOW_SCUMMED;
     bool unchecked = status == RCSHOW_UNCHECKED;
+    bool isJunk = itemLoc->GetPlacedRandomizerGet() != RG_ICE_TRAP && itemLocation->GetPlacedItem().GetGIEntry()->getItemCategory == ITEM_CATEGORY_JUNK;
+    bool knownJunk = (seen || scummed) && isJunk;
 
-    return !showHidden &&
-           ((skipped && hideSkipped) || (seen && hideSeen) || (scummed && hideScummed) || (unchecked && hideUnchecked));
+    return (skipped && hideSkipped) || (seen && hideSeen) || (scummed && hideScummed) || (unchecked && hideUnchecked) || (knownJunk && hideJunk);
 }
 
 void RecalculateAreaTotals(RandomizerCheckArea rcArea) {
@@ -1222,7 +1229,17 @@ bool UpdateFilters() {
 }
 
 bool ShouldShowCheck(RandomizerCheck check) {
-    auto itemLoc = Rando::Context::GetInstance()->GetItemLocation(check);
+    Rando::ItemLocation* itemLoc = Rando::Context::GetInstance()->GetItemLocation(check);
+    RandomizerCheckStatus status = itemLoc->GetCheckStatus();
+
+    if (
+        hideJunk &&
+        ((status == RCSHOW_SEEN && itemLoc->GetPlacedRandomizerGet() != RG_ICE_TRAP) || status == RCSHOW_IDENTIFIED || status == RCSHOW_SCUMMED) &&
+        itemLoc->GetPlacedItem().GetGIEntry()->getItemCategory == ITEM_CATEGORY_JUNK
+    ) {
+        return false;
+    }
+
     std::string search = (Rando::StaticData::GetLocation(check)->GetShortName() + " " +
                           Rando::StaticData::GetLocation(check)->GetName() + " " +
                           RandomizerCheckObjects::GetRCAreaName(Rando::StaticData::GetLocation(check)->GetArea()));
@@ -1585,7 +1602,18 @@ bool IsCheckShuffled(RandomizerCheck rc) {
 }
 
 bool IsVisibleInCheckTracker(RandomizerCheck rc) {
-    auto loc = Rando::StaticData::GetLocation(rc);
+    Rando::Location* loc = Rando::StaticData::GetLocation(rc);
+    Rando::ItemLocation* itemLoc = Rando::Context::GetInstance()->GetItemLocation(rc);
+    RandomizerCheckStatus status = itemLoc->GetCheckStatus();
+
+    if (
+        hideJunk &&
+        ((status == RCSHOW_SEEN && itemLoc->GetPlacedRandomizerGet() != RG_ICE_TRAP) || status == RCSHOW_IDENTIFIED || status == RCSHOW_SCUMMED) &&
+        itemLoc->GetPlacedItem().GetGIEntry()->getItemCategory == ITEM_CATEGORY_JUNK
+    ) {
+        return false;
+    }
+
     if (IS_RANDO) {
         return !Rando::Context::GetInstance()->GetItemLocation(rc)->IsExcluded() &&
                (IsCheckShuffled(rc) ||
@@ -1701,6 +1729,15 @@ void DrawLocation(RandomizerCheck rc) {
     bool available = itemLoc->IsAvailable();
 
     if (enableAvailableChecks && onlyShowAvailable && !available) {
+        return;
+    }
+
+    if (
+        !showHidden &&
+        hideJunk &&
+        ((status == RCSHOW_SEEN && itemLoc->GetPlacedRandomizerGet() != RG_ICE_TRAP) || status == RCSHOW_IDENTIFIED || status == RCSHOW_SCUMMED) &&
+        itemLoc->GetPlacedItem().GetGIEntry()->getItemCategory == ITEM_CATEGORY_JUNK
+    ) {
         return;
     }
 
@@ -2100,6 +2137,8 @@ void CheckTrackerSettingsWindow::DrawElement() {
         SohGui::mSohMenu->MenuDrawItem(dungeonSpoilerWidget, ImGui::GetContentRegionAvail().x, THEME_COLOR);
         ImGui::EndDisabled();
 
+        SohGui::mSohMenu->MenuDrawItem(hideJunkWidget, ImGui::GetContentRegionAvail().x, THEME_COLOR);
+
         SohGui::mSohMenu->MenuDrawItem(hideUnshuffledShopWidget, ImGui::GetContentRegionAvail().x, THEME_COLOR);
 
         SohGui::mSohMenu->MenuDrawItem(showGSWidget, ImGui::GetContentRegionAvail().x, THEME_COLOR);
@@ -2210,6 +2249,13 @@ void RegisterCheckTrackerWidgets() {
                      .Tooltip("If enabled, Vanilla/MQ dungeons will show on the tracker immediately. "
                               "Otherwise, Vanilla/MQ dungeon locations must be unlocked."));
     SohGui::mSohMenu->AddSearchWidget({ dungeonSpoilerWidget, "Randomizer", "Check Tracker", "General Settings" });
+
+    hideJunkWidget = { .name = "Hide Junk", .type = WidgetType::WIDGET_CVAR_CHECKBOX };
+    hideJunkWidget.CVar(CVAR_TRACKER_CHECK("Junk.Hide"))
+        .Options(CheckboxOptions()
+                .Color(THEME_COLOR)
+                .Tooltip("If enabled, checks that are known to be junk will be hidden."));
+    SohGui::mSohMenu->AddSearchWidget({ hideJunkWidget, "Randomizer", "Check Tracker", "General Settings" });
 
     hideUnshuffledShopWidget = { .name = "Hide Unshuffled Shop Item Checks", .type = WidgetType::WIDGET_CVAR_CHECKBOX };
     hideUnshuffledShopWidget.CVar(CVAR_TRACKER_CHECK("HideUnshuffledShopChecks"))
