@@ -194,10 +194,11 @@ void RegionTable_Init_GerudoFortress() {
         //Exits
         //you don't take fall damage if you land on the rock with the flag on for some reason
         //there's a trick to reach RR_GF_LONG_ROOF but that's too intricate for GF_JUMP
-        Entrance(RR_GF_OUTSKIRTS,   []{return ctx->GetTrickOption(RT_GF_JUMP).Get() != 0;}),
-        Entrance(RR_GF_NEAR_CHEST,  []{return logic->CanUse(RG_LONGSHOT);}),
-        Entrance(RR_GF_BELOW_CHEST, []{return logic->TakeDamage();}),
-        Entrance(RR_GF_JAIL_WINDOW, []{return logic->CanUse(RG_HOOKSHOT);}),
+        Entrance(RR_GF_OUTSKIRTS,           []{return ctx->GetTrickOption(RT_GF_JUMP).Get() != 0;}),
+        Entrance(RR_GF_NEAR_CHEST,          []{return logic->CanUse(RG_LONGSHOT);}),
+        Entrance(RR_GF_BELOW_CHEST,         []{return logic->TakeDamage();}),
+        Entrance(RR_GF_JAIL_WINDOW,         []{return logic->CanUse(RG_HOOKSHOT);}),
+        Entrance(RR_TH_BREAK_ROOM_CORRIDOR, []{return true;}),
     });
 
     areaTable[RR_GF_JAIL_WINDOW] = Region("GF Jail Window", SCENE_GERUDOS_FORTRESS, {}, {}, {

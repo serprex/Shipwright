@@ -28,6 +28,8 @@ enum class EntranceType {
     Interior,
     InteriorReverse,
     SpecialInterior,
+    GerudoFortress,
+    GerudoFortressReverse,
     GrottoGrave,
     GrottoGraveReverse,
     Overworld,

@@ -43,8 +43,9 @@ void RegionTable_Init_ThievesHideout() {
         LOCATION(RC_TH_FREED_CARPENTERS,           logic->Get(LOGIC_TH_RESCUED_ALL_CARPENTERS)),
     }, {
         //Exits
-        Entrance(RR_GF_OUTSKIRTS,   []{return true;}),
-        Entrance(RR_GF_NEAR_GROTTO, []{return true;}),
+        Entrance(RR_GF_OUTSKIRTS,          []{return true;}),
+        Entrance(RR_GF_ABOVE_GTG,          []{return true;}),
+        Entrance(RR_GF_TOP_OF_LOWER_VINES, []{return true;}),
     });
 
     areaTable[RR_TH_DEAD_END_CELL] = Region("Thieves Hideout Dead End Cell", SCENE_THIEVES_HIDEOUT, {
@@ -73,8 +74,8 @@ void RegionTable_Init_ThievesHideout() {
         LOCATION(RC_TH_FREED_CARPENTERS,      logic->Get(LOGIC_TH_RESCUED_ALL_CARPENTERS)),
     }, {
         //Exits
-        Entrance(RR_GF_ABOVE_GTG,          []{return true;}),
-        Entrance(RR_GF_TOP_OF_LOWER_VINES, []{return true;}),
+        Entrance(RR_GF_BOTTOM_OF_LOWER_VINES, []{return true;}),
+        Entrance(RR_GF_NEAR_GROTTO,           []{return true;}),
     });
 
     areaTable[RR_TH_KITCHEN_CORRIDOR] = Region("Thieves Hideout Kitchen Corridor", SCENE_THIEVES_HIDEOUT, {}, {
