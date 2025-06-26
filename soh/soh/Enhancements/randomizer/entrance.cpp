@@ -277,7 +277,7 @@ void SetAllEntrancesData() {
         { { EntranceType::Dungeon,      RR_ZF_LEDGE,                         RR_ICE_CAVERN_ENTRYWAY,               ENTR_ICE_CAVERN_ENTRANCE },
           { EntranceType::Dungeon,      RR_ICE_CAVERN_ENTRYWAY,              RR_ZF_LEDGE,                          ENTR_ZORAS_FOUNTAIN_OUTSIDE_ICE_CAVERN } },
         { { EntranceType::Dungeon,      RR_GF_TO_GTG,                        RR_GERUDO_TRAINING_GROUND_ENTRYWAY,   ENTR_GERUDO_TRAINING_GROUND_ENTRANCE },
-          { EntranceType::Dungeon,      RR_GERUDO_TRAINING_GROUND_ENTRYWAY,  RR_GF_TO_GTG,                         ENTR_GERUDOS_FORTRESS_OUTSIDE_GERUDO_TRAINING_GROUND } },
+          { EntranceType::Dungeon,      RR_GERUDO_TRAINING_GROUND_ENTRYWAY,  RR_GF_EXITING_GTG,                    ENTR_GERUDOS_FORTRESS_OUTSIDE_GERUDO_TRAINING_GROUND } },
         { { EntranceType::GanonDungeon, RR_GANONS_CASTLE_LEDGE,              RR_GANONS_CASTLE_ENTRYWAY,            ENTR_INSIDE_GANONS_CASTLE_ENTRANCE },
           { EntranceType::GanonDungeon, RR_GANONS_CASTLE_ENTRYWAY,           RR_CASTLE_GROUNDS_FROM_GANONS_CASTLE, ENTR_CASTLE_GROUNDS_RAINBOW_BRIDGE_EXIT } },
         

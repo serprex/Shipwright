@@ -62,6 +62,10 @@ void RegionTable_Init_GerudoFortress() {
 
     areaTable[RR_GF_TO_GTG] = Region("GF to GTG", SCENE_GERUDOS_FORTRESS, {}, {}, {
         Entrance(RR_GERUDO_TRAINING_GROUND_ENTRYWAY, []{return true;}),
+    });
+
+    // Split out to handle adult being immediately captured without card
+    areaTable[RR_GF_EXITING_GTG] = Region("GF Exiting GTG", SCENE_GERUDOS_FORTRESS, {}, {}, {
         Entrance(RR_GF_OUTSIDE_GTG,                  []{return logic->IsChild || logic->HasItem(RG_GERUDO_MEMBERSHIP_CARD);}),
         Entrance(RR_GF_JAIL_WINDOW,                  []{return logic->CanUse(RG_HOOKSHOT);}),
         Entrance(RR_GF_OUTSKIRTS,                    []{return true;}),
