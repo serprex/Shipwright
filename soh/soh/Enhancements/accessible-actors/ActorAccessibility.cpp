@@ -297,7 +297,7 @@ void ActorAccessibility_ConfigureSoundForActor(AccessibleActor* actor, int slot)
 }
 
 void ActorAccessibility_PlaySoundForActor(AccessibleActor* actor, int slot, s16 sfxId) {
-    if (slot < 0 || slot > AAE_SLOTS_PER_HANDLE)
+    if (slot < 0 || slot >= AAE_SLOTS_PER_HANDLE)
         return;
     ActorAccessibility_PlaySound(actor, slot, sfxId);
     ActorAccessibility_ConfigureSoundForActor(actor, slot);
@@ -376,12 +376,12 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
 
     if (actor->policy.aimAssist.isProvider) {
         Player* player = GET_PLAYER(play);
-        if (player->stateFlags1 & PLAYER_STATE1_FIRST_PERSON &&
-            (player->stateFlags1 & PLAYER_STATE1_USING_BOOMERANG || player->stateFlags1 & PLAYER_STATE1_ITEM_IN_HAND)) {
+        if ((player->stateFlags1 & PLAYER_STATE1_FIRST_PERSON) &&
+            (player->stateFlags1 & (PLAYER_STATE1_USING_BOOMERANG | PLAYER_STATE1_ITEM_IN_HAND))) {
             auto aimAssistProps = ActorAccessibility_ProvideAimAssistForActor(actor);
             if (++actor->aimAssist.framesSinceAimAssist >= actor->aimAssist.frequency) {
                 actor->aimAssist.framesSinceAimAssist = 0;
-                ActorAccessibility_PlaySound(actor, 7, actor->policy.aimAssist.sfx);
+                ActorAccessibility_PlaySoundForActor(actor, 7, actor->policy.aimAssist.sfx);
             }
             ActorAccessibility_SetSoundPitch(actor, 7, aimAssistProps.pitch);
             ActorAccessibility_SetSoundVolume(actor, 7, aimAssistProps.volume);
@@ -692,25 +692,22 @@ AimAssistProps ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* acto
     Player* player = GET_PLAYER(actor->play);
     s32 angle = player->actor.focus.rot.x;
     angle = angle / -14000.0 * 16384;
-    f32 slope = Math_SinS(angle) / Math_CosS(angle) * 1.0;
+    f32 cos_angle = Math_CosS(angle);
+    f32 slope = cos_angle <= 0.01 ? 1.0f : std::max(Math_SinS(angle) / cos_angle, 1.0f);
     s32 yIntercept = slope * actor->xzDistToPlayer + player->actor.focus.pos.y;
     s32 yHeight = actor->pos.y + 25;
-    if (slope < 1) {
-        slope = 1;
-    }
-    s32 correction = (1 - 1 / slope) * 100;
     AimAssistProps aimAssistProps;
     if (yIntercept > yHeight + 25) {
         aimAssistProps.pitch = 1.5;
     } else if (yIntercept < yHeight - 25) {
         aimAssistProps.pitch = 0.5;
+    } else {
+        aimAssistProps.pitch = 1.0;
     }
     s32 yDiff = fabs(yIntercept - yHeight);
     if (yIntercept - yHeight > 0) {
-        yDiff -= correction;
-        if (yDiff < 0) {
-            yDiff = 0;
-        }
+        s32 correction = (1 - 1 / slope) * 100;
+        yDiff = std::max(yDiff - correction, 0);
     }
     if (yDiff > 300) {
         actor->aimAssist.frequency = 30;
