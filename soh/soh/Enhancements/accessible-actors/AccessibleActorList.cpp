@@ -107,12 +107,12 @@ void accessible_switch(AccessibleActor* actor) {
         }
     } else if ((actor->actor->params & 7) == OBJSWITCH_TYPE_EYE) {
         if (sw->eyeTexIndex == 0) {
-            actor->policy.aimAssist.isProvider = true;
+            actor->policy.aimAssist.isProvider = AIM_SHOOT;
             actor->policy.ydist = 1000;
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_FOOT_SWITCH);
         }
     } else if (actor->xyzDistToPlayer < 1000) {
-        actor->policy.aimAssist.isProvider = true;
+        actor->policy.aimAssist.isProvider = AIM_ALL;
         actor->policy.ydist = 1000;
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_DIAMOND_SWITCH);
     }
@@ -479,7 +479,7 @@ void ActorAccessibility_InitActors() {
     });
     policy.distance = 2000;
     policy.n = 1;
-    policy.aimAssist.isProvider = true;
+    policy.aimAssist.isProvider = AIM_HOOK;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_KAKASI2, policy);
     ActorAccessibility_InitPolicy(&policy, "Chest", [](AccessibleActor* actor) {
         Player* player = GET_PLAYER(actor->play);
@@ -584,7 +584,7 @@ void ActorAccessibility_InitActors() {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_FLUTTER_FLAG);
         }
     });
-    policy.aimAssist.isProvider = true;
+    policy.aimAssist.isProvider = AIM_HOOK;
     policy.distance = 1000;
     policy.volume = 1.5;
     policy.n = 1;
@@ -654,7 +654,7 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_InitPolicy(&policy, "Jabu Switch", [](AccessibleActor* actor) {
         int type = actor->actor->params & 0xFF;
         if (type == YELLOW_TALL_1 || type == YELLOW_TALL_2) {
-            actor->policy.aimAssist.isProvider = true;
+            actor->policy.aimAssist.isProvider = AIM_ALL;
         }
         if ((actor->frameCount & 31) == 0) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_DIAMOND_SWITCH);
@@ -730,7 +730,7 @@ void ActorAccessibility_InitActors() {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_PO_CRY);
         }
     });
-    policy.aimAssist.isProvider = true;
+    policy.aimAssist.isProvider = AIM_BOW;
     policy.aimAssist.tolerance = 50.0f;
     policy.n = 1;
     policy.ydist = 1000;
@@ -738,15 +738,15 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_BG_PO_EVENT, policy);
     ActorAccessibility_InitPolicy(&policy, "Poe Sister", [](AccessibleActor* actor) {
         if (actor->actor->category == ACTORCAT_PROP) {
-            actor->policy.aimAssist.isProvider = false;
+            actor->policy.aimAssist.isProvider = 0;
         }
     });
-    policy.aimAssist.isProvider = true;
+    policy.aimAssist.isProvider = AIM_ALL;
     policy.aimAssist.tolerance = 20.0f;
     policy.n = 1;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_PO_SISTERS, policy);
     ActorAccessibility_InitPolicy(&policy, "Lake Hylia Object", nullptr);
-    policy.aimAssist.isProvider = true;
+    policy.aimAssist.isProvider = AIM_HOOK;
     policy.n = 1;
     policy.ydist = 600;
     policy.distance = 600;
@@ -804,7 +804,7 @@ void ActorAccessibility_InitActors() {
 
     ActorAccessibility_InitPolicy(&policy, "Statue Eye", [](AccessibleActor* actor) {
         actor->policy.aimAssist.isProvider =
-            ABS((s16)(actor->actor->yawTowardsPlayer - actor->actor->shape.rot.y)) < 0x2000;
+            ABS((s16)(actor->actor->yawTowardsPlayer - actor->actor->shape.rot.y)) < 0x2000 ? AIM_BOW : 0;
     });
     policy.n = 1;
     policy.ydist = 500;
@@ -822,7 +822,7 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_InitPolicy(&policy, "gold skulltula token", NA_SE_EN_NUTS_DAMAGE);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_SI, policy);
     ActorAccessibility_InitPolicy(&policy, "Gold and Wall skulltulas", nullptr);
-    policy.aimAssist.isProvider = true;
+    policy.aimAssist.isProvider = AIM_ALL | AIM_CUP;
     policy.n = 1;
     policy.ydist = 500;
     policy.distance = 750;
@@ -837,7 +837,7 @@ void ActorAccessibility_InitActors() {
     });
     policy.ydist = 100;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_ST, policy);
-        ActorAccessibility_InitPolicy(&policy, "goma larva egg", [](AccessibleActor* actor) {
+    ActorAccessibility_InitPolicy(&policy, "goma larva egg", [](AccessibleActor* actor) {
         if (actor->actor->bgCheckFlags == 0) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_GOMA_BJR_EGG1);
         }
@@ -890,7 +890,7 @@ void ActorAccessibility_InitActors() {
         }
     });
     policy.n = 20;
-    policy.aimAssist.isProvider = true;
+    policy.aimAssist.isProvider = AIM_ALL;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_FZ, policy);
     ActorAccessibility_InitPolicy(&policy, "Iron Knuckle", [](AccessibleActor* actor) {
         EnIk* ik = (EnIk*)actor->actor;
@@ -949,7 +949,7 @@ void ActorAccessibility_InitActors() {
             }
         }
     });
-    policy.aimAssist.isProvider = true;
+    policy.aimAssist.isProvider = AIM_SHOOT | AIM_CUP;
     policy.distance = 1000;
     policy.n = 1;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_G_SWITCH, policy);
@@ -1007,7 +1007,7 @@ void ActorAccessibility_InitActors() {
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_LOST_WOODS, 1);
     temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1348, 25, -25 });
-    temp->policy.aimAssist.isProvider = true;
+    temp->policy.aimAssist.isProvider = AIM_SLING;
     temp->policy.distance = 700;
     temp->policy.n = 1;
 
@@ -1191,8 +1191,8 @@ void ActorAccessibility_InitActors() {
     actor->pos = { 0, 0, 0 };
     actor->sceneIndex = 0;
     actor->managedSoundSlots = 0;
-    actor->aimAssist.framesSinceAimAssist = 0;
-    actor->aimAssist.frequency = 10;
+    actor->aimFramesSinceAimAssist = 0;
+    actor->aimFrequency = 10;
     actor->policy = policy;
     ActorAccessibility_AddTerrainCues(actor);
 }

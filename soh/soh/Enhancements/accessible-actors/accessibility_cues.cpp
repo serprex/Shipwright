@@ -1364,11 +1364,13 @@ struct TerrainCueState {
     AccessibleActor* actor;
     TerrainCueDirection directions[3]; // Directly ahead of Link, 90 degrees to his left and 90 degrees to his right
 
-    TerrainCueState(AccessibleActor* actor) : actor(actor), directions{ 
-        { actor, { 0, 0, 0 } },
-        { actor, { 0, 16384, 0 } },
-        { actor, { 0, -16384, 0 } },
-    } {}
+    TerrainCueState(AccessibleActor* actor)
+        : actor(actor), directions{
+              { actor, { 0, 0, 0 } },
+              { actor, { 0, 16384, 0 } },
+              { actor, { 0, -16384, 0 } },
+          } {
+    }
 
     ~TerrainCueState() {
         delete actor;

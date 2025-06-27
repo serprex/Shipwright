@@ -67,10 +67,10 @@ class AudioGlossaryData {
     AccessibleActorList_t accessibleActorList;
     AccessibleActorList_t::iterator current = accessibleActorList.begin();
     bool GlossaryStarted = false;
-    int cooldown = 0;
-    int frameCount = 0;
+    u16 frameCount = 0;
     s16 currentScene = -1;
     s8 currentRoom = -1;
+    s8 cooldown = 0;
 };
 
 class ActorAccessibility {
@@ -85,12 +85,12 @@ class ActorAccessibility {
     SceneList_t sceneList;
     AccessibleAudioEngine* audioEngine;
     SfxExtractor sfxExtractor;
-    // Maps internal sfx to external (prerendered) resources.
+    // Maps internal sfx to external (prerendered) resources
     std::unordered_map<s16, SfxRecord> sfxMap;
-    int framesUntilChime = 0;
     s16 currentScene = -1;
     s8 currentRoom = -1;
     bool currentRoomClear = false;
+    u8 framesUntilChime = 0;
     Vec3f prevPos = { 0, 0, 0 };
     s16 prevYaw = 0;
     bool extractSfx = false;
@@ -162,7 +162,7 @@ void ActorAccessibility_InitPolicy(ActorAccessibilityPolicy* policy, const char*
     policy->runsAlways = false;
     policy->volume = 1.0;
     policy->pitchModifier = 0.1;
-    policy->aimAssist.isProvider = false;
+    policy->aimAssist.isProvider = 0;
     policy->aimAssist.sfx = NA_SE_SY_HITPOINT_ALARM;
     policy->aimAssist.tolerance = 0.0;
 }
@@ -219,8 +219,8 @@ void ActorAccessibility_TrackNewActor(Actor* actor) {
     accessibleActor.currentVolume = accessibleActor.policy.volume;
     accessibleActor.sceneIndex = 0;
     accessibleActor.managedSoundSlots = 0;
-    accessibleActor.aimAssist.framesSinceAimAssist = 32768;
-    accessibleActor.aimAssist.frequency = 10;
+    accessibleActor.aimFramesSinceAimAssist = 255;
+    accessibleActor.aimFrequency = 10;
 
     aa->trackedActors[actor] = accessibleActor.instanceID;
     aa->accessibleActorList[accessibleActor.instanceID] = accessibleActor;
@@ -377,18 +377,46 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
     if (actor->policy.aimAssist.isProvider) {
         Player* player = GET_PLAYER(play);
         if ((player->stateFlags1 & PLAYER_STATE1_FIRST_PERSON) &&
-            (player->stateFlags1 & (PLAYER_STATE1_USING_BOOMERANG | PLAYER_STATE1_ITEM_IN_HAND))) {
-            auto aimAssistProps = ActorAccessibility_ProvideAimAssistForActor(actor);
-            if (++actor->aimAssist.framesSinceAimAssist >= actor->aimAssist.frequency) {
-                actor->aimAssist.framesSinceAimAssist = 0;
-                ActorAccessibility_PlaySoundForActor(actor, 7, actor->policy.aimAssist.sfx);
+            ((actor->policy.aimAssist.isProvider & AIM_CUP) ||
+             (player->stateFlags1 & (PLAYER_STATE1_USING_BOOMERANG | PLAYER_STATE1_ITEM_IN_HAND)))) {
+            bool aim = false;
+            switch (player->heldItemAction) {
+                case PLAYER_IA_BOW:
+                case PLAYER_IA_BOW_FIRE:
+                case PLAYER_IA_BOW_ICE:
+                case PLAYER_IA_BOW_LIGHT:
+                case PLAYER_IA_BOW_0C:
+                case PLAYER_IA_BOW_0D:
+                case PLAYER_IA_BOW_0E:
+                    aim = actor->policy.aimAssist.isProvider & AIM_BOW;
+                    break;
+                case PLAYER_IA_SLINGSHOT:
+                    aim = actor->policy.aimAssist.isProvider & AIM_SLING;
+                    break;
+                case PLAYER_IA_HOOKSHOT:
+                case PLAYER_IA_LONGSHOT:
+                    aim = actor->policy.aimAssist.isProvider & AIM_HOOK;
+                    break;
+                case PLAYER_IA_BOOMERANG:
+                    aim = actor->policy.aimAssist.isProvider & AIM_BOOM;
+                    break;
+                case PLAYER_IA_NONE:
+                    aim = actor->policy.aimAssist.isProvider & AIM_CUP;
+                    break;
             }
-            ActorAccessibility_SetSoundPitch(actor, 7, aimAssistProps.pitch);
-            ActorAccessibility_SetSoundVolume(actor, 7, aimAssistProps.volume);
-            ActorAccessibility_SetSoundPan(actor, 7, aimAssistProps.pan);
+            if (aim) {
+                auto aimAssistProps = ActorAccessibility_ProvideAimAssistForActor(actor);
+                if (++actor->aimFramesSinceAimAssist >= actor->aimFrequency) {
+                    actor->aimFramesSinceAimAssist = 0;
+                    ActorAccessibility_PlaySoundForActor(actor, 7, actor->policy.aimAssist.sfx);
+                }
+                ActorAccessibility_SetSoundPitch(actor, 7, aimAssistProps.pitch);
+                ActorAccessibility_SetSoundVolume(actor, 7, aimAssistProps.volume);
+                ActorAccessibility_SetSoundPan(actor, 7, aimAssistProps.pan);
+            }
         } else {
             // Make sure there's no delay the next time you draw your bow or whatever.
-            actor->aimAssist.framesSinceAimAssist = 32768;
+            actor->aimFramesSinceAimAssist = 255;
         }
     }
 
@@ -472,7 +500,8 @@ void ActorAccessibility_GeneralHelper(PlayState* play) {
         ActorAccessibility_AnnounceRoomNumber(play);
     }
 
-    if (player->actor.wallPoly && player->actor.speedXZ > 0 && (player->yDistToLedge == 0 || player->yDistToLedge >= 79.0f)) {
+    if (player->actor.wallPoly && player->actor.speedXZ > 0 &&
+        (player->yDistToLedge == 0 || player->yDistToLedge >= 79.0f)) {
         f32 movedsq = SQ(aa->prevPos.x - player->actor.world.pos.x) + SQ(aa->prevPos.z - player->actor.world.pos.z);
         if (movedsq < 0.125) {
             ActorAccessibility_PlaySound(nullptr, 3, NA_SE_IT_WALL_HIT_SOFT);
@@ -623,8 +652,8 @@ AccessibleActor* ActorAccessibility_AddVirtualActor(VirtualActorList* list, VIRT
     actor.pos = where;
     actor.sceneIndex = 0;
     actor.managedSoundSlots = 0;
-    actor.aimAssist.framesSinceAimAssist = 0;
-    actor.aimAssist.frequency = 10;
+    actor.aimFramesSinceAimAssist = 0;
+    actor.aimFrequency = 10;
     actor.policy = *policy;
 
     VAList_t* l = (VAList_t*)list;
@@ -710,9 +739,9 @@ AimAssistProps ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* acto
         yDiff = std::max(yDiff - correction, 0);
     }
     if (yDiff > 300) {
-        actor->aimAssist.frequency = 30;
+        actor->aimFrequency = 30;
     } else {
-        actor->aimAssist.frequency = 1 + (uint8_t)(yDiff / 5);
+        actor->aimFrequency = 1 + (uint8_t)(yDiff / 5);
     }
     s16 yawdiff =
         player->yaw - Math_Atan2S(actor->pos.z - player->actor.world.pos.z, actor->pos.x - player->actor.world.pos.x);
@@ -741,7 +770,7 @@ bool ActorAccessibility_InitAudio() {
 void ActorAccessibility_ShutdownAudio() {
     if (aa->isOn) {
         delete aa->audioEngine;
-                if (aa->terrainCues) {
+        if (aa->terrainCues) {
             DeleteTerrainCueState(aa->terrainCues);
         }
         aa->isOn = false;

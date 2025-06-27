@@ -8,12 +8,20 @@ typedef void (*ActorAccessibilityCallback)(AccessibleActor*);
 
 struct VirtualActorList;
 
+#define AIM_ALL 0x0F
+#define AIM_BOW 0x01
+#define AIM_SLING 0x02
+#define AIM_SHOOT 0x03
+#define AIM_HOOK 0x04
+#define AIM_BOOM 0x08
+#define AIM_CUP 0x10
+
 struct ActorAccessibilityPolicy {
     const char* englishName;
-
-    ActorAccessibilityCallback callback; // If set, it will be called once every n frames. If null, then sfx will be
-                                         // played once every n frames.
+    ActorAccessibilityCallback callback; // If set, it will be called once every n frames.
+                                         // If null, then sfx will be played once every n frames.
     s16 sound;                           // The ID of a sound to play. Ignored if the callback is set.
+    bool runsAlways;                     // If set, then the distance policy is ignored.
 
     int n;        // How often to run the callback in frames.
     f32 distance; // Maximum xz distance from player before the actor should be considered out of range.
@@ -21,13 +29,11 @@ struct ActorAccessibilityPolicy {
     f32 pitch;
     f32 volume;
     f32 pitchModifier;
-    bool runsAlways; // If set, then the distance policy is ignored.
     // Aim assist settings.
     struct {
-        bool isProvider; // determines whether or not this actor supports aim assist.
-        s16 sfx;         // The sound to play when this actor provides aim assist. Uses sound slot 9.
-        f32 tolerance;   // How close to the center of the actor does Link have to aim for aim assist to consider
-                         // it lined up.
+        u8 isProvider; // determines whether or not this actor supports aim assist.
+        s16 sfx;       // The sound to play when this actor provides aim assist. Uses sound slot 9.
+        f32 tolerance; // How close to center of actor does Link have to aim to consider it lined up.
     } aimAssist;
 };
 
@@ -40,8 +46,8 @@ struct AccessibleActor {
     uint64_t instanceID;
 
     Actor* actor; // null for virtual actors
-    s16 id; // For real actors, copy actor ID. For virtual actors we have our own table of values which
-            // are out of range for real actors.
+    s16 id;       // For real actors, copy actor ID. For virtual actors we have our own table of values which
+                  // are out of range for real actors.
     f32 yDistToPlayer;
     f32 xzDistToPlayer;
     f32 xyzDistToPlayer;
@@ -60,14 +66,9 @@ struct AccessibleActor {
     s16 sceneIndex; // If this actor represents a scene transition, then this will contain the destination scene index.
                     // Zero otherwise.
     u8 managedSoundSlots; // These have their attenuation and panning parameters updated every frame automatically.
-    struct {
-        u16 framesSinceAimAssist; // Allows rate-based vertical aim assist. Incremented every frame for aim assist
-                                  // actors. Manually reset by aim assist provider.
-        u8 frequency; // How often the sound will be played. Lower frequencies indicate that Link's vertical aim is
-                      // closer to the actor.
-    } aimAssist;
+    u8 aimFramesSinceAimAssist; // Used for rate-based vertical aim assist.
+    u8 aimFrequency; // How often the sound will be played. Lower frequencies indicate vertical aim is getting closer.
 
-    // Add more state as needed.
     ActorAccessibilityPolicy policy; // A copy, so it can be customized on a per-actor basis if needed.
 };
 
