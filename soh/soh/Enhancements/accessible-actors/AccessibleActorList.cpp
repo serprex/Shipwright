@@ -43,20 +43,18 @@ extern u8 sBgPoEventPuzzleState;
 }
 
 void accessible_torches(AccessibleActor* actor) {
-    ObjSyokudai* torche = (ObjSyokudai*)actor->actor;
+    ObjSyokudai* torch = (ObjSyokudai*)actor->actor;
     // temporary torches
     if ((actor->actor->params) == 4230 || (actor->actor->params) == 4220 || (actor->actor->params) == 4227 ||
         (actor->actor->params) == 4380 || actor->actor->params == 4321) {
-        if (torche->litTimer != 0) {
+        if (torch->litTimer != 0) {
             actor->policy.volume = 0.1;
             if ((actor->frameCount & 31) != 0) {
                 return;
             }
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_BOMB_IGNIT);
-        } else {
-            if (actor->policy.volume != 1.0) {
-                actor->policy.volume = 1.0;
-            }
+        } else if (actor->policy.volume != 1.0) {
+            actor->policy.volume = 1.0;
         }
         if ((actor->frameCount & 31) != 0) {
             return;
@@ -69,15 +67,15 @@ void accessible_torches(AccessibleActor* actor) {
 
     // unlit permanent torches
     if ((actor->actor->params) == 8192) {
-        if (torche->litTimer == 0) {
+        if (torch->litTimer == 0) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_BOMB_IGNIT);
         } else {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_ANUBIS_FIRE);
         }
     }
+
     // lit permanent torches
     if ((actor->actor->params) == 9216 || (actor->actor->params) == 962) {
-
         actor->policy.volume = 0.5;
         actor->policy.distance = 200.0;
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_ANUBIS_FIRE);
@@ -205,7 +203,7 @@ void accessible_area_change(AccessibleActor* actor) {
     } else if (actor->sceneIndex == SCENE_HYRULE_FIELD) {
         ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_HORSE_RUN_LEVEL);
     } else if (actor->sceneIndex <= SCENE_GERUDO_TRAINING_GROUND) {
-        ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_FANTOM_WARP_S);
+        ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_STALTU_LAUGH);
     } else if (actor->sceneIndex >= SCENE_MARKET_ENTRANCE_DAY && actor->sceneIndex <= SCENE_MARKET_ENTRANCE_RUINS) {
         if (actor->play->sceneNum >= SCENE_MARKET_DAY && actor->play->sceneNum <= SCENE_MARKET_RUINS) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_HORSE_RUN_LEVEL);
