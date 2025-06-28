@@ -104,7 +104,7 @@ void RegionTable_Init_KokiriForest() {
         LOCATION(RC_KF_DEKU_TREE_RIGHT_GOSSIP_STONE,           true),
     }, {
         //Exits
-        Entrance(RR_DEKU_TREE_ENTRYWAY, []{return logic->IsChild || ctx->GetOption(RSK_SHUFFLE_DUNGEON_ENTRANCES).IsNot(RO_DUNGEON_ENTRANCE_SHUFFLE_OFF);}),
+        Entrance(RR_DEKU_TREE_ENTRYWAY, []{return logic->IsChild || (ctx->GetOption(RSK_SHUFFLE_DUNGEON_ENTRANCES).IsNot(RO_DUNGEON_ENTRANCE_SHUFFLE_OFF) && (ctx->GetOption(RSK_FOREST).Is(RO_CLOSED_FOREST_OFF) || logic->ShowedMidoSwordAndShield));}),
         Entrance(RR_KOKIRI_FOREST,      []{return (logic->IsAdult && (logic->CanPassEnemy(RE_BIG_SKULLTULA) || logic->ForestTempleClear)) || ctx->GetOption(RSK_FOREST).Is(RO_CLOSED_FOREST_OFF) || logic->ShowedMidoSwordAndShield;}),
     });
 
