@@ -228,7 +228,6 @@ class Logic {
     bool CanReflectNuts();
     bool CanCutShrubs();
     bool CanStunDeku();
-    bool CanLeaveForest();
     bool CallGossipFairy();
     bool CallGossipFairyExceptSuns();
     uint8_t EffectiveHealth();
