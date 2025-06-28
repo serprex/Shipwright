@@ -6,4 +6,4 @@
 #define MA_NO_GENERATION
 #define MA_NO_STDIO
 #define MA_ENABLE_ONLY_SPECIFIC_BACKENDS
-#include "miniaudio/miniaudio.h"
+#include <miniaudio.h>

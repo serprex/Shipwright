@@ -7,6 +7,3 @@
 [submodule "OTRExporter"]
 	path = OTRExporter
 	url = https://github.com/harbourmasters/OTRExporter
-[submodule "miniaudio"]
-	path = soh/include/miniaudio
-	url = https://github.com/mackron/miniaudio
