@@ -1199,14 +1199,15 @@ void GenerateItemPool() {
     }
 
     if (!ctx->GetOption(RSK_TRIFORCE_HUNT)) { // Don't add GBK to the pool at all for Triforce Hunt.
+        auto rg = ctx->GetOption(RSK_GANONS_SOUL) ? RG_GANON_SOUL : RG_GANONS_CASTLE_BOSS_KEY;
         if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_KAK_TOKENS)) {
-            ctx->PlaceItemInLocation(RC_KAK_100_GOLD_SKULLTULA_REWARD, RG_GANONS_CASTLE_BOSS_KEY);
+            ctx->PlaceItemInLocation(RC_KAK_100_GOLD_SKULLTULA_REWARD, rg);
         } else if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Get() >= RO_GANON_BOSS_KEY_LACS_VANILLA) {
-            ctx->PlaceItemInLocation(RC_TOT_LIGHT_ARROWS_CUTSCENE, RG_GANONS_CASTLE_BOSS_KEY);
+            ctx->PlaceItemInLocation(RC_TOT_LIGHT_ARROWS_CUTSCENE, rg);
         } else if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_VANILLA)) {
-            ctx->PlaceItemInLocation(RC_GANONS_TOWER_BOSS_KEY_CHEST, RG_GANONS_CASTLE_BOSS_KEY);
+            ctx->PlaceItemInLocation(RC_GANONS_TOWER_BOSS_KEY_CHEST, rg);
         } else {
-            AddItemToMainPool(RG_GANONS_CASTLE_BOSS_KEY);
+            AddItemToMainPool(rg);
         }
     }
 

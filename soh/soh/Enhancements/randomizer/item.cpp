@@ -430,15 +430,19 @@ bool Item::IsMajorItem() const {
         return false;
     }
 
-    if (type == ITEMTYPE_BOSSKEY && getItemId != 0xAD &&
-        (ctx->GetOption(RSK_BOSS_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_VANILLA) ||
-         ctx->GetOption(RSK_BOSS_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_OWN_DUNGEON))) {
-        return false;
-    }
-    // Ganons Castle Boss Key
-    if (getItemId == 0xAD && (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_VANILLA) ||
-                              ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_OWN_DUNGEON))) {
-        return false;
+    if (type == ITEMTYPE_BOSSKEY) {
+        if (getItemId == 0xAD && !ctx->GetOption(RSK_GANONS_SOUL)) {
+            // Ganons Castle Boss Key handled specially unless Ganon's Soul is wincon reward
+            if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_VANILLA) ||
+                ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_OWN_DUNGEON)) {
+                return false;
+            }
+        } else {
+            if (ctx->GetOption(RSK_BOSS_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_VANILLA) ||
+                ctx->GetOption(RSK_BOSS_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_OWN_DUNGEON)) {
+                return false;
+            }
+        }
     }
 
     if (randomizerGet == RG_GREG_RUPEE) {

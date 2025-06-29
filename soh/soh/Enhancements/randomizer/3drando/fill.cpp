@@ -9,7 +9,6 @@
 #include "hints.hpp"
 #include "shops.hpp"
 #include "pool_functions.hpp"
-//#include "debug.hpp"
 #include "soh/Enhancements/randomizer/static_data.h"
 #include "soh/Enhancements/debugger/performanceTimer.h"
 
@@ -1058,10 +1057,9 @@ static void RandomizeOwnDungeon(const Rando::DungeonInfo* dungeon) {
         AddElementsToPool(dungeonItems, dungeonSmallKeys);
     }
 
-    if ((ctx->GetOption(RSK_BOSS_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_OWN_DUNGEON) &&
-         dungeon->GetBossKey() != RG_GANONS_CASTLE_BOSS_KEY) ||
-        (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_OWN_DUNGEON) &&
-         dungeon->GetBossKey() == RG_GANONS_CASTLE_BOSS_KEY)) {
+    if (ctx->GetOption(RSK_GANONS_SOUL) || dungeon->GetBossKey() != RG_GANONS_CASTLE_BOSS_KEY
+            ? ctx->GetOption(RSK_BOSS_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_OWN_DUNGEON)
+            : ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_OWN_DUNGEON)) {
         auto dungeonBossKey =
             FilterAndEraseFromPool(ItemPool, [dungeon](const RandomizerGet i) { return i == dungeon->GetBossKey(); });
         AddElementsToPool(dungeonItems, dungeonBossKey);
@@ -1112,25 +1110,27 @@ static void RandomizeDungeonItems() {
         }
 
         if (ctx->GetOption(RSK_BOSS_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_ANY_DUNGEON) &&
-            dungeon->GetBossKey() != RG_GANONS_CASTLE_BOSS_KEY) {
+            (ctx->GetOption(RSK_GANONS_SOUL) || dungeon->GetBossKey() != RG_GANONS_CASTLE_BOSS_KEY)) {
             auto bossKey = FilterAndEraseFromPool(
                 ItemPool, [dungeon](const RandomizerGet i) { return i == dungeon->GetBossKey(); });
             AddElementsToPool(anyDungeonItems, bossKey);
         } else if (ctx->GetOption(RSK_BOSS_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_OVERWORLD) &&
-                   dungeon->GetBossKey() != RG_GANONS_CASTLE_BOSS_KEY) {
+                   (ctx->GetOption(RSK_GANONS_SOUL) || dungeon->GetBossKey() != RG_GANONS_CASTLE_BOSS_KEY)) {
             auto bossKey = FilterAndEraseFromPool(
                 ItemPool, [dungeon](const RandomizerGet i) { return i == dungeon->GetBossKey(); });
             AddElementsToPool(overworldItems, bossKey);
         }
 
-        if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_ANY_DUNGEON)) {
-            auto ganonBossKey =
-                FilterAndEraseFromPool(ItemPool, [](const auto i) { return i == RG_GANONS_CASTLE_BOSS_KEY; });
-            AddElementsToPool(anyDungeonItems, ganonBossKey);
-        } else if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_OVERWORLD)) {
-            auto ganonBossKey =
-                FilterAndEraseFromPool(ItemPool, [](const auto i) { return i == RG_GANONS_CASTLE_BOSS_KEY; });
-            AddElementsToPool(overworldItems, ganonBossKey);
+        if (!ctx->GetOption(RSK_GANONS_SOUL)) {
+            if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_ANY_DUNGEON)) {
+                auto ganonBossKey =
+                    FilterAndEraseFromPool(ItemPool, [](const auto i) { return i == RG_GANONS_CASTLE_BOSS_KEY; });
+                AddElementsToPool(anyDungeonItems, ganonBossKey);
+            } else if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_OVERWORLD)) {
+                auto ganonBossKey =
+                    FilterAndEraseFromPool(ItemPool, [](const auto i) { return i == RG_GANONS_CASTLE_BOSS_KEY; });
+                AddElementsToPool(overworldItems, ganonBossKey);
+            }
         }
     }
 

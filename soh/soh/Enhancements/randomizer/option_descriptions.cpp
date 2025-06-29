@@ -595,6 +595,9 @@ void Settings::CreateOptionDescriptions() {
         "\n"
         "Greg as Wildcard - Greg does not change logic, Greg helps obtain GBK, max number of "
         "rewards on slider does not change.";
+    mOptionDescriptions[RSK_GANONS_SOUL] = "Ganon's Boss Key reward replaced with Ganon's Soul.\n"
+        "GBK will be shuffled like a regular boss key.\n"
+        "Ganon's Tower's boss entrance may be shuffled.";
     mOptionDescriptions[RSK_BIG_POE_COUNT] = "The Poe collector will give a reward for turning in this many Big Poes.";
     mOptionDescriptions[RSK_SKIP_CHILD_STEALTH] =
         "The crawlspace into Hyrule Castle goes straight to Zelda, skipping the guards.";

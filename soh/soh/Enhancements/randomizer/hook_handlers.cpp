@@ -2008,7 +2008,9 @@ void RandomizerOnActorInitHandler(void* actorRef) {
         Actor_Kill(actor);
     }
 
-    if (RAND_GET_OPTION(RSK_SHUFFLE_BOSS_SOULS)) {
+    if (RAND_GET_OPTION(RSK_SHUFFLE_BOSS_SOULS) ||
+        (RAND_GET_OPTION(RSK_GANONS_SOUL) && gPlayState->sceneNum == SCENE_GANONDORF_BOSS ||
+         gPlayState->sceneNum == SCENE_GANON_BOSS)) {
         // Boss souls require an additional item (represented by a RAND_INF) to spawn a boss in a particular lair
         RandomizerInf currentBossSoulRandInf = RAND_INF_MAX;
         switch (gPlayState->sceneNum) {
@@ -2038,7 +2040,8 @@ void RandomizerOnActorInitHandler(void* actorRef) {
                 break;
             case SCENE_GANONDORF_BOSS:
             case SCENE_GANON_BOSS:
-                if (RAND_GET_OPTION(RSK_SHUFFLE_BOSS_SOULS) == RO_BOSS_SOULS_ON_PLUS_GANON) {
+                if (RAND_GET_OPTION(RSK_GANONS_SOUL) ||
+                    RAND_GET_OPTION(RSK_SHUFFLE_BOSS_SOULS) == RO_BOSS_SOULS_ON_PLUS_GANON) {
                     currentBossSoulRandInf = RAND_INF_GANON_SOUL;
                 }
                 break;
@@ -2218,8 +2221,8 @@ void RandomizerOnPlayerUpdateHandler() {
     if (!GameInteractor::IsGameplayPaused() && Flags_GetRandomizerInf(RAND_INF_GRANT_GANONS_BOSSKEY) &&
         gPlayState->transitionTrigger != TRANS_TRIGGER_START &&
         (1 << 0 & gSaveContext.inventory.dungeonItems[SCENE_GANONS_TOWER]) == 0) {
-        GiveItemEntryWithoutActor(gPlayState,
-                                  *Rando::StaticData::GetItemTable().at(RG_GANONS_CASTLE_BOSS_KEY).GetGIEntry());
+        auto rg = RAND_GET_OPTION(RSK_GANONS_SOUL) ? RG_GANON_SOUL : RG_GANONS_CASTLE_BOSS_KEY;
+        GiveItemEntryWithoutActor(gPlayState, *Rando::StaticData::GetItemTable().at(rg).GetGIEntry());
     }
 
     if (!GameInteractor::IsGameplayPaused() && RAND_GET_OPTION(RSK_TRIFORCE_HUNT)) {

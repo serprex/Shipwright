@@ -543,6 +543,9 @@ void SetAllEntrancesData() {
           { EntranceType::AdultBoss, RR_SPIRIT_TEMPLE_BOSS_ROOM,        RR_SPIRIT_TEMPLE_BOSS_ENTRYWAY, ENTR_SPIRIT_TEMPLE_BOSS_DOOR } },
         { { EntranceType::AdultBoss, RR_SHADOW_TEMPLE_BOSS_ENTRYWAY,    RR_SHADOW_TEMPLE_BOSS_ROOM,     ENTR_SHADOW_TEMPLE_BOSS_ENTRANCE },
           { EntranceType::AdultBoss, RR_SHADOW_TEMPLE_BOSS_ROOM,        RR_SHADOW_TEMPLE_BOSS_ENTRYWAY, ENTR_SHADOW_TEMPLE_BOSS_DOOR } },
+
+        { { EntranceType::GanonBoss, RR_GANONS_TOWER_BEFORE_GANONDORF_LAIR, RR_GANONS_TOWER_GANONDORF_LAIR,        ENTR_GANONDORF_BOSS_0 },
+          { EntranceType::GanonBoss, RR_GANONS_TOWER_GANONDORF_LAIR,        RR_GANONS_TOWER_BEFORE_GANONDORF_LAIR, ENTR_GANONS_TOWER_2 } },
         
         { { EntranceType::BlueWarp, RR_DEKU_TREE_BOSS_ROOM,        RR_KF_OUTSIDE_DEKU_TREE,      ENTR_KOKIRI_FOREST_DEKU_TREE_BLUE_WARP },
           NO_RETURN_ENTRANCE },
@@ -559,6 +562,8 @@ void SetAllEntrancesData() {
         { { EntranceType::BlueWarp, RR_SPIRIT_TEMPLE_BOSS_ROOM,    RR_DESERT_COLOSSUS,           ENTR_DESERT_COLOSSUS_SPIRIT_TEMPLE_BLUE_WARP },
           NO_RETURN_ENTRANCE },
         { { EntranceType::BlueWarp, RR_SHADOW_TEMPLE_BOSS_ROOM,    RR_GRAVEYARD_WARP_PAD_REGION, ENTR_GRAVEYARD_SHADOW_TEMPLE_BLUE_WARP },
+          NO_RETURN_ENTRANCE },
+        { { EntranceType::BlueWarp, RR_GANONS_TOWER_GANONDORF_LAIR, RR_GANONS_TOWER_FLOOR_1,     ENTR_GANONS_TOWER_0 },
           NO_RETURN_ENTRANCE },
         // clang-format on
     };
@@ -760,7 +765,7 @@ static bool EntranceUnreachableAs(Entrance* entrance, uint8_t age, std::vector<E
 
 static bool ValidateWorld(Entrance* entrancePlaced) {
     auto ctx = Rando::Context::GetInstance();
-    SPDLOG_DEBUG("Validating world\n");
+    SPDLOG_DEBUG("Validating world");
 
     // check certain conditions when certain types of ER are enabled
     EntranceType type = EntranceType::None;
@@ -1214,6 +1219,9 @@ int EntranceShuffler::ShuffleAllEntrances() {
         if (ctx->GetOption(RSK_SHUFFLE_BOSS_ENTRANCES).Is(RO_BOSS_ROOM_ENTRANCE_SHUFFLE_FULL)) {
             entrancePools[EntranceType::Boss] = GetShuffleableEntrances(EntranceType::ChildBoss);
             AddElementsToPool(entrancePools[EntranceType::Boss], GetShuffleableEntrances(EntranceType::AdultBoss));
+            if (ctx->GetOption(RSK_GANONS_SOUL)) {
+                AddElementsToPool(entrancePools[EntranceType::Boss], GetShuffleableEntrances(EntranceType::GanonBoss));
+            }
             // If forest is closed, ensure Ghoma is inside the Deku tree
             // Deku tree being in its vanilla location is handled below
             if (ctx->GetOption(RSK_FOREST).Is(RO_CLOSED_FOREST_ON) &&
@@ -1231,6 +1239,10 @@ int EntranceShuffler::ShuffleAllEntrances() {
         } else {
             entrancePools[EntranceType::ChildBoss] = GetShuffleableEntrances(EntranceType::ChildBoss);
             entrancePools[EntranceType::AdultBoss] = GetShuffleableEntrances(EntranceType::AdultBoss);
+            if (ctx->GetOption(RSK_GANONS_SOUL)) {
+                AddElementsToPool(entrancePools[EntranceType::AdultBoss],
+                                  GetShuffleableEntrances(EntranceType::GanonBoss));
+            }
             // If forest is closed, ensure Ghoma is inside the Deku tree
             if (ctx->GetOption(RSK_FOREST).Is(RO_CLOSED_FOREST_ON) &&
                 !(ctx->GetOption(RSK_SHUFFLE_OVERWORLD_ENTRANCES) || ctx->GetOption(RSK_SHUFFLE_INTERIOR_ENTRANCES))) {
@@ -1506,6 +1518,8 @@ int EntranceShuffler::ShuffleAllEntrances() {
               GetEntrance(RR_SPIRIT_TEMPLE_ENTRYWAY, RR_DESERT_COLOSSUS_OUTSIDE_TEMPLE) },
             { EntranceNameByRegions(RR_SHADOW_TEMPLE_BOSS_ROOM, RR_SHADOW_TEMPLE_BOSS_ENTRYWAY),
               GetEntrance(RR_SHADOW_TEMPLE_ENTRYWAY, RR_GRAVEYARD_WARP_PAD_REGION) },
+            { EntranceNameByRegions(RR_GANONS_TOWER_GANONDORF_LAIR, RR_GANONS_TOWER_BEFORE_GANONDORF_LAIR),
+              GetEntrance(RR_GANONS_TOWER_ENTRYWAY, RR_GANONS_TOWER_FLOOR_1) },
         };
 
         // If a boss room is inside a dungeon entrance (or inside a dungeon which is inside a dungeon entrance), make
@@ -1527,6 +1541,8 @@ int EntranceShuffler::ShuffleAllEntrances() {
               GetEntrance(RR_SPIRIT_TEMPLE_BOSS_ROOM, RR_DESERT_COLOSSUS) },
             { EntranceNameByRegions(RR_SHADOW_TEMPLE_ENTRYWAY, RR_GRAVEYARD_WARP_PAD_REGION),
               GetEntrance(RR_SHADOW_TEMPLE_BOSS_ROOM, RR_GRAVEYARD_WARP_PAD_REGION) },
+            { EntranceNameByRegions(RR_GANONS_TOWER_ENTRYWAY, RR_GANONS_TOWER_FLOOR_1),
+              GetEntrance(RR_GANONS_TOWER_GANONDORF_LAIR, RR_GANONS_TOWER_FLOOR_1) },
         };
 
         // Pair <BlueWarp exit, BossRoom reverse exit>
@@ -1547,6 +1563,8 @@ int EntranceShuffler::ShuffleAllEntrances() {
               GetEntrance(RR_SPIRIT_TEMPLE_BOSS_ROOM, RR_SPIRIT_TEMPLE_BOSS_ENTRYWAY) },
             { GetEntrance(RR_SHADOW_TEMPLE_BOSS_ROOM, RR_GRAVEYARD_WARP_PAD_REGION),
               GetEntrance(RR_SHADOW_TEMPLE_BOSS_ROOM, RR_SHADOW_TEMPLE_BOSS_ENTRYWAY) },
+            { GetEntrance(RR_GANONS_TOWER_GANONDORF_LAIR, RR_GANONS_TOWER_FLOOR_1),
+              GetEntrance(RR_GANONS_TOWER_GANONDORF_LAIR, RR_GANONS_TOWER_BEFORE_GANONDORF_LAIR) },
         };
 
         for (EntrancePair pair : bossRoomExitPairs) {
@@ -1587,7 +1605,6 @@ void EntranceShuffler::CreateEntranceOverrides() {
 
     int i = 0;
     for (Entrance* entrance : allShuffleableEntrances) {
-
         // Include blue warps when dungeons or bosses are shuffled
         bool includeBluewarps =
             entrance->GetType() == Rando::EntranceType::BlueWarp &&

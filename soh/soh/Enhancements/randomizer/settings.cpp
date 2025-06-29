@@ -251,6 +251,7 @@ void Settings::CreateOptions() {
     OPT_U8(RSK_LACS_DUNGEON_COUNT, "GCBK Dungeon Count", {NumOpts(0, 9)}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("LacsDungeonCount"), "", WidgetType::Slider, 8, true);
     OPT_U8(RSK_LACS_TOKEN_COUNT, "GCBK Token Count", {NumOpts(0, 100)}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("LacsTokenCount"), "", WidgetType::Slider, 100, true);
     OPT_U8(RSK_LACS_OPTIONS, "GCBK LACS Reward Options", {"Standard Reward", "Greg as Reward", "Greg as Wildcard"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("LacsRewardOptions"), mOptionDescriptions[RSK_LACS_OPTIONS], WidgetType::Combobox, RO_LACS_STANDARD_REWARD);
+    OPT_BOOL(RSK_GANONS_SOUL, "Ganon's Soul Instead", CVAR_RANDOMIZER_SETTING("ShuffleGanonSoul"), mOptionDescriptions[RSK_GANONS_SOUL]);
     OPT_U8(RSK_KEYRINGS, "Key Rings", {"Off", "Random", "Count", "Selection"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRings"), mOptionDescriptions[RSK_KEYRINGS], WidgetType::Combobox, RO_KEYRINGS_OFF);
     OPT_U8(RSK_KEYRINGS_RANDOM_COUNT, "Keyring Dungeon Count", {NumOpts(0, 9)}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsRandomCount"), "", WidgetType::Slider, 8);
     OPT_U8(RSK_KEYRINGS_GERUDO_FORTRESS, "Gerudo Fortress Keyring", {"No", "Random", "Yes"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsGerudoFortress"), "", WidgetType::Combobox, 0);
@@ -1305,6 +1306,7 @@ void Settings::CreateOptions() {
                                   &mOptions[RSK_GERUDO_KEYS],
                                   &mOptions[RSK_BOSS_KEYSANITY],
                                   &mOptions[RSK_GANONS_BOSS_KEY],
+                                  &mOptions[RSK_GANONS_SOUL],
                                   &mOptions[RSK_LACS_STONE_COUNT],
                                   &mOptions[RSK_LACS_MEDALLION_COUNT],
                                   &mOptions[RSK_LACS_DUNGEON_COUNT],
@@ -1543,6 +1545,7 @@ void Settings::CreateOptions() {
                                                  &mOptions[RSK_GERUDO_KEYS],
                                                  &mOptions[RSK_BOSS_KEYSANITY],
                                                  &mOptions[RSK_GANONS_BOSS_KEY],
+                                                 &mOptions[RSK_GANONS_SOUL],
                                                  &mOptions[RSK_LACS_STONE_COUNT],
                                                  &mOptions[RSK_LACS_MEDALLION_COUNT],
                                                  &mOptions[RSK_LACS_DUNGEON_COUNT],
