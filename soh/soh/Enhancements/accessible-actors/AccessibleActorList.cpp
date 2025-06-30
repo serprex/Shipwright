@@ -91,7 +91,7 @@ void accessible_switch(AccessibleActor* actor) {
             return;
         }
         if (scale.y >= 33.0f / 200.0f) {
-            if (actor->play->sceneNum == 0 && actor->play->roomCtx.curRoom.num == 5 && actor->xzDistToPlayer < 20) {
+            if (actor->play->sceneNum == SCENE_DEKU_TREE && actor->play->roomCtx.curRoom.num == 5 && actor->xzDistToPlayer < 20) {
                 ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_DIAMOND_SWITCH);
             }
             if ((actor->frameCount & 31) != 0) {
@@ -106,10 +106,15 @@ void accessible_switch(AccessibleActor* actor) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_HAMMER_HIT);
         }
     } else if ((actor->actor->params & 7) == OBJSWITCH_TYPE_EYE) {
-        if (sw->eyeTexIndex == 0) {
+        s32 subType = (actor->actor->params >> 4) & 7;
+        if (subType != 0 || sw->eyeTexIndex == 0) {
             actor->policy.aimAssist.isProvider = AIM_SHOOT;
             actor->policy.ydist = 1000;
-            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_FOOT_SWITCH);
+            // prevent hearing yellow eye in forest temple block puzzle heard on top floor
+            if (!(actor->play->sceneNum == SCENE_FOREST_TEMPLE && actor->play->roomCtx.curRoom.num == 11 &&
+                    actor->pos.y < player->actor.world.pos.y - 100)) {
+                ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_FOOT_SWITCH);
+            }
         }
     } else if (actor->xyzDistToPlayer < 1000) {
         actor->policy.aimAssist.isProvider = AIM_ALL;
@@ -726,12 +731,17 @@ void ActorAccessibility_InitActors() {
             if ((actor->frameCount & 31) == 0) {
                 ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_TRAP_BOUND);
             }
-        } else if (po->index == sBgPoEventPuzzleState && (actor->frameCount & 63) == 0) {
-            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_PO_CRY);
+        } else if (po->index == sBgPoEventPuzzleState) {
+            actor->policy.aimAssist.isProvider = AIM_BOW;
+            if ((actor->frameCount & 63) == 0) {
+                ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_PO_CRY);
+            }
+        } else {
+            actor->policy.aimAssist.isProvider = 0;
         }
     });
     policy.aimAssist.isProvider = AIM_BOW;
-    policy.aimAssist.tolerance = 50.0f;
+    policy.aimAssist.tolerance = 40.0f;
     policy.n = 1;
     policy.ydist = 1000;
     policy.distance = 1000;
@@ -969,7 +979,7 @@ void ActorAccessibility_InitActors() {
     policy.pitch = 1.3;
     ActorAccessibility_AddSupportedActor(VA_CLIMB, policy);
     ActorAccessibility_InitPolicy(&policy, "Door", [](AccessibleActor* actor) {
-        if (((actor->actor->params >> 7) & 7) == DOOR_LOCKED) {
+        if (((actor->actor->params >> 7) & 7) == DOOR_LOCKED && !Flags_GetSwitch(actor->play, actor->actor->params & 0x3F)) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_CHAIN_KEY_UNLOCK_B);
         } else {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_OC_DOOR_OPEN);

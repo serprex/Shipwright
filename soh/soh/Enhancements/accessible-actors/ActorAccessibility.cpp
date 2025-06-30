@@ -517,7 +517,7 @@ void ActorAccessibility_GeneralHelper(PlayState* play) {
 
     bool compassOn = false;
     if (aa->prevPos.x == player->actor.world.pos.x && aa->prevPos.z == player->actor.world.pos.z) {
-        if (aa->prevYaw != player->yaw) {
+        if (ABS(aa->prevYaw - player->yaw) > 0x400) {
             compassOn = true;
             aa->prevYaw = player->yaw;
         }
@@ -722,7 +722,7 @@ AimAssistProps ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* acto
     s32 angle = player->actor.focus.rot.x;
     angle = angle / -14000.0 * 16384;
     f32 cos_angle = Math_CosS(angle);
-    f32 slope = cos_angle <= 0.01 ? 1.0f : std::max(Math_SinS(angle) / cos_angle, 1.0f);
+    f32 slope = cos_angle == 0.0f ? 0.0f : Math_SinS(angle) / cos_angle;
     s32 yIntercept = slope * actor->xzDistToPlayer + player->actor.focus.pos.y;
     s32 yHeight = actor->pos.y + 25;
     AimAssistProps aimAssistProps;
@@ -735,7 +735,7 @@ AimAssistProps ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* acto
     }
     s32 yDiff = fabs(yIntercept - yHeight);
     if (yIntercept - yHeight > 0) {
-        s32 correction = (1 - 1 / slope) * 100;
+        s32 correction = 100.0f - 100.0f / std::max(slope, 1.0f);
         yDiff = std::max(yDiff - correction, 0);
     }
     if (yDiff > 300) {
