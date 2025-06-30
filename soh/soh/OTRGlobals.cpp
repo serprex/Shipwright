@@ -2314,7 +2314,7 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
                     entrance = ENTR_LINKS_HOUSE_1;
                     break;
                 case TEXT_KOKIRI_EXIT_SIGN:
-                    entrance = ENTR_LOST_WOODS_BRIDGE_WEST_EXIT;
+                    entrance = ENTR_LOST_WOODS_BRIDGE_EAST_EXIT;
                     break;
                 case TEXT_ZD_SIGN:
                     if (gPlayState->sceneNum == SCENE_ZORAS_DOMAIN) {
