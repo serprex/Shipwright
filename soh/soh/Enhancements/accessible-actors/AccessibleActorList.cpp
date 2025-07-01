@@ -42,35 +42,6 @@ void EnGSwitch_SilverRupeeIdle(EnGSwitch*, PlayState*);
 extern u8 sBgPoEventPuzzleState;
 }
 
-void accessible_torches(AccessibleActor* actor) {
-    ObjSyokudai* torch = (ObjSyokudai*)actor->actor;
-    // temporary torches
-    if ((actor->actor->params) == 4230 || (actor->actor->params) == 4220 || (actor->actor->params) == 4227 ||
-        (actor->actor->params) == 4380 || actor->actor->params == 4321) {
-        actor->policy.volume = torch->litTimer != 0 ? 0.1 : 1.0;
-        if ((actor->frameCount & 31) == 0) {
-            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_BOMB_IGNIT);
-        }
-        return;
-    } else if ((actor->frameCount & 31) == 0) {
-        // unlit permanent torches
-        if ((actor->actor->params) == 8192) {
-            if (torch->litTimer == 0) {
-                ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_BOMB_IGNIT);
-            } else {
-                ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_ANUBIS_FIRE);
-            }
-        }
-
-        // lit permanent torches
-        if ((actor->actor->params) == 9216 || (actor->actor->params) == 962) {
-            actor->policy.volume = 0.5;
-            actor->policy.distance = 200.0;
-            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_ANUBIS_FIRE);
-        }
-    }
-}
-
 void accessible_switch(AccessibleActor* actor) {
     Player* player = GET_PLAYER(actor->play);
     ObjSwitch* sw = (ObjSwitch*)actor->actor;
@@ -80,7 +51,8 @@ void accessible_switch(AccessibleActor* actor) {
             return;
         }
         if (scale.y >= 33.0f / 200.0f) {
-            if (actor->play->sceneNum == SCENE_DEKU_TREE && actor->play->roomCtx.curRoom.num == 5 && actor->xzDistToPlayer < 20) {
+            if (actor->play->sceneNum == SCENE_DEKU_TREE && actor->play->roomCtx.curRoom.num == 5 &&
+                actor->xzDistToPlayer < 20) {
                 ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_DIAMOND_SWITCH);
             }
             if ((actor->frameCount & 31) != 0) {
@@ -101,7 +73,7 @@ void accessible_switch(AccessibleActor* actor) {
             actor->policy.ydist = 1000;
             // prevent hearing yellow eye in forest temple block puzzle heard on top floor
             if (!(actor->play->sceneNum == SCENE_FOREST_TEMPLE && actor->play->roomCtx.curRoom.num == 11 &&
-                    actor->pos.y < player->actor.world.pos.y - 100)) {
+                  actor->pos.y < player->actor.world.pos.y - 100)) {
                 ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_FOOT_SWITCH);
             }
         }
@@ -297,27 +269,6 @@ void accessible_en_guard(AccessibleActor* actor) {
     }
 }
 
-void accessible_en_dogs(AccessibleActor* actor) {
-    EnDog* dog = (EnDog*)actor->actor;
-    if (EnDog_CanFollow(dog, actor->play) == 1) {
-        dog->actionFunc = EnDog_FollowPlayer;
-        ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_DIAMOND_SWITCH);
-        ActorAccessibility_SetSoundPitch(actor, 0, 1.0);
-    }
-    if ((actor->frameCount & 31) != 0) {
-        return;
-    }
-    if (actor->actor->params == 608 || actor->actor->params == 336 || actor->actor->params == 304 ||
-        actor->actor->params == 3088 || actor->actor->params == 2576 || actor->actor->params < 0) {
-        ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_SMALL_DOG_BARK);
-
-        ActorAccessibility_SetSoundPitch(actor, 0, 2.0);
-    } else {
-        ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_SMALL_DOG_BARK);
-        ActorAccessibility_SetSoundPitch(actor, 0, 0.5);
-    }
-}
-
 void ActorAccessibility_InitActors() {
     const int Npc_Frames = 35;
     ActorAccessibilityPolicy policy;
@@ -431,7 +382,26 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_EN_KAKASI, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_KAKASI3, policy);
 
-    ActorAccessibility_InitPolicy(&policy, "Dogs", accessible_en_dogs);
+    ActorAccessibility_InitPolicy(&policy, "Dogs", [](AccessibleActor* actor) {
+        EnDog* dog = (EnDog*)actor->actor;
+        if (EnDog_CanFollow(dog, actor->play) == 1) {
+            dog->actionFunc = EnDog_FollowPlayer;
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_DIAMOND_SWITCH);
+            ActorAccessibility_SetSoundPitch(actor, 0, 1.0);
+        }
+        if ((actor->frameCount & 31) != 0) {
+            return;
+        }
+        if (actor->actor->params == 608 || actor->actor->params == 336 || actor->actor->params == 304 ||
+            actor->actor->params == 3088 || actor->actor->params == 2576 || actor->actor->params < 0) {
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_SMALL_DOG_BARK);
+
+            ActorAccessibility_SetSoundPitch(actor, 0, 2.0);
+        } else {
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_SMALL_DOG_BARK);
+            ActorAccessibility_SetSoundPitch(actor, 0, 0.5);
+        }
+    });
     policy.n = 1;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_DOG, policy);
 
@@ -685,12 +655,44 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_BG_SPOT15_RRBOX, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_HIDAN_ROCK, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_JYA_BLOCK, policy);
-    ActorAccessibility_InitPolicy(&policy, "Torch", accessible_torches);
+    ActorAccessibility_InitPolicy(&policy, "Torch", [](AccessibleActor* actor) {
+        ObjSyokudai* torch = (ObjSyokudai*)actor->actor;
+        // temporary torches
+        if ((actor->actor->params) == 4230 || (actor->actor->params) == 4220 || (actor->actor->params) == 4227 ||
+            (actor->actor->params) == 4380 || actor->actor->params == 4321) {
+            actor->policy.volume = torch->litTimer != 0 ? 0.1 : 1.0;
+            if ((actor->frameCount & 31) == 0) {
+                ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_BOMB_IGNIT);
+            }
+            return;
+        } else if ((actor->frameCount & 31) == 0) {
+            // unlit permanent torches
+            if ((actor->actor->params) == 8192) {
+                if (torch->litTimer == 0) {
+                    ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_BOMB_IGNIT);
+                } else {
+                    ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_ANUBIS_FIRE);
+                }
+            }
+
+            // lit permanent torches
+            if ((actor->actor->params) == 9216 || (actor->actor->params) == 962) {
+                actor->policy.volume = 0.5;
+                actor->policy.distance = 200.0;
+                ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_ANUBIS_FIRE);
+            }
+        }
+    });
     policy.aimAssist.isProvider = AIM_HOOK;
     policy.n = 1;
     policy.pitch = 1.1;
     policy.distance = 800;
+    ActorAccessibility_InitPolicy(&policy, "Po Torch", NA_SE_EN_ANUBIS_FIRE);
+    policy.n = 40;
+    policy.volume = 0.5;
+    policy.distance = 500;
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_SYOKUDAI, policy);
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_PO_SYOKUDAI, policy);
     ActorAccessibility_InitPolicy(&policy, "Deku Tree Moving Platform", [](AccessibleActor* actor) {
         if ((actor->actor->params) == 0) {
             actor->policy.ydist = 1000;
@@ -963,7 +965,8 @@ void ActorAccessibility_InitActors() {
     policy.pitch = 1.3;
     ActorAccessibility_AddSupportedActor(VA_CLIMB, policy);
     ActorAccessibility_InitPolicy(&policy, "Door", [](AccessibleActor* actor) {
-        if (((actor->actor->params >> 7) & 7) == DOOR_LOCKED && !Flags_GetSwitch(actor->play, actor->actor->params & 0x3F)) {
+        if (((actor->actor->params >> 7) & 7) == DOOR_LOCKED &&
+            !Flags_GetSwitch(actor->play, actor->actor->params & 0x3F)) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_CHAIN_KEY_UNLOCK_B);
         } else {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_OC_DOOR_OPEN);
@@ -1138,6 +1141,38 @@ void ActorAccessibility_InitActors() {
     temp->policy.distance = 500;
     temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 2960, -410, -2000 });
     temp->policy.distance = 500;
+
+    auto forest_twisted_hallway = [](AccessibleActor* actor) {
+        Actor* twisted = Actor_Find(&actor->play->actorCtx, ACTOR_BG_MORI_HINERI, ACTORCAT_BG);
+        if (twisted != nullptr) {
+            switch (twisted->params) {
+                case 0: // boss key on wall
+                    if (actor->pos.x != -1835)
+                        return;
+                    break;
+                case 1: // boss key on floor
+                    if (actor->pos.x != -1760)
+                        return;
+                    break;
+                case 2: // to ice eye
+                    if (actor->pos.x != 1877)
+                        return;
+                    break;
+            }
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_PL_LAND_LADDER);
+        }
+    };
+    list = ActorAccessibility_GetVirtualActorList(SCENE_FOREST_TEMPLE, 19);
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { -1835, 1033, -3320 });
+    temp->policy.callback = forest_twisted_hallway;
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { -1760, 1033, -3200 });
+    temp->policy.callback = forest_twisted_hallway;
+
+    list = ActorAccessibility_GetVirtualActorList(SCENE_FOREST_TEMPLE, 20);
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 1877, 1033, -3320 });
+    temp->policy.callback = forest_twisted_hallway;
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 2000, 1033, -3200 });
+    temp->policy.sound = NA_SE_PL_LAND_LADDER;
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_FOREST_TEMPLE, 15);
     // falling ceiling safe spots
