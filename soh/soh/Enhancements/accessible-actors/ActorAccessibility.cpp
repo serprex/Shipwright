@@ -365,9 +365,7 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
     if (aa->glossary->GlossaryStarted) {
         aa->glossary->frameCount++;
     }
-    if (actor->frameCount % actor->policy.n) {
-        return;
-    } else if (!actor->policy.runsAlways && actor->xyzDistToPlayer > actor->policy.distance) {
+    if (!actor->policy.runsAlways && actor->xyzDistToPlayer > actor->policy.distance) {
         return;
     } else if (actor->isDrawn == 0 && actor->actor->id != ACTOR_EN_IT && actor->actor->id != ACTOR_EN_OKARINA_TAG &&
                !aa->glossary->GlossaryStarted) {
@@ -420,10 +418,12 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
         }
     }
 
-    if (actor->policy.callback != nullptr) {
-        actor->policy.callback(actor);
-    } else if (actor->policy.sound != 0) {
-        ActorAccessibility_PlaySoundForActor(actor, 0, actor->policy.sound);
+    if (actor->frameCount % actor->policy.n == 0) {
+        if (actor->policy.callback != nullptr) {
+            actor->policy.callback(actor);
+        } else if (actor->policy.sound != 0) {
+            ActorAccessibility_PlaySoundForActor(actor, 0, actor->policy.sound);
+        }
     }
 }
 

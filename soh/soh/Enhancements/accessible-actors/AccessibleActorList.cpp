@@ -47,38 +47,27 @@ void accessible_torches(AccessibleActor* actor) {
     // temporary torches
     if ((actor->actor->params) == 4230 || (actor->actor->params) == 4220 || (actor->actor->params) == 4227 ||
         (actor->actor->params) == 4380 || actor->actor->params == 4321) {
-        if (torch->litTimer != 0) {
-            actor->policy.volume = 0.1;
-            if ((actor->frameCount & 31) != 0) {
-                return;
-            }
+        actor->policy.volume = torch->litTimer != 0 ? 0.1 : 1.0;
+        if ((actor->frameCount & 31) == 0) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_BOMB_IGNIT);
-        } else if (actor->policy.volume != 1.0) {
-            actor->policy.volume = 1.0;
         }
-        if ((actor->frameCount & 31) != 0) {
-            return;
-        }
-        ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_BOMB_IGNIT);
-    }
-    if ((actor->frameCount & 31) != 0) {
         return;
-    }
+    } else if ((actor->frameCount & 31) == 0) {
+        // unlit permanent torches
+        if ((actor->actor->params) == 8192) {
+            if (torch->litTimer == 0) {
+                ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_BOMB_IGNIT);
+            } else {
+                ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_ANUBIS_FIRE);
+            }
+        }
 
-    // unlit permanent torches
-    if ((actor->actor->params) == 8192) {
-        if (torch->litTimer == 0) {
-            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_BOMB_IGNIT);
-        } else {
+        // lit permanent torches
+        if ((actor->actor->params) == 9216 || (actor->actor->params) == 962) {
+            actor->policy.volume = 0.5;
+            actor->policy.distance = 200.0;
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_ANUBIS_FIRE);
         }
-    }
-
-    // lit permanent torches
-    if ((actor->actor->params) == 9216 || (actor->actor->params) == 962) {
-        actor->policy.volume = 0.5;
-        actor->policy.distance = 200.0;
-        ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_ANUBIS_FIRE);
     }
 }
 
@@ -524,6 +513,7 @@ void ActorAccessibility_InitActors() {
     });
     policy.pitch = 1.1;
     policy.distance = 1000;
+    policy.aimAssist.isProvider = AIM_HOOK;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_BOX, policy);
     ActorAccessibility_InitPolicy(&policy, "Sign", NA_SE_IT_REFLECTION_WOOD);
     policy.n = 40;
@@ -585,14 +575,11 @@ void ActorAccessibility_InitActors() {
     policy.ydist = 1000;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_PO_DESERT, policy);
     ActorAccessibility_InitPolicy(&policy, "flag pole", [](AccessibleActor* actor) {
-        if ((actor->frameCount & 31) == 0) {
-            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_FLUTTER_FLAG);
-        }
+        ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_FLUTTER_FLAG);
     });
     policy.aimAssist.isProvider = AIM_HOOK;
     policy.distance = 1000;
     policy.volume = 1.5;
-    policy.n = 1;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_HATA, policy);
     ActorAccessibility_InitPolicy(&policy, "oasis", NA_SE_EV_SCOOPUP_WATER);
     policy.distance = 2000;
@@ -661,11 +648,8 @@ void ActorAccessibility_InitActors() {
         if (type == YELLOW_TALL_1 || type == YELLOW_TALL_2) {
             actor->policy.aimAssist.isProvider = AIM_ALL;
         }
-        if ((actor->frameCount & 31) == 0) {
-            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_DIAMOND_SWITCH);
-        }
+        ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_DIAMOND_SWITCH);
     });
-    policy.n = 1;
     policy.volume = 0.6;
     policy.distance = 1000;
     policy.ydist = 300;
@@ -702,6 +686,7 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_BG_HIDAN_ROCK, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_JYA_BLOCK, policy);
     ActorAccessibility_InitPolicy(&policy, "Torch", accessible_torches);
+    policy.aimAssist.isProvider = AIM_HOOK;
     policy.n = 1;
     policy.pitch = 1.1;
     policy.distance = 800;
@@ -736,7 +721,7 @@ void ActorAccessibility_InitActors() {
             if ((actor->frameCount & 63) == 0) {
                 ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_PO_CRY);
             }
-        } else {
+        } else if (po->type != 4) {
             actor->policy.aimAssist.isProvider = 0;
         }
     });
@@ -744,7 +729,7 @@ void ActorAccessibility_InitActors() {
     policy.aimAssist.tolerance = 40.0f;
     policy.n = 1;
     policy.ydist = 1000;
-    policy.distance = 1000;
+    policy.distance = 1500;
     ActorAccessibility_AddSupportedActor(ACTOR_BG_PO_EVENT, policy);
     ActorAccessibility_InitPolicy(&policy, "Poe Sister", [](AccessibleActor* actor) {
         if (actor->actor->category == ACTORCAT_PROP) {
@@ -833,7 +818,6 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_EN_SI, policy);
     ActorAccessibility_InitPolicy(&policy, "Gold and Wall skulltulas", nullptr);
     policy.aimAssist.isProvider = AIM_ALL | AIM_CUP;
-    policy.n = 1;
     policy.ydist = 500;
     policy.distance = 750;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_SW, policy);
