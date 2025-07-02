@@ -168,11 +168,9 @@ void SfxExtractor::frameCallback() {
 }
 
 void SfxExtractor::prime() {
-    while (true) {
+    do {
         AudioMgr_CreateNextAudioBuffer(tempBuffer + 0, SFX_EXTRACTION_ONE_FRAME);
-        if (isAllZero(tempBuffer + 0, SFX_EXTRACTION_ONE_FRAME * 2))
-            break;
-    }
+    } while(isAllZero(tempBuffer + 0, SFX_EXTRACTION_ONE_FRAME * 2));
     captureThreadState = CT_FINISHED;
 }
 
@@ -181,7 +179,7 @@ void SfxExtractor::captureCallback() {
         prime();
     if (captureThreadState != CT_READY)
         return; // No work to do at the moment.
-    memset(tempBuffer, 0, SFX_EXTRACTION_BUFFER_SIZE * 4);
+    memset(tempBuffer, 0, sizeof(tempBuffer));
     int16_t* mark = tempBuffer + 0;
     size_t samplesLeft = SFX_EXTRACTION_BUFFER_SIZE;
     bool outputStarted = false;
