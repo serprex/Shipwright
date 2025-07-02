@@ -564,6 +564,7 @@ void ActorAccessibility_GeneralHelper(PlayState* play) {
                                  1, 1, &bgId)) {
             if (SurfaceType_IsHookshotSurface(&play->colCtx, colPoly, bgId)) {
                 ActorAccessibility_PlaySound(nullptr, 2, NA_SE_IT_HOOKSHOT_STICK_OBJ);
+                ActorAccessibility_SetSoundVolume(nullptr, 2, 0.5f);
             }
         }
     }

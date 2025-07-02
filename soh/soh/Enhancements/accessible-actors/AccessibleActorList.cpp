@@ -641,6 +641,12 @@ void ActorAccessibility_InitActors() {
     policy.n = 1;
     policy.ydist = 50;
     ActorAccessibility_AddSupportedActor(ACTOR_BG_BDAN_OBJECTS, policy);
+    ActorAccessibility_InitPolicy(&policy, "Forest Basement Gate", NA_SE_EV_METALGATE_OPEN);
+    policy.ydist = 1;
+    policy.distance = 200;
+    policy.volume = 0.5;
+    policy.pitch = 1.2;
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_MORI_HASHIRA4, policy);
     ActorAccessibility_InitPolicy(&policy, "Ocarina Spots", NA_SE_EV_DIAMOND_SWITCH);
     policy.n = 30;
     policy.distance = 800;
@@ -1141,6 +1147,28 @@ void ActorAccessibility_InitActors() {
     temp->policy.distance = 500;
     temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 2960, -410, -2000 });
     temp->policy.distance = 500;
+
+    auto forest_basement = [](AccessibleActor* actor) {
+        Actor* walls = Actor_Find(&actor->play->actorCtx, ACTOR_BG_MORI_KAITENKABE, ACTORCAT_BG);
+        if (walls != nullptr) {
+            actor->pos.x = walls->world.pos.x + Math_CosS(-walls->world.rot.y) * (actor->policy.sound == 0 ? -300.0f : 300.0f);
+            actor->pos.z = walls->world.pos.z + Math_SinS(-walls->world.rot.y) * (actor->policy.sound == 0 ? -300.0f : 300.0f);
+            if ((actor->frameCount & 31) == 0) {
+                ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_TRAP_BOUND);
+            }
+        }
+    };
+    list = ActorAccessibility_GetVirtualActorList(SCENE_FOREST_TEMPLE, 17);
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 119, -779, -1566 });
+    temp->policy.callback = forest_basement;
+    temp->policy.sound = 0;
+    temp->policy.distance = 333;
+    temp->policy.n = 1;
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 119, -779, -1566 });
+    temp->policy.callback = forest_basement;
+    temp->policy.sound = 1;
+    temp->policy.distance = 333;
+    temp->policy.n = 1;
 
     auto forest_twisted_hallway = [](AccessibleActor* actor) {
         Actor* twisted = Actor_Find(&actor->play->actorCtx, ACTOR_BG_MORI_HINERI, ACTORCAT_BG);
