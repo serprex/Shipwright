@@ -170,7 +170,7 @@ void SfxExtractor::frameCallback() {
 void SfxExtractor::prime() {
     do {
         AudioMgr_CreateNextAudioBuffer(tempBuffer + 0, SFX_EXTRACTION_ONE_FRAME);
-    } while(isAllZero(tempBuffer + 0, SFX_EXTRACTION_ONE_FRAME * 2));
+    } while (isAllZero(tempBuffer + 0, SFX_EXTRACTION_ONE_FRAME * 2));
     captureThreadState = CT_FINISHED;
 }
 
