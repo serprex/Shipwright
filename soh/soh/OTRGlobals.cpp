@@ -2294,6 +2294,9 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
                 case TEXT_KAK_DMT:
                     entrance = ENTR_DEATH_MOUNTAIN_TRAIL_BOTTOM_EXIT;
                     break;
+                case TEXT_DMT_DMT:
+                    entrance = ENTR_GROTTOS_13;
+                    break;
                 case TEXT_DMT_DC:
                     entrance = ENTR_DEATH_MOUNTAIN_TRAIL_OUTSIDE_DODONGOS_CAVERN;
                     break;
@@ -2303,6 +2306,12 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
                     } else {
                         entrance = ENTR_GORON_CITY_DARUNIA_ROOM_EXIT;
                     }
+                    break;
+                case TEXT_DMT_DMC:
+                    entrance = ENTR_DEATH_MOUNTAIN_CRATER_UPPER_EXIT;
+                    break;
+                case TEXT_DMT_SUMMIT:
+                    entrance = ENTR_GREAT_FAIRYS_FOUNTAIN_MAGIC_DMT;
                     break;
                 case TEXT_HF_ZR:
                     entrance = ENTR_ZORAS_RIVER_WEST_EXIT;
