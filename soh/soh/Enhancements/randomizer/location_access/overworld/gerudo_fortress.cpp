@@ -99,12 +99,12 @@ void RegionTable_Init_GerudoFortress() {
 
     areaTable[RR_GF_TOP_OF_LOWER_VINES] = Region("GF Top of Lower Vines", SCENE_GERUDOS_FORTRESS, {}, {}, {
         //Exits
-        Entrance(RR_TH_KITCHEN_TOP,           []{return true;}),
-        Entrance(RR_TH_DOUBLE_CELL,           []{return true;}),
-        Entrance(RR_GF_ABOVE_GTG,             []{return true;}),
-        Entrance(RR_GF_BOTTOM_OF_LOWER_VINES, []{return true;}),
+        Entrance(RR_TH_KITCHEN_BY_CORRIDOR,     []{return true;}),
+        Entrance(RR_TH_DOUBLE_CELL,             []{return true;}),
+        Entrance(RR_GF_ABOVE_GTG,               []{return true;}),
+        Entrance(RR_GF_BOTTOM_OF_LOWER_VINES,   []{return true;}),
         // need to explicitly convert it into a bool
-        Entrance(RR_GF_BOTTOM_OF_UPPER_VINES, []{return logic->IsAdult && ctx->GetTrickOption(RT_GF_JUMP).Get();}),
+        Entrance(RR_GF_BOTTOM_OF_UPPER_VINES,   []{return logic->IsAdult && ctx->GetTrickOption(RT_GF_JUMP).Get();}),
     });
 
     areaTable[RR_GF_NEAR_GS] = Region("GF Near GS", SCENE_GERUDOS_FORTRESS, {}, {
@@ -112,13 +112,13 @@ void RegionTable_Init_GerudoFortress() {
         LOCATION(RC_GF_GS_TOP_FLOOR, logic->IsAdult && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOMB_THROW) && logic->CanGetNightTimeGS()),
     }, {
         //Exits
-        Entrance(RR_TH_KITCHEN_TOP,           []{return true;}),
-        Entrance(RR_GF_BOTTOM_OF_LOWER_VINES, []{return true;}),
-        Entrance(RR_GF_TOP_OF_LOWER_VINES,    []{return true;}),
-        Entrance(RR_GF_SLOPED_ROOF,           []{return logic->IsAdult || logic->CanGroundJump();}),
-        Entrance(RR_GF_LONG_ROOF,             []{return logic->CanUse(RG_HOVER_BOOTS) /* || bunny hood jump */ || logic->IsAdult && ctx->GetTrickOption(RT_GF_JUMP);}),
-        Entrance(RR_GF_NEAR_CHEST,            []{return logic->CanUse(RG_LONGSHOT);}),
-        Entrance(RR_GF_BELOW_GS,              []{return true;}),
+        Entrance(RR_TH_KITCHEN_OPPOSITE_CORRIDOR, []{return true;}),
+        Entrance(RR_GF_BOTTOM_OF_LOWER_VINES,     []{return true;}),
+        Entrance(RR_GF_TOP_OF_LOWER_VINES,        []{return true;}),
+        Entrance(RR_GF_SLOPED_ROOF,               []{return logic->IsAdult || logic->CanGroundJump();}),
+        Entrance(RR_GF_LONG_ROOF,                 []{return logic->CanUse(RG_HOVER_BOOTS) /* || bunny hood jump */ || logic->IsAdult && ctx->GetTrickOption(RT_GF_JUMP);}),
+        Entrance(RR_GF_NEAR_CHEST,                []{return logic->CanUse(RG_LONGSHOT);}),
+        Entrance(RR_GF_BELOW_GS,                  []{return true;}),
     });
 
     areaTable[RR_GF_SLOPED_ROOF] = Region("GF Sloped Roof", SCENE_GERUDOS_FORTRESS, {}, {}, {
