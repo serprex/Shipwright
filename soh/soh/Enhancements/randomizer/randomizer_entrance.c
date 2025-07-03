@@ -674,14 +674,20 @@ void Entrance_OverrideWeatherState() {
 // instead of being thrown in the valley Child should always be thrown in the stream when caught in the valley, and
 // placed at the fortress entrance from valley when caught in the fortress
 void Entrance_OverrideGerudoGuardCapture(void) {
-    if (LINK_IS_CHILD) {
-        gPlayState->nextEntranceIndex = ENTR_GERUDO_VALLEY_1; // Gerudo Valley thrown out
-    }
+    if (gPlayState->sceneNum == SCENE_THIEVES_HIDEOUT &&
+        Randomizer_GetSettingValue(RSK_MIX_GERUDO_FORTRESS_ENTRANCES)) {
+        // If GF entrances in mixed shuffle, TH captures stay in TH
+        gPlayState->nextEntranceIndex = gSaveContext.entranceIndex;
+    } else {
+        if (LINK_IS_CHILD) {
+            gPlayState->nextEntranceIndex = ENTR_GERUDO_VALLEY_1; // Gerudo Valley thrown out
+        }
 
-    if ((LINK_IS_CHILD || Randomizer_GetSettingValue(RSK_SHUFFLE_OVERWORLD_ENTRANCES)) &&
-        gPlayState->nextEntranceIndex == ENTR_GERUDO_VALLEY_1) {             // Gerudo Valley thrown out
-        if (gPlayState->sceneNum != SCENE_GERUDO_VALLEY) {                   // Gerudo Valley
-            gPlayState->nextEntranceIndex = ENTR_GERUDOS_FORTRESS_EAST_EXIT; // Gerudo Fortress
+        if ((LINK_IS_CHILD || Randomizer_GetSettingValue(RSK_SHUFFLE_OVERWORLD_ENTRANCES)) &&
+            gPlayState->nextEntranceIndex == ENTR_GERUDO_VALLEY_1) {             // Gerudo Valley thrown out
+            if (gPlayState->sceneNum != SCENE_GERUDO_VALLEY) {                   // Gerudo Valley
+                gPlayState->nextEntranceIndex = ENTR_GERUDOS_FORTRESS_EAST_EXIT; // Gerudo Fortress
+            }
         }
     }
 }
