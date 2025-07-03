@@ -647,6 +647,35 @@ void ActorAccessibility_InitActors() {
     policy.volume = 0.5;
     policy.pitch = 1.2;
     ActorAccessibility_AddSupportedActor(ACTOR_BG_MORI_HASHIRA4, policy);
+    ActorAccessibility_InitPolicy(&policy, "Forest Elevator", NA_SE_EV_ELEVATOR_MOVE2);
+    policy.n = 40;
+    policy.ydist = 1;
+    policy.distance = 300;
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_MORI_ELEVATOR, policy);
+    ActorAccessibility_InitPolicy(&policy, "Phantom Ganon", [](AccessibleActor* actor) {
+        if (actor->actor->params == 1) {
+            actor->policy.aimAssist.isProvider = AIM_SHOOT | AIM_HOOK;
+        } else {
+            actor->policy.aimAssist.isProvider = 0;
+        }
+    });
+    policy.distance = 2000;
+    policy.ydist = 2000;
+    ActorAccessibility_AddSupportedActor(ACTOR_BOSS_GANONDROF, policy);
+    ActorAccessibility_InitPolicy(&policy, "Phantom Ganon Ball", [](AccessibleActor* actor) {
+        if (actor->actor->params == 50) { // energy ball
+            int distance = actor->xyzDistToPlayer;
+            int freq = distance < 200 ? 1 : distance < 400 ? 3 : 7;
+            if ((actor->frameCount & freq) == 0) {
+                ActorAccessibility_PlaySoundForActor(
+                    actor, 0, freq <= 3 ? NA_SE_IT_SWORD_REFLECT_MG : NA_SE_IT_SHIELD_REFLECT_MG);
+            }
+        }
+    });
+    policy.volume = 2;
+    policy.distance = 900;
+    policy.ydist = 900;
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_FHG_FIRE, policy);
     ActorAccessibility_InitPolicy(&policy, "Ocarina Spots", NA_SE_EV_DIAMOND_SWITCH);
     policy.n = 30;
     policy.distance = 800;
@@ -1151,8 +1180,10 @@ void ActorAccessibility_InitActors() {
     auto forest_basement = [](AccessibleActor* actor) {
         Actor* walls = Actor_Find(&actor->play->actorCtx, ACTOR_BG_MORI_KAITENKABE, ACTORCAT_BG);
         if (walls != nullptr) {
-            actor->pos.x = walls->world.pos.x + Math_CosS(-walls->world.rot.y) * (actor->policy.sound == 0 ? -300.0f : 300.0f);
-            actor->pos.z = walls->world.pos.z + Math_SinS(-walls->world.rot.y) * (actor->policy.sound == 0 ? -300.0f : 300.0f);
+            actor->pos.x =
+                walls->world.pos.x + Math_CosS(-walls->world.rot.y) * (actor->policy.sound == 0 ? -300.0f : 300.0f);
+            actor->pos.z =
+                walls->world.pos.z + Math_SinS(-walls->world.rot.y) * (actor->policy.sound == 0 ? -300.0f : 300.0f);
             if ((actor->frameCount & 31) == 0) {
                 ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_TRAP_BOUND);
             }
