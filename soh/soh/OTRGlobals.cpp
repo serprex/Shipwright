@@ -2349,7 +2349,7 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
                     entrance = ENTR_ZORA_SHOP_0;
                     break;
                 case TEXT_OUTSIDE_KOKIRI_SIGN:
-                    entrance = ENTR_MARKET_ENTRANCE_OUTSIDE_GUARD_HOUSE;
+                    entrance = ENTR_MARKET_ENTRANCE_NEAR_GUARD_EXIT;
                     break;
                 case TEXT_OUTSIDE_MARKET_SIGN:
                     entrance = ENTR_LON_LON_RANCH_ENTRANCE;
