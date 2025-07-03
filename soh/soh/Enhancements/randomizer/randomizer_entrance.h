@@ -47,7 +47,7 @@ void Entrance_SetWarpSongEntrance(void);
 void Entrance_OverrideBlueWarp(void);
 void Entrance_HandleEponaState(void);
 void Entrance_OverrideWeatherState(void);
-void Entrance_OverrideGeurdoGuardCapture(void);
+void Entrance_OverrideGerudoGuardCapture(void);
 void Entrance_OverrideSpawnScene(int32_t sceneNum, int32_t spawn);
 int32_t Entrance_OverrideSpawnSceneRoom(int32_t sceneNum, int32_t spawn, int32_t room);
 void Entrance_EnableFW(void);
