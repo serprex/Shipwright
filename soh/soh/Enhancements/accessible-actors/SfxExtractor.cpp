@@ -13,26 +13,29 @@ void AudioMgr_CreateNextAudioBuffer(s16* samples, u32 num_samples);
 extern bool freezeGame;
 }
 
-bool SfxExtractor::isAllZero(int16_t* buffer, size_t count) {
+bool SfxExtractor::isAllSilence(int16_t* buffer, size_t count) {
     for (size_t i = 0; i < count; i++) {
-        if (buffer[i] != 0)
+        if (!isSilentSample(buffer[i]))//Tolerance for low-amplitude dither noise.
             return false;
     }
     return true;
+}
+bool SfxExtractor::isSilentSample(int16_t sample) {
+    return abs(sample) <= SFX_EXTRACTION_SILENCE_THRESHOLD;
+
 }
 
 // Find the beginning of a captured signal.
 size_t SfxExtractor::adjustedStartOfInput() {
     size_t startOfInput = 0;
-    while (startOfInput + 2 < SFX_EXTRACTION_BUFFER_SIZE * 2 &&
-           (tempBuffer[startOfInput] == 0 || tempBuffer[startOfInput + 1] == 0)) {
+    while (startOfInput + 2 < SFX_EXTRACTION_BUFFER_SIZE * 2 && isSilentSample(tempBuffer[startOfInput]) && isSilentSample(tempBuffer[startOfInput + 1])) {
         startOfInput += 2;
     }
     return startOfInput;
 }
 
 size_t SfxExtractor::adjustedEndOfInput(size_t endOfInput) {
-    while (endOfInput > 0 && (tempBuffer[endOfInput] == 0 || tempBuffer[endOfInput - 1] == 0)) {
+    while (endOfInput > 0 && (!isSilentSample(tempBuffer[endOfInput]) || isSilentSample(tempBuffer[endOfInput - 1]))) {
         endOfInput -= 2;
     }
     return endOfInput;
@@ -82,6 +85,7 @@ void SfxExtractor::setup() {
         }
 
         sfxToRip = 0;
+        currentSfx = -1;
         currentStep = STEP_MAIN;
         archive = std::make_shared<Ship::O2rArchive>(sohAccessibilityPath);
         archive->Open();
@@ -89,11 +93,11 @@ void SfxExtractor::setup() {
 }
 
 void SfxExtractor::ripNextSfx() {
-    {
-        auto lock = OTRAudio_Lock();
+    //This entire method is expected to be atomic; Don't try to narrow the scope of this lock please!
+    //Todo: remove the thread altogether as we don't actually need or want parallelism here.
+auto lock = OTRAudio_Lock();
         if (captureThreadState == CT_READY || captureThreadState == CT_PRIMING)
             return; // Keep going.
-    }
     // Was the last sfx a loop? If so then we need to stop it, and then we need to run audio out to nowhere for as long
     // as it takes to get back to a blank slate.
     if (currentSfx != -1) {
@@ -111,11 +115,7 @@ void SfxExtractor::ripNextSfx() {
     currentSfx = sfxTable[sfxToRip++];
     Audio_PlaySoundGeneral(currentSfx, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale, &gSfxDefaultFreqAndVolScale,
                            &gSfxDefaultReverb);
-
-    {
-        auto lock = OTRAudio_Lock();
         captureThreadState = CT_READY;
-    }
     maybeGiveProgressReport();
 }
 void SfxExtractor::finished() {
@@ -168,9 +168,10 @@ void SfxExtractor::frameCallback() {
 }
 
 void SfxExtractor::prime() {
+    int frameLimit = 0;//A couple of sounds don't come to a full stop until another sound is loaded, but should be effectively silent after a couple of seconds.
     do {
         AudioMgr_CreateNextAudioBuffer(tempBuffer + 0, SFX_EXTRACTION_ONE_FRAME);
-    } while (isAllZero(tempBuffer + 0, SFX_EXTRACTION_ONE_FRAME * 2));
+    } while (frameLimit ++ < 200 && !isAllSilence(tempBuffer + 0, SFX_EXTRACTION_ONE_FRAME * 2));
     captureThreadState = CT_FINISHED;
 }
 
@@ -187,7 +188,7 @@ void SfxExtractor::captureCallback() {
     while (samplesLeft > 0) {
         AudioMgr_CreateNextAudioBuffer(mark, SFX_EXTRACTION_ONE_FRAME);
 
-        if (isAllZero(mark, SFX_EXTRACTION_ONE_FRAME * 2)) {
+        if (isAllSilence(mark, SFX_EXTRACTION_ONE_FRAME * 2)) {
             if (outputStarted) {
                 break;
             } else if (waitTime++ < 300) {

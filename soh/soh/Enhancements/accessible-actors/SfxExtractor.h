@@ -1,8 +1,10 @@
 #pragma once
 #include "libultraship/libultraship.h"
 
-#define SFX_EXTRACTION_BUFFER_SIZE 44100 * 15
-#define SFX_EXTRACTION_ONE_FRAME 736
+#define SFX_EXTRACTION_BUFFER_SIZE 32000 * 15
+#define SFX_EXTRACTION_ONE_FRAME 560
+#define SFX_EXTRACTION_SILENCE_THRESHOLD 6//Corresponds to an amplitude of -75dB.
+
 
 enum CaptureThreadStates {
     CT_WAITING, // for a sound to start ripping.
@@ -29,7 +31,8 @@ class SfxExtractor {
     // Stores raw audio data for the sfx currently being ripped.
     int16_t tempBuffer[(SFX_EXTRACTION_BUFFER_SIZE + SFX_EXTRACTION_ONE_FRAME * 3) * 2];
     // Check if a buffer contains meaningful audio output.
-    bool isAllZero(int16_t* buffer, size_t count);
+    bool isAllSilence(int16_t* buffer, size_t count);
+    bool isSilentSample(int16_t sample);
     size_t adjustedStartOfInput();
     size_t adjustedEndOfInput(size_t endOfInput);
     bool renderOutput(size_t endOfInput);

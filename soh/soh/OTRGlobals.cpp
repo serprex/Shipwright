@@ -2628,8 +2628,9 @@ extern "C" void Gfx_RegisterBlendedTexture(const char* name, u8* mask, u8* repla
 
 void OTRAudio_SfxCaptureThread() {
     while (audio.running) {
-        {
-            std::unique_lock<std::mutex> Lock(audio.mutex);
+        // This entire body is expected to be atomic; Don't try to narrow the scope of this lock please!
+        // Todo: remove the thread altogether as we don't actually need or want parallelism here.
+        std::unique_lock<std::mutex> Lock(audio.mutex);
             while (!audio.processing && audio.running) {
                 audio.cv_to_thread.wait(Lock);
             }
@@ -2637,8 +2638,6 @@ void OTRAudio_SfxCaptureThread() {
             if (!audio.running) {
                 break;
             }
-        }
-        std::unique_lock<std::mutex> Lock(audio.mutex);
 #if !defined(__SWITCH__) && !defined(__WIIU__)
         ActorAccessibility_DoSoundExtractionStep();
 #endif
