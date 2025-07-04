@@ -3,8 +3,7 @@
 
 #define SFX_EXTRACTION_BUFFER_SIZE 32000 * 15
 #define SFX_EXTRACTION_ONE_FRAME 560
-#define SFX_EXTRACTION_SILENCE_THRESHOLD 6//Corresponds to an amplitude of -75dB.
-
+#define SFX_EXTRACTION_SILENCE_THRESHOLD 6 // Corresponds to an amplitude of -75dB.
 
 enum CaptureThreadStates {
     CT_WAITING, // for a sound to start ripping.

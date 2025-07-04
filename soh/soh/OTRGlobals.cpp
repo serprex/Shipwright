@@ -2631,13 +2631,13 @@ void OTRAudio_SfxCaptureThread() {
         // This entire body is expected to be atomic; Don't try to narrow the scope of this lock please!
         // Todo: remove the thread altogether as we don't actually need or want parallelism here.
         std::unique_lock<std::mutex> Lock(audio.mutex);
-            while (!audio.processing && audio.running) {
-                audio.cv_to_thread.wait(Lock);
-            }
+        while (!audio.processing && audio.running) {
+            audio.cv_to_thread.wait(Lock);
+        }
 
-            if (!audio.running) {
-                break;
-            }
+        if (!audio.running) {
+            break;
+        }
 #if !defined(__SWITCH__) && !defined(__WIIU__)
         ActorAccessibility_DoSoundExtractionStep();
 #endif
