@@ -90,7 +90,8 @@ void accessible_area_change(AccessibleActor* actor) {
     actor->policy.ydist = 2000;
 
     if (actor->yDistToPlayer > 500.0 && actor->sceneIndex != SCENE_DEATH_MOUNTAIN_TRAIL &&
-        actor->play->sceneNum != SCENE_HYRULE_FIELD && actor->play->sceneNum != SCENE_KAKARIKO_VILLAGE) {
+        actor->play->sceneNum != SCENE_HYRULE_FIELD && actor->play->sceneNum != SCENE_KAKARIKO_VILLAGE &&
+        actor->play->sceneNum != SCENE_LOST_WOODS) {
         return;
     }
 
@@ -534,6 +535,11 @@ void ActorAccessibility_InitActors() {
     });
     policy.n = 40;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_ELF, policy);
+
+    ActorAccessibility_InitPolicy(&policy, "frog spot", NA_SE_EN_DODO_M_EAT);
+    policy.distance = 100;
+    policy.n = 40;
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_FR, policy);
 
     ActorAccessibility_InitPolicy(&policy, "big poe spawn", NA_SE_EN_PO_BIG_GET);
     policy.distance = 1500;

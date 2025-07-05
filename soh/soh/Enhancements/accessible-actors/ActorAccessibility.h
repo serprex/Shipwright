@@ -151,7 +151,6 @@ typedef enum {
     VA_DOOR,
     VA_AREA_CHANGE,
     VA_MARKER,
-    VA_SPIKE,
     VA_MAX,
 } VIRTUAL_ACTOR_TABLE;
 
