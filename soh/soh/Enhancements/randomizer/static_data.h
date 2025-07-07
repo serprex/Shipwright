@@ -59,6 +59,7 @@ class StaticData {
     static void RegisterFairyLocations();
     static void RegisterPotLocations();
     static void RegisterFreestandingLocations();
+    static void RegisterSilverLocations();
     static void RegisterGrassLocations();
     static void RegisterCrateLocations();
     static void RegisterRockLocations();
@@ -93,6 +94,7 @@ class StaticData {
     static std::vector<RandomizerGet> normalBottles;
     static std::vector<RandomizerGet> beanSouls;
     static std::vector<RandomizerGet> overworldKeys;
+    static std::vector<RandomizerGet> silverRupees;
 
     StaticData();
     ~StaticData();

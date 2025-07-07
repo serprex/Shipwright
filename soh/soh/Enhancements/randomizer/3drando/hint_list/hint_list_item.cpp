@@ -2108,6 +2108,8 @@ void StaticData::HintTable_Init_Item() {
                                               }, {
                                               CustomMessage("sack of mice", /*german*/"ein Sack Mäuse", /*french*/"un Sac rempli de souris")});
 
+    hintTextTable[RHT_SILVER] = HintText(CustomMessage("a Silver Rupee", /*german*/ TODO_TRANSLATE, /*french*/ TODO_TRANSLATE));
+
     hintTextTable[RHT_SKELETON_KEY] = HintText(CustomMessage("a Skeleton Key", /*german*/ "der Skelettschlüssel", /*french*/ "une Clé Squelette"),
                                                // /*spanish*/una Llave Maestra
                                                {

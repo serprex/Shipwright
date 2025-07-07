@@ -185,7 +185,9 @@ void RegionTable_Init_BottomOfTheWell() {
         ENTRANCE(RR_BOTW_NEAR_BOSS_UPPER, logic->CanKillEnemy(RE_DEAD_HAND)),
     });
 
-    areaTable[RR_BOTW_B3_OOZE] = Region("Bottom of the Well B3 Ooze", SCENE_BOTTOM_OF_THE_WELL, {}, {
+    areaTable[RR_BOTW_B3_OOZE] = Region("Bottom of the Well B3 Ooze", SCENE_BOTTOM_OF_THE_WELL, {
+        EventAccess(LOGIC_BOTW_SILVER, []{return true;}),
+    }, {
         //Locations
         LOCATION(RC_BOTTOM_OF_THE_WELL_BASEMENT_POT_1,     logic->CanBreakPots()),
         LOCATION(RC_BOTTOM_OF_THE_WELL_BASEMENT_POT_2,     logic->CanBreakPots()),
@@ -210,9 +212,14 @@ void RegionTable_Init_BottomOfTheWell() {
         LOCATION(RC_BOTW_BOULDER_4,                        logic->BlastOrSmash()),
         LOCATION(RC_BOTW_BOULDER_5,                        logic->BlastOrSmash()),
         LOCATION(RC_BOTW_BOULDER_6,                        logic->BlastOrSmash()),
+        LOCATION(RC_BOTW_SILVER_1,                         true /*CanClimbHigh()*/),
+        LOCATION(RC_BOTW_SILVER_2,                         true /*CanClimb()*/),
+        LOCATION(RC_BOTW_SILVER_3,                         true),
+        LOCATION(RC_BOTW_SILVER_4,                         true),
+        LOCATION(RC_BOTW_SILVER_5,                         true),
     }, {
         //Exits
-        ENTRANCE(RR_BOTW_HIDDEN_POTS,      logic->CanClimbHighLadder()),
+        ENTRANCE(RR_BOTW_HIDDEN_POTS,      logic->HasItem(RG_BOTW_SILVER) && logic->CanClimbHighLadder()),
         //It's possible to abuse boulder's limited range of collision detection to detonate the flowers through the boulder with bow, but this is a glitch
         //the exact range is just past the furthest away plank in the green goo section
         ENTRANCE(RR_BOTW_B3_BOMB_FLOWERS,  AnyAgeTime([]{return logic->BlastOrSmash() || logic->CanUse(RG_DINS_FIRE) || (ctx->GetTrickOption(RT_BOTW_BASEMENT) && logic->CanUse(RG_STICKS)) || (ctx->GetTrickOption(RT_BOULDER_COLLISION) && logic->CanUse(RG_FAIRY_BOW));})),

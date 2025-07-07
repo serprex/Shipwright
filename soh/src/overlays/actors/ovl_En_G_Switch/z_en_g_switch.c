@@ -12,6 +12,7 @@
 #include "objects/gameplay_keep/gameplay_keep.h"
 #include "objects/object_tsubo/object_tsubo.h"
 #include "objects/object_gi_rupy/object_gi_rupy.h"
+#include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "soh/frame_interpolation.h"
 
 #define FLAGS (ACTOR_FLAG_UPDATE_CULLING_DISABLED | ACTOR_FLAG_DRAW_CULLING_DISABLED)
@@ -101,7 +102,7 @@ void EnGSwitch_Init(Actor* thisx, PlayState* play) {
             // "maximum number of checks"
             osSyncPrintf(VT_FGCOL(PURPLE) "☆☆☆☆☆ 最大チェック数 ☆☆☆☆☆ %d\n" VT_RST, this->silverCount);
             osSyncPrintf("\n\n");
-            if (Flags_GetSwitch(play, this->switchFlag)) {
+            if (GameInteractor_Should(VB_SILVER_DESPAWN, Flags_GetSwitch(play, this->switchFlag), this)) {
                 // This is a reference to Hokuto no Ken
                 osSyncPrintf(VT_FGCOL(GREEN) "☆☆☆☆☆ Ｙｏｕ ａｒｅ Ｓｈｏｃｋ！  ☆☆☆☆☆ %d\n" VT_RST, this->switchFlag);
                 Actor_Kill(&this->actor);
@@ -119,7 +120,7 @@ void EnGSwitch_Init(Actor* thisx, PlayState* play) {
             Collider_SetCylinder(play, &this->collider, &this->actor, &sCylinderInit);
             this->actor.draw = EnGSwitch_DrawRupee;
             this->actor.shape.yOffset = 700.0f;
-            if (Flags_GetSwitch(play, this->switchFlag)) {
+            if (GameInteractor_Should(VB_SILVER_DESPAWN, Flags_GetSwitch(play, this->switchFlag), this)) {
                 osSyncPrintf(VT_FGCOL(GREEN) "☆☆☆☆☆ Ｙｏｕ ａｒｅ Ｓｈｏｃｋ！  ☆☆☆☆☆ %d\n" VT_RST, this->switchFlag);
                 Actor_Kill(&this->actor);
             } else {

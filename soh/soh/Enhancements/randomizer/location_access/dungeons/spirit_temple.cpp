@@ -84,16 +84,21 @@ void RegionTable_Init_SpiritTemple() {
 
     areaTable[RR_SPIRIT_TEMPLE_RUPEE_BRIDGE_NORTH] = Region("Spirit Temple Rupee Bridge North", SCENE_SPIRIT_TEMPLE, {
         //Events
-        EVENT_ACCESS(LOGIC_SPIRIT_SILVER_RUPEE_BRIDGE,         logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT)),
+        EVENT_ACCESS(LOGIC_SPIRIT_SILVER_CHILD,                logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT)),
         EVENT_ACCESS(LOGIC_SPIRIT_SILVER_RUPEE_BRIDGE_TORCHES, (logic->Get(LOGIC_SPIRIT_SILVER_RUPEE_BRIDGE) && logic->HasFireSourceWithTorch()) || logic->CanUse(RG_DINS_FIRE)),
     }, {
         //Locations
         LOCATION(RC_SPIRIT_TEMPLE_CHILD_EARLY_TORCHES_CHEST, logic->Get(LOGIC_SPIRIT_SILVER_RUPEE_BRIDGE_TORCHES) && logic->HasItem(RG_OPEN_CHEST)),
-        // possible to collect without lowering fence, should be a trick
-        LOCATION(RC_SPIRIT_TEMPLE_GS_METAL_FENCE,            logic->Get(LOGIC_SPIRIT_SILVER_RUPEE_BRIDGE) && logic->CanKillEnemy(RE_GOLD_SKULLTULA, ED_BOMB_THROW) && logic->HasItem(RG_CLIMB)),
+        // possible to collect by climbing around token without lowering fence, should be a trick. boomerang can grab through fence
+        LOCATION(RC_SPIRIT_TEMPLE_GS_METAL_FENCE,            logic->HasItem(RG_SPIRIT_SILVER_CHILD) && logic->CanKillEnemy(RE_GOLD_SKULLTULA, ED_BOMB_THROW) && logic->HasItem(RG_CLIMB)),
+        LOCATION(RC_SPIRIT_SILVER_CHILD_1, logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT)),
+        LOCATION(RC_SPIRIT_SILVER_CHILD_2, true),
+        LOCATION(RC_SPIRIT_SILVER_CHILD_3, true),
+        LOCATION(RC_SPIRIT_SILVER_CHILD_4, logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT)),
+        LOCATION(RC_SPIRIT_SILVER_CHILD_5, true),
     }, {
         //Exits
-        ENTRANCE(RR_SPIRIT_TEMPLE_RUPEE_BRIDGE_SOUTH, logic->Get(LOGIC_SPIRIT_SILVER_RUPEE_BRIDGE)),
+        ENTRANCE(RR_SPIRIT_TEMPLE_RUPEE_BRIDGE_SOUTH, logic->HasItem(RG_SPIRIT_SILVER_CHILD)),
         ENTRANCE(RR_SPIRIT_TEMPLE_1F_ANUBIS,          true),
     });
 
@@ -106,7 +111,7 @@ void RegionTable_Init_SpiritTemple() {
     }, {
         //Exits
         ENTRANCE(RR_SPIRIT_TEMPLE_CHILD_SIDE_HUB,     true),
-        ENTRANCE(RR_SPIRIT_TEMPLE_RUPEE_BRIDGE_NORTH, logic->Get(LOGIC_SPIRIT_SILVER_RUPEE_BRIDGE)),
+        ENTRANCE(RR_SPIRIT_TEMPLE_RUPEE_BRIDGE_NORTH, logic->HasItem(RG_SPIRIT_SILVER_CHILD)),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_CHILD_BOXES] = Region("Child Spirit Temple Before Climb", SCENE_SPIRIT_TEMPLE, {}, {
@@ -164,8 +169,11 @@ void RegionTable_Init_SpiritTemple() {
         //Jumpslash is possible as child, but pretty tight. Jumpslash as late as you can
         //A damage boost off the boulder is also possible, but you need to land on the middle of the boulder
         //to get enough distance to reach the rupee
-        EVENT_ACCESS(LOGIC_SPIRIT_BOUNDERS_SILVERS, logic->CanUse(RG_HOVER_BOOTS) || logic->CanJumpslash() || logic->CanUse(RG_LONGSHOT)/* || CanBunnyHop()*/),
-    }, {}, {
+        EVENT_ACCESS(LOGIC_SPIRIT_SILVER_BOULDERS, logic->CanUse(RG_HOVER_BOOTS) || logic->CanJumpslash() || logic->CanUse(RG_LONGSHOT)/* || CanBunnyHop()*/),
+    }, {
+        //Locations
+        LOCATION(RC_SPIRIT_SILVER_BOULDERS_5, logic->Get(LOGIC_SPIRIT_SILVER_BOULDERS)),
+    }, {
         //Exits
         ENTRANCE(RR_SPIRIT_TEMPLE_ADULT_SIDE_HUB, true),
         ENTRANCE(RR_SPIRIT_TEMPLE_BOULDERS,       true),
@@ -174,10 +182,14 @@ void RegionTable_Init_SpiritTemple() {
     areaTable[RR_SPIRIT_TEMPLE_BOULDERS] = Region("Spirit Temple Boulders", SCENE_SPIRIT_TEMPLE, {}, {
         //Locations
         LOCATION(RC_SPIRIT_TEMPLE_GS_BOULDER_ROOM, logic->CanUse(RG_SONG_OF_TIME) && logic->CanKillEnemy(RE_GOLD_SKULLTULA)),
+        LOCATION(RC_SPIRIT_SILVER_BOULDERS_1, true),
+        LOCATION(RC_SPIRIT_SILVER_BOULDERS_2, true),
+        LOCATION(RC_SPIRIT_SILVER_BOULDERS_3, true),
+        LOCATION(RC_SPIRIT_SILVER_BOULDERS_4, true),
     }, {
         //Exits
         ENTRANCE(RR_SPIRIT_TEMPLE_ABOVE_BOULDERS, logic->IsAdult || logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT) || logic->CanGroundJump()),
-        ENTRANCE(RR_SPIRIT_TEMPLE_PAST_BOULDERS,  logic->Get(LOGIC_SPIRIT_BOUNDERS_SILVERS)),
+        ENTRANCE(RR_SPIRIT_TEMPLE_PAST_BOULDERS,  logic->HasItem(RG_SPIRIT_SILVER_BOULDERS)),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_PAST_BOULDERS] = Region("Spirit Temple Past Boulders", SCENE_SPIRIT_TEMPLE, {}, {
@@ -290,7 +302,13 @@ void RegionTable_Init_SpiritTemple() {
         ENTRANCE(RR_SPIRIT_TEMPLE_SUN_BLOCK_ROOM,    true),
     });
 
-    areaTable[RR_SPIRIT_TEMPLE_SUN_BLOCK_ROOM] = Region("Spirit Temple Sun Block Room", SCENE_SPIRIT_TEMPLE, {}, {}, {
+    areaTable[RR_SPIRIT_TEMPLE_SUN_BLOCK_ROOM] = Region("Spirit Temple Sun Block Room", SCENE_SPIRIT_TEMPLE, {}, {
+        //Locations
+        LOCATION(RC_SPIRIT_SILVER_SUN_1, true),
+        LOCATION(RC_SPIRIT_SILVER_SUN_2, true),
+        LOCATION(RC_SPIRIT_SILVER_SUN_3, true),
+        LOCATION(RC_SPIRIT_SILVER_SUN_5, true),
+    }, {
         //Exits
         ENTRANCE(RR_SPIRIT_TEMPLE_EMPTY_STAIRS,          logic->HasItem(RG_POWER_BRACELET) || logic->SunlightArrows()),
         //The blocks can be used to get onto this ledge itemless
@@ -301,14 +319,15 @@ void RegionTable_Init_SpiritTemple() {
     areaTable[RR_SPIRIT_TEMPLE_SUN_BLOCK_CHEST_LEDGE] = Region("Spirit Temple Sun Block Chest ledge", SCENE_SPIRIT_TEMPLE, {
         //Events
         //Assumes RR_SPIRIT_TEMPLE_SUN_BLOCK_ROOM access
-        EVENT_ACCESS(LOGIC_SPIRIT_SUN_BLOCK_TORCH, SpiritShared(RR_SPIRIT_TEMPLE_SUN_BLOCK_CHEST_LEDGE, []{return true;}, true)),
+        EVENT_ACCESS(LOGIC_SPIRIT_SILVER_SUN, SpiritShared(RR_SPIRIT_TEMPLE_SUN_BLOCK_CHEST_LEDGE, []{return true;}, true)),
     }, {
         //Locations
         //Spawning the chest to get here is accounted for in movement logic, so we only need to confirm it can be spawned here
         LOCATION(RC_SPIRIT_TEMPLE_SUN_BLOCK_ROOM_CHEST, SpiritShared(RR_SPIRIT_TEMPLE_SUN_BLOCK_CHEST_LEDGE, 
                                                                      []{return logic->HasFireSource() || 
-                                                                               (logic->Get(LOGIC_SPIRIT_SUN_BLOCK_TORCH) &&
+                                                                               (logic->HasItem(RG_SPIRIT_SILVER_SUN) &&
                                                                                 (logic->CanUse(RG_STICKS) || (ctx->GetTrickOption(RT_SPIRIT_SUN_CHEST) && logic->CanUse(RG_FAIRY_BOW))));}) && logic->HasItem(RG_OPEN_CHEST)), 
+        LOCATION(RC_SPIRIT_SILVER_SUN_4, SpiritShared(RR_SPIRIT_TEMPLE_SUN_BLOCK_CHEST_LEDGE, []{return true;}, true)),
     }, {
         //Exits
         ENTRANCE(RR_SPIRIT_TEMPLE_SUN_BLOCK_ROOM, true),
@@ -565,7 +584,7 @@ void RegionTable_Init_SpiritTemple() {
         LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_BACK_LEFT_CHEST,   logic->HasItem(RG_OPEN_CHEST) && 
                                                                  ((AnyAgeTime([]{return logic->BlastOrSmash();}) && logic->CanHitEyeTargets()) || (ctx->GetTrickOption(RT_BOULDER_COLLISION) && logic->IsChild ? logic->CanHitEyeTargets() : logic->CanUse(RG_FAIRY_SLINGSHOT)))),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_BACK_RIGHT_CHEST,  logic->CanHitSwitch(ED_BOOMERANG) && logic->HasItem(RG_OPEN_CHEST)),
-        LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_FRONT_RIGHT_CHEST, logic->Get(LOGIC_SPIRIT_1F_SILVER_RUPEES) && logic->HasItem(RG_OPEN_CHEST)),
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_FRONT_RIGHT_CHEST, logic->HasItem(RG_SPIRIT_MQ_SILVER_LOBBY) && logic->HasItem(RG_OPEN_CHEST)),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_POT_1,             logic->CanBreakPots()),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_POT_2,             logic->CanBreakPots()),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_POT_3,             logic->CanBreakPots()),
@@ -576,6 +595,11 @@ void RegionTable_Init_SpiritTemple() {
         LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_CEILING_BOULDER,   logic->CanUse(RG_BOMBCHU_5)),
         LOCATION(RC_SPIRIT_TEMPLE_LEFT_SNAKE_STATUE,             logic->CanRead()),
         LOCATION(RC_SPIRIT_TEMPLE_RIGHT_SNAKE_STATUE,            logic->CanRead()),
+        LOCATION(RC_SPIRIT_MQ_SILVER_LOBBY_1,                    true),
+        LOCATION(RC_SPIRIT_MQ_SILVER_LOBBY_2,                    true),
+        LOCATION(RC_SPIRIT_MQ_SILVER_LOBBY_3,                    true),
+        LOCATION(RC_SPIRIT_MQ_SILVER_LOBBY_4,                    true),
+        LOCATION(RC_SPIRIT_MQ_SILVER_LOBBY_5,                    true),
     }, {
         //Exits
         ENTRANCE(RR_SPIRIT_TEMPLE_ENTRYWAY,           true),
@@ -924,7 +948,7 @@ void RegionTable_Init_SpiritTemple() {
     areaTable[RR_SPIRIT_TEMPLE_MQ_BEHIND_GEYSER] = Region("Spirit Temple MQ 1F East", SCENE_SPIRIT_TEMPLE, {
         //Events
         //Assumes RR_SPIRIT_TEMPLE_MQ_FOYER access
-        EVENT_ACCESS(LOGIC_SPIRIT_1F_SILVER_RUPEES, logic->CanUse(RG_MEGATON_HAMMER)),
+        EVENT_ACCESS(LOGIC_SPIRIT_MQ_SILVER_LOBBY, logic->CanUse(RG_MEGATON_HAMMER)),
     }, {
         //Locations
         LOCATION(RC_SPIRIT_TEMPLE_MQ_EARLY_ADULT_POT_1,   logic->CanBreakPots()),
@@ -1049,6 +1073,11 @@ void RegionTable_Init_SpiritTemple() {
         //Locations
         LOCATION(RC_SPIRIT_TEMPLE_MQ_LONG_CLIMB_POT_1, logic->CanBreakPots()),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_LONG_CLIMB_POT_2, logic->CanBreakPots()),
+        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_1, true),
+        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_2, true),
+        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_3, true),
+        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_4, true),
+        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_5, true),
     }, {
         //Exits
         ENTRANCE(RR_SPIRIT_TEMPLE_MQ_BEAMOS_PITS,    true),

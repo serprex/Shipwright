@@ -354,6 +354,8 @@ void RegionTable_Init_DodongosCavern() {
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_POT_4,         logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_LOWER_CRATE_1, logic->CanBreakCrates()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_LOWER_CRATE_2, logic->CanBreakCrates()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_1,                true),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_2,                logic->CanBreakCrates()),
     }, {
         //Exits
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_LOBBY,               true),
@@ -376,7 +378,7 @@ void RegionTable_Init_DodongosCavern() {
 
     areaTable[RR_DODONGOS_CAVERN_MQ_STAIRS_UPPER] = Region("Dodongos Cavern MQ Stairs Upper", SCENE_DODONGOS_CAVERN, {
         //Events
-        EVENT_ACCESS(LOGIC_DC_MQ_STAIRS_SILVER_RUPEES, logic->HasItem(RG_CLIMB)),
+        EVENT_ACCESS(LOGIC_DODONGOS_CAVERN_MQ_SILVER, (logic->CanPassEnemy(RE_BIG_SKULLTULA) || logic->CanUse(RG_HOVER_BOOTS)) && logic->HasItem(RG_CLIMB)),
     }, {
         //Locations
         LOCATION(RC_DODONGOS_CAVERN_MQ_DEKU_SCRUB_STAIRCASE,    logic->CanStunDeku() && logic->HasItem(RG_SPEAK_DEKU) && GetCheckPrice() <= GetWalletCapacity()),
@@ -384,17 +386,22 @@ void RegionTable_Init_DodongosCavern() {
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_UPPER_CRATE_2, logic->CanBreakCrates()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_UPPER_CRATE_3, logic->CanBreakCrates()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_UPPER_CRATE_4, logic->CanBreakCrates()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_3,                logic->CanBreakCrates()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_5,                logic->CanBreakCrates()),
     }, {
         //Exits
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_STAIRS_LOWER,               true),
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_STAIRS_PAST_BIG_SKULLTULAS, logic->CanPassEnemy(RE_BIG_SKULLTULA) || logic->CanUse(RG_HOVER_BOOTS)),
     });
 
-    areaTable[RR_DODONGOS_CAVERN_MQ_STAIRS_PAST_BIG_SKULLTULAS] = Region("Dodongos Cavern MQ Past Big Skulltulas", SCENE_DODONGOS_CAVERN, {}, {}, {
+    areaTable[RR_DODONGOS_CAVERN_MQ_STAIRS_PAST_BIG_SKULLTULAS] = Region("Dodongos Cavern MQ Past Big Skulltulas", SCENE_DODONGOS_CAVERN, {}, {
+        //Locations
+        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_4, true /*CanClimb()*/),
+    }, {
         //Exits
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_STAIRS_UPPER, logic->CanPassEnemy(RE_BIG_SKULLTULA) || logic->CanUse(RG_HOVER_BOOTS)),
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_STAIRS_LOWER, logic->TakeDamage()),
-        ENTRANCE(RR_DODONGOS_CAVERN_MQ_DODONGO_ROOM, logic->Get(LOGIC_DC_MQ_STAIRS_SILVER_RUPEES)),
+        ENTRANCE(RR_DODONGOS_CAVERN_MQ_DODONGO_ROOM, logic->HasItem(RG_DODONGOS_CAVERN_MQ_SILVER)),
     });
 
     areaTable[RR_DODONGOS_CAVERN_MQ_DODONGO_ROOM] = Region("Dodongos Cavern MQ Dodongo Room", SCENE_DODONGOS_CAVERN, {}, {

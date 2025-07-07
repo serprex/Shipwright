@@ -2216,6 +2216,14 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // Flags_GetSwitch(play, this->switchFlag)
+    // ```
+    // #### `args`
+    // - *EnGSwitch
+    VB_SILVER_DESPAWN,
+
+    // #### `result`
+    // ```c
     // true
     // ```
     // #### `args`

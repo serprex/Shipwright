@@ -265,6 +265,47 @@ bool Logic::HasItem(RandomizerGet itemName) {
             return CheckRandoInf(RAND_INF_CAN_CRAWL);
         case RG_OPEN_CHEST:
             return CheckRandoInf(RAND_INF_CAN_OPEN_CHEST);
+            // Silver Rupees
+        case RG_SHADOW_SILVER_BLADES:
+        case RG_SHADOW_SILVER_PIT:
+        case RG_SHADOW_SILVER_SPIKES:
+        case RG_SPIRIT_SILVER_CHILD:
+        case RG_SPIRIT_SILVER_SUN:
+        case RG_SPIRIT_SILVER_BOULDERS:
+        case RG_BOTW_SILVER:
+        case RG_ICE_CAVERN_SILVER_BLADES:
+        case RG_ICE_CAVERN_SILVER_BLOCK:
+        case RG_GTG_SILVER_SLOPE:
+        case RG_GTG_SILVER_LAVA:
+        case RG_GTG_SILVER_WATER:
+        case RG_GANONS_CASTLE_SILVER_LIGHT:
+        case RG_GANONS_CASTLE_SILVER_FOREST:
+        case RG_GANONS_CASTLE_SILVER_FIRE:
+        case RG_GANONS_CASTLE_SILVER_SPIRIT:
+        case RG_DODONGOS_CAVERN_MQ_SILVER:
+        case RG_SHADOW_MQ_SILVER_BLADES:
+        case RG_SHADOW_MQ_SILVER_PIT:
+        case RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES:
+        case RG_SHADOW_MQ_SILVER_SPIKES:
+        case RG_SPIRIT_MQ_SILVER_LOBBY:
+        case RG_SPIRIT_MQ_SILVER_BIG_WALL:
+        case RG_GTG_MQ_SILVER_SLOPE:
+        case RG_GTG_MQ_SILVER_LAVA:
+        case RG_GTG_MQ_SILVER_WATER:
+        case RG_GANONS_CASTLE_MQ_SILVER_FIRE:
+        case RG_GANONS_CASTLE_MQ_SILVER_WATER:
+        case RG_GANONS_CASTLE_MQ_SILVER_SHADOW: {
+            if (!ctx->GetOption(RSK_SHUFFLE_SILVER)) {
+                return Get((LogicVal)(LOGIC_SHADOW_SILVER_BLADES + (itemName - RG_SHADOW_SILVER_BLADES)));
+            }
+            s8 field = *Randomizer::SilverFieldFromSaveContext(mSaveContext, itemName);
+            return field >= (itemName == RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES || itemName == RG_SHADOW_MQ_SILVER_SPIKES
+                                 ? 10
+                             : itemName == RG_GTG_MQ_SILVER_LAVA  ? 6
+                             : itemName == RG_GTG_MQ_SILVER_WATER ? 3
+                                                                  : 5);
+        }
+            // Trade Items
         case RG_POCKET_EGG:
             return CheckRandoInf(RAND_INF_ADULT_TRADES_HAS_POCKET_EGG) ||
                    CheckRandoInf(RAND_INF_ADULT_TRADES_HAS_POCKET_CUCCO);
@@ -2113,23 +2154,41 @@ void Logic::ApplyItemEffect(Item& item, bool state) {
         case ITEMTYPE_FORTRESS_SMALLKEY:
         case ITEMTYPE_SMALLKEY: {
             auto randoGet = item.GetRandomizerGet();
-            auto keyring = randoGet >= RG_FOREST_TEMPLE_KEY_RING && randoGet <= RG_GANONS_CASTLE_KEY_RING;
-            auto dungeonIndex = RandoGetToDungeonScene.find(randoGet)->second;
-            auto count = GetSmallKeyCount(dungeonIndex);
-            if (!state) {
-                if (keyring) {
-                    count = 0;
+            if (randoGet >= RG_SHADOW_SILVER_BLADES && randoGet <= RG_GANONS_CASTLE_MQ_SILVER_SHADOW) {
+                s8* field = Randomizer::SilverFieldFromSaveContext(mSaveContext, randoGet);
+                bool isWallet = ctx->GetOption(RSK_SHUFFLE_SILVER).Is(RO_SHUFFLE_SILVER_WALLET);
+                if (!state) {
+                    if (isWallet) {
+                        *field = 0;
+                    } else {
+                        *field -= 1;
+                    }
                 } else {
-                    count -= 1;
+                    if (isWallet) {
+                        *field = 10;
+                    } else {
+                        *field += 1;
+                    }
                 }
             } else {
-                if (keyring) {
-                    count = 10;
+                auto keyring = randoGet >= RG_FOREST_TEMPLE_KEY_RING && randoGet <= RG_GANONS_CASTLE_KEY_RING;
+                auto dungeonIndex = RandoGetToDungeonScene.find(randoGet)->second;
+                auto count = GetSmallKeyCount(dungeonIndex);
+                if (!state) {
+                    if (keyring) {
+                        count = 0;
+                    } else {
+                        count -= 1;
+                    }
                 } else {
-                    count += 1;
+                    if (keyring) {
+                        count = 10;
+                    } else {
+                        count += 1;
+                    }
                 }
+                SetSmallKeyCount(dungeonIndex, count);
             }
-            SetSmallKeyCount(dungeonIndex, count);
         } break;
         case ITEMTYPE_TOKEN:
             mSaveContext->inventory.gsTokens += (!state ? -1 : 1);
