@@ -53,6 +53,16 @@ void RegionTable_Init_IceCavern() {
         LOCATION(RC_ICE_CAVERN_SLIDING_BLOCK_RUPEE_1,   logic->BlueFire() && (logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_BOOMERANG))),
         LOCATION(RC_ICE_CAVERN_SLIDING_BLOCK_RUPEE_2,   logic->BlueFire() && (logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_BOOMERANG))),
         LOCATION(RC_ICE_CAVERN_SLIDING_BLOCK_RUPEE_3,   logic->BlueFire() && (logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_BOOMERANG))),
+        LOCATION(RC_ICE_CAVERN_SILVER_BLADES_1, true),
+        LOCATION(RC_ICE_CAVERN_SILVER_BLADES_2, true),
+        LOCATION(RC_ICE_CAVERN_SILVER_BLADES_3, true),
+        LOCATION(RC_ICE_CAVERN_SILVER_BLADES_4, true),
+        LOCATION(RC_ICE_CAVERN_SILVER_BLADES_5, true),
+        LOCATION(RC_ICE_CAVERN_SILVER_BLOCK_1, true),
+        LOCATION(RC_ICE_CAVERN_SILVER_BLOCK_2, true),
+        LOCATION(RC_ICE_CAVERN_SILVER_BLOCK_3, true),
+        LOCATION(RC_ICE_CAVERN_SILVER_BLOCK_4, true),
+        LOCATION(RC_ICE_CAVERN_SILVER_BLOCK_5, true),
     }, {});
 
 #pragma endregion

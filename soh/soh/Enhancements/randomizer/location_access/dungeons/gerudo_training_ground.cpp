@@ -25,6 +25,11 @@ void RegionTable_Init_GerudoTrainingGround() {
         LOCATION(RC_GERUDO_TRAINING_GROUND_ENTRANCE_STORMS_FAIRY, logic->CanUse(RG_SONG_OF_STORMS)),
         LOCATION(RC_GERUDO_TRAINING_GROUND_BEAMOS_SOUTH_HEART,    true),
         LOCATION(RC_GERUDO_TRAINING_GROUND_BEAMOS_EAST_HEART,     true),
+        LOCATION(RC_GTG_SILVER_SLOPE_1, true),
+        LOCATION(RC_GTG_SILVER_SLOPE_2, true),
+        LOCATION(RC_GTG_SILVER_SLOPE_3, true),
+        LOCATION(RC_GTG_SILVER_SLOPE_4, true),
+        LOCATION(RC_GTG_SILVER_SLOPE_5, true),
     }, {
         //Exits
         Entrance(RR_GERUDO_TRAINING_GROUND_ENTRYWAY,         []{return true;}),
@@ -59,6 +64,16 @@ void RegionTable_Init_GerudoTrainingGround() {
     areaTable[RR_GERUDO_TRAINING_GROUND_LAVA_ROOM] = Region("Gerudo Training Ground Lava Room", SCENE_GERUDO_TRAINING_GROUND, {}, {
         //Locations
         LOCATION(RC_GERUDO_TRAINING_GROUND_UNDERWATER_SILVER_RUPEE_CHEST, logic->CanUse(RG_HOOKSHOT) && logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24),
+        LOCATION(RC_GTG_SILVER_LAVA_1, true),
+        LOCATION(RC_GTG_SILVER_LAVA_2, true),
+        LOCATION(RC_GTG_SILVER_LAVA_3, true),
+        LOCATION(RC_GTG_SILVER_LAVA_4, true),
+        LOCATION(RC_GTG_SILVER_LAVA_5, true),
+        LOCATION(RC_GTG_SILVER_WATER_1, logic->CanUse(RG_HOOKSHOT) && logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24),
+        LOCATION(RC_GTG_SILVER_WATER_2, logic->CanUse(RG_HOOKSHOT) && logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24),
+        LOCATION(RC_GTG_SILVER_WATER_3, logic->CanUse(RG_HOOKSHOT) && logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24),
+        LOCATION(RC_GTG_SILVER_WATER_4, logic->CanUse(RG_HOOKSHOT) && logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24),
+        LOCATION(RC_GTG_SILVER_WATER_5, logic->CanUse(RG_HOOKSHOT) && logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24),
     }, {
         //Exits
         Entrance(RR_GERUDO_TRAINING_GROUND_CENTRAL_MAZE_RIGHT, []{return logic->CanUse(RG_SONG_OF_TIME) || logic->IsChild;}),
@@ -170,7 +185,14 @@ void RegionTable_Init_GerudoTrainingGround() {
         Entrance(RR_GERUDO_TRAINING_GROUND_MQ_LEFT_SIDE, []{return Here(RR_GERUDO_TRAINING_GROUND_MQ_SAND_ROOM, []{return logic->CanKillEnemy(RE_IRON_KNUCKLE);});}),
     });
 
-    areaTable[RR_GERUDO_TRAINING_GROUND_MQ_LEFT_SIDE] = Region("Gerudo Training Ground MQ Left Side", SCENE_GERUDO_TRAINING_GROUND, {}, {}, {
+    areaTable[RR_GERUDO_TRAINING_GROUND_MQ_LEFT_SIDE] = Region("Gerudo Training Ground MQ Left Side", SCENE_GERUDO_TRAINING_GROUND, {}, {
+        //Locations
+        LOCATION(RC_GTG_MQ_SILVER_SLOPE_1, true),
+        LOCATION(RC_GTG_MQ_SILVER_SLOPE_2, true),
+        LOCATION(RC_GTG_MQ_SILVER_SLOPE_3, true),
+        LOCATION(RC_GTG_MQ_SILVER_SLOPE_4, true),
+        LOCATION(RC_GTG_MQ_SILVER_SLOPE_5, true),
+    }, {
         //Exits
         Entrance(RR_GERUDO_TRAINING_GROUND_MQ_SAND_ROOM,    []{return true;}),
         Entrance(RR_GERUDO_TRAINING_GROUND_MQ_STALFOS_ROOM, []{return Here(RR_GERUDO_TRAINING_GROUND_MQ_LEFT_SIDE, []{return logic->CanUse(RG_LONGSHOT) || ctx->GetTrickOption(RT_GTG_MQ_WITHOUT_HOOKSHOT) || (ctx->GetTrickOption(RT_GTG_MQ_WITH_HOOKSHOT) && logic->IsAdult && logic->CanJumpslash() && logic->CanUse(RG_HOOKSHOT));});}),
@@ -276,7 +298,14 @@ void RegionTable_Init_GerudoTrainingGround() {
         //Events
         //this torch shot is possible as child but tight and obtuse enough to be a trick
         EventAccess(&logic->GTGPlatformSilverRupees, []{return ((logic->CanUse(RG_FAIRY_BOW) && logic->IsAdult) || logic->CanUse(RG_FIRE_ARROWS)) && logic->CanUse(RG_HOVER_BOOTS);}),
-    }, {}, {
+    }, {
+        LOCATION(RC_GTG_MQ_SILVER_LAVA_1, logic->GTGPlatformSilverRupees),
+        LOCATION(RC_GTG_MQ_SILVER_LAVA_2, logic->GTGPlatformSilverRupees),
+        LOCATION(RC_GTG_MQ_SILVER_LAVA_3, logic->GTGPlatformSilverRupees),
+        LOCATION(RC_GTG_MQ_SILVER_LAVA_4, logic->GTGPlatformSilverRupees),
+        LOCATION(RC_GTG_MQ_SILVER_LAVA_5, logic->GTGPlatformSilverRupees),
+        LOCATION(RC_GTG_MQ_SILVER_LAVA_6, logic->GTGPlatformSilverRupees),
+    }, {
         //Exits
         Entrance(RR_GERUDO_TRAINING_GROUND_MQ_LEDGE_SIDE_PLATFORMS,  []{return ((logic->CanUse(RG_FAIRY_BOW) && logic->IsAdult) || logic->CanUse(RG_FIRE_ARROWS)) && logic->CanUse(RG_HOVER_BOOTS);}),
         Entrance(RR_GERUDO_TRAINING_GROUND_MQ_PLATFORMS_UNLIT_TORCH, []{return (logic->CanUse(RG_FAIRY_BOW) && logic->IsAdult) || logic->CanUse(RG_FIRE_ARROWS) || logic->CanUse(RG_LONGSHOT);}),
@@ -288,6 +317,9 @@ void RegionTable_Init_GerudoTrainingGround() {
         //Locations
         //it is possible to snipe the stingers with bow or sling before dropping in, or just get really lucky, and avoid needing to take damage, but that might be trick worthy
         LOCATION(RC_GERUDO_TRAINING_GROUND_MQ_UNDERWATER_SILVER_RUPEE_CHEST, logic->HasFireSource() && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24 && logic->HasItem(RG_BRONZE_SCALE) && logic->TakeDamage()),
+        LOCATION(RC_GTG_MQ_SILVER_WATER_1, true),
+        LOCATION(RC_GTG_MQ_SILVER_WATER_2, true),
+        LOCATION(RC_GTG_MQ_SILVER_WATER_3, true),
     }, {
         //Exits
         Entrance(RR_GERUDO_TRAINING_GROUND_MQ_PLATFORMS_UNLIT_TORCH, []{return true;}),

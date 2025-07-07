@@ -41,6 +41,11 @@ void RegionTable_Init_SpiritTemple() {
         LOCATION(RC_SPIRIT_TEMPLE_ANUBIS_POT_4,                     (logic->CanUse(RG_BOOMERANG) || logic->CanUse(RG_FAIRY_SLINGSHOT) || (logic->CanUse(RG_BOMBCHU_5) && ctx->GetTrickOption(RT_SPIRIT_CHILD_CHU))) && (logic->HasExplosives() || ((logic->CanUse(RG_NUTS) || logic->CanUse(RG_BOOMERANG)) && (logic->CanUse(RG_STICKS) || logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_FAIRY_SLINGSHOT))))),
         LOCATION(RC_SPIRIT_TEMPLE_BEFORE_CHILD_CLIMB_SMALL_CRATE_1, logic->CanBreakSmallCrates()),
         LOCATION(RC_SPIRIT_TEMPLE_BEFORE_CHILD_CLIMB_SMALL_CRATE_2, logic->CanBreakSmallCrates()),
+        LOCATION(RC_SPIRIT_SILVER_CHILD_1, (logic->CanUse(RG_BOOMERANG) || logic->CanUse(RG_FAIRY_SLINGSHOT) || (logic->CanUse(RG_BOMBCHU_5) && ctx->GetTrickOption(RT_SPIRIT_CHILD_CHU)))),
+        LOCATION(RC_SPIRIT_SILVER_CHILD_2, (logic->CanUse(RG_BOOMERANG) || logic->CanUse(RG_FAIRY_SLINGSHOT) || (logic->CanUse(RG_BOMBCHU_5) && ctx->GetTrickOption(RT_SPIRIT_CHILD_CHU)))),
+        LOCATION(RC_SPIRIT_SILVER_CHILD_3, (logic->CanUse(RG_BOOMERANG) || logic->CanUse(RG_FAIRY_SLINGSHOT) || (logic->CanUse(RG_BOMBCHU_5) && ctx->GetTrickOption(RT_SPIRIT_CHILD_CHU)))),
+        LOCATION(RC_SPIRIT_SILVER_CHILD_4, (logic->CanUse(RG_BOOMERANG) || logic->CanUse(RG_FAIRY_SLINGSHOT) || (logic->CanUse(RG_BOMBCHU_5) && ctx->GetTrickOption(RT_SPIRIT_CHILD_CHU)))),
+        LOCATION(RC_SPIRIT_SILVER_CHILD_5, (logic->CanUse(RG_BOOMERANG) || logic->CanUse(RG_FAIRY_SLINGSHOT) || (logic->CanUse(RG_BOMBCHU_5) && ctx->GetTrickOption(RT_SPIRIT_CHILD_CHU)))),
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_CHILD_CLIMB, []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 1);}),
@@ -55,6 +60,11 @@ void RegionTable_Init_SpiritTemple() {
                                                                 (logic->IsChild && logic->SmallKeys(RR_SPIRIT_TEMPLE, 5) && logic->HasProjectile(HasProjectileAge::Child)) ||
                                                                     (logic->SmallKeys(RR_SPIRIT_TEMPLE, 2) && logic->CanUse(RG_SILVER_GAUNTLETS) && (logic->HasProjectile(HasProjectileAge::Adult) || (logic->TakeDamage() && logic->CanJumpslashExceptHammer())))),
         LOCATION(RC_SPIRIT_TEMPLE_CHILD_CLIMB_POT_1,       logic->CanBreakPots()),
+        LOCATION(RC_SPIRIT_SILVER_SUN_1, true),
+        LOCATION(RC_SPIRIT_SILVER_SUN_2, true),
+        LOCATION(RC_SPIRIT_SILVER_SUN_3, true),
+        LOCATION(RC_SPIRIT_SILVER_SUN_4, true),
+        LOCATION(RC_SPIRIT_SILVER_SUN_5, true),
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_CENTRAL_CHAMBER, []{return logic->HasExplosives() || (ctx->GetOption(RSK_SUNLIGHT_ARROWS) && logic->CanUse(RG_LIGHT_ARROWS));}),
@@ -68,6 +78,11 @@ void RegionTable_Init_SpiritTemple() {
         LOCATION(RC_SPIRIT_TEMPLE_FIRST_MIRROR_RIGHT_CHEST, logic->SmallKeys(RR_SPIRIT_TEMPLE, 3)),
         LOCATION(RC_SPIRIT_TEMPLE_GS_BOULDER_ROOM,          logic->CanUse(RG_SONG_OF_TIME) && (logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_BOMBCHU_5) || (logic->CanUse(RG_BOMB_BAG) && ctx->GetTrickOption(RT_SPIRIT_LOWER_ADULT_SWITCH)))),
         LOCATION(RC_SPIRIT_TEMPLE_BOULDER_ROOM_SUN_FAIRY,   logic->CanUse(RG_SUNS_SONG) && (logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_BOOMERANG) || logic->CanUse(RG_BOMBCHU_5) || (logic->CanUse(RG_BOMB_BAG) && logic->IsAdult && ctx->GetTrickOption(RT_SPIRIT_LOWER_ADULT_SWITCH))) && (logic->CanUse(RG_HOVER_BOOTS) || logic->CanJumpslash())),
+        LOCATION(RC_SPIRIT_SILVER_BOULDERS_1, true),
+        LOCATION(RC_SPIRIT_SILVER_BOULDERS_2, true),
+        LOCATION(RC_SPIRIT_SILVER_BOULDERS_3, true),
+        LOCATION(RC_SPIRIT_SILVER_BOULDERS_4, true),
+        LOCATION(RC_SPIRIT_SILVER_BOULDERS_5, true),
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_CENTRAL_CHAMBER, []{return logic->SmallKeys(RR_SPIRIT_TEMPLE, 1);}),
@@ -161,6 +176,11 @@ void RegionTable_Init_SpiritTemple() {
         LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_POT_2,             logic->CanBreakPots()),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_POT_3,             logic->CanBreakPots()),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_POT_4,             logic->CanBreakPots()),
+        LOCATION(RC_SPIRIT_MQ_SILVER_LOBBY_1, true),
+        LOCATION(RC_SPIRIT_MQ_SILVER_LOBBY_2, true),
+        LOCATION(RC_SPIRIT_MQ_SILVER_LOBBY_3, true),
+        LOCATION(RC_SPIRIT_MQ_SILVER_LOBBY_4, true),
+        LOCATION(RC_SPIRIT_MQ_SILVER_LOBBY_5, true),
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_ENTRYWAY,                []{return true;}),
@@ -482,6 +502,11 @@ void RegionTable_Init_SpiritTemple() {
         //Locations
         LOCATION(RC_SPIRIT_TEMPLE_MQ_LONG_CLIMB_POT_1, logic->CanBreakPots()),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_LONG_CLIMB_POT_2, logic->CanBreakPots()),
+        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_1, true),
+        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_2, true),
+        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_3, true),
+        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_4, true),
+        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_5, true),
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_MQ_FOUR_BEAMOS_ROOM, []{return true;}),

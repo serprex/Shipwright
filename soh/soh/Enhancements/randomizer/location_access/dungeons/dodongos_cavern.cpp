@@ -313,6 +313,11 @@ void RegionTable_Init_DodongosCavern() {
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_POT_4,         logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_LOWER_CRATE_1, logic->CanBreakCrates()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_LOWER_CRATE_2, logic->CanBreakCrates()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_1, true),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_2, true),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_3, true),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_4, true),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_5, true),
     }, {
         //Exits
         Entrance(RR_DODONGOS_CAVERN_MQ_LOBBY,               []{return true;}),

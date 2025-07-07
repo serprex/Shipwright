@@ -1057,6 +1057,9 @@ void GenerateItemPool() {
                                      ctx->GetOption(RSK_SHUFFLE_FREESTANDING).Is(RO_SHUFFLE_FREESTANDING_ALL);
     PlaceItemsForType(RCTYPE_FREESTANDING, overworldFreeStandingActive, dungeonFreeStandingActive);
 
+    bool silverActive = ctx->GetOption(RSK_SHUFFLE_SILVER).Get();
+    PlaceItemsForType(RCTYPE_SILVER, silverActive, silverActive);
+
     AddItemsToPool(ItemPool, alwaysItems);
     AddItemsToPool(ItemPool, dungeonRewards);
 
@@ -1196,6 +1199,63 @@ void GenerateItemPool() {
         AddItemToMainPool(RG_WATER_TEMPLE_BOSS_KEY);
         AddItemToMainPool(RG_SPIRIT_TEMPLE_BOSS_KEY);
         AddItemToMainPool(RG_SHADOW_TEMPLE_BOSS_KEY);
+    }
+
+    if (ctx->GetOption(RSK_SHUFFLE_SILVER)) {
+        auto dungeons = ctx->GetDungeons();
+        if (dungeons->GetDungeonFromScene(SCENE_DODONGOS_CAVERN)->IsMQ()) {
+            AddItemToMainPool(RG_DODONGOS_CAVERN_MQ_SILVER);
+        }
+
+        if (dungeons->GetDungeonFromScene(SCENE_SHADOW_TEMPLE)->IsVanilla()) {
+            AddItemToMainPool(RG_SHADOW_SILVER_BLADES);
+            AddItemToMainPool(RG_SHADOW_SILVER_PIT);
+            AddItemToMainPool(RG_SHADOW_SILVER_SPIKES);
+        } else {
+            AddItemToMainPool(RG_SHADOW_MQ_SILVER_BLADES);
+            AddItemToMainPool(RG_SHADOW_MQ_SILVER_PIT);
+            AddItemToMainPool(RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES);
+            AddItemToMainPool(RG_SHADOW_MQ_SILVER_SPIKES);
+        }
+
+        if (dungeons->GetDungeonFromScene(SCENE_SPIRIT_TEMPLE)->IsVanilla()) {
+            AddItemToMainPool(RG_SPIRIT_SILVER_CHILD);
+            AddItemToMainPool(RG_SPIRIT_SILVER_SUN);
+            AddItemToMainPool(RG_SPIRIT_SILVER_BOULDERS);
+        } else {
+            AddItemToMainPool(RG_SPIRIT_MQ_SILVER_LOBBY);
+            AddItemToMainPool(RG_SPIRIT_MQ_SILVER_BIG_WALL);
+        }
+
+        if (dungeons->GetDungeonFromScene(SCENE_BOTTOM_OF_THE_WELL)->IsVanilla()) {
+            AddItemToMainPool(RG_BOTW_SILVER);
+        }
+
+        if (dungeons->GetDungeonFromScene(SCENE_ICE_CAVERN)->IsVanilla()) {
+            AddItemToMainPool(RG_ICE_CAVERN_SILVER_BLADES);
+            AddItemToMainPool(RG_ICE_CAVERN_SILVER_BLOCK);
+        }
+
+        if (dungeons->GetDungeonFromScene(SCENE_GERUDO_TRAINING_GROUND)->IsVanilla()) {
+            AddItemToMainPool(RG_GTG_SILVER_SLOPE);
+            AddItemToMainPool(RG_GTG_SILVER_LAVA);
+            AddItemToMainPool(RG_GTG_SILVER_WATER);
+        } else {
+            AddItemToMainPool(RG_GTG_MQ_SILVER_SLOPE);
+            AddItemToMainPool(RG_GTG_MQ_SILVER_LAVA);
+            AddItemToMainPool(RG_GTG_MQ_SILVER_WATER);
+        }
+
+        if (dungeons->GetDungeonFromScene(SCENE_INSIDE_GANONS_CASTLE)->IsVanilla()) {
+            AddItemToMainPool(RG_GANONS_CASTLE_SILVER_LIGHT);
+            AddItemToMainPool(RG_GANONS_CASTLE_SILVER_FOREST);
+            AddItemToMainPool(RG_GANONS_CASTLE_SILVER_FIRE);
+            AddItemToMainPool(RG_GANONS_CASTLE_SILVER_SPIRIT);
+        } else {
+            AddItemToMainPool(RG_GANONS_CASTLE_MQ_SILVER_FIRE);
+            AddItemToMainPool(RG_GANONS_CASTLE_MQ_SILVER_WATER);
+            AddItemToMainPool(RG_GANONS_CASTLE_MQ_SILVER_SHADOW);
+        }
     }
 
     if (!ctx->GetOption(RSK_TRIFORCE_HUNT)) { // Don't add GBK to the pool at all for Triforce Hunt.

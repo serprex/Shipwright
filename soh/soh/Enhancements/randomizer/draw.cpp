@@ -17,6 +17,7 @@ extern "C" {
 #include "objects/object_gi_compass/object_gi_compass.h"
 #include "objects/object_gi_map/object_gi_map.h"
 #include "objects/object_gi_hearts/object_gi_hearts.h"
+#include "objects/object_gi_rupy/object_gi_rupy.h"
 #include "objects/object_gi_scale/object_gi_scale.h"
 #include "objects/object_gi_fire/object_gi_fire.h"
 #include "objects/object_fish/object_fish.h"
@@ -34,6 +35,7 @@ extern "C" {
 #include "overlays/ovl_Boss_Sst/ovl_Boss_Sst.h"
 #include "objects/object_tw/object_tw.h"
 #include "objects/object_ganon2/object_ganon2.h"
+#include "objects/object_mo/object_mo.h"
 extern PlayState* gPlayState;
 extern SaveContext gSaveContext;
 }
@@ -1105,6 +1107,27 @@ extern "C" void Randomizer_DrawBronzeScale(PlayState* play, GetItemEntry* getIte
     gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gGiScaleDL);
     gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gGiBronzeScaleWaterColorDL);
     gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gGiScaleWaterDL);
+
+    CLOSE_DISPS(play->state.gfxCtx);
+}
+
+extern "C" void Randomizer_DrawSilverRupee(PlayState* play, GetItemEntry* getItemEntry) {
+    OPEN_DISPS(play->state.gfxCtx);
+
+    Gfx_SetupDL_25Opa(play->state.gfxCtx);
+
+    gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(play->state.gfxCtx, (char*)__FILE__, __LINE__),
+              G_MTX_MODELVIEW | G_MTX_LOAD);
+
+        gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
+        gDPSetEnvColor(POLY_OPA_DISP++, 255 / 5, 255 / 5, 255 / 5, 255);
+        gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gGiRupeeInnerDL);
+
+        Gfx_SetupDL_25Xlu(play->state.gfxCtx);
+        gSPMatrix(POLY_XLU_DISP++, MATRIX_NEWMTX(play->state.gfxCtx), G_MTX_MODELVIEW | G_MTX_LOAD);
+        gDPSetPrimColor(POLY_XLU_DISP++, 0, 0x80, 255, 255, 255, 255);
+        gDPSetEnvColor(POLY_XLU_DISP++, 255 * 0.75f, 255 * 0.75f, 255 * 0.75f, 255);
+        gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gGiRupeeOuterDL);
 
     CLOSE_DISPS(play->state.gfxCtx);
 }

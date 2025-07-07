@@ -156,6 +156,11 @@ void RegionTable_Init_BottomOfTheWell() {
         LOCATION(RC_BOTTOM_OF_THE_WELL_BASEMENT_BEHIND_ROCKS_GRASS_7, logic->CanCutShrubs() && logic->BlastOrSmash()),
         LOCATION(RC_BOTTOM_OF_THE_WELL_BASEMENT_BEHIND_ROCKS_GRASS_8, logic->CanCutShrubs() && logic->BlastOrSmash()),
         LOCATION(RC_BOTTOM_OF_THE_WELL_BASEMENT_BEHIND_ROCKS_GRASS_9, logic->CanCutShrubs() && logic->BlastOrSmash()),
+        LOCATION(RC_BOTW_SILVER_1, true),
+        LOCATION(RC_BOTW_SILVER_2, true),
+        LOCATION(RC_BOTW_SILVER_3, true),
+        LOCATION(RC_BOTW_SILVER_4, true),
+        LOCATION(RC_BOTW_SILVER_5, true),
     }, {
         //Exits
         Entrance(RR_BOTTOM_OF_THE_WELL_SOUTHWEST_ROOM,               []{return logic->IsChild && logic->CanPassEnemy(RE_BIG_SKULLTULA);}),
