@@ -56,6 +56,7 @@ bool showBeehives;
 bool showCows;
 bool showOverworldFreestanding;
 bool showDungeonFreestanding;
+bool showSilver;
 bool showAdultTrade;
 bool showKokiriSword;
 bool showMasterSword;
@@ -1505,6 +1506,8 @@ void LoadSettings() {
                 showDungeonFreestanding = false;
                 break;
         }
+
+        showSilver = OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER);
     } else { // Vanilla
         showOverworldFreestanding = false;
         showDungeonFreestanding = true;
@@ -1583,6 +1586,7 @@ bool IsCheckShuffled(RandomizerCheck rc) {
                (loc->GetRCType() != RCTYPE_FREESTANDING ||
                 (showOverworldFreestanding && RandomizerCheckObjects::AreaIsOverworld(loc->GetArea())) ||
                 (showDungeonFreestanding && RandomizerCheckObjects::AreaIsDungeon(loc->GetArea()))) &&
+               (loc->GetRCType() != RCTYPE_SILVER || showSilver) &&
                (loc->GetRCType() != RCTYPE_ADULT_TRADE || showAdultTrade ||
                 rc == RC_KAK_ANJU_AS_ADULT ||  // adult trade checks that are always shuffled
                 rc == RC_DMT_TRADE_CLAIM_CHECK // even when shuffle adult trade is off
