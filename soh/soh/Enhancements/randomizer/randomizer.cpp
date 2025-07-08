@@ -3887,7 +3887,7 @@ SilverIdentity Randomizer::IdentifySilver(s32 sceneNum, s32 posX, s32 posZ) {
 
     s32 actorParams = TWO_ACTOR_PARAMS(posX, posZ);
 
-    Rando::Location* location = GetCheckObjectFromActor(ACTOR_OBJ_TSUBO, sceneNum, actorParams);
+    Rando::Location* location = GetCheckObjectFromActor(ACTOR_EN_G_SWITCH, sceneNum, actorParams);
 
     if (location->GetRandomizerCheck() != RC_UNKNOWN_CHECK) {
         silverIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
@@ -5561,7 +5561,7 @@ CustomMessage Randomizer::GetGoronMessage(u16 index) {
 void Randomizer::CreateCustomMessages() {
     // RANDTODO: Translate into french and german and replace GIMESSAGE_UNTRANSLATED
     // with GIMESSAGE(getItemID, itemID, english, german, french).
-    const std::array<GetItemMessage, 112> getItemMessages = { {
+    const std::array<GetItemMessage, 141> getItemMessages = { {
         GIMESSAGE(RG_GREG_RUPEE, ITEM_MASK_GORON, "You found %gGreg%w!", "%gGreg%w! Du hast ihn&wirklich gefunden!",
                   "Félicitation! Vous avez trouvé %gGreg%w!"),
         GIMESSAGE(RG_MASTER_SWORD, ITEM_SWORD_MASTER, "You found the %gMaster Sword%w!",
@@ -5925,6 +5925,35 @@ void Randomizer::CreateCustomMessages() {
         GIMESSAGE(RG_DEKU_NUT_BAG, ITEM_NUT, "You found the %rDeku Nut Bag%w!&You can now hold Deku Nuts!",
                   "Du hast eine %rDeku-Nuß-Tasche%w&gefunden! Nun kannst Du &%yDeku-Nüsse%w verwenden!",
                   "Vous avez trouvé le %rSac de Noix& Mojo%w!&Vous pouvez maintenant porter des&Noix Mojo!"),
+        GIMESSAGE_UNTRANSLATED(RG_SHADOW_SILVER_BLADES, ITEM_KEY_SMALL, "You found Shadow Silver: Blades"),
+        GIMESSAGE_UNTRANSLATED(RG_SHADOW_SILVER_PIT, ITEM_KEY_SMALL, "You found Shadow Silver: Pit"),
+        GIMESSAGE_UNTRANSLATED(RG_SHADOW_SILVER_SPIKES, ITEM_KEY_SMALL, "You found Shadow Silver: Spikes"),
+        GIMESSAGE_UNTRANSLATED(RG_SPIRIT_SILVER_CHILD, ITEM_KEY_SMALL, "You found Spirit Silver: Child"),
+        GIMESSAGE_UNTRANSLATED(RG_SPIRIT_SILVER_SUN, ITEM_KEY_SMALL, "You found Spirit Silver: Sun"),
+        GIMESSAGE_UNTRANSLATED(RG_SPIRIT_SILVER_BOULDERS, ITEM_KEY_SMALL, "You found Spirit Silver: Boulders"),
+        GIMESSAGE_UNTRANSLATED(RG_BOTW_SILVER, ITEM_KEY_SMALL, "You found Bottom of the Well Silver"),
+        GIMESSAGE_UNTRANSLATED(RG_ICE_CAVERN_SILVER_BLADES, ITEM_KEY_SMALL, "You found Ice Cavern Silver: Blades"),
+        GIMESSAGE_UNTRANSLATED(RG_ICE_CAVERN_SILVER_BLOCK, ITEM_KEY_SMALL, "You found Ice Cavern Silver: Block"),
+        GIMESSAGE_UNTRANSLATED(RG_GTG_SILVER_SLOPE, ITEM_KEY_SMALL, "You found Training Ground Silver: Slope"),
+        GIMESSAGE_UNTRANSLATED(RG_GTG_SILVER_LAVA, ITEM_KEY_SMALL, "You found Training Ground Silver: Lava"),
+        GIMESSAGE_UNTRANSLATED(RG_GTG_SILVER_WATER, ITEM_KEY_SMALL, "You found Training Ground Silver: Water"),
+        GIMESSAGE_UNTRANSLATED(RG_GANONS_CASTLE_SILVER_LIGHT, ITEM_KEY_SMALL, "You found Ganon's Castle Silver: Light"),
+        GIMESSAGE_UNTRANSLATED(RG_GANONS_CASTLE_SILVER_FOREST, ITEM_KEY_SMALL, "You found Ganon's Castle Silver: Forest"),
+        GIMESSAGE_UNTRANSLATED(RG_GANONS_CASTLE_SILVER_FIRE, ITEM_KEY_SMALL, "You found Ganon's Castle Silver: Fire"),
+        GIMESSAGE_UNTRANSLATED(RG_GANONS_CASTLE_SILVER_SPIRIT, ITEM_KEY_SMALL, "You found Ganon's Castle Silver: Spirit"),
+        GIMESSAGE_UNTRANSLATED(RG_DODONGOS_CAVERN_MQ_SILVER, ITEM_KEY_SMALL, "You found Dodongo's Cavern Silver"),
+        GIMESSAGE_UNTRANSLATED(RG_SHADOW_MQ_SILVER_BLADES, ITEM_KEY_SMALL, "You found Shadow Silver: Blades"),
+        GIMESSAGE_UNTRANSLATED(RG_SHADOW_MQ_SILVER_PIT, ITEM_KEY_SMALL, "You found Shadow Silver: Pit"),
+        GIMESSAGE_UNTRANSLATED(RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES, ITEM_KEY_SMALL, "You found Shadow Silver: Invisible Blades"),
+        GIMESSAGE_UNTRANSLATED(RG_SHADOW_MQ_SILVER_SPIKES, ITEM_KEY_SMALL, "You found Shadow Silver: Spikes"),
+        GIMESSAGE_UNTRANSLATED(RG_SPIRIT_MQ_SILVER_LOBBY, ITEM_KEY_SMALL, "You found Spirit Silver: Lobby"),
+        GIMESSAGE_UNTRANSLATED(RG_SPIRIT_MQ_SILVER_BIG_WALL, ITEM_KEY_SMALL, "You found Spirit Silver: Big Wall"),
+        GIMESSAGE_UNTRANSLATED(RG_GTG_MQ_SILVER_SLOPE, ITEM_KEY_SMALL, "You found Training Ground Silver: Slope"),
+        GIMESSAGE_UNTRANSLATED(RG_GTG_MQ_SILVER_LAVA, ITEM_KEY_SMALL, "You found Training Ground Silver: Lava"),
+        GIMESSAGE_UNTRANSLATED(RG_GTG_MQ_SILVER_WATER, ITEM_KEY_SMALL, "You found Training Ground Silver: Water"),
+        GIMESSAGE_UNTRANSLATED(RG_GANONS_CASTLE_MQ_SILVER_FIRE, ITEM_KEY_SMALL, "You found Ganon's Castle Silver: Fire"),
+        GIMESSAGE_UNTRANSLATED(RG_GANONS_CASTLE_MQ_SILVER_WATER, ITEM_KEY_SMALL, "You found Ganon's Castle Silver: Water"),
+        GIMESSAGE_UNTRANSLATED(RG_GANONS_CASTLE_MQ_SILVER_SHADOW, ITEM_KEY_SMALL, "You found Ganon's Castle Silver: Shadow"),
     } };
     CreateGetItemMessages(getItemMessages);
     CreateRupeeMessages();
@@ -6020,6 +6049,35 @@ std::map<RandomizerGet, RandomizerInf> randomizerGetToRandInf = {
     { RG_BONGO_BONGO_SOUL, RAND_INF_BONGO_BONGO_SOUL },
     { RG_TWINROVA_SOUL, RAND_INF_TWINROVA_SOUL },
     { RG_GANON_SOUL, RAND_INF_GANON_SOUL },
+    { RG_SHADOW_SILVER_BLADES, RAND_INF_SHADOW_SILVER_BLADES },
+    { RG_SHADOW_SILVER_PIT, RAND_INF_SHADOW_SILVER_PIT },
+    { RG_SHADOW_SILVER_SPIKES, RAND_INF_SHADOW_SILVER_SPIKES },
+    { RG_SPIRIT_SILVER_CHILD, RAND_INF_SPIRIT_SILVER_CHILD },
+    { RG_SPIRIT_SILVER_SUN, RAND_INF_SPIRIT_SILVER_SUN },
+    { RG_SPIRIT_SILVER_BOULDERS, RAND_INF_SPIRIT_SILVER_BOULDERS },
+    { RG_BOTW_SILVER, RAND_INF_BOTW_SILVER },
+    { RG_ICE_CAVERN_SILVER_BLADES, RAND_INF_ICE_CAVERN_SILVER_BLADES },
+    { RG_ICE_CAVERN_SILVER_BLOCK, RAND_INF_ICE_CAVERN_SILVER_BLOCK },
+    { RG_GTG_SILVER_SLOPE, RAND_INF_GTG_SILVER_SLOPE },
+    { RG_GTG_SILVER_LAVA, RAND_INF_GTG_SILVER_LAVA },
+    { RG_GTG_SILVER_WATER, RAND_INF_GTG_SILVER_WATER },
+    { RG_GANONS_CASTLE_SILVER_LIGHT, RAND_INF_GANONS_CASTLE_SILVER_LIGHT },
+    { RG_GANONS_CASTLE_SILVER_FOREST, RAND_INF_GANONS_CASTLE_SILVER_FOREST },
+    { RG_GANONS_CASTLE_SILVER_FIRE, RAND_INF_GANONS_CASTLE_SILVER_FIRE },
+    { RG_GANONS_CASTLE_SILVER_SPIRIT, RAND_INF_GANONS_CASTLE_SILVER_SPIRIT },
+    { RG_DODONGOS_CAVERN_MQ_SILVER, RAND_INF_DODONGOS_CAVERN_MQ_SILVER },
+    { RG_SHADOW_MQ_SILVER_BLADES, RAND_INF_SHADOW_MQ_SILVER_BLADES },
+    { RG_SHADOW_MQ_SILVER_PIT, RAND_INF_SHADOW_MQ_SILVER_PIT },
+    { RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES, RAND_INF_SHADOW_MQ_SILVER_INVISIBLE_BLADES },
+    { RG_SHADOW_MQ_SILVER_SPIKES, RAND_INF_SHADOW_MQ_SILVER_SPIKES },
+    { RG_SPIRIT_MQ_SILVER_LOBBY, RAND_INF_SPIRIT_MQ_SILVER_LOBBY },
+    { RG_SPIRIT_MQ_SILVER_BIG_WALL, RAND_INF_SPIRIT_MQ_SILVER_BIG_WALL },
+    { RG_GTG_MQ_SILVER_SLOPE, RAND_INF_GTG_MQ_SILVER_SLOPE },
+    { RG_GTG_MQ_SILVER_LAVA, RAND_INF_GTG_MQ_SILVER_LAVA },
+    { RG_GTG_MQ_SILVER_WATER, RAND_INF_GTG_MQ_SILVER_WATER },
+    { RG_GANONS_CASTLE_MQ_SILVER_FIRE, RAND_INF_GANONS_CASTLE_MQ_SILVER_FIRE },
+    { RG_GANONS_CASTLE_MQ_SILVER_WATER, RAND_INF_GANONS_CASTLE_MQ_SILVER_WATER },
+    { RG_GANONS_CASTLE_MQ_SILVER_SHADOW, RAND_INF_GANONS_CASTLE_MQ_SILVER_SHADOW },
 };
 
 extern "C" u16 Randomizer_Item_Give(PlayState* play, GetItemEntry giEntry) {
