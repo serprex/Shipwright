@@ -1910,23 +1910,41 @@ void Logic::ApplyItemEffect(Item& item, bool state) {
         case ITEMTYPE_FORTRESS_SMALLKEY:
         case ITEMTYPE_SMALLKEY: {
             auto randoGet = item.GetRandomizerGet();
-            auto keyring = randoGet >= RG_FOREST_TEMPLE_KEY_RING && randoGet <= RG_GANONS_CASTLE_KEY_RING;
-            auto dungeonIndex = RandoGetToDungeonScene.find(randoGet)->second;
-            auto count = GetSmallKeyCount(dungeonIndex);
-            if (!state) {
-                if (keyring) {
-                    count = 0;
+            if (randoGet >= RG_SHADOW_SILVER_BLADES && randoGet <= RG_GANONS_CASTLE_MQ_SILVER_SHADOW) {
+                s8* field = Randomizer::SilverFieldFromSaveContext(randoGet);
+                bool isWallet = ctx->GetOption(RSK_SHUFFLE_SILVER).Is(RO_SHUFFLE_SILVER_WALLET);
+                if (!state) {
+                    if (isWallet) {
+                        *field = 0;
+                    } else {
+                        *field -= 1;
+                    }
                 } else {
-                    count -= 1;
+                    if (isWallet) {
+                        *field = 10;
+                    } else {
+                        *field += 1;
+                    }
                 }
             } else {
-                if (keyring) {
-                    count = 10;
+                auto keyring = randoGet >= RG_FOREST_TEMPLE_KEY_RING && randoGet <= RG_GANONS_CASTLE_KEY_RING;
+                auto dungeonIndex = RandoGetToDungeonScene.find(randoGet)->second;
+                auto count = GetSmallKeyCount(dungeonIndex);
+                if (!state) {
+                    if (keyring) {
+                        count = 0;
+                    } else {
+                        count -= 1;
+                    }
                 } else {
-                    count += 1;
+                    if (keyring) {
+                        count = 10;
+                    } else {
+                        count += 1;
+                    }
                 }
+                SetSmallKeyCount(dungeonIndex, count);
             }
-            SetSmallKeyCount(dungeonIndex, count);
         } break;
         case ITEMTYPE_TOKEN:
             mSaveContext->inventory.gsTokens += (!state ? -1 : 1);

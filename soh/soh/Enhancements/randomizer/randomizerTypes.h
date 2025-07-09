@@ -5391,6 +5391,7 @@ typedef enum {
     RHT_BRONZE_SCALE,
     RHT_FISHING_POLE,
     RHT_SKELETON_KEY,
+    RHT_SILVER,
     RHT_EPONA,
     RHT_OVERWORLD_KEY,
     RHT_HINT_MYSTERIOUS,
@@ -6494,6 +6495,14 @@ typedef enum {
     RO_SHUFFLE_FREESTANDING_OVERWORLD,
     RO_SHUFFLE_FREESTANDING_ALL,
 } RandoOptionFreestanding;
+
+// Shuffle Silver settings (off, on, wallet, start with)
+typedef enum {
+    RO_SHUFFLE_SILVER_OFF,
+    RO_SHUFFLE_SILVER_ON,
+    RO_SHUFFLE_SILVER_WALLET,
+    RO_SHUFFLE_SILVER_STARTWITH,
+} RandoOptionSilver;
 
 // Shuffle Pots settings (off, dungeons, overworld, all)
 typedef enum {

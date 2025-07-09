@@ -1201,60 +1201,62 @@ void GenerateItemPool() {
         AddItemToMainPool(RG_SHADOW_TEMPLE_BOSS_KEY);
     }
 
-    if (ctx->GetOption(RSK_SHUFFLE_SILVER)) {
+    if (ctx->GetOption(RSK_SHUFFLE_SILVER).Is(RO_SHUFFLE_SILVER_ON) ||
+        ctx->GetOption(RSK_SHUFFLE_SILVER).Is(RO_SHUFFLE_SILVER_WALLET)) {
+        bool isWallet = ctx->GetOption(RSK_SHUFFLE_SILVER).Is(RO_SHUFFLE_SILVER_WALLET);
         auto dungeons = ctx->GetDungeons();
         if (dungeons->GetDungeonFromScene(SCENE_DODONGOS_CAVERN)->IsMQ()) {
-            AddItemToMainPool(RG_DODONGOS_CAVERN_MQ_SILVER);
+            AddItemToMainPool(RG_DODONGOS_CAVERN_MQ_SILVER, isWallet ? 1 : 5);
         }
 
         if (dungeons->GetDungeonFromScene(SCENE_SHADOW_TEMPLE)->IsVanilla()) {
-            AddItemToMainPool(RG_SHADOW_SILVER_BLADES);
-            AddItemToMainPool(RG_SHADOW_SILVER_PIT);
-            AddItemToMainPool(RG_SHADOW_SILVER_SPIKES);
+            AddItemToMainPool(RG_SHADOW_SILVER_BLADES, isWallet ? 1 : 5);
+            AddItemToMainPool(RG_SHADOW_SILVER_PIT, isWallet ? 1 : 5);
+            AddItemToMainPool(RG_SHADOW_SILVER_SPIKES, isWallet ? 1 : 5);
         } else {
-            AddItemToMainPool(RG_SHADOW_MQ_SILVER_BLADES);
-            AddItemToMainPool(RG_SHADOW_MQ_SILVER_PIT);
-            AddItemToMainPool(RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES);
-            AddItemToMainPool(RG_SHADOW_MQ_SILVER_SPIKES);
+            AddItemToMainPool(RG_SHADOW_MQ_SILVER_BLADES, isWallet ? 1 : 5);
+            AddItemToMainPool(RG_SHADOW_MQ_SILVER_PIT, isWallet ? 1 : 5);
+            AddItemToMainPool(RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES, isWallet ? 1 : 10);
+            AddItemToMainPool(RG_SHADOW_MQ_SILVER_SPIKES, isWallet ? 1 : 10);
         }
 
         if (dungeons->GetDungeonFromScene(SCENE_SPIRIT_TEMPLE)->IsVanilla()) {
-            AddItemToMainPool(RG_SPIRIT_SILVER_CHILD);
-            AddItemToMainPool(RG_SPIRIT_SILVER_SUN);
-            AddItemToMainPool(RG_SPIRIT_SILVER_BOULDERS);
+            AddItemToMainPool(RG_SPIRIT_SILVER_CHILD, isWallet ? 1 : 5);
+            AddItemToMainPool(RG_SPIRIT_SILVER_SUN, isWallet ? 1 : 5);
+            AddItemToMainPool(RG_SPIRIT_SILVER_BOULDERS, isWallet ? 1 : 5);
         } else {
-            AddItemToMainPool(RG_SPIRIT_MQ_SILVER_LOBBY);
-            AddItemToMainPool(RG_SPIRIT_MQ_SILVER_BIG_WALL);
+            AddItemToMainPool(RG_SPIRIT_MQ_SILVER_LOBBY, isWallet ? 1 : 5);
+            AddItemToMainPool(RG_SPIRIT_MQ_SILVER_BIG_WALL, isWallet ? 1 : 5);
         }
 
         if (dungeons->GetDungeonFromScene(SCENE_BOTTOM_OF_THE_WELL)->IsVanilla()) {
-            AddItemToMainPool(RG_BOTW_SILVER);
+            AddItemToMainPool(RG_BOTW_SILVER, isWallet ? 1 : 5);
         }
 
         if (dungeons->GetDungeonFromScene(SCENE_ICE_CAVERN)->IsVanilla()) {
-            AddItemToMainPool(RG_ICE_CAVERN_SILVER_BLADES);
-            AddItemToMainPool(RG_ICE_CAVERN_SILVER_BLOCK);
+            AddItemToMainPool(RG_ICE_CAVERN_SILVER_BLADES, isWallet ? 1 : 5);
+            AddItemToMainPool(RG_ICE_CAVERN_SILVER_BLOCK, isWallet ? 1 : 5);
         }
 
         if (dungeons->GetDungeonFromScene(SCENE_GERUDO_TRAINING_GROUND)->IsVanilla()) {
-            AddItemToMainPool(RG_GTG_SILVER_SLOPE);
-            AddItemToMainPool(RG_GTG_SILVER_LAVA);
-            AddItemToMainPool(RG_GTG_SILVER_WATER);
+            AddItemToMainPool(RG_GTG_SILVER_SLOPE, isWallet ? 1 : 5);
+            AddItemToMainPool(RG_GTG_SILVER_LAVA, isWallet ? 1 : 5);
+            AddItemToMainPool(RG_GTG_SILVER_WATER, isWallet ? 1 : 5);
         } else {
-            AddItemToMainPool(RG_GTG_MQ_SILVER_SLOPE);
-            AddItemToMainPool(RG_GTG_MQ_SILVER_LAVA);
-            AddItemToMainPool(RG_GTG_MQ_SILVER_WATER);
+            AddItemToMainPool(RG_GTG_MQ_SILVER_SLOPE, isWallet ? 1 : 5);
+            AddItemToMainPool(RG_GTG_MQ_SILVER_LAVA, isWallet ? 1 : 6);
+            AddItemToMainPool(RG_GTG_MQ_SILVER_WATER, isWallet ? 1 : 3);
         }
 
         if (dungeons->GetDungeonFromScene(SCENE_INSIDE_GANONS_CASTLE)->IsVanilla()) {
-            AddItemToMainPool(RG_GANONS_CASTLE_SILVER_LIGHT);
-            AddItemToMainPool(RG_GANONS_CASTLE_SILVER_FOREST);
-            AddItemToMainPool(RG_GANONS_CASTLE_SILVER_FIRE);
-            AddItemToMainPool(RG_GANONS_CASTLE_SILVER_SPIRIT);
+            AddItemToMainPool(RG_GANONS_CASTLE_SILVER_LIGHT, isWallet ? 1 : 5);
+            AddItemToMainPool(RG_GANONS_CASTLE_SILVER_FOREST, isWallet ? 1 : 5);
+            AddItemToMainPool(RG_GANONS_CASTLE_SILVER_FIRE, isWallet ? 1 : 5);
+            AddItemToMainPool(RG_GANONS_CASTLE_SILVER_SPIRIT, isWallet ? 1 : 5);
         } else {
-            AddItemToMainPool(RG_GANONS_CASTLE_MQ_SILVER_FIRE);
-            AddItemToMainPool(RG_GANONS_CASTLE_MQ_SILVER_WATER);
-            AddItemToMainPool(RG_GANONS_CASTLE_MQ_SILVER_SHADOW);
+            AddItemToMainPool(RG_GANONS_CASTLE_MQ_SILVER_FIRE, isWallet ? 1 : 5);
+            AddItemToMainPool(RG_GANONS_CASTLE_MQ_SILVER_WATER, isWallet ? 1 : 5);
+            AddItemToMainPool(RG_GANONS_CASTLE_MQ_SILVER_SHADOW, isWallet ? 1 : 5);
         }
     }
 

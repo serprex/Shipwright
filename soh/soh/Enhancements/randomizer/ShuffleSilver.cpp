@@ -12,72 +12,75 @@ extern SaveContext gSaveContext;
 }
 
 static bool IsSilverCleared(s16 switchFlag) {
-    bool isMQ =
-        Rando::Context::GetInstance()->GetDungeons()->GetDungeonFromScene(gPlayState->sceneNum)->IsMQ();
+    bool isMQ = Rando::Context::GetInstance()->GetDungeons()->GetDungeonFromScene(gPlayState->sceneNum)->IsMQ();
     switch (gPlayState->sceneNum) {
         case SCENE_DODONGOS_CAVERN:
-            return Flags_GetRandomizerInf(RAND_INF_DODONGOS_CAVERN_MQ_SILVER);
+            return gSaveContext.ship.quest.data.randomizer.silverMqDodongosCavern >= 5;
         case SCENE_SHADOW_TEMPLE:
             switch (switchFlag) {
                 case 1:
-                    return Flags_GetRandomizerInf(isMQ ? RAND_INF_SHADOW_MQ_SILVER_BLADES
-                                                       : RAND_INF_SHADOW_SILVER_BLADES);
+
+                    return isMQ ? gSaveContext.ship.quest.data.randomizer.silverMqShadowBlades >= 5
+                                : gSaveContext.ship.quest.data.randomizer.silverShadowBlades >= 5;
                 case 3:
-                    return Flags_GetRandomizerInf(RAND_INF_SHADOW_MQ_SILVER_INVISIBLE_BLADES);
+                    return gSaveContext.ship.quest.data.randomizer.silverMqShadowInvisibleBlades >= 10;
                 case 8:
-                    return Flags_GetRandomizerInf(isMQ ? RAND_INF_SHADOW_MQ_SILVER_SPIKES
-                                                       : RAND_INF_SHADOW_SILVER_SPIKES);
+                    return isMQ ? gSaveContext.ship.quest.data.randomizer.silverMqShadowSpikes >= 10
+                                : gSaveContext.ship.quest.data.randomizer.silverShadowSpikes >= 5;
                 case 9:
-                    return Flags_GetRandomizerInf(RAND_INF_SHADOW_SILVER_PIT);
+                    return gSaveContext.ship.quest.data.randomizer.silverShadowPit >= 5;
                 case 17:
-                    return Flags_GetRandomizerInf(RAND_INF_SHADOW_MQ_SILVER_PIT);
+                    return gSaveContext.ship.quest.data.randomizer.silverMqShadowPit >= 5;
             }
         case SCENE_SPIRIT_TEMPLE:
             switch (switchFlag) {
                 case 0:
-                    return Flags_GetRandomizerInf(RAND_INF_SPIRIT_MQ_SILVER_BIG_WALL);
+                    return gSaveContext.ship.quest.data.randomizer.silverMqSpiritBigWall;
                 case 2:
-                    return Flags_GetRandomizerInf(RAND_INF_SPIRIT_SILVER_BOULDERS);
+                    return gSaveContext.ship.quest.data.randomizer.silverSpiritBoulders;
                 case 5:
-                    return Flags_GetRandomizerInf(RAND_INF_SPIRIT_SILVER_CHILD);
+                    return gSaveContext.ship.quest.data.randomizer.silverSpiritChild;
                 case 10:
-                    return Flags_GetRandomizerInf(RAND_INF_SPIRIT_SILVER_SUN);
+                    return gSaveContext.ship.quest.data.randomizer.silverSpiritSun;
                 case 55:
-                    return Flags_GetRandomizerInf(RAND_INF_SPIRIT_MQ_SILVER_LOBBY);
+                    return gSaveContext.ship.quest.data.randomizer.silverMqSpiritLobby;
             }
         case SCENE_BOTTOM_OF_THE_WELL:
-            return Flags_GetRandomizerInf(RAND_INF_BOTW_SILVER);
+            return gSaveContext.ship.quest.data.randomizer.silverBotw >= 5;
         case SCENE_ICE_CAVERN:
             switch (switchFlag) {
                 case 8:
-                    return Flags_GetRandomizerInf(RAND_INF_ICE_CAVERN_SILVER_BLOCK);
+                    return gSaveContext.ship.quest.data.randomizer.silverIceCavernBlock >= 5;
                 case 31:
-                    return Flags_GetRandomizerInf(RAND_INF_ICE_CAVERN_SILVER_BLADES);
+                    return gSaveContext.ship.quest.data.randomizer.silverIceCavernBlades >= 5;
             }
         case SCENE_GERUDO_TRAINING_GROUND:
             switch (switchFlag) {
                 case 12:
-                    return Flags_GetRandomizerInf(isMQ ? RAND_INF_GTG_MQ_SILVER_LAVA : RAND_INF_GTG_SILVER_LAVA);
+                    return isMQ ? gSaveContext.ship.quest.data.randomizer.silverMqGtgLava >= 6
+                                : gSaveContext.ship.quest.data.randomizer.silverGtgLava >= 5;
                 case 27:
-                    return Flags_GetRandomizerInf(isMQ ? RAND_INF_GTG_MQ_SILVER_WATER : RAND_INF_GTG_SILVER_WATER);
+                    return isMQ ? gSaveContext.ship.quest.data.randomizer.silverMqGtgWater >= 3
+                                : gSaveContext.ship.quest.data.randomizer.silverGtgWater >= 5;
                 case 28:
-                    return Flags_GetRandomizerInf(isMQ ? RAND_INF_GTG_MQ_SILVER_SLOPE : RAND_INF_GTG_SILVER_SLOPE);
+                    return isMQ ? gSaveContext.ship.quest.data.randomizer.silverMqGtgSlope >= 5
+                                : gSaveContext.ship.quest.data.randomizer.silverGtgSlope >= 5;
             }
         case SCENE_INSIDE_GANONS_CASTLE:
             switch (switchFlag) {
                 case 1:
-                    return Flags_GetRandomizerInf(RAND_INF_GANONS_CASTLE_MQ_SILVER_FIRE);
+                    return gSaveContext.ship.quest.data.randomizer.silverMqGanonFire >= 5;
                 case 2:
-                    return Flags_GetRandomizerInf(RAND_INF_GANONS_CASTLE_MQ_SILVER_WATER);
+                    return gSaveContext.ship.quest.data.randomizer.silverMqGanonWater >= 5;
                 case 9:
-                    return Flags_GetRandomizerInf(RAND_INF_GANONS_CASTLE_SILVER_FIRE);
+                    return gSaveContext.ship.quest.data.randomizer.silverGanonFire >= 5;
                 case 11:
-                    return Flags_GetRandomizerInf(isMQ ? RAND_INF_GANONS_CASTLE_MQ_SILVER_SHADOW
-                                                       : RAND_INF_GANONS_CASTLE_SILVER_SPIRIT);
+                    return isMQ ? gSaveContext.ship.quest.data.randomizer.silverMqGanonShadow >= 5
+                                : gSaveContext.ship.quest.data.randomizer.silverGanonSpirit >= 5;
                 case 14:
-                    return Flags_GetRandomizerInf(RAND_INF_GANONS_CASTLE_SILVER_FOREST);
+                    return gSaveContext.ship.quest.data.randomizer.silverGanonForest >= 5;
                 case 18:
-                    return Flags_GetRandomizerInf(RAND_INF_GANONS_CASTLE_SILVER_LIGHT);
+                    return gSaveContext.ship.quest.data.randomizer.silverGanonLight >= 5;
             }
     }
     return false;
@@ -89,24 +92,25 @@ void RegisterShuffleSilver() {
     COND_VB_SHOULD(VB_SILVER_DESPAWN, shouldRegister, {
         EnGSwitch* silver = va_arg(args, EnGSwitch*);
         if (silver->type == ENGSWITCH_SILVER_RUPEE) {
-            auto silverIdentity = OTRGlobals::Instance->gRandomizer->IdentifySilver(gPlayState->sceneNum,
-                    (s16)silver->actor.world.pos.x, (s16)silver->actor.world.pos.z);
+            auto silverIdentity = OTRGlobals::Instance->gRandomizer->IdentifySilver(
+                gPlayState->sceneNum, (s16)silver->actor.world.pos.x, (s16)silver->actor.world.pos.z);
             *should = true;
-            LUSLOG_WARN("!!%d %d %d %d", silver->type, silverIdentity.randomizerCheck,
-                    (s16)silver->actor.world.pos.x, (s16)silver->actor.world.pos.z);
+            LUSLOG_WARN("!!%d %d %d %d", silver->type, silverIdentity.randomizerCheck, (s16)silver->actor.world.pos.x,
+                        (s16)silver->actor.world.pos.z);
             if (silverIdentity.randomizerCheck == RC_UNKNOWN_CHECK ||
                 Flags_GetRandomizerInf(silverIdentity.randomizerInf)) {
                 return;
             }
 
-            auto spawnedActor = (EnItem00*)Actor_Spawn(&gPlayState->actorCtx, gPlayState, ACTOR_EN_ITEM00,
-                    silver->actor.world.pos.x, silver->actor.world.pos.y, silver->actor.world.pos.z,
-                    0, 0, 0, ITEM00_SOH_GIVE_ITEM_ENTRY, false);
+            auto spawnedActor = (EnItem00*)Actor_Spawn(
+                &gPlayState->actorCtx, gPlayState, ACTOR_EN_ITEM00, silver->actor.world.pos.x,
+                silver->actor.world.pos.y, silver->actor.world.pos.z, 0, 0, 0, ITEM00_SOH_GIVE_ITEM_ENTRY, false);
             LUSLOG_WARN("!!%p", spawnedActor);
             spawnedActor->randoCheck = silverIdentity.randomizerCheck;
             spawnedActor->randoInf = silverIdentity.randomizerInf;
             spawnedActor->itemEntry = Rando::Context::GetInstance()->GetFinalGIEntry(
-                    silverIdentity.randomizerCheck, true, (GetItemID)Rando::StaticData::GetLocation(silverIdentity.randomizerCheck)->GetVanillaItem());
+                silverIdentity.randomizerCheck, true,
+                (GetItemID)Rando::StaticData::GetLocation(silverIdentity.randomizerCheck)->GetVanillaItem());
         } else if (silver->type == ENGSWITCH_SILVER_TRACKER) {
             if (IsSilverCleared(silver->switchFlag)) {
                 Flags_SetSwitch(gPlayState, silver->switchFlag);

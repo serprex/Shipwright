@@ -477,8 +477,8 @@ void Settings::CreateOptionDescriptions() {
         "\n"
         "All Items - Shuffle all freestanding rupees & hearts.";
     mOptionDescriptions[RSK_SHUFFLE_SILVER] = "Silver rupees will be shuffled.\n"
-        "Items will be added to pool which completes the silver rupee puzzles,\n"
-        "while silver rupee locations will be random items.";
+                                              "Items will be added to pool which completes the silver rupee puzzles,\n"
+                                              "while silver rupee locations will be random items.";
     mOptionDescriptions[RSK_SHUFFLE_FAIRIES] = "Shuffle fairy locations.";
     mOptionDescriptions[RSK_SHUFFLE_GRASS] =
         "Grass/Bushes will drop a randomized item the first time they're cut and collected. "

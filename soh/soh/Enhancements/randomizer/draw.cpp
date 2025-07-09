@@ -1119,15 +1119,15 @@ extern "C" void Randomizer_DrawSilverRupee(PlayState* play, GetItemEntry* getIte
     gSPMatrix(POLY_XLU_DISP++, Matrix_NewMtx(play->state.gfxCtx, (char*)__FILE__, __LINE__),
               G_MTX_MODELVIEW | G_MTX_LOAD);
 
-        gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
-        gDPSetEnvColor(POLY_OPA_DISP++, 255 / 5, 255 / 5, 255 / 5, 255);
-        gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gGiRupeeInnerDL);
+    gDPSetPrimColor(POLY_OPA_DISP++, 0, 0x80, 255, 255, 255, 255);
+    gDPSetEnvColor(POLY_OPA_DISP++, 255 / 5, 255 / 5, 255 / 5, 255);
+    gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gGiRupeeInnerDL);
 
-        Gfx_SetupDL_25Xlu(play->state.gfxCtx);
-        gSPMatrix(POLY_XLU_DISP++, MATRIX_NEWMTX(play->state.gfxCtx), G_MTX_MODELVIEW | G_MTX_LOAD);
-        gDPSetPrimColor(POLY_XLU_DISP++, 0, 0x80, 255, 255, 255, 255);
-        gDPSetEnvColor(POLY_XLU_DISP++, 255 * 0.75f, 255 * 0.75f, 255 * 0.75f, 255);
-        gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gGiRupeeOuterDL);
+    Gfx_SetupDL_25Xlu(play->state.gfxCtx);
+    gSPMatrix(POLY_XLU_DISP++, MATRIX_NEWMTX(play->state.gfxCtx), G_MTX_MODELVIEW | G_MTX_LOAD);
+    gDPSetPrimColor(POLY_XLU_DISP++, 0, 0x80, 255, 255, 255, 255);
+    gDPSetEnvColor(POLY_XLU_DISP++, 255 * 0.75f, 255 * 0.75f, 255 * 0.75f, 255);
+    gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gGiRupeeOuterDL);
 
     CLOSE_DISPS(play->state.gfxCtx);
 }

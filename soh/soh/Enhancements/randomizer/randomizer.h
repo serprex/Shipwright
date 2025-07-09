@@ -44,6 +44,7 @@ class Randomizer {
     void LoadMerchantMessages();
     void LoadHintMessages();
     bool IsTrialRequired(s32 trialFlag);
+    static s8* SilverFieldFromSaveContext(RandomizerGet rg);
     u8 GetRandoSettingValue(RandomizerSettingKey randoSettingKey);
     RandomizerCheck GetCheckFromRandomizerInf(RandomizerInf randomizerInf);
     RandomizerInf GetRandomizerInfFromCheck(RandomizerCheck rc);
