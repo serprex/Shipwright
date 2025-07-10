@@ -40,7 +40,7 @@ void RegionTable_Init_IceCavern() {
         Entrance(RR_ICE_CAVERN_BEGINNING,    []{return true;}),
         Entrance(RR_ICE_CAVERN_MAP_ROOM,     []{return (logic->IsAdult || (ctx->GetTrickOption(RT_GROUND_JUMP_HARD) && logic->CanGroundJump())) && logic->CanClearStalagmite();}),
         Entrance(RR_ICE_CAVERN_COMPASS_ROOM, []{return Here(RR_ICE_CAVERN_HUB, []{return logic->BlueFire();});}),
-        Entrance(RR_ICE_CAVERN_BLOCK_ROOM,   []{return Here(RR_ICE_CAVERN_HUB, []{return logic->BlueFire();});}),
+        Entrance(RR_ICE_CAVERN_BLOCK_ROOM,   []{return Here(RR_ICE_CAVERN_HUB, []{return logic->BlueFire();}) && logic->CanClearStalagmite();}),
     });
 
     areaTable[RR_ICE_CAVERN_MAP_ROOM] = Region("Ice Cavern Map Room", SCENE_ICE_CAVERN, {
@@ -63,8 +63,8 @@ void RegionTable_Init_IceCavern() {
         EventAccess(LOGIC_BLUE_FIRE_ACCESS, []{return true;}),
     }, {
         //Locations
-        LOCATION(RC_ICE_CAVERN_COMPASS_CHEST,       logic->CanClearStalagmite()),
-        LOCATION(RC_ICE_CAVERN_FREESTANDING_POH,    logic->CanClearStalagmite()),
+        LOCATION(RC_ICE_CAVERN_COMPASS_CHEST,       logic->CanClearStalagmite() && logic->BlueFire()),
+        LOCATION(RC_ICE_CAVERN_FREESTANDING_POH,    logic->CanClearStalagmite() && logic->BlueFire()),
         LOCATION(RC_ICE_CAVERN_GS_HEART_PIECE_ROOM, logic->HookshotOrBoomerang()),
     }, {
         //Exits
@@ -78,13 +78,13 @@ void RegionTable_Init_IceCavern() {
     }, {
         //Locations
         // trick involves backflip, could be merged into general trick
-        LOCATION(RC_ICE_CAVERN_GS_PUSH_BLOCK_ROOM,    logic->HookshotOrBoomerang() || (ctx->GetTrickOption(RT_ICE_BLOCK_GS) && logic->IsAdult && logic->CanUse(RG_HOVER_BOOTS) && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOMB_THROW))),
+        LOCATION(RC_ICE_CAVERN_GS_PUSH_BLOCK_ROOM,    logic->HookshotOrBoomerang() || (ctx->GetTrickOption(RT_ICE_BLOCK_GS) && logic->IsAdult && logic->CanUse(RG_HOVER_BOOTS) && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_SHORT_JUMPSLASH))),
         LOCATION(RC_ICE_CAVERN_SLIDING_BLOCK_RUPEE_1, logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_BOOMERANG)),
         LOCATION(RC_ICE_CAVERN_SLIDING_BLOCK_RUPEE_2, logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_BOOMERANG)),
         LOCATION(RC_ICE_CAVERN_SLIDING_BLOCK_RUPEE_3, logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_BOOMERANG)),
     }, {
         //Exits
-        Entrance(RR_ICE_CAVERN_HUB,               []{return true;}),
+        Entrance(RR_ICE_CAVERN_HUB,               []{return logic->CanClearStalagmite();}),
         Entrance(RR_ICE_CAVERN_BEFORE_FINAL_ROOM, []{return Here(RR_ICE_CAVERN_BLOCK_ROOM, []{return logic->BlueFire();});}),
     });
 
