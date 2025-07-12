@@ -826,7 +826,9 @@ void ActorAccessibility_InitActors() {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_FLAME);
         }
     });
-    policy.n = 60;
+    policy.n = 40;
+    policy.distance = 900;
+    policy.volume = 2;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_ICE_HONO, policy);
     ActorAccessibility_InitPolicy(&policy, "Ice Barred", NA_SE_EV_CHAIN_KEY_UNLOCK);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_ICE_SHUTTER, policy);
@@ -857,6 +859,11 @@ void ActorAccessibility_InitActors() {
         }
     });
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_HANA, policy);
+    ActorAccessibility_InitPolicy(&policy, "Keese", nullptr);
+    policy.ydist = 1000;
+    policy.distance = 1500;
+    policy.aimAssist.isProvider = AIM_SHOOT;
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_FIREFLY, policy);
     ActorAccessibility_InitPolicy(&policy, "gold skulltula token", NA_SE_EN_NUTS_DAMAGE);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_SI, policy);
     ActorAccessibility_InitPolicy(&policy, "Gold and Wall skulltulas", nullptr);
@@ -1260,9 +1267,11 @@ void ActorAccessibility_InitActors() {
     temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 475, 2840, -30 });
 
     list = ActorAccessibility_GetVirtualActorList(SCENE_ICE_CAVERN, 9);
-    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 860, 180, -2400 });
-    temp->policy.distance = 300;
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 860, 200, -2400 });
+    temp->policy.aimAssist.isProvider = AIM_CUP;
+    temp->policy.distance = 750;
     temp->policy.ydist = 100;
+    temp->policy.volume = 1.5;
     temp->policy.sound = NA_SE_EV_BLOCK_SHAKE;
 
     ActorAccessibility_InitPolicy(&policy, "Terrain cue helper", nullptr);

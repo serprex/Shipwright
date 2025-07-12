@@ -378,29 +378,33 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
             ((actor->policy.aimAssist.isProvider & AIM_CUP) ||
              (player->stateFlags1 & (PLAYER_STATE1_USING_BOOMERANG | PLAYER_STATE1_ITEM_IN_HAND)))) {
             bool aim = false;
-            switch (player->heldItemAction) {
-                case PLAYER_IA_BOW:
-                case PLAYER_IA_BOW_FIRE:
-                case PLAYER_IA_BOW_ICE:
-                case PLAYER_IA_BOW_LIGHT:
-                case PLAYER_IA_BOW_0C:
-                case PLAYER_IA_BOW_0D:
-                case PLAYER_IA_BOW_0E:
-                    aim = actor->policy.aimAssist.isProvider & AIM_BOW;
-                    break;
-                case PLAYER_IA_SLINGSHOT:
-                    aim = actor->policy.aimAssist.isProvider & AIM_SLING;
-                    break;
-                case PLAYER_IA_HOOKSHOT:
-                case PLAYER_IA_LONGSHOT:
-                    aim = actor->policy.aimAssist.isProvider & AIM_HOOK;
-                    break;
-                case PLAYER_IA_BOOMERANG:
-                    aim = actor->policy.aimAssist.isProvider & AIM_BOOM;
-                    break;
-                case PLAYER_IA_NONE:
-                    aim = actor->policy.aimAssist.isProvider & AIM_CUP;
-                    break;
+            if (player->unk_6AD == 2) {
+                switch (player->heldItemAction) {
+                    case PLAYER_IA_BOW:
+                    case PLAYER_IA_BOW_FIRE:
+                    case PLAYER_IA_BOW_ICE:
+                    case PLAYER_IA_BOW_LIGHT:
+                    case PLAYER_IA_BOW_0C:
+                    case PLAYER_IA_BOW_0D:
+                    case PLAYER_IA_BOW_0E:
+                        aim = actor->policy.aimAssist.isProvider & AIM_BOW;
+                        break;
+                    case PLAYER_IA_SLINGSHOT:
+                        aim = actor->policy.aimAssist.isProvider & AIM_SLING;
+                        break;
+                    case PLAYER_IA_HOOKSHOT:
+                    case PLAYER_IA_LONGSHOT:
+                        aim = actor->policy.aimAssist.isProvider & AIM_HOOK;
+                        break;
+                    case PLAYER_IA_BOOMERANG:
+                        aim = actor->policy.aimAssist.isProvider & AIM_BOOM;
+                        break;
+                    case PLAYER_IA_NONE:
+                        aim = actor->policy.aimAssist.isProvider & AIM_CUP;
+                        break;
+                }
+            } else {
+                aim = actor->policy.aimAssist.isProvider & AIM_CUP;
             }
             if (aim) {
                 auto aimAssistProps = ActorAccessibility_ProvideAimAssistForActor(actor);
