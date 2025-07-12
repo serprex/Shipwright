@@ -57,8 +57,8 @@ void RegionTable_Init_ShadowTemple() {
         LOCATION(RC_SHADOW_TEMPLE_INVISIBLE_BLADES_VISIBLE_CHEST,   logic->CanJumpslashExceptHammer()),
         LOCATION(RC_SHADOW_TEMPLE_INVISIBLE_BLADES_INVISIBLE_CHEST, logic->CanJumpslashExceptHammer()),
         LOCATION(RC_SHADOW_TEMPLE_FALLING_SPIKES_LOWER_CHEST,       true),
-        LOCATION(RC_SHADOW_TEMPLE_FALLING_SPIKES_UPPER_CHEST,       (ctx->GetTrickOption(RT_SHADOW_UMBRELLA) && logic->CanUse(RG_HOVER_BOOTS)) || logic->HasItem(RG_GORONS_BRACELET)),
-        LOCATION(RC_SHADOW_TEMPLE_FALLING_SPIKES_SWITCH_CHEST,      (ctx->GetTrickOption(RT_SHADOW_UMBRELLA) && logic->CanUse(RG_HOVER_BOOTS)) || logic->HasItem(RG_GORONS_BRACELET)),
+        LOCATION(RC_SHADOW_TEMPLE_FALLING_SPIKES_UPPER_CHEST,       (ctx->GetTrickOption(RT_SHADOW_UMBRELLA) && logic->CanUse(RG_HOVER_BOOTS)) || ctx->GetTrickOption(RT_SHADOW_UMBRELLA_CLIP) || logic->HasItem(RG_GORONS_BRACELET)),
+        LOCATION(RC_SHADOW_TEMPLE_FALLING_SPIKES_SWITCH_CHEST,      (ctx->GetTrickOption(RT_SHADOW_UMBRELLA) && logic->CanUse(RG_HOVER_BOOTS)) || ctx->GetTrickOption(RT_SHADOW_UMBRELLA_CLIP) || logic->HasItem(RG_GORONS_BRACELET)),
         LOCATION(RC_SHADOW_TEMPLE_INVISIBLE_SPIKES_CHEST,           logic->SmallKeys(SCENE_SHADOW_TEMPLE, 2) && ((ctx->GetTrickOption(RT_LENS_SHADOW_PLATFORM) && ctx->GetTrickOption(RT_LENS_SHADOW)) || logic->CanUse(RG_LENS_OF_TRUTH))),
         LOCATION(RC_SHADOW_TEMPLE_FREESTANDING_KEY,                 logic->SmallKeys(SCENE_SHADOW_TEMPLE, 2) && ((ctx->GetTrickOption(RT_LENS_SHADOW_PLATFORM) && ctx->GetTrickOption(RT_LENS_SHADOW)) || logic->CanUse(RG_LENS_OF_TRUTH)) && logic->CanUse(RG_HOOKSHOT) && (logic->CanUse(RG_BOMB_BAG) || logic->HasItem(RG_GORONS_BRACELET) || (ctx->GetTrickOption(RT_SHADOW_FREESTANDING_KEY) && logic->CanUse(RG_BOMBCHU_5)))),
         LOCATION(RC_SHADOW_TEMPLE_GS_LIKE_LIKE_ROOM,                logic->CanJumpslashExceptHammer()),
@@ -66,8 +66,8 @@ void RegionTable_Init_ShadowTemple() {
         LOCATION(RC_SHADOW_TEMPLE_GS_SINGLE_GIANT_POT,              logic->SmallKeys(SCENE_SHADOW_TEMPLE, 2) && ((ctx->GetTrickOption(RT_LENS_SHADOW_PLATFORM) && ctx->GetTrickOption(RT_LENS_SHADOW)) || logic->CanUse(RG_LENS_OF_TRUTH)) && logic->CanUse(RG_HOOKSHOT)),
         LOCATION(RC_SHADOW_TEMPLE_FALLING_SPIKES_POT_1,             logic->CanBreakPots()),
         LOCATION(RC_SHADOW_TEMPLE_FALLING_SPIKES_POT_2,             logic->CanBreakPots()),
-        LOCATION(RC_SHADOW_TEMPLE_FALLING_SPIKES_POT_3,             logic->CanBreakPots() && (ctx->GetTrickOption(RT_SHADOW_UMBRELLA) && logic->CanUse(RG_HOVER_BOOTS)) || logic->HasItem(RG_GORONS_BRACELET)),
-        LOCATION(RC_SHADOW_TEMPLE_FALLING_SPIKES_POT_4,             logic->CanBreakPots() && (ctx->GetTrickOption(RT_SHADOW_UMBRELLA) && logic->CanUse(RG_HOVER_BOOTS)) || logic->HasItem(RG_GORONS_BRACELET)),
+        LOCATION(RC_SHADOW_TEMPLE_FALLING_SPIKES_POT_3,             logic->CanBreakPots() && (ctx->GetTrickOption(RT_SHADOW_UMBRELLA) && logic->CanUse(RG_HOVER_BOOTS)) || ctx->GetTrickOption(RT_SHADOW_UMBRELLA_CLIP) || logic->HasItem(RG_GORONS_BRACELET)),
+        LOCATION(RC_SHADOW_TEMPLE_FALLING_SPIKES_POT_4,             logic->CanBreakPots() && (ctx->GetTrickOption(RT_SHADOW_UMBRELLA) && logic->CanUse(RG_HOVER_BOOTS)) || ctx->GetTrickOption(RT_SHADOW_UMBRELLA_CLIP) || logic->HasItem(RG_GORONS_BRACELET)),
         //We cannot repeat the MQ invisible blades trick for these hearts as the like-like does not respawn if the room is cleared
         LOCATION(RC_SHADOW_TEMPLE_INVISIBLE_BLADES_LEFT_HEART,      (logic->CanUse(RG_SONG_OF_TIME) && logic->IsAdult) || logic->CanUse(RG_BOOMERANG)),
         LOCATION(RC_SHADOW_TEMPLE_INVISIBLE_BLADES_RIGHT_HEART,     (logic->CanUse(RG_SONG_OF_TIME) && logic->IsAdult) || logic->CanUse(RG_BOOMERANG)),
@@ -243,7 +243,7 @@ void RegionTable_Init_ShadowTemple() {
         //Exits
         Entrance(RR_SHADOW_TEMPLE_MQ_LOWER_HUGE_PIT,       []{return Here(RR_SHADOW_TEMPLE_MQ_STONE_UMBRELLA_ROOM, []{return ctx->GetTrickOption(RT_VISIBLE_COLLISION) || logic->CanHitSwitch();});}),
         //Assuming the known setup for RT_SHADOW_UMBRELLA, probably possible without sword + shield
-        Entrance(RR_SHADOW_TEMPLE_MQ_UPPER_STONE_UMBRELLA, []{return logic->IsAdult && (logic->HasItem(RG_GORONS_BRACELET) || (ctx->GetTrickOption(RT_SHADOW_UMBRELLA) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanStandingShield() && logic->CanUse(RG_MASTER_SWORD)));}),
+        Entrance(RR_SHADOW_TEMPLE_MQ_UPPER_STONE_UMBRELLA, []{return ctx->GetTrickOption(RT_SHADOW_UMBRELLA_CLIP) || (logic->IsAdult && (logic->HasItem(RG_GORONS_BRACELET) || (ctx->GetTrickOption(RT_SHADOW_UMBRELLA) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanStandingShield() && logic->CanUse(RG_MASTER_SWORD))));}),
     });
 
     areaTable[RR_SHADOW_TEMPLE_MQ_UPPER_STONE_UMBRELLA] = Region("Shadow Temple MQ Upper Stone Umbrella", SCENE_SHADOW_TEMPLE, {}, {
