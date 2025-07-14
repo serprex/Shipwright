@@ -540,7 +540,10 @@ void RegionTable_Init_ForestTemple() {
         Entrance(RR_FOREST_TEMPLE_MQ_NW_COURTYARD_LEDGE, []{return Here(RR_FOREST_TEMPLE_MQ_REDEAD_ROOM, []{return logic->CanKillEnemy(RE_REDEAD);});}),
     });
 
-    areaTable[RR_FOREST_TEMPLE_MQ_NW_COURTYARD] = Region("Forest Temple MQ NW Courtyard", SCENE_FOREST_TEMPLE, {}, {
+    areaTable[RR_FOREST_TEMPLE_MQ_NW_COURTYARD] = Region("Forest Temple MQ NW Courtyard", SCENE_FOREST_TEMPLE, {
+        //Events
+        EventAccess(LOGIC_FOREST_MQ_BURNED_WEB, []{return logic->CanUse(RG_FIRE_ARROWS);}),
+    }, {
         //Locations
         LOCATION(RC_FOREST_TEMPLE_MQ_GS_LEVEL_ISLAND_COURTYARD, logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA)),
         //the well checks are considered from both areas instead of being a region because the draining is a temp flag and the skull (as well as the chest with hook glitch) has different breath timers from each side
@@ -553,14 +556,27 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_MQ_WELL_EAST_HEART,           logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_MQ_NE_COURTYARD,       []{return (((logic->CanUse(RG_IRON_BOOTS) || logic->CanUse(RG_LONGSHOT) || (ctx->GetTrickOption(RT_FOREST_WELL_SWIM) && logic->CanUse(RG_HOOKSHOT))) && logic->HasItem(RG_BRONZE_SCALE)) || logic->HasItem(RG_GOLDEN_SCALE)) && logic->WaterTimer() >= 16;}),
-        Entrance(RR_FOREST_TEMPLE_MQ_NORTH_PASSAGE,      []{return logic->CanUse(RG_FIRE_ARROWS);}), // temp flag, can't be event
-        Entrance(RR_FOREST_TEMPLE_MQ_NW_COURTYARD_LEDGE, []{return logic->CanUse(RG_HOVER_BOOTS) && ((ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->HasExplosives()) || (ctx->GetTrickOption(RT_GROUND_JUMP_HARD) && logic->IsAdult && logic->CanGroundJump()));}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NE_COURTYARD,              []{return (((logic->CanUse(RG_IRON_BOOTS) || logic->CanUse(RG_LONGSHOT) || (ctx->GetTrickOption(RT_FOREST_WELL_SWIM) && logic->CanUse(RG_HOOKSHOT))) && logic->HasItem(RG_BRONZE_SCALE)) || logic->HasItem(RG_GOLDEN_SCALE)) && logic->WaterTimer() >= 16;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NW_COURTYARD_UPPER_ALCOVE, []{return logic->Get(LOGIC_FOREST_MQ_BURNED_WEB) && (logic->CanKillEnemy(RE_BIG_SKULLTULA, ED_LONGSHOT) || logic->CanUse(RG_BOMBCHU_5));}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NW_COURTYARD_LEDGE,        []{return logic->CanUse(RG_HOVER_BOOTS) && ((ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->HasExplosives()) || (ctx->GetTrickOption(RT_GROUND_JUMP_HARD) && logic->IsAdult && logic->CanGroundJump()));}),
     });
 
-    areaTable[RR_FOREST_TEMPLE_MQ_NORTH_PASSAGE] = Region("Forest Temple MQ North Passage", SCENE_FOREST_TEMPLE, {}, {}, {
-        Entrance(RR_FOREST_TEMPLE_MQ_NW_COURTYARD,         []{return logic->HasFireSourceWithTorch();}),
-        Entrance(RR_FOREST_TEMPLE_MQ_COURTYARD_TOP_LEDGES, []{return true;}),
+    areaTable[RR_FOREST_TEMPLE_MQ_NW_COURTYARD_UPPER_ALCOVE] = Region("Forest Temple MQ NW Courtyard Upper Alcove", SCENE_FOREST_TEMPLE, {
+        //Events
+        EventAccess(LOGIC_FOREST_MQ_BURNED_WEB, []{return logic->HasFireSource();}),
+    }, {}, {
+        //Exits
+        Entrance(RR_FOREST_TEMPLE_MQ_NW_COURTYARD,  []{return logic->CanPassEnemy(RE_BIG_SKULLTULA) || logic->TakeDamage();}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NORTH_PASSAGE, []{return true;}),
+    });
+
+    areaTable[RR_FOREST_TEMPLE_MQ_NORTH_PASSAGE] = Region("Forest Temple MQ North Passage", SCENE_FOREST_TEMPLE, {
+        //Events
+        EventAccess(LOGIC_FOREST_MQ_BURNED_WEB, []{return logic->HasFireSourceWithTorch();}),
+    }, {}, {
+        //Exits
+        Entrance(RR_FOREST_TEMPLE_MQ_NW_COURTYARD_UPPER_ALCOVE, []{return logic->Get(LOGIC_FOREST_MQ_BURNED_WEB);}),
+        Entrance(RR_FOREST_TEMPLE_MQ_COURTYARD_TOP_LEDGES,      []{return true;}),
     });
 
     //The well only considers the eye target here because the eye target is a temp flag, making it unwieldy to use as an EventAccess to make it it's own room
