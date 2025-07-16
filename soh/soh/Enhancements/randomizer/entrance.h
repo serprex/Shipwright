@@ -9,6 +9,8 @@
 #define ENTRANCE_SHUFFLE_SUCCESS 0
 #define ENTRANCE_SHUFFLE_FAILURE 1
 
+constexpr std::string CleanCheckConditionString(std::string condition);
+
 namespace Rando {
 enum class EntranceType {
     None,
