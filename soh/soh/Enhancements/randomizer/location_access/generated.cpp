@@ -6,7 +6,7 @@ using namespace Rando;
 extern "C" SaveContext gSaveContext;
 
 void RegionTable_Init_Generated() {
-// clang-format off
+    // clang-format off
 areaTable[RR_ROOT] = Region("Root", SCENE_ID_MAX, false, {RA_LINKS_POCKET}, {
 	EventAccess(&logic->KakarikoVillageGateOpen, []{return ctx->GetOption(RSK_KAK_GATE).Is(RO_KAK_GATE_OPEN);}),
 	EventAccess(&logic->THCouldFree1TorchCarpenter, []{return ctx->GetOption(RSK_GERUDO_FORTRESS).Is(RO_GF_CARPENTERS_FREE);}),
@@ -6324,5 +6324,5 @@ areaTable[RR_GANONS_CASTLE_ESCAPE] = Region("Ganon's Castle Escape", SCENE_GANON
 areaTable[RR_GANONS_CASTLE_GANON_ARENA] = Region("Ganon's Arena", SCENE_GANON_BOSS, false, {}, {}, {
 	LOCATION(RC_GANON, logic->CanKillEnemy(RE_GANON)),
 }, {});
-// clang-format on
+    // clang-format on
 }
