@@ -7,10 +7,13 @@ if len(argv) < 1:
     exit()
 
 class RR:
-    __slots__ = "name", "scene", "events", "checks", "exits"
-    def __init__(self, name, scene):
+    __slots__ = "name", "scene", "timepass", "areas", "ui_name", "events", "checks", "exits"
+    def __init__(self, name, scene, timepass, *areas):
         self.name = name
         self.scene = scene
+        self.timepass = timepass == "true"
+        self.areas = areas
+        self.ui_name = ""
         self.events = []
         self.checks = []
         self.exits = []
@@ -100,7 +103,7 @@ class RR:
             elif f in RANDO:
                 output(f"Rando::{f}")
             elif f == "Here":
-                output("Here(f{self.name}, []{return f{self.to_cpp(ast[1])};})")
+                output(f"Here({self.name}, []{{return {self.to_cpp(ast[1])};}})")
             elif f != "--":
                 if len(ast) != 1:
                     print("expected atom, got tree", ast)
@@ -119,6 +122,7 @@ LOGIC = {
     "AtNight",
     "LoweredWaterInBotw",
     "BigPoes",
+    "IsFireLoopLocked",
 }
 
 RANDO = {
@@ -156,6 +160,7 @@ logicFUNC = {
     "HasFireSourceWithTorch",
     "CanUse",
     "CanPassEnemy",
+    "CanAvoidEnemy",
     "CanKillEnemy",
     "CanGetEnemyDrop",
     "CanGetDekuBabaSticks",
@@ -169,6 +174,7 @@ logicFUNC = {
     "CanSpawnSoilSkull",
     "CanGetNightTimeGS",
     "CanOpenUnderwaterChest",
+    "CanOpenOverworldDoor",
     "CanHitSwitch",
     "CanHitEyeTargets",
     "CanDetonateUprightBombFlower",
@@ -188,6 +194,8 @@ logicFUNC = {
     "TradeQuestStep",
     "GetGSCount",
     "BlastOrSmash",
+    "CanOpenBombGrotto",
+    "CanOpenStormsGrotto",
     "HookshotOrBoomerang",
     "TakeDamage",
     "CanAttack",
@@ -196,6 +204,7 @@ logicFUNC = {
     "CanJumpslash",
     "CanJumpslashExceptHammer",
     "HasBottle",
+    "ScarecrowsSong",
     "SmallKeys",
     "OcarinaButtons",
     "Hearts",
@@ -219,15 +228,17 @@ open_count = close_count = 0
 for line in open(argv[1]):
     if line.startswith("def "):
         if open_count != close_count:
-            print("error parsing:", name)
+            print("error parsing", line)
         defline = line.split()
-        name = defline[1]
-        active_rr = RR(name, defline[2])
+        active_rr = RR(*defline[1:])
         RRs.append(active_rr)
         buf = ""
         open_count = close_count = 0
         continue
-    if line.startswith("--"):
+    if active_rr and not active_rr.ui_name:
+        active_rr.ui_name = line.strip()
+        continue
+    if not active_rr or line.startswith("--"):
         continue
     open_count += line.count('(')
     close_count += line.count(')')
@@ -254,7 +265,7 @@ for line in open(argv[1]):
 result = []
 output = result.append
 for rr in RRs:
-    output(f"areaTable[{rr.name}] = Region(\"...\", {rr.scene}, {{")
+    output(f"areaTable[{rr.name}] = Region(\"{rr.ui_name}\", {rr.scene}, {'true' if rr.timepass else 'false'}, {{','.join(rr.areas)}}, {{")
     if rr.events:
         output("\n")
         for name, code in rr.events:
@@ -269,7 +280,7 @@ for rr in RRs:
 
     if rr.exits:
         output("\n")
-        for name, code in rr.events:
+        for name, code in rr.exits:
             output(f"\tEntrance({name}, []{{return {rr.gen(code)};}}),\n")
     output("});\n")
 
