@@ -2,8 +2,8 @@
 
 from sys import argv
 
-if len(argv) < 1:
-    print("expects input file")
+if len(argv) < 2:
+    print("expects input file & output file")
     exit()
 
 class RR:
@@ -72,9 +72,14 @@ class RR:
                 output(", ".join(map(self.to_cpp, ast[1:])))
                 output(")")
             elif f in binOP:
-                output("(")
-                output(binOP[f].join(map(self.to_cpp, ast[1:])))
-                output(")")
+                if f == "==" and isinstance(ast[1], str) and ast[1].startswith("RSK_"):
+                    output(f"{self.to_cpp(ast[1])}.Is({self.to_cpp(ast[2])})")
+                elif f == "!=" and isinstance(ast[1], str) and ast[1].startswith("RSK_"):
+                    output(f"{self.to_cpp(ast[1])}.IsNot({self.to_cpp(ast[2])})")
+                else:
+                    output("(")
+                    output(binOP[f].join(map(self.to_cpp, ast[1:])))
+                    output(")")
             elif f == "not":
                 output("!")
                 output(self.to_cpp(ast[1]))
@@ -87,23 +92,27 @@ class RR:
                 output(self.to_cpp(ast[3]))
                 output(")")
             elif f.startswith("RSK_"):
-                output(f"ctx->GetOption(f{f})")
+                output(f"ctx->GetOption({f})")
+                if f in ("RSK_BIG_POE_COUNT", "RSK_TRIFORCE_HUNT_PIECES_REQUIRED"):
+                    output(".Get()")
             elif f.startswith("RT_"):
-                output(f"ctx->GetTrickOption(f{f})")
+                output(f"(bool)ctx->GetTrickOption({f})")
             elif f == "IsDungeonVanilla":
-                output(f"ctx->GetDungeon(f{self.to_cpp(ast[1])})->IsVanilla()")
+                output(f"ctx->GetDungeon({self.to_cpp(ast[1])})->IsVanilla()")
             elif f == "IsDungeonMQ":
-                output(f"ctx->GetDungeon(f{self.to_cpp(ast[1])})->IsMQ()")
+                output(f"ctx->GetDungeon({self.to_cpp(ast[1])})->IsMQ()")
             elif f == "IsTrialSkipped":
-                output(f"ctx->GetTrial(f{self.to_cpp(ast[1])})->IsSkipped()")
+                output(f"ctx->GetTrial({self.to_cpp(ast[1])})->IsSkipped()")
             elif f == "TriforcePiecesCollected":
                 output("gSaveContext.ship.quest.data.randomizer.triforcePiecesCollected")
             elif f.startswith("HasProjectileAge"):
-                output(f.replace("HasProjectileAge", "HasProjectileAge::"))
+                output(f)
             elif f in RANDO:
                 output(f"Rando::{f}")
             elif f == "Here":
                 output(f"Here({self.name}, []{{return {self.to_cpp(ast[1])};}})")
+            elif f in ("MQSpiritSharedStatueRoom", "MQSpiritSharedBrokenWallRoom"):
+                output(f"{f}({self.to_cpp(ast[1])}, []{{return {self.to_cpp(ast[2])};}})")
             elif f != "--":
                 if len(ast) != 1:
                     print("expected atom, got tree", ast)
@@ -141,19 +150,17 @@ RANDO = {
 }
 
 FUNC = {
-    "MQSpiritSharedStatueRoom",
-    "MQSpiritSharedBrokenWallRoom",
     "CanPlantBean",
     "BothAges",
     "ChildCanAccess",
     "AdultCanAccess",
     "HasAccessTo",
+    "CanBuyCheck",
 }
 
 logicFUNC = {
     "BlueFire",
     "CanBreakMudWalls",
-    "CanBuyCheck",
     "HasItem",
     "HasBossSoul",
     "HasFireSource",
@@ -225,7 +232,15 @@ RRs = []
 active_rr = None
 buf = ""
 open_count = close_count = 0
-for line in open(argv[1]):
+mode = None
+for line in open(argv[1], "r", encoding="ascii"):
+    line = line.strip()
+    if line == "::":
+        mode = None if mode == line else line
+        continue
+    if mode == "::":
+        RRs.append(line)
+        continue
     if line.startswith("def "):
         if open_count != close_count:
             print("error parsing", line)
@@ -236,7 +251,7 @@ for line in open(argv[1]):
         open_count = close_count = 0
         continue
     if active_rr and not active_rr.ui_name:
-        active_rr.ui_name = line.strip()
+        active_rr.ui_name = line
         continue
     if not active_rr or line.startswith("--"):
         continue
@@ -245,12 +260,12 @@ for line in open(argv[1]):
     buf += line
     if open_count != close_count:
         continue
-    if buf and buf.isspace(): continue
+    if not buf or buf.isspace():
+        continue
     try:
         thing, code = buf.split(None, 1)
-        code = code.strip()
     except:
-        print("failed to parse line", buf)
+        print("failed to parse line", repr(buf))
         continue
     if thing.startswith("RR_"):
         active_rr.exits.append((thing, code))
@@ -265,7 +280,11 @@ for line in open(argv[1]):
 result = []
 output = result.append
 for rr in RRs:
-    output(f"areaTable[{rr.name}] = Region(\"{rr.ui_name}\", {rr.scene}, {'true' if rr.timepass else 'false'}, {{','.join(rr.areas)}}, {{")
+    if isinstance(rr, str):
+        output(rr)
+        output("\n")
+        continue
+    output(f"areaTable[{rr.name}] = Region(\"{rr.ui_name}\", {rr.scene}, {'true' if rr.timepass else 'false'}, {{{','.join(rr.areas)}}}, {{")
     if rr.events:
         output("\n")
         for name, code in rr.events:
@@ -284,4 +303,6 @@ for rr in RRs:
             output(f"\tEntrance({name}, []{{return {rr.gen(code)};}}),\n")
     output("});\n")
 
-print("".join(result))
+source = "".join(result)
+with open(argv[2], "w", encoding="ascii") as f:
+    f.write(source)

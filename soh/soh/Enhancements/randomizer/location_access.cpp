@@ -784,6 +784,7 @@ void RegionTable_Init() {
     // locations which appear in both MQ and Vanilla dungeons don't get set in both areas.
     areaTable.fill(Region("Invalid Region", SCENE_ID_MAX, {}, {}, {}));
 
+#if 0
     // clang-format off
     areaTable[RR_ROOT] = Region("Root", SCENE_ID_MAX, TIME_DOESNT_PASS, {RA_LINKS_POCKET}, {
         //Events
@@ -856,43 +857,9 @@ void RegionTable_Init() {
     });
 
     // clang-format on
+#endif
 
-    // Overworld
-    RegionTable_Init_KokiriForest();
-    RegionTable_Init_LostWoods();
-    RegionTable_Init_SacredForestMeadow();
-    RegionTable_Init_HyruleField();
-    RegionTable_Init_LakeHylia();
-    RegionTable_Init_LonLonRanch();
-    RegionTable_Init_Market();
-    RegionTable_Init_TempleOfTime();
-    RegionTable_Init_CastleGrounds();
-    RegionTable_Init_Kakariko();
-    RegionTable_Init_Graveyard();
-    RegionTable_Init_DeathMountainTrail();
-    RegionTable_Init_GoronCity();
-    RegionTable_Init_DeathMountainCrater();
-    RegionTable_Init_ZoraRiver();
-    RegionTable_Init_ZorasDomain();
-    RegionTable_Init_ZorasFountain();
-    RegionTable_Init_GerudoValley();
-    RegionTable_Init_GerudoFortress();
-    RegionTable_Init_ThievesHideout();
-    RegionTable_Init_HauntedWasteland();
-    RegionTable_Init_DesertColossus();
-    // Dungeons
-    RegionTable_Init_DekuTree();
-    RegionTable_Init_DodongosCavern();
-    RegionTable_Init_JabuJabusBelly();
-    RegionTable_Init_ForestTemple();
-    RegionTable_Init_FireTemple();
-    RegionTable_Init_WaterTemple();
-    RegionTable_Init_SpiritTemple();
-    RegionTable_Init_ShadowTemple();
-    RegionTable_Init_BottomOfTheWell();
-    RegionTable_Init_IceCavern();
-    RegionTable_Init_GerudoTrainingGround();
-    RegionTable_Init_GanonsCastle();
+    RegionTable_Init_Generated();
 
     // Set parent regions
     for (uint32_t i = RR_ROOT; i <= RR_GANONS_CASTLE; i++) {
