@@ -156,7 +156,7 @@ FUNC = {
     "ChildCanAccess",
     "AdultCanAccess",
     "HasAccessTo",
-    "CanBuyCheck",
+    "CanBuyAnother",
 }
 
 logicFUNC = {

@@ -1118,7 +1118,7 @@ def RR_HAUNTED_WASTELAND SCENE_HAUNTED_WASTELAND false RA_HAUNTED_WASTELAND
 Haunted Wasteland
 FairyPot true
 NutPot true
-CarpetMerchant (and (HasItem RG_ADULT_WALLET) (and (CanBuyCheck RC_WASTELAND_BOMBCHU_SALESMAN) (or CanJumpslash (CanUse RG_HOVER_BOOTS))))
+CarpetMerchant (and (HasItem RG_ADULT_WALLET) (and (CanBuyAnother RC_WASTELAND_BOMBCHU_SALESMAN) (or CanJumpslash (CanUse RG_HOVER_BOOTS))))
 RC_WASTELAND_CHEST HasFireSource
 RC_WASTELAND_BOMBCHU_SALESMAN (or CanJumpslash (CanUse RG_HOVER_BOOTS))
 RC_WASTELAND_GS HookshotOrBoomerang

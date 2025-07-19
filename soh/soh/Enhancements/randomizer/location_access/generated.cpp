@@ -1086,7 +1086,7 @@ areaTable[RR_WASTELAND_NEAR_FORTRESS] = Region("Wasteland Near Fortress", SCENE_
 areaTable[RR_HAUNTED_WASTELAND] = Region("Haunted Wasteland", SCENE_HAUNTED_WASTELAND, false, {RA_HAUNTED_WASTELAND}, {
 	EventAccess(&logic->FairyPot, []{return true;}),
 	EventAccess(&logic->NutPot, []{return true;}),
-	EventAccess(&logic->CarpetMerchant, []{return (logic->HasItem(RG_ADULT_WALLET) && (CanBuyCheck(RC_WASTELAND_BOMBCHU_SALESMAN) && (logic->CanJumpslash() || logic->CanUse(RG_HOVER_BOOTS))));}),
+	EventAccess(&logic->CarpetMerchant, []{return (logic->HasItem(RG_ADULT_WALLET) && (CanBuyAnother(RC_WASTELAND_BOMBCHU_SALESMAN) && (logic->CanJumpslash() || logic->CanUse(RG_HOVER_BOOTS))));}),
 }, {
 	LOCATION(RC_WASTELAND_CHEST, logic->HasFireSource()),
 	LOCATION(RC_WASTELAND_BOMBCHU_SALESMAN, (logic->CanJumpslash() || logic->CanUse(RG_HOVER_BOOTS))),
