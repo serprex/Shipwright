@@ -232,11 +232,21 @@ BugShrub (and IsChild CanCutShrubs)
 BorrowSpookyMask (and IsChild (and BorrowSkullMask (and (CanUse RG_SARIAS_SONG) (HasItem RG_CHILD_WALLET))))
 RC_LW_SKULL_KID (and IsChild (CanUse RG_SARIAS_SONG))
 RC_LW_TRADE_COJIRO (and IsAdult (CanUse RG_COJIRO))
+//I cannot think of a case where you can use Odd pot but not Cojiro to reset the quadrant should you have both. If one exists, add it to logic
 RC_LW_TRADE_ODD_POTION (and IsAdult (CanUse RG_ODD_POTION))
+//all 5 buttons are logically required for memory game
+//because the chances of being able to beat it
+//every time you attempt it are as follows:
+//0 or 1 button(s) => 0%
+//2 buttons        => 0.15625%
+//3 buttons        => 3.75%
+//4 buttons        => 25.3125%
+//5 buttons        => 100%
 RC_LW_OCARINA_MEMORY_GAME (and IsChild (and (HasItem RG_FAIRY_OCARINA) (>= OcarinaButtons 5)))
 RC_LW_TARGET_IN_WOODS (and IsChild (CanUse RG_FAIRY_SLINGSHOT))
 RC_LW_DEKU_SCRUB_NEAR_BRIDGE (and IsChild CanStunDeku)
 RC_LW_GS_BEAN_PATCH_NEAR_BRIDGE (and CanSpawnSoilSkull CanAttack)
+//RANDOTODO handle collecting some of these as you leave the shortcut from the other side
 RC_LW_SHORTCUT_RUPEE_1 (and IsChild (or (HasItem RG_SILVER_SCALE) (CanUse RG_IRON_BOOTS)))
 RC_LW_SHORTCUT_RUPEE_2 (and IsChild (or (HasItem RG_SILVER_SCALE) (CanUse RG_IRON_BOOTS)))
 RC_LW_SHORTCUT_RUPEE_3 (and IsChild (or (HasItem RG_SILVER_SCALE) (CanUse RG_IRON_BOOTS)))
@@ -585,6 +595,7 @@ RC_LH_BEAN_SPROUT_FAIRY_2 (and IsChild (and (CanUse RG_MAGIC_BEAN) (CanUse RG_SO
 RC_LH_BEAN_SPROUT_FAIRY_3 (and IsChild (and (CanUse RG_MAGIC_BEAN) (CanUse RG_SONG_OF_STORMS)))
 RC_LH_LAB_GOSSIP_STONE_FAIRY CallGossipFairy
 RC_LH_LAB_GOSSIP_STONE_FAIRY_BIG (CanUse RG_SONG_OF_STORMS)
+//You can walk along the edge of the lake to get these without swimming, the fairy is created going backwards, which is convenient here
 RC_LH_SOUTHEAST_GOSSIP_STONE_FAIRY CallGossipFairy
 RC_LH_SOUTHEAST_GOSSIP_STONE_FAIRY_BIG (CanUse RG_SONG_OF_STORMS)
 RC_LH_SOUTHWEST_GOSSIP_STONE_FAIRY CallGossipFairy
@@ -731,12 +742,14 @@ RR_GV_UPPER_STREAM (or IsChild (or (HasItem RG_BRONZE_SCALE) TakeDamage))
 RR_GV_CRATE_LEDGE (or IsChild (CanUse RG_LONGSHOT))
 RR_GV_GROTTO_LEDGE true
 RR_GV_FORTRESS_SIDE (or (and IsAdult (or (CanUse RG_EPONA) (or (CanUse RG_LONGSHOT) (or (== RSK_GERUDO_FORTRESS RO_GF_CARPENTERS_FREE) THRescuedAllCarpenters)))) (and IsChild (CanUse RG_HOOKSHOT)))
+//can use cucco as child
 RR_GV_LOWER_STREAM IsChild
 
 def RR_GV_UPPER_STREAM SCENE_GERUDO_VALLEY true RA_GERUDO_VALLEY
 GV Upper Stream
 GossipStoneFairy CallGossipFairy
 BeanPlantFairy (and IsChild (and (CanUse RG_MAGIC_BEAN) (CanUse RG_SONG_OF_STORMS)))
+//can use cucco as child
 RC_GV_WATERFALL_FREESTANDING_POH (or IsChild (HasItem RG_BRONZE_SCALE))
 RC_GV_GS_BEAN_PATCH (and CanSpawnSoilSkull CanAttack)
 RC_GV_COW (and IsChild (CanUse RG_EPONAS_SONG))
@@ -817,6 +830,7 @@ RR_TH_1_TORCH_CELL true
 RR_GF_OUTSIDE_GATE GF_GateOpen
 RR_GF_NEAR_GROTTO (or IsChild (CanPassEnemy RE_GERUDO_GUARD))
 RR_GF_OUTSIDE_GTG (or IsChild (CanPassEnemy RE_GERUDO_GUARD))
+//You can talk to the guards to get yourself thrown in jail, so long as you have a hookshot to actually end up there
 RR_GF_JAIL_WINDOW (CanUse RG_HOOKSHOT)
 
 def RR_GF_NEAR_GROTTO SCENE_GERUDOS_FORTRESS false RA_GERUDO_FORTRESS
@@ -882,6 +896,7 @@ RR_GF_BOTTOM_OF_UPPER_VINES (and IsAdult RT_GF_JUMP)
 
 def RR_GF_NEAR_GS SCENE_GERUDOS_FORTRESS false RA_GERUDO_FORTRESS
 GF Near GS
+//if RR_GF_SLOPED_ROOF > RR_GF_TOP_OF_UPPER_VINES is ever made part of RT_GF_JUMP, climb is needed to get back up
 RC_GF_GS_TOP_FLOOR (and IsAdult (and (CanGetEnemyDrop RE_GOLD_SKULLTULA ED_BOMB_THROW) CanGetNightTimeGS))
 RR_TH_KITCHEN_TOP true
 RR_GF_BOTTOM_OF_LOWER_VINES true
@@ -924,6 +939,7 @@ RR_GF_LONG_ROOF true
 def RR_GF_LONG_ROOF SCENE_GERUDOS_FORTRESS false RA_GERUDO_FORTRESS
 GF Long Roof
 RR_GF_BOTTOM_OF_LOWER_VINES true
+//hookshot to cross using the rafters is implied in logic->CanPassEnemy(RE_GERUDO_GUARD)
 RR_GF_NEAR_GS (or (and IsAdult RT_GF_JUMP) (CanUse RG_HOVER_BOOTS))
 RR_GF_BELOW_GS true
 RR_GF_NEAR_CHEST (CanUse RG_LONGSHOT)
@@ -956,6 +972,7 @@ RC_GF_HBA_CANOPY_EAST_CRATE CanBreakCrates
 RC_GF_HBA_CANOPY_WEST_CRATE CanBreakCrates
 RC_GF_NORTH_TARGET_EAST_CRATE CanBreakCrates
 RC_GF_NORTH_TARGET_WEST_CRATE (or IsAdult (or BlastOrSmash (or HookshotOrBoomerang (CanUse RG_HOVER_BOOTS))))
+//implies CanBreakCrates
 RC_GF_NORTH_TARGET_CHILD_CRATE (and IsChild BlastOrSmash)
 RC_GF_SOUTH_TARGET_EAST_CRATE CanBreakCrates
 RC_GF_SOUTH_TARGET_WEST_CRATE CanBreakCrates
@@ -964,6 +981,8 @@ RR_GF_OUTSIDE_GTG (or IsChild (HasItem RG_GERUDO_MEMBERSHIP_CARD))
 def RR_GF_ABOVE_JAIL SCENE_GERUDOS_FORTRESS false RA_GERUDO_FORTRESS
 GF Above Jail
 RC_GF_ABOVE_JAIL_CRATE true
+//you don't take fall damage if you land on the rock with the flag on for some reason
+//there's a trick to reach RR_GF_LONG_ROOF but that's too intricate for GF_JUMP
 RR_GF_OUTSKIRTS (!= RT_GF_JUMP 0)
 RR_GF_NEAR_CHEST (CanUse RG_LONGSHOT)
 RR_GF_BELOW_CHEST TakeDamage
@@ -971,6 +990,7 @@ RR_GF_JAIL_WINDOW (CanUse RG_HOOKSHOT)
 
 def RR_GF_JAIL_WINDOW SCENE_GERUDOS_FORTRESS false RA_GERUDO_FORTRESS
 GF Jail Window
+//There's a trick where hovers backwalk into backflip gives access to RR_GF_LONG_ROOF from here
 RR_GF_OUTSKIRTS true
 RR_GF_BELOW_CHEST true
 
@@ -1080,6 +1100,7 @@ RC_TH_BREAK_HALLWAY_INNER_CRATE CanBreakCrates
 RC_TH_BREAK_ROOM_RIGHT_CRATE (or (and (CanPassEnemy RE_BREAK_ROOM_GUARD) CanBreakCrates) (and (CanPassEnemy RE_GERUDO_GUARD) (and HasExplosives (CanUse RG_BOOMERANG))))
 RC_TH_BREAK_ROOM_LEFT_CRATE (or (and (CanPassEnemy RE_BREAK_ROOM_GUARD) CanBreakCrates) (and (CanPassEnemy RE_GERUDO_GUARD) (and HasExplosives (CanUse RG_BOOMERANG))))
 RR_GF_BELOW_CHEST (CanPassEnemy RE_GERUDO_GUARD)
+//Implies logic->CanPassEnemy(RE_GERUDO_GUARD)
 RR_TH_BREAK_ROOM_CORRIDOR (CanUse RG_HOOKSHOT)
 
 def RR_TH_BREAK_ROOM_CORRIDOR SCENE_THIEVES_HIDEOUT false RA_GERUDO_FORTRESS
@@ -1131,12 +1152,14 @@ RC_COLOSSUS_BEAN_SPROUT_FAIRY_3 (and IsChild (and (CanUse RG_MAGIC_BEAN) (CanUse
 RC_COLOSSUS_GOSSIP_STONE_FAIRY CallGossipFairy
 RC_COLOSSUS_GOSSIP_STONE_FAIRY_BIG (CanUse RG_SONG_OF_STORMS)
 RC_COLOSSUS_GOSSIP_STONE true
+//You can kinda get the fairies without entering the water, but it relies on them cooperating and leevers are jerks. should be a trick
 RR_DESERT_COLOSSUS_OASIS (and (CanUse RG_SONG_OF_STORMS) (or (HasItem RG_BRONZE_SCALE) (CanUse RG_IRON_BOOTS)))
 RR_COLOSSUS_GREAT_FAIRY_FOUNTAIN HasExplosives
 RR_SPIRIT_TEMPLE_ENTRYWAY true
 RR_WASTELAND_NEAR_COLOSSUS true
 RR_COLOSSUS_GROTTO (CanUse RG_SILVER_GAUNTLETS)
 
+//specifically the full oasis, after the fairies have spawned
 def RR_DESERT_COLOSSUS_OASIS SCENE_DESERT_COLOSSUS true RA_DESERT_COLOSSUS
 Desert Colossus Oasis
 FairyPond true
@@ -1175,6 +1198,7 @@ RR_MARKET_GUARD_HOUSE (CanOpenOverworldDoor RG_GUARD_HOUSE_KEY)
 
 def RR_THE_MARKET SCENE_MARKET_DAY false RA_THE_MARKET
 Market
+//RANDOTODO add item avalibility to regions to remove need to hardcode logic in limited item use situations
 RC_MARKET_GRASS_1 (and IsChild (or CanUseSword (HasItem RG_GORONS_BRACELET)))
 RC_MARKET_GRASS_2 (and IsChild (or CanUseSword (HasItem RG_GORONS_BRACELET)))
 RC_MARKET_GRASS_3 (and IsChild (or CanUseSword (HasItem RG_GORONS_BRACELET)))
@@ -1279,6 +1303,9 @@ RR_THE_MARKET true
 
 def RR_MARKET_MASK_SHOP SCENE_HAPPY_MASK_SHOP false
 Market Mask Shop
+//Currently, mask swap in menu doesn't need access to the mask shop
+//If it is forced on/a setting, a copy of these events should be added to root
+//it also doesn't need you to open kak gate, but that might be best treated as a bug
 CanBorrowMasks (and (HasItem RG_ZELDAS_LETTER) KakarikoVillageGateOpen)
 BorrowSkullMask (and RSK_COMPLETE_MASK_QUEST CanBorrowMasks)
 BorrowSpookyMask (and RSK_COMPLETE_MASK_QUEST CanBorrowMasks)
@@ -1393,6 +1420,9 @@ RC_GIFT_FROM_RAURU IsAdult
 RC_SHEIK_AT_TEMPLE (and (HasItem RG_FOREST_MEDALLION) IsAdult)
 RR_TEMPLE_OF_TIME true
 
+//With multi-area support {RA_CASTLE_GROUNDS} is not strictly required anymore, as any interior here could inherit both
+//{RA_HYRULE_CASTLE} and {RA_OUTSIDE_GANONS_CASTLE}, but a setting to merge the latter 2 into the former may be preferred
+//Temporarily uses SCENE_OUTSIDE_GANONS_CASTLE to avoid self connection between ages
 def RR_CASTLE_GROUNDS SCENE_OUTSIDE_GANONS_CASTLE false RA_CASTLE_GROUNDS
 Castle Grounds
 RR_THE_MARKET true
@@ -1477,12 +1507,15 @@ RR_GANONS_CASTLE_ENTRYWAY IsAdult
 def RR_KAKARIKO_VILLAGE SCENE_KAKARIKO_VILLAGE true RA_KAKARIKO_VILLAGE
 Kakariko Village
 BugRock true
+//Open Gate setting is applied in RR_ROOT
 KakarikoVillageGateOpen (and IsChild (HasItem RG_ZELDAS_LETTER))
+//Needs wallet to be able to get another mask after selling Keaton
 BorrowSkullMask (and IsChild (and CanBorrowMasks (HasItem RG_CHILD_WALLET)))
 RC_SHEIK_IN_KAKARIKO (and IsAdult (and (HasItem RG_FOREST_MEDALLION) (and (HasItem RG_FIRE_MEDALLION) (HasItem RG_WATER_MEDALLION))))
 RC_KAK_ANJU_AS_CHILD (and IsChild AtDay)
 RC_KAK_ANJU_AS_ADULT (and IsAdult AtDay)
 RC_KAK_TRADE_POCKET_CUCCO (and IsAdult (and AtDay (and (CanUse RG_POCKET_EGG) WakeUpAdultTalon)))
+//Can kill lower kak skulls with pots
 RC_KAK_GS_HOUSE_UNDER_CONSTRUCTION (and IsChild CanGetNightTimeGS)
 RC_KAK_GS_SKULLTULA_HOUSE (and IsChild CanGetNightTimeGS)
 RC_KAK_GS_GUARDS_HOUSE (and IsChild CanGetNightTimeGS)
@@ -1539,6 +1572,7 @@ RR_KAK_ROOFTOP (or (CanUse RG_HOOKSHOT) (and RT_KAK_MAN_ON_ROOF IsAdult))
 RR_KAK_IMPAS_ROOFTOP (or (CanUse RG_HOOKSHOT) (and RT_KAK_ROOFTOP_GS (CanUse RG_HOVER_BOOTS)))
 RR_THE_GRAVEYARD true
 RR_KAK_BEHIND_GATE (or IsAdult KakarikoVillageGateOpen)
+//adult can jump from the fence near the windmill to ledgegrab the fence near granny's shop. is in logic on N64
 RR_KAK_BACKYARD (or IsAdult AtDay)
 
 def RR_KAK_CARPENTER_BOSS_HOUSE SCENE_KAKARIKO_CENTER_GUEST_HOUSE false
@@ -1616,6 +1650,7 @@ RR_KAK_POTION_SHOP_FRONT true
 
 def RR_KAK_WATCHTOWER SCENE_KAKARIKO_VILLAGE true RA_KAKARIKO_VILLAGE
 Kak Watchtower
+//exists for when age change is in logic.
 RC_KAK_GS_WATCHTOWER (and IsChild (and (CanUse RG_DINS_FIRE) CanGetNightTimeGS))
 RR_KAKARIKO_VILLAGE true
 RR_KAK_ROOFTOP (and RT_KAK_MAN_ON_ROOF IsChild)
@@ -1639,6 +1674,7 @@ RR_DEATH_MOUNTAIN_TRAIL true
 
 def RR_KAK_BACKYARD SCENE_KAKARIKO_VILLAGE true RA_KAKARIKO_VILLAGE
 Kak Backyard
+//There's probably a trick to get these with rang from the main region
 RC_KAK_NEAR_MEDICINE_SHOP_POT_1 (and IsChild CanBreakPots)
 RC_KAK_NEAR_MEDICINE_SHOP_POT_2 (and IsChild CanBreakPots)
 RR_KAKARIKO_VILLAGE true
@@ -1688,6 +1724,7 @@ BeanPlantFairy (and IsChild (and (CanUse RG_MAGIC_BEAN) (CanUse RG_SONG_OF_STORM
 BugRock true
 BorrowBunnyHood (and IsChild (and AtDay (and BorrowSpookyMask (HasItem RG_CHILD_WALLET))))
 RC_GRAVEYARD_FREESTANDING_POH (or (and (or (and IsAdult (CanPlantBean RR_THE_GRAVEYARD)) (CanUse RG_LONGSHOT)) CanBreakCrates) (and RT_GY_POH (CanUse RG_BOOMERANG)))
+//TODO: This needs to change
 RC_GRAVEYARD_DAMPE_GRAVEDIGGING_TOUR (and (HasItem RG_CHILD_WALLET) (and IsChild AtNight))
 RC_GRAVEYARD_GS_WALL (and IsChild (and HookshotOrBoomerang (and AtNight CanGetNightTimeGS)))
 RC_GRAVEYARD_GS_BEAN_PATCH (and CanSpawnSoilSkull CanAttack)
@@ -1711,6 +1748,7 @@ RR_GRAVEYARD_SHIELD_GRAVE (or IsAdult AtNight)
 RR_GRAVEYARD_COMPOSERS_GRAVE (CanUse RG_ZELDAS_LULLABY)
 RR_GRAVEYARD_HEART_PIECE_GRAVE (or IsAdult AtNight)
 RR_GRAVEYARD_DAMPES_GRAVE IsAdult
+//TODO: This needs to be handled in ToD rework
 RR_GRAVEYARD_DAMPES_HOUSE (and IsAdult (CanOpenOverworldDoor RG_DAMPES_HUT_KEY))
 RR_KAKARIKO_VILLAGE true
 RR_GRAVEYARD_WARP_PAD_REGION false
@@ -2262,6 +2300,7 @@ RC_ZF_NEAR_JABU_POT_4 (and IsChild CanBreakPots)
 RR_ZD_BEHIND_KING_ZORA true
 RR_ZF_ICEBERGS IsAdult
 RR_ZF_LAKEBED (CanUse RG_IRON_BOOTS)
+//child can break the brown rock without lifting the silver rock and it stays gone for adult, but it's not intuitive and there's no reasonable case where it matters.
 RR_ZF_HIDDEN_CAVE (and (CanUse RG_SILVER_GAUNTLETS) BlastOrSmash)
 RR_ZF_ROCK (and IsAdult (CanUse RG_SCARECROW))
 RR_JABU_JABUS_BELLY_ENTRYWAY (and IsChild (or (== RSK_JABU_OPEN RO_JABU_OPEN) (CanUse RG_BOTTLE_WITH_FISH)))
@@ -2309,16 +2348,20 @@ ZF Hidden Cave
 RC_ZF_HIDDEN_CAVE_POT_1 (and IsAdult CanBreakPots)
 RC_ZF_HIDDEN_CAVE_POT_2 (and IsAdult CanBreakPots)
 RC_ZF_HIDDEN_CAVE_POT_3 (and IsAdult CanBreakPots)
+//There are invisible big skultullas here as adult but they do not block the path and can be "seen" with Z-target
+//Lens is not currently needed for this either, implying they are not considered blocking, but it's open for discussion long-term
 RR_ZF_HIDDEN_LEDGE true
 
 def RR_ZF_HIDDEN_LEDGE SCENE_ZORAS_FOUNTAIN false RA_ZORAS_FOUNTAIN
 ZF Hidden Ledge
 RC_ZF_GS_HIDDEN_CAVE (and IsAdult (and (CanGetEnemyDrop RE_GOLD_SKULLTULA ED_BOMB_THROW) CanGetNightTimeGS))
+//It is possible to avoid fall damage by jumping towards the right and landing in deeper water, but this is basically never relevent
 RR_ZORAS_FOUNTAIN (or (HasItem RG_BRONZE_SCALE) TakeDamage)
 RR_ZF_HIDDEN_CAVE true
 
 def RR_ZF_ROCK SCENE_ZORAS_FOUNTAIN false RA_ZORAS_FOUNTAIN
 ZF Rock
+//Has a wonder item
 RR_ZORAS_FOUNTAIN true
 
 def RR_ZF_GREAT_FAIRY_FOUNTAIN SCENE_GREAT_FAIRYS_FOUNTAIN_SPELLS false
@@ -2507,7 +2550,9 @@ RC_DEKU_TREE_BASEMENT_GRASS_1 CanCutShrubs
 RC_DEKU_TREE_BASEMENT_GRASS_2 CanCutShrubs
 RR_DEKU_TREE_LOBBY true
 RR_DEKU_TREE_BASEMENT_SCRUB_ROOM (Here (or HasFireSourceWithTorch (CanUse RG_FAIRY_BOW)))
+//Only adult can get the token without assistance
 RR_DEKU_TREE_BASEMENT_UPPER (or IsAdult (or RT_DEKU_B1_SKIP (HasAccessTo RR_DEKU_TREE_BASEMENT_UPPER)))
+//You can get the LOWER skull token from here as adult with hovers backwalk and a backflip, but it's trickworthy and not relevant unless you can beat tentacles without rang
 RR_DEKU_TREE_OUTSIDE_BOSS_ROOM false
 
 def RR_DEKU_TREE_BASEMENT_SCRUB_ROOM SCENE_DEKU_TREE false RA_DEKU_TREE
@@ -2584,8 +2629,13 @@ RC_DEKU_TREE_MQ_LOBBY_GRASS_3 CanCutShrubs
 RC_DEKU_TREE_MQ_LOBBY_GRASS_4 CanCutShrubs
 RC_DEKU_TREE_MQ_LOBBY_GRASS_5 CanCutShrubs
 RR_DEKU_TREE_ENTRYWAY true
+//may need canAvoid logic with enemy shuffle
 RR_DEKU_TREE_MQ_2F true
+//Swim is not required because you can jump with enough momentum to hit land.
+//You even avoid fall damage if you hit the shallow water, though it's obscure knowledge so may be a trick
+//if it is, then we need a landing room with (IsAdult || HasItem(RG_BRONZE_SCALE) || TakeDamage() || that trick) to reach basement
 RR_DEKU_TREE_MQ_BASEMENT BrokeDeku1FWeb
+//is it possible to recoil from here to the ledge with a trick?
 
 def RR_DEKU_TREE_MQ_2F SCENE_DEKU_TREE false RA_DEKU_TREE
 Deku Tree MQ 2F
@@ -2596,6 +2646,7 @@ RC_DEKU_TREE_MQ_LOBBY_GRASS_6 CanCutShrubs
 RC_DEKU_TREE_MQ_LOBBY_GRASS_7 CanCutShrubs
 RC_DEKU_TREE_MQ_LOBBY_CRATE CanBreakCrates
 RR_DEKU_TREE_MQ_1F true
+//Will need canAvoid logic with enemy shuffle
 RR_DEKU_TREE_MQ_3F true
 RR_DEKU_TREE_MQ_EYE_TARGET_ROOM (Here HasFireSource)
 
@@ -2604,6 +2655,7 @@ Deku Tree MQ 3F
 DekuBabaSticks CanGetDekuBabaSticks
 DekuBabaNuts CanGetDekuBabaNuts
 BrokeDeku1FWeb true
+//Implies CanKillEnemy(RE_GOHMA_LARVA)
 RC_DEKU_TREE_MQ_SLINGSHOT_CHEST (CanKillEnemy RE_DEKU_BABA)
 RC_DEKU_TREE_MQ_SLINGSHOT_ROOM_BACK_CHEST (or HasFireSourceWithTorch (and IsAdult (CanUse RG_FAIRY_BOW)))
 RC_DEKU_TREE_MQ_SLINGSHOT_ROOM_HEART true
@@ -2613,6 +2665,7 @@ RC_DEKU_TREE_MQ_SLINGSHOT_GRASS_3 CanCutShrubs
 RC_DEKU_TREE_MQ_SLINGSHOT_GRASS_4 CanCutShrubs
 RC_DEKU_TREE_MQ_SLINGSHOT_ROOM_CRATE_1 CanBreakCrates
 RC_DEKU_TREE_MQ_SLINGSHOT_ROOM_CRATE_2 CanBreakCrates
+//Assumes RR_DEKU_TREE_MQ_2F access
 RR_DEKU_TREE_MQ_2F true
 RR_DEKU_TREE_MQ_EYE_TARGET_ROOM (Here (or (CanUse RG_STICKS) (CanUse RG_FAIRY_BOW)))
 RR_DEKU_TREE_MQ_BASEMENT true
@@ -2657,11 +2710,13 @@ RC_DEKU_TREE_MQ_BASEMENT_LOWER_GRASS_3 CanCutShrubs
 RC_DEKU_TREE_MQ_BASEMENT_LOWER_GRASS_4 CanCutShrubs
 RR_DEKU_TREE_MQ_1F true
 RR_DEKU_TREE_MQ_BASEMENT_SOUTHEAST_ROOM (Here CanHitEyeTargets)
+//includes RR_DEKU_TREE_MQ_BASEMENT_SOUTHEAST_ROOM Access, other fire sources clear directly from there
 RR_DEKU_TREE_MQ_BASEMENT_WATER_ROOM_FRONT (and (Here CanHitEyeTargets) (and ClearedMQDekuSERoom (Here (CanUse RG_STICKS))))
 RR_DEKU_TREE_MQ_BASEMENT_LEDGE (or RT_DEKU_B1_SKIP (or PushedDekuBasementBlock (or IsAdult (CanUse RG_HOVER_BOOTS))))
 
 def RR_DEKU_TREE_MQ_BASEMENT_SOUTHEAST_ROOM SCENE_DEKU_TREE false RA_DEKU_TREE
 Deku Tree MQ Southeast Room
+//Implies CanKillEnemy(RE_GOHMA_LARVA)
 ClearedMQDekuSERoom (CanKillEnemy RE_MAD_SCRUB)
 RC_DEKU_TREE_MQ_BASEMENT_TORCHES_GRASS_1 CanCutShrubs
 RC_DEKU_TREE_MQ_BASEMENT_TORCHES_GRASS_2 CanCutShrubs
@@ -2672,6 +2727,7 @@ RR_DEKU_TREE_MQ_BASEMENT ClearedMQDekuSERoom
 
 def RR_DEKU_TREE_MQ_BASEMENT_WATER_ROOM_FRONT SCENE_DEKU_TREE false RA_DEKU_TREE
 Deku Tree MQ Basement Water Room Front
+//It's possible to get this with bow if you have move while in first person and one-point skips on, noticeably harder and jankier as child, but that's a trick
 MQDekuWaterRoomTorches (or (CanUse RG_FIRE_ARROWS) (and (CanUse RG_STICKS) (or RT_DEKU_MQ_LOG (and IsChild CanShield))))
 RC_DEKU_TREE_MQ_BEFORE_SPINNING_LOG_CHEST true
 RC_DEKU_TREE_MQ_BASEMENT_SPIKE_ROLLER_FRONT_GRASS_1 CanCutShrubs
@@ -2684,6 +2740,7 @@ def RR_DEKU_TREE_MQ_BASEMENT_WATER_ROOM_BACK SCENE_DEKU_TREE false RA_DEKU_TREE
 Deku Tree MQ Basement Water Room Back
 DekuBabaSticks (CanKillEnemy RE_WITHERED_DEKU_BABA)
 MQDekuWaterRoomTorches HasFireSource
+//it blocks the chest while stunned unless you stun it from afar while it's slightly off the ground
 RC_DEKU_TREE_MQ_AFTER_SPINNING_LOG_CHEST (and (CanUse RG_SONG_OF_TIME) (CanPassEnemy RE_BIG_SKULLTULA))
 RC_DEKU_TREE_MQ_BASEMENT_SPIKE_ROLLER_BACK_GRASS_1 CanCutShrubs
 RC_DEKU_TREE_MQ_BASEMENT_SPIKE_ROLLER_BACK_GRASS_2 CanCutShrubs
@@ -2694,6 +2751,7 @@ def RR_DEKU_TREE_MQ_BASEMENT_SOUTHWEST_ROOM SCENE_DEKU_TREE false RA_DEKU_TREE
 Deku Tree MQ Basement Southwest Room
 RC_DEKU_TREE_MQ_BASEMENT_LARVAE_GRASS_1 CanCutShrubs
 RC_DEKU_TREE_MQ_BASEMENT_LARVAE_GRASS_2 CanCutShrubs
+//both imply CanKillEnemy(RE_GOHMA_LARVA)
 RR_DEKU_TREE_MQ_BASEMENT_GRAVE_ROOM (Here (and (CanKillEnemy RE_MAD_SCRUB) (CanKillEnemy RE_KEESE)))
 RR_DEKU_TREE_MQ_BASEMENT_WATER_ROOM_BACK (Here (and (CanKillEnemy RE_MAD_SCRUB) (CanKillEnemy RE_KEESE)))
 
@@ -2709,6 +2767,7 @@ RC_DEKU_TREE_MQ_BASEMENT_GRAVES_GRASS_4 CanCutShrubs
 RC_DEKU_TREE_MQ_BASEMENT_GRAVES_GRASS_5 CanCutShrubs
 RR_DEKU_TREE_MQ_BASEMENT_LEDGE (and IsChild (Here (or HasFireSourceWithTorch (CanUse RG_FAIRY_BOW))))
 RR_DEKU_TREE_MQ_BASEMENT_SOUTHWEST_ROOM true
+//Using a bow to get past here as adult is a bit precise on standing position but simple, doing as as child requires a side-hop with the bow out to shoot through the torch and may be trick worthy
 RR_DEKU_TREE_MQ_BASEMENT_BACK_ROOM (Here (or HasFireSourceWithTorch (CanUse RG_FAIRY_BOW)))
 
 def RR_DEKU_TREE_MQ_BASEMENT_BACK_ROOM SCENE_DEKU_TREE false RA_DEKU_TREE
@@ -2728,6 +2787,8 @@ RC_DEKU_TREE_MQ_BASEMENT_UPPER_GRASS_2 CanCutShrubs
 RC_DEKU_TREE_MQ_BASEMENT_UPPER_GRASS_3 CanCutShrubs
 RR_DEKU_TREE_MQ_BASEMENT_GRAVE_ROOM IsChild
 RR_DEKU_TREE_MQ_BASEMENT true
+//If strength 0 is shuffled, add hovers or block push to the stick check
+//recoiling to skip swim is possible, but would be a trick
 RR_DEKU_TREE_MQ_OUTSIDE_BOSS_ROOM (and (Here (or HasFireSource (CanUse RG_STICKS))) (or (HasItem RG_BRONZE_SCALE) (CanUse RG_IRON_BOOTS)))
 
 def RR_DEKU_TREE_MQ_OUTSIDE_BOSS_ROOM SCENE_DEKU_TREE false RA_DEKU_TREE
@@ -2805,6 +2866,7 @@ RR_DODONGOS_CAVERN_LOBBY true
 RR_DODONGOS_CAVERN_SE_ROOM (Here (or CanBreakMudWalls (or CanAttack (and TakeDamage CanShield))))
 RR_DODONGOS_CAVERN_NEAR_LOWER_LIZALFOS true
 
+//Shield seems to be in logic to drop a pot on their head as they hit you to blow up the wall
 def RR_DODONGOS_CAVERN_SE_ROOM SCENE_DODONGOS_CAVERN false RA_DODONGOS_CAVERN
 Dodongos Cavern SE Room
 RC_DODONGOS_CAVERN_GS_SIDE_ROOM_NEAR_LOWER_LIZALFOS CanAttack
@@ -2954,6 +3016,7 @@ RR_DODONGOS_CAVERN_MQ_BEGINNING true
 RR_DODONGOS_CAVERN_MQ_GOSSIP_STONE (Here (or CanBreakMudWalls (HasItem RG_GORONS_BRACELET)))
 RR_DODONGOS_CAVERN_MQ_MOUTH_SIDE_BRIDGE (Here (or BlastOrSmash (HasItem RG_GORONS_BRACELET)))
 RR_DODONGOS_CAVERN_MQ_STAIRS_LOWER (Here (or BlastOrSmash (HasItem RG_GORONS_BRACELET)))
+//strength 1 and bunny speed works too
 RR_DODONGOS_CAVERN_MQ_LOWER_RIGHT_SIDE (or (Here CanBreakMudWalls) (Here (and (HasItem RG_GORONS_BRACELET) TakeDamage)))
 RR_DODONGOS_CAVERN_MQ_POES_ROOM IsAdult
 RR_DODONGOS_CAVERN_MQ_BEHIND_MOUTH (Here (or HasExplosives (and ClearMQDCUpperLobbyRocks (and (HasItem RG_GORONS_BRACELET) (or (and IsAdult RT_DC_MQ_ADULT_EYES) (and IsChild RT_DC_MQ_CHILD_EYES))))))
@@ -2971,6 +3034,9 @@ Dodongos Cavern MQ Mouth Side Bridge
 ClearMQDCUpperLobbyRocks (or BlastOrSmash (CanUse RG_DINS_FIRE))
 RR_DODONGOS_CAVERN_MQ_LOBBY true
 RR_DODONGOS_CAVERN_MQ_TORCH_PUZZLE_UPPER ClearMQDCUpperLobbyRocks
+//Bunny hood jump + jumpslash can also make it directly from the raising platform
+//RANDOTODO is this possible with equip swapped hammer?
+//it is possible to use bunny hood speed, hovers and a jumpslash to go between here and the other bridge (included with TORCH_ROOM_LOWER), but this would be a trick
 RR_DODONGOS_CAVERN_MQ_POES_ROOM (or (CanUse RG_HOVER_BOOTS) (and RT_DC_MQ_CHILD_BOMBS (and CanJumpslashExceptHammer TakeDamage)))
 
 def RR_DODONGOS_CAVERN_MQ_STAIRS_PAST_MUD_WALL SCENE_DODONGOS_CAVERN false RA_DODONGOS_CAVERN
@@ -2989,6 +3055,7 @@ RC_DODONGOS_CAVERN_MQ_STAIRCASE_POT_4 CanBreakPots
 RC_DODONGOS_CAVERN_MQ_STAIRCASE_LOWER_CRATE_1 CanBreakCrates
 RC_DODONGOS_CAVERN_MQ_STAIRCASE_LOWER_CRATE_2 CanBreakCrates
 RR_DODONGOS_CAVERN_MQ_LOBBY true
+//This is possible with sticks and shield, igniting a first flower by "touch" then very quickly crouch stabbing in a way that cuts the corner to light the 3rd bomb on the other side, but that's a trick
 RR_DODONGOS_CAVERN_MQ_STAIRS_UPPER (Here (or HasExplosives (or (CanUse RG_DINS_FIRE) (and RT_DC_STAIRS_WITH_BOW (CanUse RG_FAIRY_BOW)))))
 RR_DODONGOS_CAVERN_MQ_STAIRS_PAST_MUD_WALL (Here CanBreakMudWalls)
 
@@ -3006,6 +3073,9 @@ def RR_DODONGOS_CAVERN_MQ_STAIRS_PAST_BIG_SKULLTULAS SCENE_DODONGOS_CAVERN false
 Dodongos Cavern MQ Past Big Skulltulas
 RR_DODONGOS_CAVERN_MQ_STAIRS_UPPER (or (CanPassEnemy RE_BIG_SKULLTULA) (CanUse RG_HOVER_BOOTS))
 RR_DODONGOS_CAVERN_MQ_STAIRS_LOWER TakeDamage
+//If some case comes up where you can directly (void?)warp here without going through Dodongo room or climbing up from below,
+//the commented out logic is to handle going down and reclimbing to get silver rupees. A new eventVar will need decalring to handle this.
+//(and CanClimbDCStairs (or (CanPassEnemy RE_BIG_SKULLTULA) (CanUse RG_HOVER_BOOTS)))
 RR_DODONGOS_CAVERN_MQ_DODONGO_ROOM true
 
 def RR_DODONGOS_CAVERN_MQ_DODONGO_ROOM SCENE_DODONGOS_CAVERN false RA_DODONGOS_CAVERN
@@ -3025,9 +3095,12 @@ RC_DODONGOS_CAVERN_MQ_TORCH_PUZZLE_MIDDLE_POT (CanUse RG_BOOMERANG)
 RC_DODONGOS_CAVERN_MQ_TORCH_PUZZLE_ROOM_HEART true
 RR_DODONGOS_CAVERN_MQ_LOBBY TakeDamage
 RR_DODONGOS_CAVERN_MQ_DODONGO_ROOM true
+//torch checks here need strength 0 with sticks when that is implemented
 RR_DODONGOS_CAVERN_MQ_LARVAE_ROOM HasFireSourceWithTorch
+//Includes an implied CanPass(RE_BIG_SKULLTULA)
 RR_DODONGOS_CAVERN_MQ_BIG_BLOCK_ROOM (Here HasFireSourceWithTorch)
 RR_DODONGOS_CAVERN_MQ_TORCH_PUZZLE_UPPER (or (and IsAdult RT_DC_JUMP) (or (CanUse RG_HOVER_BOOTS) (CanUse RG_HOOKSHOT)))
+//Implies access to RR_DODONGOS_CAVERN_MQ_BIG_BLOCK_ROOM from here
 RR_DODONGOS_CAVERN_MQ_UPPER_LIZALFOS (and (CanUse RG_STICKS) (HasItem RG_GORONS_BRACELET))
 
 def RR_DODONGOS_CAVERN_MQ_BIG_BLOCK_ROOM SCENE_DODONGOS_CAVERN false RA_DODONGOS_CAVERN
@@ -3035,11 +3108,14 @@ Dodongos Cavern MQ Torch Puzzle Lower
 RC_DODONGOS_CAVERN_MQ_BIG_BLOCK_POT_1 CanBreakPots
 RC_DODONGOS_CAVERN_MQ_BIG_BLOCK_POT_2 CanBreakPots
 RR_DODONGOS_CAVERN_MQ_TORCH_PUZZLE_LOWER (CanPassEnemy RE_BIG_SKULLTULA)
+//Requires stregnth 0, If you can somehow warp into this room, add logic->CanPassEnemy(RE_BIG_SKULLTULA)
 RR_DODONGOS_CAVERN_MQ_UPPER_LIZALFOS (or (and HasFireSource (HasItem RG_GORONS_BRACELET)) CanBreakMudWalls)
 
 def RR_DODONGOS_CAVERN_MQ_LARVAE_ROOM SCENE_DODONGOS_CAVERN false RA_DODONGOS_CAVERN
 Dodongos Cavern MQ Larvae Room
+//implied logic->CanKillEnemy(RE_GOHMA_LARVA) based on entry reqs with a trick to kill with nuts
 RC_DODONGOS_CAVERN_MQ_LARVAE_ROOM_CHEST true
+//implied logic->CanKillEnemy(RE_GOLD_SKULTULLA) based on entry reqs. Add crate logic when BONKO is added
 RC_DODONGOS_CAVERN_MQ_GS_LARVAE_ROOM CanBreakCrates
 RC_DODONGOS_CAVERN_MQ_LARVAE_ROOM_CRATE_1 CanBreakCrates
 RC_DODONGOS_CAVERN_MQ_LARVAE_ROOM_CRATE_2 CanBreakCrates
@@ -3047,16 +3123,19 @@ RC_DODONGOS_CAVERN_MQ_LARVAE_ROOM_CRATE_3 CanBreakCrates
 RC_DODONGOS_CAVERN_MQ_LARVAE_ROOM_CRATE_4 CanBreakCrates
 RC_DODONGOS_CAVERN_MQ_LARVAE_ROOM_CRATE_5 CanBreakCrates
 RC_DODONGOS_CAVERN_MQ_LARVAE_ROOM_CRATE_6 CanBreakCrates
+//implied logic->CanKillEnemy(RE_GOHMA_LARVA) based on entry reqs with a trick to kill with nuts
 RR_DODONGOS_CAVERN_MQ_TORCH_PUZZLE_LOWER true
 
 def RR_DODONGOS_CAVERN_MQ_UPPER_LIZALFOS SCENE_DODONGOS_CAVERN false RA_DODONGOS_CAVERN
 Dodongos Cavern MQ Before Upper Lizalfos
+//Implied CanGetEnemyDrop(RE_GOLD_SKULLTULA)
 RC_DODONGOS_CAVERN_MQ_GS_LIZALFOS_ROOM BlastOrSmash
 RC_DODONGOS_CAVERN_MQ_UPPER_LIZALFOS_POT_1 CanBreakPots
 RC_DODONGOS_CAVERN_MQ_UPPER_LIZALFOS_POT_2 CanBreakPots
 RC_DODONGOS_CAVERN_MQ_UPPER_LIZALFOS_POT_3 CanBreakPots
 RC_DODONGOS_CAVERN_MQ_UPPER_LIZALFOS_POT_4 CanBreakPots
 RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_HEART BlastOrSmash
+//Falling down gets you stuck with nothing there, not a useful exit for logic
 RR_DODONGOS_CAVERN_MQ_BIG_BLOCK_ROOM (Here (CanKillEnemy RE_LIZALFOS))
 RR_DODONGOS_CAVERN_MQ_TWO_FIRES_ROOM (Here (CanKillEnemy RE_LIZALFOS))
 
@@ -3097,6 +3176,7 @@ RR_DODONGOS_CAVERN_MQ_POES_ROOM (Here (CanKillEnemy RE_LIZALFOS))
 
 def RR_DODONGOS_CAVERN_MQ_POES_ROOM SCENE_DODONGOS_CAVERN false RA_DODONGOS_CAVERN
 Dodongos Cavern MQ Poes Room
+//If you can get to the locked part of POES_ROOM without a way to open it or passing the chest, this will need it's own room
 RC_DODONGOS_CAVERN_MQ_BOMB_BAG_CHEST true
 RC_DODONGOS_CAVERN_MQ_GS_SCRUB_ROOM (and (Here (or CanDetonateBombFlowers (HasItem RG_GORONS_BRACELET))) (CanGetEnemyDrop RE_GOLD_SKULLTULA ED_BOOMERANG true))
 RC_DODONGOS_CAVERN_MQ_POE_ROOM_POT_1 CanBreakPots
@@ -3117,7 +3197,11 @@ RR_DODONGOS_CAVERN_MQ_MAD_SCRUB_ROOM (Here (or CanDetonateBombFlowers (HasItem R
 
 def RR_DODONGOS_CAVERN_MQ_MAD_SCRUB_ROOM SCENE_DODONGOS_CAVERN false RA_DODONGOS_CAVERN
 Dodongos Cavern Mad Scrub Room
+//Implies you can avoid/kill the enemies with what you use on the skull, if this assumption is broken, add
+//&& (Here(RR_DODONGOS_CAVERN_MQ_POES_ROOM, []{return logic->CanKillEnemy(RE_FIRE_KEESE) && logic->CanKillEnemy(RE_MAD_SCRUB);}) || (logic->CanAvoidEnemy(RE_FIRE_KEESE) && logic->CanAvoidEnemy(RE_MAD_SCRUB)))
 RC_DODONGOS_CAVERN_MQ_GS_SCRUB_ROOM (CanGetEnemyDrop RE_GOLD_SKULLTULA ED_BOOMERANG true)
+//Implies you can avoid/kill the enemies with what you use on the skull, if this assumption is broken, add
+//&& (Here(RR_DODONGOS_CAVERN_MQ_POES_ROOM, []{return logic->CanKillEnemy(RE_FIRE_KEESE) && logic->CanKillEnemy(RE_MAD_SCRUB);}) || (logic->CanAvoidEnemy(RE_FIRE_KEESE) && logic->CanAvoidEnemy(RE_MAD_SCRUB)))
 RC_DODONGOS_CAVERN_MQ_SCRUB_GRASS_1 CanCutShrubs
 RC_DODONGOS_CAVERN_MQ_SCRUB_GRASS_2 CanCutShrubs
 RR_DODONGOS_CAVERN_MQ_POES_ROOM (Here (and (CanKillEnemy RE_FIRE_KEESE) (CanKillEnemy RE_MAD_SCRUB)))
@@ -3129,26 +3213,32 @@ RC_DODONGOS_CAVERN_MQ_BEFORE_BOSS_NE_POT CanBreakPots
 RC_DODONGOS_CAVERN_MQ_ARMOS_ROOM_SE_POT CanBreakPots
 RC_DODONGOS_CAVERN_MQ_ARMOS_ROOM_SW_POT CanBreakPots
 RR_DODONGOS_CAVERN_MQ_LOBBY true
+//using pots to get past the fire is in default logic. if stregnth 0 gets added, this will need to be:
+//stregnth 0 || explosives, or projectiles if str0 isn't needed to pull graves (it's a narrow shot though, may be trick worthy)
 RR_DODONGOS_CAVERN_MQ_BACK_BEHIND_FIRE true
 RR_DODONGOS_CAVERN_MQ_BACK_SWITCH_GRAVE IsAdult
 
 def RR_DODONGOS_CAVERN_MQ_BACK_BEHIND_FIRE SCENE_DODONGOS_CAVERN false RA_DODONGOS_CAVERN
 Dodongos Cavern MQ Back Behind Fire
+//pulling the grave isn't required, as you can open the chest through it
 RC_DODONGOS_CAVERN_MQ_UNDER_GRAVE_CHEST true
 RC_DODONGOS_CAVERN_MQ_BACKROOM_POT_1 CanBreakPots
 RC_DODONGOS_CAVERN_MQ_BACKROOM_POT_2 CanBreakPots
 RC_DODONGOS_CAVERN_MQ_BACK_POE_GRASS CanCutShrubs
 RR_DODONGOS_CAVERN_MQ_BEHIND_MOUTH CanAttack
+//There's a trick N64 rolls into the child eyes trick for using armos blow up the bomb flowers when dying, which would be killing an armos
 RR_DODONGOS_CAVERN_MQ_BACK_SWITCH_GRAVE (or (Here CanDetonateBombFlowers) (Here CanAttack))
 
 def RR_DODONGOS_CAVERN_MQ_BACK_SWITCH_GRAVE SCENE_DODONGOS_CAVERN false RA_DODONGOS_CAVERN
 Dodongos Cavern MQ BossArea
 FairyPot true
+//even if you somehow warp to BACK_BEHIND_FIRE, if you can kill the skull at range, you can get to BEHIND_MOUTH
 RC_DODONGOS_CAVERN_MQ_GS_BACK_AREA (or (CanGetEnemyDrop RE_GOLD_SKULLTULA) (or (HasItem RG_GORONS_BRACELET) (Here (or (CanGetEnemyDrop RE_GOLD_SKULLTULA ED_BOOMERANG) (and IsAdult (CanUse RG_HOVER_BOOTS))))))
 RC_DODONGOS_CAVERN_MQ_ARMOS_ROOM_NW_POT CanBreakPots
 RC_DODONGOS_CAVERN_MQ_ARMOS_ROOM_NE_POT CanBreakPots
 RC_DODONGOS_CAVERN_MQ_ARMOS_GRASS CanCutShrubs
 RR_DODONGOS_CAVERN_MQ_BACK_BEHIND_FIRE true
+//if strength 0 prevents grave pulls, add it here
 RR_DODONGOS_CAVERN_BOSS_ENTRYWAY true
 
 def RR_DODONGOS_CAVERN_BOSS_ENTRYWAY SCENE_DODONGOS_CAVERN false RA_DODONGOS_CAVERN
@@ -3174,15 +3264,18 @@ Jabu Jabus Belly Beginning
 RR_JABU_JABUS_BELLY_ENTRYWAY true
 RR_JABU_JABUS_BELLY_MAIN CanUseProjectile
 
+//Combines Lift room middle and lower, 1F holes room, the forked corridor, and it's side rooms
 def RR_JABU_JABUS_BELLY_MAIN SCENE_JABU_JABU false RA_JABU_JABUS_BELLY
 Jabu Jabus Belly Main
 JabuWestTentacle (and JabuRutoIn1F (CanKillEnemy RE_TENTACLE ED_BOOMERANG))
 RC_JABU_JABUS_BELLY_DEKU_SCRUB (and (HasItem RG_BRONZE_SCALE) (and (or IsChild (or (HasItem RG_SILVER_SCALE) (or RT_JABU_ALCOVE_JUMP_DIVE (CanUse RG_IRON_BOOTS)))) CanStunDeku))
+//We can kill the Stingers with ruto
 RC_JABU_JABUS_BELLY_BOOMERANG_CHEST JabuRutoIn1F
 RC_JABU_JABUS_BELLY_MAP_CHEST JabuWestTentacle
 RC_JABU_JABUS_BELLY_PLATFORM_ROOM_SMALL_CRATE_1 CanBreakSmallCrates
 RC_JABU_JABUS_BELLY_PLATFORM_ROOM_SMALL_CRATE_2 CanBreakSmallCrates
 RR_JABU_JABUS_BELLY_BEGINNING true
+//contains B1 of hole room (aside from the ledge leading to big octo), 2 octorock room and north water switch room
 RR_JABU_JABUS_BELLY_B1_NORTH true
 RR_JABU_JABUS_BELLY_COMPASS_ROOM JabuWestTentacle
 RR_JABU_JABUS_BELLY_BLUE_TENTACLE JabuWestTentacle
@@ -3203,6 +3296,7 @@ RC_JABU_JABUS_BELLY_TWO_OCTOROK_POT_3 (and CanBreakPots (or (CanUse RG_BOOMERANG
 RC_JABU_JABUS_BELLY_TWO_OCTOROK_POT_4 (and CanBreakPots (or (CanUse RG_BOOMERANG) (and (CanUse RG_HOVER_BOOTS) (CanKillEnemy RE_OCTOROK ED_BOOMERANG false))))
 RC_JABU_JABUS_BELLY_TWO_OCTOROK_POT_5 (and CanBreakPots (or (CanUse RG_BOOMERANG) (and (CanUse RG_HOVER_BOOTS) (CanKillEnemy RE_OCTOROK ED_BOOMERANG false))))
 RR_JABU_JABUS_BELLY_MAIN true
+//there's tricks for getting here with bunny-jumps or just side-hops
 RR_JABU_JABUS_BELLY_WATER_SWITCH_ROOM_LEDGE (or (HasItem RG_BRONZE_SCALE) (CanUse RG_HOVER_BOOTS))
 RR_JABU_JABUS_BELLY_WATER_SWITCH_ROOM_SOUTH (or IsAdult (HasItem RG_BRONZE_SCALE))
 
@@ -3216,6 +3310,7 @@ RR_JABU_JABUS_BELLY_MAIN CanUseProjectile
 def RR_JABU_JABUS_BELLY_WATER_SWITCH_ROOM_LEDGE SCENE_JABU_JABU false RA_JABU_JABUS_BELLY
 Jabu Jabus Belly Water Switch Room Ledge
 FairyPot true
+//this is the logic for climbing back and forth to use the pots to kill the skull...                             or killing the skull before climbing to grab the token
 RC_JABU_JABUS_BELLY_GS_WATER_SWITCH_ROOM (or (HasItem RG_BRONZE_SCALE) (or (and IsAdult (CanUse RG_HOVER_BOOTS)) (CanKillEnemy RE_GOLD_SKULLTULA ED_BOMB_THROW)))
 RC_JABU_JABUS_BELLY_BASEMENT_POT_1 CanBreakPots
 RC_JABU_JABUS_BELLY_BASEMENT_POT_2 CanBreakPots
@@ -3225,6 +3320,7 @@ RR_JABU_JABUS_BELLY_WATER_SWITCH_ROOM_SOUTH true
 
 def RR_JABU_JABUS_BELLY_COMPASS_ROOM SCENE_JABU_JABU false RA_JABU_JABUS_BELLY
 Jabu Jabus Belly Compass Room
+//ruto could theoretically clear this room, but it's hard because of the timer and she doesn't appear with you when you respawn after failing, which would force a savewarp
 RC_JABU_JABUS_BELLY_COMPASS_CHEST (CanKillEnemy RE_SHABOM)
 RR_JABU_JABUS_BELLY_MAIN (Here (CanKillEnemy RE_SHABOM))
 
@@ -3236,6 +3332,7 @@ RR_JABU_JABUS_BELLY_MAIN JabuEastTentacle
 def RR_JABU_JABUS_BELLY_GREEN_TENTACLE SCENE_JABU_JABU false RA_JABU_JABUS_BELLY
 Jabu Jabus Belly Green Tentacle
 JabuNorthTentacle (CanKillEnemy RE_TENTACLE ED_BOOMERANG)
+//implied logic->CanKillEnemy(RE_BARI)
 RR_JABU_JABUS_BELLY_MAIN JabuNorthTentacle
 
 def RR_JABU_JABUS_BELLY_BIGOCTO_LEDGE SCENE_JABU_JABU false RA_JABU_JABUS_BELLY
@@ -3289,6 +3386,7 @@ RR_JABU_JABUS_BELLY_MQ_BEGINNING true
 RR_JABU_JABUS_BELLY_MQ_UNDERWATER_ALCOVE (or (HasItem RG_SILVER_SCALE) (and (HasItem RG_BRONZE_SCALE) (or IsChild (or (CanUse RG_IRON_BOOTS) RT_JABU_ALCOVE_JUMP_DIVE))))
 RR_JABU_JABUS_BELLY_MQ_HOLES_ROOM MQJabuHolesRoomDoor
 RR_JABU_JABUS_BELLY_MQ_LIFT_ROOM_EAST_LEDGE (or LoweredJabuPath (or (CanUse RG_HOVER_BOOTS) (and (CanUse RG_HOOKSHOT) MQJabuLiftRoomCow)))
+//If opening RR_JABU_JABUS_BELLY_MQ_WATER_SWITCH_ROOM by lowering the geyser as 1 age is to let the other through is relevant, it needs an eventAccess
 
 def RR_JABU_JABUS_BELLY_MQ_LIFT_ROOM_EAST_LEDGE SCENE_JABU_JABU false RA_JABU_JABUS_BELLY
 Jabu Jabus Belly MQ Lift Room East Ledge
@@ -3302,6 +3400,7 @@ MQJabuHolesRoomDoor true
 RC_JABU_JABUS_BELLY_MQ_COMPASS_CHEST (or (CanHitSwitch ED_HOOKSHOT true) (and RT_JABU_MQ_RANG_JUMP (and (CanUse RG_BOOMERANG) (HasItem RG_BRONZE_SCALE))))
 RC_JABU_JABUS_BELLY_MQ_GEYSER_POT_1 CanBreakPots
 RC_JABU_JABUS_BELLY_MQ_GEYSER_POT_2 CanBreakPots
+//Getting the ones closest to the ledge with rang may be a trick due to the awkward angle without blind shooting through the flesh
 RC_JABU_JABUS_BELLY_MQ_LIFT_RUPEE_1 (or (HasItem RG_GOLDEN_SCALE) (CanUse RG_BOOMERANG))
 RC_JABU_JABUS_BELLY_MQ_LIFT_RUPEE_2 (or (HasItem RG_SILVER_SCALE) (CanUse RG_BOOMERANG))
 RC_JABU_JABUS_BELLY_MQ_LIFT_RUPEE_3 (or (HasItem RG_BRONZE_SCALE) (CanUse RG_BOOMERANG))
@@ -3325,17 +3424,21 @@ RR_JABU_JABUS_BELLY_MQ_PAST_OCTO (and JabuWestTentacle (and (Here (CanKillEnemy 
 def RR_JABU_JABUS_BELLY_MQ_WATER_SWITCH_ROOM SCENE_JABU_JABU false RA_JABU_JABUS_BELLY
 Jabu Jabus Belly MQ Water Switch Room
 RC_JABU_JABUS_BELLY_MQ_BOOMERANG_ROOM_SMALL_CHEST true
+//Implies logic->CanKillEnemy(RE_LIKE_LIKE) && logic->CanKillEnemy(RE_STINGER). Without swim, jump from the song of time block to the vines.
 RC_JABU_JABUS_BELLY_MQ_BOOMERANG_CHEST (CanKillEnemy RE_LIZALFOS)
 RC_JABU_JABUS_BELLY_MQ_GS_BOOMERANG_CHEST_ROOM (or (and (CanUse RG_SONG_OF_TIME) (CanGetEnemyDrop RE_GOLD_SKULLTULA)) (and RT_JABU_MQ_SOT_GS (CanUse RG_BOOMERANG)))
 RC_JABU_JABUS_BELLY_MQ_TIME_BLOCK_POT_1 CanBreakPots
 RC_JABU_JABUS_BELLY_MQ_TIME_BLOCK_POT_2 CanBreakPots
 RC_JABU_JABUS_BELLY_MQ_BASEMENT_BOOMERANG_GRASS CanCutShrubs
+//without swim, jump from rang chest to the other side
 RR_JABU_JABUS_BELLY_MQ_BEGINNING (Here (CanKillEnemy RE_LIZALFOS))
 RR_JABU_JABUS_BELLY_MQ_HOLES_ROOM (and (or IsAdult (HasItem RG_BRONZE_SCALE)) (Here (CanKillEnemy RE_LIZALFOS)))
 
+//Includes Like Like room
 def RR_JABU_JABUS_BELLY_MQ_FORKED_CORRIDOR SCENE_JABU_JABU false RA_JABU_JABUS_BELLY
 Jabu Jabus Belly MQ Forked Corridor
 JabuNorthTentacle (and (Here BlastOrSmash) (CanUse RG_BOOMERANG))
+//Implies CanKillEnemy(RE_LIKE_LIKE)
 RC_JABU_JABUS_BELLY_MQ_FALLING_LIKE_LIKE_ROOM_CHEST (CanUse RG_FAIRY_SLINGSHOT)
 RC_JABU_JABUS_BELLY_MQ_LIKE_LIKES_POT_1 CanBreakPots
 RC_JABU_JABUS_BELLY_MQ_LIKE_LIKES_POT_2 CanBreakPots
@@ -3343,6 +3446,7 @@ RC_JABU_JABUS_BELLY_MQ_FALLING_LIKE_LIKE_GRASS CanCutShrubs
 RC_JABU_JABUS_BELLY_MQ_TRIPLE_HALLWAY_SMALL_CRATE_1 CanBreakSmallCrates
 RC_JABU_JABUS_BELLY_MQ_TRIPLE_HALLWAY_SMALL_CRATE_2 CanBreakSmallCrates
 RR_JABU_JABUS_BELLY_MQ_HOLES_ROOM (CanUse RG_BOOMERANG)
+//If some mode lets an age use sticks and not sling, and other use sling and not sticks, this needs changing
 RR_JABU_JABUS_BELLY_MQ_WEST_FORKED_ROOMS (and (Here (CanUse RG_BOOMERANG)) (or (Here (and (CanUse RG_FAIRY_SLINGSHOT) (CanUse RG_STICKS))) (Here HasFireSource)))
 
 def RR_JABU_JABUS_BELLY_MQ_WEST_FORKED_ROOMS SCENE_JABU_JABU false RA_JABU_JABUS_BELLY
@@ -3353,11 +3457,24 @@ RR_JABU_JABUS_BELLY_MQ_FORKED_CORRIDOR true
 
 def RR_JABU_JABUS_BELLY_MQ_INVISIBLE_KEESE_ROOM SCENE_JABU_JABU false RA_JABU_JABUS_BELLY
 Jabu Jabus Belly MQ Invisible Keese Room
-RC_JABU_JABUS_BELLY_MQ_GS_INVISIBLE_ENEMIES_ROOM (or (and (CanUse RG_FIRE_ARROWS) (CanGetEnemyDrop RE_GOLD_SKULLTULA ED_LONGSHOT)) (and (CanGetEnemyDrop RE_GOLD_SKULLTULA ED_BOOMERANG) (and (or (CanUse RG_HOVER_BOOTS) (Here (and (or RT_LENS_JABU_MQ (CanUse RG_LENS_OF_TRUTH)) (and (CanKillEnemy RE_STINGER ED_BOOMERANG false 2 false true) (or (CanKillEnemy RE_KEESE ED_LONGSHOT false) (and RT_LENS_JABU_MQ (and (CanUse RG_HOOKSHOT) (CanUse RG_IRON_BOOTS)))))))) (or (and IsChild (HasItem RG_BRONZE_SCALE)) (and IsAdult (CanUse RG_IRON_BOOTS))))))
+RC_JABU_JABUS_BELLY_MQ_GS_INVISIBLE_ENEMIES_ROOM (or
+	//firstly, we can just use FAs to clear the web and then longshot the skull
+	(and (CanUse RG_FIRE_ARROWS) (CanGetEnemyDrop RE_GOLD_SKULLTULA ED_LONGSHOT))
+	//Otherwise, we we have to cross the gap and kill the skull.
+	//We can cheese the gap with hovers
+	//Otherwise we have to kill the enemies to raise the platform. This persists so we can do it as the other age.
+	(and (CanGetEnemyDrop RE_GOLD_SKULLTULA ED_BOOMERANG) (and
+		//we can hit the keese farthest from the water with irons and hookshot, but we won't be able to see it while doing so
+		(or (CanUse RG_HOVER_BOOTS) (Here (and (or RT_LENS_JABU_MQ (CanUse RG_LENS_OF_TRUTH)) (and (CanKillEnemy RE_STINGER ED_BOOMERANG false 2 false true) (or (CanKillEnemy RE_KEESE ED_LONGSHOT false) (and RT_LENS_JABU_MQ (and (CanUse RG_HOOKSHOT) (CanUse RG_IRON_BOOTS))))))))
+		//If we kill the enemies, we then need to cross the water using the platform. Note that adult cannot do so while swimming because MQ jank.
+		(or (and IsChild (HasItem RG_BRONZE_SCALE)) (and IsAdult (CanUse RG_IRON_BOOTS))))
+	)
+)
 RR_JABU_JABUS_BELLY_MQ_HOLES_ROOM (and (or JabuNorthTentacle TakeDamage) (HasItem RG_BRONZE_SCALE))
 
 def RR_JABU_JABUS_BELLY_MQ_PAST_OCTO SCENE_JABU_JABU false RA_JABU_JABUS_BELLY
 Jabu Jabus Belly MQ Past Octo
+//if a hover up to the path is added, this will want it's own room
 LoweredJabuPath (and (CanUse RG_BOOMERANG) (CanUse RG_FAIRY_SLINGSHOT))
 RC_JABU_JABUS_BELLY_MQ_COW (and (CanUse RG_EPONAS_SONG) (CanUse RG_FAIRY_SLINGSHOT))
 RC_JABU_JABUS_BELLY_MQ_JIGGLIES_GRASS CanCutShrubs
@@ -3366,6 +3483,7 @@ RC_JABU_JABUS_BELLY_MQ_AFTER_BIG_OCTO_GRASS_2 CanCutShrubs
 RC_JABU_JABUS_BELLY_MQ_JIGGLIES_SMALL_CRATE_1 (and (CanUse RG_FAIRY_SLINGSHOT) CanBreakSmallCrates)
 RC_JABU_JABUS_BELLY_MQ_JIGGLIES_SMALL_CRATE_2 (and (CanUse RG_FAIRY_SLINGSHOT) CanBreakSmallCrates)
 RR_JABU_JABUS_BELLY_MQ_LIFT_ROOM (and (CanUse RG_BOOMERANG) (CanUse RG_FAIRY_SLINGSHOT))
+//you take both fall damage and tentacle damage, unless the tentacle is down. need better damage logic
 RR_JABU_JABUS_BELLY_MQ_HOLES_ROOM (and TakeDamage (Here (CanKillEnemy RE_BIG_OCTO)))
 
 def RR_JABU_JABUS_BELLY_MQ_EAST_ROOM SCENE_JABU_JABU false RA_JABU_JABUS_BELLY
@@ -3390,6 +3508,7 @@ RR_JABU_JABUS_BELLY_MQ_EAST_ROOM (IsDungeonMQ JABU_JABUS_BELLY)
 
 def RR_JABU_JABUS_BELLY_BOSS_ROOM SCENE_JABU_JABU_BOSS false
 Jabu Jabus Belly Boss Room
+//todo: add pot kill trick
 JabuJabusBellyClear (CanKillEnemy RE_BARINADE)
 RC_JABU_JABUS_BELLY_BARINADE_POT_1 CanBreakPots
 RC_JABU_JABUS_BELLY_BARINADE_POT_2 CanBreakPots
@@ -3609,6 +3728,7 @@ RR_FOREST_TEMPLE_BOSS_ENTRYWAY true
 def RR_FOREST_TEMPLE_MQ_LOBBY SCENE_FOREST_TEMPLE false RA_FOREST_TEMPLE
 Forest Temple MQ Lobby
 RC_FOREST_TEMPLE_MQ_FIRST_ROOM_CHEST (or (CanPassEnemy RE_BIG_SKULLTULA ED_SHORT_JUMPSLASH false) (CanUse RG_HOVER_BOOTS))
+//Implies CanPassEnemy(RE_BIG_SKULLTULA)
 RC_FOREST_TEMPLE_MQ_GS_FIRST_HALLWAY HookshotOrBoomerang
 RR_FOREST_TEMPLE_ENTRYWAY true
 RR_FOREST_TEMPLE_MQ_CENTRAL_AREA (and (SmallKeys RR_FOREST_TEMPLE 1) (CanPassEnemy RE_BIG_SKULLTULA))
@@ -3626,6 +3746,7 @@ RR_FOREST_TEMPLE_MQ_WOLFOS_ROOM (or IsChild (CanUse RG_SONG_OF_TIME))
 RR_FOREST_TEMPLE_MQ_NW_OUTDOORS CanHitEyeTargets
 RR_FOREST_TEMPLE_MQ_NE_OUTDOORS CanHitEyeTargets
 RR_FOREST_TEMPLE_MQ_LOWER_BLOCK_PUZZLE (Here (CanKillEnemy RE_STALFOS))
+//implies the other 3 poes
 RR_FOREST_TEMPLE_MQ_BASEMENT ForestTempleMeg
 
 def RR_FOREST_TEMPLE_MQ_WOLFOS_ROOM SCENE_FOREST_TEMPLE false RA_FOREST_TEMPLE
@@ -3639,20 +3760,25 @@ RR_FOREST_TEMPLE_MQ_CENTRAL_AREA (and ForestClearBelowBowChest (or IsChild (CanU
 
 def RR_FOREST_TEMPLE_MQ_LOWER_BLOCK_PUZZLE SCENE_FOREST_TEMPLE false RA_FOREST_TEMPLE
 Forest Temple MQ Lower Block Puzzle
+//longshot is capable of hitting the switch, but some invisible collision makes the shot harder than you would think, so it may be trickworthy
 MQForestBlockRoomTargets (and RT_FOREST_MQ_BLOCK_PUZZLE (CanUse RG_BOMBCHU_5))
+//It is barely possible to get this as child with master + hovers, but it's tight without bunny speed
 ForestCanTwistHallway (or (or (and RT_FOREST_MQ_JS_HALLWAY_SWITCH (and (CanUse RG_HOVER_BOOTS) (and IsAdult CanJumpslash))) (or (CanUse RG_STICKS) (or (CanUse RG_BIGGORON_SWORD) (and MQForestBlockRoomTargets (CanUse RG_MASTER_SWORD))))) (or (and RT_FOREST_MQ_RANG_HALLWAY_SWITCH (CanUse RG_BOOMERANG)) (and RT_FOREST_MQ_HOOKSHOT_HALLWAY_SWITCH (CanUse RG_HOOKSHOT))))
 RC_FOREST_TEMPLE_MQ_GS_BLOCK_PUSH_ROOM (CanGetEnemyDrop RE_GOLD_SKULLTULA)
 RR_FOREST_TEMPLE_MQ_CENTRAL_AREA (Here (CanKillEnemy RE_STALFOS))
 RR_FOREST_TEMPLE_MQ_MIDDLE_BLOCK_PUZZLE (or (HasItem RG_GORONS_BRACELET) (and MQForestBlockRoomTargets (CanUse RG_HOOKSHOT)))
+//Assumes RR_FOREST_TEMPLE_MQ_MIDDLE_BLOCK_PUZZLE access
 RR_FOREST_TEMPLE_MQ_UPPER_BLOCK_PUZZLE (or (and IsAdult (HasItem RG_GORONS_BRACELET)) (and MQForestBlockRoomTargets (CanUse RG_HOOKSHOT)))
 RR_FOREST_TEMPLE_MQ_OUTDOOR_LEDGE (and ForestCanTwistHallway (or (CanUse RG_HOOKSHOT) (CanUse RG_HOVER_BOOTS)))
 
 def RR_FOREST_TEMPLE_MQ_MIDDLE_BLOCK_PUZZLE SCENE_FOREST_TEMPLE false RA_FOREST_TEMPLE
 Forest Temple MQ Middle Block Puzzle
+//longshot is capable of hitting the switch, but some invisible collision makes the shot more annoying than you would think, so it may be trickworthy
 MQForestBlockRoomTargets (or (CanUse RG_FAIRY_BOW) (or (CanUse RG_FAIRY_SLINGSHOT) (CanUse RG_LONGSHOT)))
 ForestCanTwistHallway (or (and RT_FOREST_MQ_JS_HALLWAY_SWITCH (and IsAdult CanJumpslash)) (and (CanUse RG_HOVER_BOOTS) (or (CanUse RG_STICKS) (or (CanUse RG_BIGGORON_SWORD) (CanUse RG_MASTER_SWORD)))))
 RR_FOREST_TEMPLE_MQ_LOWER_BLOCK_PUZZLE true
 RR_FOREST_TEMPLE_MQ_UPPER_BLOCK_PUZZLE (or (and IsAdult (HasItem RG_GORONS_BRACELET)) (and MQForestBlockRoomTargets (CanUse RG_HOOKSHOT)))
+//Hammer cannot recoil from here, but can make the jump forwards with a hammer jumpslash as adult
 RR_FOREST_TEMPLE_MQ_OUTDOOR_LEDGE (or (and ForestCanTwistHallway (CanUse RG_HOVER_BOOTS)) (and RT_FOREST_OUTSIDE_BACKDOOR (or CanJumpslashExceptHammer (and IsAdult (CanUse RG_MEGATON_HAMMER)))))
 
 def RR_FOREST_TEMPLE_MQ_UPPER_BLOCK_PUZZLE SCENE_FOREST_TEMPLE false RA_FOREST_TEMPLE
@@ -3660,6 +3786,10 @@ Forest Temple MQ After Block Puzzle
 RC_FOREST_TEMPLE_MQ_BOSS_KEY_CHEST (SmallKeys RR_FOREST_TEMPLE 3)
 RR_FOREST_TEMPLE_MQ_STRAIGHT_HALLWAY (SmallKeys RR_FOREST_TEMPLE 3)
 RR_FOREST_TEMPLE_MQ_JOELLE_ROOM (and ForestCanTwistHallway (SmallKeys RR_FOREST_TEMPLE 4))
+//!QUANTUM LOGIC!
+//As there is no way in default logic to reach the other possible key use without going through RR_FOREST_TEMPLE_MQ_NW_OUTDOORS, this is logically safe for now
+//Breaks if there's any other way to RR_FOREST_TEMPLE_MQ_FALLING_ROOM than going through the eye targets in RR_FOREST_TEMPLE_MQ_CENTRAL_AREA
+//Requires a bow/sling ammo source once ammo logic is done, to avoid edge cases.
 RR_FOREST_TEMPLE_MQ_NW_OUTDOORS (and (SmallKeys RR_FOREST_TEMPLE 2) (Here (CanKillEnemy RE_FLOORMASTER)))
 
 def RR_FOREST_TEMPLE_MQ_STRAIGHT_HALLWAY SCENE_FOREST_TEMPLE false RA_FOREST_TEMPLE
@@ -3683,6 +3813,7 @@ RR_FOREST_TEMPLE_MQ_NW_OUTDOORS true
 def RR_FOREST_TEMPLE_MQ_NW_OUTDOORS SCENE_FOREST_TEMPLE false RA_FOREST_TEMPLE
 Forest Temple MQ NW Outdoors
 RC_FOREST_TEMPLE_MQ_GS_LEVEL_ISLAND_COURTYARD (CanGetEnemyDrop RE_GOLD_SKULLTULA)
+//the well checks are considered from both areas instead of being a region because the draining is a temp flag and the skull (as well as the chest with hook glitch) has different breath timers from each side
 RC_FOREST_TEMPLE_MQ_GS_WELL (and (CanUse RG_IRON_BOOTS) (and (>= WaterTimer 8) (CanUse RG_HOOKSHOT)))
 RC_FOREST_TEMPLE_MQ_COURTYARD_RIGHT_HEART (and (CanUse RG_BOOMERANG) RT_FOREST_OUTDOORS_HEARTS_BOOMERANG)
 RC_FOREST_TEMPLE_MQ_COURTYARD_MIDDLE_HEART (and (CanUse RG_BOOMERANG) RT_FOREST_OUTDOORS_HEARTS_BOOMERANG)
@@ -3693,12 +3824,14 @@ RC_FOREST_TEMPLE_MQ_WELL_EAST_HEART (and (CanUse RG_IRON_BOOTS) (>= WaterTimer 8
 RR_FOREST_TEMPLE_MQ_NE_OUTDOORS (and (or (and (or (CanUse RG_IRON_BOOTS) (or (CanUse RG_LONGSHOT) (and RT_FOREST_MQ_WELL_SWIM (CanUse RG_HOOKSHOT)))) (HasItem RG_BRONZE_SCALE)) (HasItem RG_GOLDEN_SCALE)) (>= WaterTimer 16))
 RR_FOREST_TEMPLE_MQ_OUTDOORS_TOP_LEDGES (CanUse RG_FIRE_ARROWS)
 
+//The well only coniders the eye target here because the eye target is a temp flag, making it unwieldy to use as an EventAccess to make it it's own room
 def RR_FOREST_TEMPLE_MQ_NE_OUTDOORS SCENE_FOREST_TEMPLE false RA_FOREST_TEMPLE
 Forest Temple MQ NE Outdoors
 DekuBabaSticks CanGetDekuBabaSticks
 DekuBabaNuts CanGetDekuBabaNuts
 RC_FOREST_TEMPLE_MQ_WELL_CHEST (or CanHitEyeTargets (and CanOpenUnderwaterChest (>= WaterTimer 8)))
 RC_FOREST_TEMPLE_MQ_GS_RAISED_ISLAND_COURTYARD (CanGetEnemyDrop RE_GOLD_SKULLTULA)
+//implies logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA)
 RC_FOREST_TEMPLE_MQ_GS_WELL (or CanHitEyeTargets (and (CanUse RG_IRON_BOOTS) (CanUse RG_HOOKSHOT)))
 RC_FOREST_TEMPLE_MQ_WELL_WEST_HEART (or (and (CanUse RG_IRON_BOOTS) (>= WaterTimer 8)) CanHitEyeTargets)
 RC_FOREST_TEMPLE_MQ_WELL_MIDDLE_HEART (or (and (CanUse RG_IRON_BOOTS) (>= WaterTimer 8)) CanHitEyeTargets)
@@ -3710,9 +3843,11 @@ RR_FOREST_TEMPLE_MQ_NE_OUTDOORS_LEDGE (CanUse RG_LONGSHOT)
 def RR_FOREST_TEMPLE_MQ_OUTDOORS_TOP_LEDGES SCENE_FOREST_TEMPLE false RA_FOREST_TEMPLE
 Forest Temple MQ Outdoors Top Ledges
 RC_FOREST_TEMPLE_MQ_RAISED_ISLAND_COURTYARD_UPPER_CHEST true
+//Actually killing the skull from the doorframe with melee is annoying. Hammer swing hits low enough unaided, other swords need to crouch stab but the spot is precise based on range. kokiri sword doesn't reach at all for adult.
 RC_FOREST_TEMPLE_MQ_GS_RAISED_ISLAND_COURTYARD (and (or (and IsAdult (CanUse RG_SONG_OF_TIME)) (and (CanUse RG_HOVER_BOOTS) RT_FOREST_DOORFRAME)) (and CanJumpslash (or (CanUse RG_FAIRY_SLINGSHOT) (or BlastOrSmash (or (CanUse RG_DINS_FIRE) (or (CanUse RG_FAIRY_BOW) (or HookshotOrBoomerang (and CanStandingShield (or (CanUse RG_STICKS) (or (CanUse RG_BIGGORON_SWORD) (or (CanUse RG_MASTER_SWORD) (and IsChild (CanUse RG_KOKIRI_SWORD)))))))))))))
 RR_FOREST_TEMPLE_MQ_NW_OUTDOORS HasFireSourceWithTorch
 RR_FOREST_TEMPLE_MQ_NE_OUTDOORS true
+//N64 logic doesn't check damage but I always take some so I'm adding it
 RR_FOREST_TEMPLE_MQ_NE_OUTDOORS_LEDGE (and RT_FOREST_OUTDOORS_LEDGE (and (CanUse RG_HOVER_BOOTS) (and CanJumpslash TakeDamage)))
 
 def RR_FOREST_TEMPLE_MQ_NE_OUTDOORS_LEDGE SCENE_FOREST_TEMPLE false RA_FOREST_TEMPLE
@@ -3730,6 +3865,7 @@ RR_FOREST_TEMPLE_MQ_3_STALFOS_ROOM true
 
 def RR_FOREST_TEMPLE_MQ_3_STALFOS_ROOM SCENE_FOREST_TEMPLE false RA_FOREST_TEMPLE
 Forest Temple MQ 3 Stalfos Room
+//technically happens in RR_FOREST_TEMPLE_MQ_WOLFOS_ROOM, but the way this room blocks the hole means it cannot be logical to do anything else there.
 ForestClearBelowBowChest (CanKillEnemy RE_WOLFOS)
 RC_FOREST_TEMPLE_MQ_BOW_CHEST (and ForestClearBelowBowChest (CanKillEnemy RE_STALFOS ED_CLOSE true 3))
 RC_FOREST_TEMPLE_MQ_UPPER_STALFOS_POT_1 CanBreakPots
@@ -3746,10 +3882,14 @@ RC_FOREST_TEMPLE_MQ_COMPASS_CHEST ForestTempleBeth
 RC_FOREST_TEMPLE_MQ_BLUE_POE_POT_1 CanBreakPots
 RC_FOREST_TEMPLE_MQ_BLUE_POE_POT_2 CanBreakPots
 RC_FOREST_TEMPLE_MQ_BLUE_POE_POT_3 CanBreakPots
+//!QUANTUM LOGIC!
+//This key logic assumes that you can get to falling room either by spending the 5th key here, or by wasting a key in falling room itself.
+//While being the 5th key makes this simpler in theory, if a different age can waste the key compared to reaching this room it breaks
 RR_FOREST_TEMPLE_MQ_FALLING_ROOM (and (SmallKeys RR_FOREST_TEMPLE 5) (Here (or (CanUse RG_FAIRY_BOW) (CanUse RG_DINS_FIRE))))
 RR_FOREST_TEMPLE_MQ_TORCH_SHOT_ROOM (SmallKeys RR_FOREST_TEMPLE 6)
 RR_FOREST_TEMPLE_MQ_3_STALFOS_ROOM true
 
+//This room exists to show the actual map layout, and for when the crates get added to logic
 def RR_FOREST_TEMPLE_MQ_TORCH_SHOT_ROOM SCENE_FOREST_TEMPLE false RA_FOREST_TEMPLE
 Forest Temple MQ Torch Shot Room
 RC_FOREST_TEMPLE_MQ_FROZEN_EYE_SWITCH_SMALL_CRATE_1 CanBreakSmallCrates
@@ -3761,6 +3901,7 @@ RR_FOREST_TEMPLE_MQ_BETH_ROOM (SmallKeys RR_FOREST_TEMPLE 6)
 def RR_FOREST_TEMPLE_MQ_FALLING_ROOM SCENE_FOREST_TEMPLE false RA_FOREST_TEMPLE
 Forest Temple MQ Falling Room
 RC_FOREST_TEMPLE_MQ_FALLING_CEILING_ROOM_CHEST true
+//Skipping swim here is non-trival, needs a roll-jump. If a swim lock is added it's probably wise to copy deku baba events here
 RR_FOREST_TEMPLE_MQ_NE_OUTDOORS_LEDGE true
 RR_FOREST_TEMPLE_MQ_AMY_ROOM (SmallKeys RR_FOREST_TEMPLE 6)
 
@@ -3774,6 +3915,7 @@ RR_FOREST_TEMPLE_MQ_FALLING_ROOM true
 
 def RR_FOREST_TEMPLE_MQ_BASEMENT SCENE_FOREST_TEMPLE false RA_FOREST_TEMPLE
 Forest Temple MQ Basement
+//Implies CanHitSwitch()
 ForestOpenBossCorridor CanHitEyeTargets
 RC_FOREST_TEMPLE_MQ_BASEMENT_CHEST true
 RR_FOREST_TEMPLE_MQ_CENTRAL_AREA ForestTempleMeg
@@ -3878,6 +4020,7 @@ RR_FIRE_TEMPLE_BIG_LAVA_ROOM true
 
 def RR_FIRE_TEMPLE_BIG_LAVA_ROOM_NORTH_TILES SCENE_FIRE_TEMPLE false RA_FIRE_TEMPLE
 Fire Temple Big Lava Room North Tiles
+//RANDOTODO check if child can reach
 RC_FIRE_TEMPLE_GS_SONG_OF_TIME_ROOM (or (and IsAdult CanAttack) HookshotOrBoomerang)
 RR_FIRE_TEMPLE_BIG_LAVA_ROOM true
 
@@ -4045,6 +4188,7 @@ Fire Temple Above Fire Maze
 RR_FIRE_TEMPLE_HAMMER_RETURN_PATH true
 RR_FIRE_TEMPLE_FIRE_MAZE_UPPER (CanUse RG_MEGATON_HAMMER)
 
+//potentially dangerous temp flag on the first room's torches, should be made permanent if possible
 def RR_FIRE_TEMPLE_MQ_FIRST_ROOM_LOWER SCENE_FIRE_TEMPLE false RA_FIRE_TEMPLE
 Fire Temple MQ First Room Lower
 RC_FIRE_TEMPLE_MQ_ENTRANCE_POT_1 CanBreakPots
@@ -4107,15 +4251,26 @@ RR_FIRE_TEMPLE_MQ_MAP_ROOM_SOUTH OpenedLowestGoronCage
 
 def RR_FIRE_TEMPLE_MQ_NEAR_BOSS_ROOM SCENE_FIRE_TEMPLE false RA_FIRE_TEMPLE
 Fire Temple MQ Near Boss Room
+//If we're using the south torch as the initial torch, or using FAs, we either have to cross to the north to remove the crate, or use a trick to ignore it
 RC_FIRE_TEMPLE_MQ_NEAR_BOSS_CHEST (and (> FireTimer 25) (and RT_FIRE_MQ_NEAR_BOSS (or (CanUse RG_FIRE_ARROWS) (and IsAdult (and (CanUse RG_DINS_FIRE) (CanUse RG_FAIRY_BOW))))))
 RC_FIRE_TEMPLE_MQ_OUTSIDE_BOSS_CRATE_1 (and (> FireTimer 25) CanBreakCrates)
 RC_FIRE_TEMPLE_MQ_OUTSIDE_BOSS_CRATE_2 (and (> FireTimer 25) CanBreakCrates)
 RR_FIRE_TEMPLE_MQ_FIRST_ROOM_UPPER true
+//Child cannot make it to the north side torches without a hook without specifically bunny hood speed + hover boots
 RR_FIRE_TEMPLE_MQ_NEAR_BOSS_ROOM_NORTH (and (> FireTimer 32) (or (CanUse RG_HOOKSHOT) (and IsAdult (CanUse RG_HOVER_BOOTS))))
 RR_FIRE_TEMPLE_BOSS_ENTRYWAY (and (>= FireTimer 15) (or (and IsAdult (or RT_FIRE_BOSS_DOOR_JUMP (CanUse RG_HOVER_BOOTS))) (or (and IsAdult HitFireTemplePlatform) (and HitFireTemplePlatform (CanUse RG_HOVER_BOOTS)))))
 
+//This room assumes tunic logic is handled on entry.
+//Covers the upper section too, as all methods to reach this can climb up somehow
 def RR_FIRE_TEMPLE_MQ_NEAR_BOSS_ROOM_NORTH SCENE_FIRE_TEMPLE false RA_FIRE_TEMPLE
 Fire Temple MQ Near Boss Room North
+//If we have FAs, we can just remove the crate and use those to light the torches.
+//otherwise, with Dins, we first light them with dins and then either use a bow shot or to cross back over to light the other torch
+//Valid ways across are adult+hovers, bunny+hovers, longshot or running through the lava and then climbing back up as adult (child can't reach the ledge).
+//The Damage logic here is for jumping down and running across the lava to get in dins range of the south torch
+//Fairies cannot be used for this as it is time sensetive, and NL is only useful with sticks as it disables other magic while in use, so it's tunic or raw damage taking ability.
+//testing tells me you take 3 ticks of lava damage, which is 12 internal damage or 3/4 of a heart at x1 damage multiplier, performing this run
+//logic->EffectiveHealth() works in half hearts for whatever reason, meaning this needs a deeper refactor to be perfect, but it should be good enough for now
 RC_FIRE_TEMPLE_MQ_NEAR_BOSS_CHEST (or (CanUse RG_FIRE_ARROWS) (and (CanUse RG_DINS_FIRE) (or (CanUse RG_FAIRY_BOW) (or (CanUse RG_LONGSHOT) (and IsAdult (or (CanUse RG_HOVER_BOOTS) (or (CanUse RG_GORON_TUNIC) (or (>= EffectiveHealth 2) (and (CanUse RG_NAYRUS_LOVE) (CanUse RG_STICKS))))))))))
 RC_FIRE_TEMPLE_MQ_OUTSIDE_BOSS_POT_1 CanBreakPots
 RC_FIRE_TEMPLE_MQ_OUTSIDE_BOSS_POT_2 CanBreakPots
@@ -4129,12 +4284,15 @@ RR_FIRE_TEMPLE_NEAR_BOSS_ROOM true
 
 def RR_FIRE_TEMPLE_MQ_BIG_LAVA_ROOM SCENE_FIRE_TEMPLE false RA_FIRE_TEMPLE
 Fire Temple MQ Big Lava Room
+//I'm currently assuming the oversight version of RT_FIRE_MQ_BK_CHEST for the fire timer logic
 RC_FIRE_TEMPLE_MQ_BIG_LAVA_ROOM_BLOCKED_DOOR_CHEST (and (>= FireTimer 40) (and HasFireSource (and HasExplosives (or (CanUse RG_HOOKSHOT) (and IsAdult RT_FIRE_MQ_BLOCKED_CHEST)))))
+//implies CanGetEnemyDrop(RE_GOLD_SKULLTULA)
 RC_FIRE_TEMPLE_MQ_GS_BIG_LAVA_ROOM_OPEN_DOOR (and (>= FireTimer 20) (CanUse RG_MEGATON_HAMMER))
 RC_FIRE_TEMPLE_MQ_LAVA_ROOM_NORTH_POT CanBreakPots
 RC_FIRE_TEMPLE_MQ_LAVA_ROOM_HIGH_POT CanBreakPots
 RC_FIRE_TEMPLE_MQ_LAVA_ROOM_SOUTH_POT (and (>= FireTimer 40) (or (CanUse RG_HOOKSHOT) (and RT_FIRE_MQ_BLOCKED_CHEST (or (and IsAdult CanBreakPots) (CanUse RG_BOOMERANG)))))
 RR_FIRE_TEMPLE_MQ_FIRST_ROOM_UPPER (>= FireTimer 20)
+//This room assumes Goron Tunic until looser tunic requirements tricks are made
 RR_FIRE_TEMPLE_MQ_ELEVATOR_ROOM (and (CanUse RG_GORON_TUNIC) (SmallKeys RR_FIRE_TEMPLE 2))
 RR_FIRE_TEMPLE_MQ_TORCH_FIREWALL_ROOM (and HasFireSource (and (or (and (CanUse RG_FAIRY_BOW) (>= FireTimer 25)) (and RT_FIRE_MQ_BK_CHEST (>= FireTimer 50))) (or (CanUse RG_HOOKSHOT) (and IsAdult RT_FIRE_SOT))))
 
@@ -4162,9 +4320,12 @@ RR_FIRE_TEMPLE_MQ_MAZE_SHORTCUT_CAGE OpenedUpperFireShortcut
 
 def RR_FIRE_TEMPLE_MQ_LOWER_MAZE SCENE_FIRE_TEMPLE false RA_FIRE_TEMPLE
 Fire Temple MQ Lower Maze
+//Check handled on both floors
 RC_FIRE_TEMPLE_MQ_LIZALFOS_MAZE_SIDE_ROOM_CHEST (and HasExplosives RT_FIRE_MQ_MAZE_SIDE_ROOM)
 RR_FIRE_TEMPLE_MQ_BIG_TORCH_ROOM true
+//Explosives can also reach this room. Chus is relatively simple, they need to detonate on the first horizontal bar up from the floor while horizontally near the switch, but bombs are much harder
 RR_FIRE_TEMPLE_MQ_LOWER_MAZE_CRATE_CAGE (Here CanJumpslash)
+//it's possible to make the RT_FIRE_MQ_MAZE_HOVERS as child using bunny hood jumps, but not adult as adult bonks
 RR_FIRE_TEMPLE_MQ_UPPER_MAZE (and HasExplosives (and (CanUse RG_MEGATON_HAMMER) (CanUse RG_HOOKSHOT)))
 
 def RR_FIRE_TEMPLE_MQ_LOWER_MAZE_CRATE_CAGE SCENE_FIRE_TEMPLE false RA_FIRE_TEMPLE
@@ -4174,13 +4335,17 @@ RC_FIRE_TEMPLE_MQ_LIZALFOS_MAZE_LOWER_CRATE_1 CanBreakCrates
 RC_FIRE_TEMPLE_MQ_LIZALFOS_MAZE_LOWER_CRATE_2 CanBreakCrates
 RC_FIRE_TEMPLE_MQ_LIZALFOS_MAZE_LOWER_CRATE_3 CanBreakCrates
 RR_FIRE_TEMPLE_MQ_LOWER_MAZE true
+//it's possible to make the RT_FIRE_MQ_MAZE_HOVERS as child using bunny hood jumps, but not adult as adult bonks
 RR_FIRE_TEMPLE_MQ_UPPER_MAZE (and IsAdult (or (and RT_FIRE_MQ_MAZE_HOVERS (CanUse RG_HOVER_BOOTS)) RT_FIRE_MQ_MAZE_JUMP))
 
 def RR_FIRE_TEMPLE_MQ_UPPER_MAZE SCENE_FIRE_TEMPLE false RA_FIRE_TEMPLE
 Fire Temple MQ Upper Maze
 RR_FIRE_TEMPLE_MQ_LOWER_MAZE true
+//this cage is much more lenient than the lower cage as the switch is close to the front. sling, rang and bow all hit the switch easily, though might be too unintuitive for default logic
+//This shouldn't come up in most cases anyway as most methods to get here need either a melee weapon or explosives
 RR_FIRE_TEMPLE_MQ_UPPER_MAZE_BOX_CAGE (Here (or CanJumpslash HasExplosives))
 RR_FIRE_TEMPLE_MQ_MAZE_SHORTCUT HasExplosives
+//Implies RR_FIRE_TEMPLE_MQ_LOWER_MAZE access
 RR_FIRE_TEMPLE_MQ_BURNING_BLOCK_CLIMB (and HasExplosives (and (CanUse RG_MEGATON_HAMMER) (or (CanUse RG_LONGSHOT) (and (CanUse RG_HOOKSHOT) (CanUse RG_SONG_OF_TIME)))))
 RR_FIRE_TEMPLE_MQ_HIGH_TORCH_ROOM (and (SmallKeys RR_FIRE_TEMPLE 3) (CanUse RG_GORON_TUNIC))
 
@@ -4192,6 +4357,7 @@ RC_FIRE_TEMPLE_MQ_LIZALFOS_MAZE_UPPER_CRATE_2 CanBreakCrates
 RC_FIRE_TEMPLE_MQ_LIZALFOS_MAZE_UPPER_CRATE_3 CanBreakCrates
 RC_FIRE_TEMPLE_MQ_LIZALFOS_MAZE_UPPER_SMALL_CRATE_1 CanBreakSmallCrates
 RC_FIRE_TEMPLE_MQ_LIZALFOS_MAZE_UPPER_SMALL_CRATE_2 CanBreakSmallCrates
+//Assumes maze access
 RC_FIRE_TEMPLE_MQ_LIZALFOS_MAZE_SIDE_ROOM_CHEST HasExplosives
 RR_FIRE_TEMPLE_MQ_UPPER_MAZE true
 
@@ -4215,6 +4381,8 @@ RR_FIRE_TEMPLE_MQ_BIG_TORCH_ROOM OpenedUpperFireShortcut
 
 def RR_FIRE_TEMPLE_MQ_BURNING_BLOCK_CLIMB SCENE_FIRE_TEMPLE false RA_FIRE_TEMPLE
 Fire Temple MQ Burning Block Climb
+//WallFairy (CanUse RG_HOOKSHOT)
+//There's definitely ways to do this hammerless, but with one points on it's a trick
 RC_FIRE_TEMPLE_MQ_GS_SKULL_ON_FIRE (and (CanUse RG_HOOKSHOT) (CanUse RG_MEGATON_HAMMER))
 RR_FIRE_TEMPLE_MQ_UPPER_MAZE true
 RR_FIRE_TEMPLE_MQ_NARROW_PATH_ROOM TakeDamage
@@ -4244,6 +4412,7 @@ RC_FIRE_TEMPLE_MQ_LAVA_TORCH_SMALL_CRATE_4 CanBreakSmallCrates
 RC_FIRE_TEMPLE_MQ_LAVA_TORCH_SMALL_CRATE_5 CanBreakSmallCrates
 RR_FIRE_TEMPLE_MQ_UPPER_MAZE (SmallKeys RR_FIRE_TEMPLE 3)
 RR_FIRE_TEMPLE_MQ_NARROW_PATH_ROOM true
+//Child has issues navigating the higher points of this room without an equip swapped hookshot
 RR_FIRE_TEMPLE_MQ_SOUTH_FIRE_MAZE (and (Here (or (CanUse RG_FIRE_ARROWS) (and (CanUse RG_FAIRY_BOW) (CanUse RG_HOOKSHOT)))) (or IsAdult (CanUse RG_HOOKSHOT)))
 
 def RR_FIRE_TEMPLE_MQ_SOUTH_FIRE_MAZE SCENE_FIRE_TEMPLE false RA_FIRE_TEMPLE
@@ -4254,6 +4423,7 @@ RC_FIRE_TEMPLE_MQ_SOUTH_FIRE_MAZE_EAST_POT CanBreakPots
 RR_FIRE_TEMPLE_MQ_NEAR_BOSS_ROOM HitFireTemplePlatform
 RR_FIRE_TEMPLE_MQ_HIGH_TORCH_ROOM true
 RR_FIRE_TEMPLE_MQ_FIRE_MAZE_PLATFORMS (or IsAdult (or (CanUse RG_SONG_OF_TIME) (CanUse RG_HOVER_BOOTS)))
+//Hover boots get there via the platforms
 RR_FIRE_TEMPLE_MQ_NORTH_FIRE_MAZE RT_FIRE_MQ_FLAME_MAZE
 RR_FIRE_TEMPLE_MQ_WEST_FIRE_MAZE OpenedFireMQFireMazeDoor
 
@@ -4263,6 +4433,7 @@ HitFireTemplePlatform (CanUse RG_MEGATON_HAMMER)
 OpenedFireMQFireMazeDoor (and (CanUse RG_MEGATON_HAMMER) (CanUse RG_HOOKSHOT))
 RR_FIRE_TEMPLE_MQ_SOUTH_FIRE_MAZE true
 RR_FIRE_TEMPLE_MQ_NORTH_FIRE_MAZE (or (CanUse RG_SONG_OF_TIME) (CanUse RG_HOVER_BOOTS))
+//trick to get to RR_FIRE_TEMPLE_MQ_WEST_FIRE_MAZE with hovers + taking damage is plausible
 
 def RR_FIRE_TEMPLE_MQ_NORTH_FIRE_MAZE SCENE_FIRE_TEMPLE false RA_FIRE_TEMPLE
 Fire Temple MQ North Fire Maze
@@ -4278,6 +4449,7 @@ Fire Temple MQ West Fire Maze
 RR_FIRE_TEMPLE_MQ_FIRE_MAZE_PAST_WALL true
 RR_FIRE_TEMPLE_MQ_NORTH_FIRE_MAZE RT_FIRE_MQ_FLAME_MAZE
 
+//this area exists for the pots in case we void warp to the top of fire somehow, because there's no way to get back the way we came
 def RR_FIRE_TEMPLE_MQ_FIRE_MAZE_PAST_WALL SCENE_FIRE_TEMPLE false RA_FIRE_TEMPLE
 Fire Temple MQ Fire Maze Past Wall
 RC_FIRE_TEMPLE_MQ_PAST_FIRE_MAZE_SOUTH_POT CanBreakPots
@@ -4293,12 +4465,20 @@ RR_FIRE_TEMPLE_MQ_SCARECROW_ROOM (and (CanKillEnemy RE_FLARE_DANCER) (SmallKeys 
 
 def RR_FIRE_TEMPLE_MQ_SCARECROW_ROOM SCENE_FIRE_TEMPLE false RA_FIRE_TEMPLE
 Fire Temple MQ Scarecrow Room
+//This requires nothing in N64 logic, but is tight enough to need rollspam with the one-point on which is stricter than I would normally consider in logic
+//Child basically needs the scarecrow or a bunny hood though due to a worse ledge grab.
 RC_FIRE_TEMPLE_MQ_CHEST_ON_FIRE (or IsAdult (CanUse RG_SCARECROW))
+//The dropdown here is unusual in that it hits 1 of 3 locations: RR_FIRE_TEMPLE_MQ_SOUTH_FIRE_MAZE, RR_FIRE_TEMPLE_MQ_FIRE_MAZE_PLATFORMS and the section of RR_FIRE_TEMPLE_MQ_FIRE_MAZE_PLATFORMS with the hammer switch
+//Using this dropdown is in N64 logic elsewhere, but not here, probably because it requires good foreknowlege to determine where to land
+//This would be a logical method to reach the hammer switch without hookshot, but it practically requires access to the area that switch unlocks already. It could also be first child access to PLATFORMS if tricks ever enable that
+//If a practical use for this drop is found, it should be made a trick
 RR_FIRE_TEMPLE_MQ_UPPER_FLARE_DANCER (SmallKeys RR_FIRE_TEMPLE 4)
 RR_FIRE_TEMPLE_MQ_COLLAPSED_STAIRS (and (Here (CanUse RG_MEGATON_HAMMER)) (SmallKeys RR_FIRE_TEMPLE 5))
 
+//The peg knocked down from here could have logical implications for child in the fire maze if tricks to gain height like bomb jumps exist
 def RR_FIRE_TEMPLE_MQ_COLLAPSED_STAIRS SCENE_FIRE_TEMPLE false RA_FIRE_TEMPLE
 Fire Temple MQ Collapsed Stairs
+//If someone manages to make a trick to get here from fire maze, this needs to be in a separate room as the door back is barred
 RC_FIRE_TEMPLE_MQ_GS_ABOVE_FIRE_MAZE (CanUse RG_HOOKSHOT)
 RR_FIRE_TEMPLE_MQ_FIRE_MAZE_PLATFORMS (and (CanUse RG_HOOKSHOT) (Here (CanUse RG_MEGATON_HAMMER)))
 RR_FIRE_TEMPLE_MQ_SCARECROW_ROOM (and IsAdult (CanUse RG_HOOKSHOT))
@@ -4317,6 +4497,7 @@ RC_VOLVAGIA FireTempleClear
 RR_FIRE_TEMPLE_BOSS_ENTRYWAY false
 RR_DMC_CENTRAL_LOCAL @deprioritize FireTempleClear
 
+//Water Temple logic currently assumes that the locked door leading to the upper water raising location is unlocked from the start
 def RR_WATER_TEMPLE_LOBBY SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple Lobby
 RC_WATER_TEMPLE_MAIN_LEVEL_2_POT_1 (and CanBreakPots (or CanWaterTempleLowFromHigh (or CanWaterTempleMiddle (and (CanUse RG_IRON_BOOTS) (CanUse RG_HOOKSHOT)))))
@@ -4508,22 +4689,33 @@ def RR_WATER_TEMPLE_MQ_3F_SOUTH_LEDGE SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple MQ 3F South Ledge
 RR_WATER_TEMPLE_ENTRYWAY (or (HasItem RG_BRONZE_SCALE) (CanUse RG_IRON_BOOTS))
 RR_WATER_TEMPLE_MQ_MAIN true
+//If we are not on WL_HIGH, we reach RR_WATER_TEMPLE_MQ_3F_MAIN with hookshot via 2F, otherwise we can reach the platform
 RR_WATER_TEMPLE_MQ_3F_CENTRAL (or (CanUse RG_HOOKSHOT) (CanUse RG_HOVER_BOOTS))
 RR_WATER_TEMPLE_MQ_2F_CENTRAL (MQWaterLevel WL_LOW_OR_MID)
 
+//This region covers simply existing in the area around the central pillar without being on a specific platform, either swimming or walking on the lakebed
+//Entry should only include being in the correct area, taking any possible fall damage, and floating up to the surface of WL_HIGH if coming from below
+//This area then leads to others based on level and worst-case water timers for follow-up exits from the water's surface
+//remember that any solution that works for any level doesn't need to be given a level, even if that solution is overkill for a lower level
 def RR_WATER_TEMPLE_MQ_MAIN SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple MQ Main
 RR_WATER_TEMPLE_MQ_3F_SOUTH_LEDGE (and (HasItem RG_BRONZE_SCALE) (MQWaterLevel WL_HIGH))
+//Jumping across is possible but a trick due to the janky ledge
 RR_WATER_TEMPLE_MQ_EAST_TOWER (or (and (>= WaterTimer 24) (CanUse RG_IRON_BOOTS)) (or (and (MQWaterLevel WL_MID) (and (HasItem RG_GOLDEN_SCALE) (>= WaterTimer 16))) (MQWaterLevel WL_LOW)))
 RR_WATER_TEMPLE_MQ_3F_CENTRAL (and (MQWaterLevel WL_HIGH) (HasItem RG_BRONZE_SCALE))
+//First water timer uses the hook to go from the top of center to storage room/central pillar as coming from the bottom
+//Second water timer is simply diving down and entering the door as fast as possible from the surface
 RR_WATER_TEMPLE_MQ_2F_CENTRAL (or (and (or (MQWaterLevel WL_LOW) (and (CanUse RG_IRON_BOOTS) (or (MQWaterLevel WL_MID) (>= WaterTimer 16)))) (CanUse RG_LONGSHOT)) (and (or (MQWaterLevel WL_MID) (and (MQWaterLevel WL_HIGH_OR_MID) (and (CanUse RG_IRON_BOOTS) (>= WaterTimer 8)))) (HasItem RG_BRONZE_SCALE)))
 RR_WATER_TEMPLE_MQ_CENTRAL_PILLAR_1F (MQWaterLevel WL_LOW)
+//A special entry as we can't set it to high after entering at a lower height
 RR_WATER_TEMPLE_MQ_CENTRAL_PILLAR_HIGH (and (MQWaterLevel WL_HIGH) (and (CanUse RG_IRON_BOOTS) (and (>= WaterTimer 16) (or (HasItem RG_BRONZE_SCALE) (CanUse RG_LONGSHOT)))))
 RR_WATER_TEMPLE_MQ_LIZALFOS_HALLWAY (and (or (MQWaterLevel WL_MID) (and (MQWaterLevel WL_HIGH_OR_MID) (and (CanUse RG_IRON_BOOTS) (>= WaterTimer 16)))) (HasItem RG_BRONZE_SCALE))
 RR_WATER_TEMPLE_MQ_B1_GATE_SWITCH (and MQWaterB1Switch (or (MQWaterLevel WL_LOW) (and (and (CanUse RG_IRON_BOOTS) (>= WaterTimer 24)) (HasItem RG_BRONZE_SCALE))))
 RR_WATER_TEMPLE_MQ_TRIANGLE_TORCH_ROOM (and MQWaterB1Switch (or (and (MQWaterLevel WL_LOW) (HasItem RG_SILVER_SCALE)) (and (CanUse RG_IRON_BOOTS) (and (>= WaterTimer 16) (or (HasItem RG_BRONZE_SCALE) (CanUse RG_LONGSHOT))))))
+//Adult needs to jump in instead of dive for swim access, but you just hold forward. RT_WATER_BK_REGION isn't relevant unless the Dark Link loop can be done without longshot with other tricks
 RR_WATER_TEMPLE_MQ_CRATES_WHIRLPOOLS_ROOM (and MQWaterB1Switch (and (or (and (MQWaterLevel WL_LOW) (HasItem RG_BRONZE_SCALE)) (and (CanUse RG_IRON_BOOTS) (and (>= WaterTimer 16) (CanUse RG_HOOKSHOT)))) (or (CanUse RG_LONGSHOT) (and RT_WATER_BK_REGION (CanUse RG_HOVER_BOOTS)))))
 
+//This region specifically covers the topmost platform around central pillar
 def RR_WATER_TEMPLE_MQ_3F_CENTRAL SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple MQ 3F Central
 RR_WATER_TEMPLE_MQ_MAIN true
@@ -4531,10 +4723,15 @@ RR_WATER_TEMPLE_MQ_3F_SOUTH_LEDGE (or (CanUse RG_LONGSHOT) (CanUse RG_HOVER_BOOT
 RR_WATER_TEMPLE_MQ_2F_CENTRAL (and (or (MQWaterLevel WL_LOW_OR_MID) (and (CanUse RG_IRON_BOOTS) (>= WaterTimer 16))) (CanUse RG_HOOKSHOT))
 RR_WATER_TEMPLE_MQ_CENTRAL_PILLAR_HIGH (and (MQWaterLevel WL_HIGH) (and (CanUse RG_IRON_BOOTS) (and (>= WaterTimer 16) (CanUse RG_HOOKSHOT))))
 RR_WATER_TEMPLE_MQ_3F_NORTH_LEDGE (or (and (MQWaterLevel WL_HIGH) (CanUse RG_LONGSHOT)) (and RT_HOVER_BOOST_SIMPLE (and RT_DAMAGE_BOOST_SIMPLE (and HasExplosives (CanUse RG_HOVER_BOOTS)))))
+//Jumping across is possible but a trick due to the janky ledge
 RR_WATER_TEMPLE_MQ_HIGH_EMBLEM (or (CanUse RG_HOOKSHOT) (and IsAdult (CanUse RG_HOVER_BOOTS)))
+//room access is (logic->IsAdult || (logic->HasItem(RG_BRONZE_SCALE) || logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_HOOKSHOT)))
 RR_WATER_TEMPLE_MQ_WATERFALL (and (SmallKeys RR_WATER_TEMPLE 1) (and (MQWaterLevel WL_HIGH) (CanUse RG_LONGSHOT)))
+//this swimless jump with irons may be a trick as you have to put irons on quite late.
 RR_WATER_TEMPLE_MQ_LIZALFOS_HALLWAY (or (and (CanUse RG_IRON_BOOTS) (>= WaterTimer 16)) (MQWaterLevel WL_LOW_OR_MID))
 
+//This region specifically covers walking on the lower platform around central pillar. This is underwater when WL_HIGH
+//RR_WATER_TEMPLE_MQ_CENTRAL_PILLAR_HIGH should be accessed directly to use the central pillar door while at WL_HIGH
 def RR_WATER_TEMPLE_MQ_2F_CENTRAL SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple MQ 2F Central
 RR_WATER_TEMPLE_MQ_MAIN true
@@ -4556,6 +4753,7 @@ RR_WATER_TEMPLE_MQ_MAIN true
 
 def RR_WATER_TEMPLE_MQ_3F_NORTH_LEDGE SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple MQ 3F North Ledge
+//what we need if WL_LOW, we can't guarantee repeated access otherwise.
 RR_WATER_TEMPLE_MQ_MAIN (or (HasItem RG_BRONZE_SCALE) TakeDamage)
 RR_WATER_TEMPLE_MQ_3F_CENTRAL (CanUse RG_LONGSHOT)
 RR_WATER_TEMPLE_MQ_BOSS_DOOR (or (CanUse RG_LONGSHOT) (or (CanUse RG_ICE_ARROWS) (CanUse RG_NAYRUS_LOVE)))
@@ -4567,6 +4765,8 @@ RR_WATER_TEMPLE_BOSS_ENTRYWAY true
 
 def RR_WATER_TEMPLE_MQ_EAST_TOWER SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple MQ East Tower
+//if we can't reach these, we can't move the water at all, so no need to specify level or account for WL_LOW access here
+//review is some way to play ocarina underwater exists
 CouldWaterTempleLow true
 CanWaterTempleLowFromHigh (CanUse RG_ZELDAS_LULLABY)
 RC_WATER_TEMPLE_MQ_MAP_CHEST (and (MQWaterLevel WL_HIGH) (and HasFireSource (CanUse RG_HOOKSHOT)))
@@ -4575,22 +4775,29 @@ RC_WATER_TEMPLE_MQ_LOWER_TORCHES_POT_1 (or (and (MQWaterLevel WL_LOW) CanBreakPo
 RC_WATER_TEMPLE_MQ_LOWER_TORCHES_POT_2 (or (and (MQWaterLevel WL_LOW) CanBreakPots) (and (CanUse RG_IRON_BOOTS) (and (CanUse RG_HOOKSHOT) (>= WaterTimer 16))))
 RR_WATER_TEMPLE_MQ_EAST_TOWER_1F_ROOM (and (MQWaterLevel WL_LOW) (or (CanUse RG_FAIRY_BOW) (or (CanUse RG_DINS_FIRE) (CanUse RG_STICKS))))
 
+//Raising the targets by clearing this room achieves nothing logically because it requires WL_LOW to do and hookshot to use, which implies access to WL_MID and WL_HIGH already
 def RR_WATER_TEMPLE_MQ_EAST_TOWER_1F_ROOM SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple MQ East Tower 1F Room
 RC_WATER_TEMPLE_MQ_COMPASS_CHEST (and (CanKillEnemy RE_LIZALFOS) (CanKillEnemy RE_SPIKE))
 RR_WATER_TEMPLE_MQ_EAST_TOWER true
 
+//This area assumes we entered through the lower door, so water is low and cannot be changed without leaving.
 def RR_WATER_TEMPLE_MQ_CENTRAL_PILLAR_1F SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple MQ Central Pillar 1F
+//This is harder than the other possibilities as you have to move between shots on top of the extra range, but there's basically no universe this should matter.
 MQWaterB1Switch (and RT_WATER_MQ_CENTRAL_PILLAR (CanUse RG_FIRE_ARROWS))
 RR_WATER_TEMPLE_MQ_CENTRAL_PILLAR_HIGH (and (MQWaterLevel WL_HIGH) (and RT_WATER_FW_CENTRAL_GS (and (CanUse RG_FARORES_WIND) (HasItem RG_BRONZE_SCALE))))
+//I don't know if this FW trick can ever matter but maybe it's needed to get child to CENTRAL_2F or something
 RR_WATER_TEMPLE_MQ_CENTRAL_PILLAR_2F (or (CanUse RG_HOOKSHOT) (and (MQWaterLevel WL_MID) (and RT_WATER_FW_CENTRAL_GS (and (CanUse RG_FARORES_WIND) (HasItem RG_BRONZE_SCALE)))))
+//if the gate is open, you sink straight in, so you can't climb up this way in logic without swimming
 RR_WATER_TEMPLE_MQ_CENTRAL_PILLAR_B1 (and MQWaterOpenedPillarB1 (and (MQWaterLevel WL_HIGH_OR_MID) (and RT_WATER_FW_CENTRAL_GS (and (CanUse RG_FARORES_WIND) (and (CanUse RG_IRON_BOOTS) (CanUse RG_ZORA_TUNIC))))))
 
+//If we enter here in WL_HIGH, go to RR_WATER_TEMPLE_MQ_CENTRAL_PILLAR_HIGH instead, Assumes WL_MID_OR_LOW
 def RR_WATER_TEMPLE_MQ_CENTRAL_PILLAR_2F SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple MQ Central Pillar 2F
 CouldWaterTempleMiddle true
 CanWaterTempleMiddle (CanUse RG_ZELDAS_LULLABY)
+//It's possible to do this even on low water, but more awkward. I'm not sure if it's even possible for it to be relevant though.
 MQWaterOpenedPillarB1 (and RT_WATER_MQ_CENTRAL_PILLAR (CanUse RG_FIRE_ARROWS))
 RR_WATER_TEMPLE_MQ_CENTRAL_PILLAR_HIGH (and (MQWaterLevel WL_HIGH) (and (CanUse RG_FARORES_WIND) (or (HasItem RG_BRONZE_SCALE) (CanUse RG_IRON_BOOTS))))
 RR_WATER_TEMPLE_MQ_CENTRAL_PILLAR_B1 (and MQWaterOpenedPillarB1 (and (MQWaterLevel WL_MID) (and (CanUse RG_IRON_BOOTS) (CanUse RG_ZORA_TUNIC))))
@@ -4602,9 +4809,12 @@ RC_WATER_TEMPLE_MQ_CENTRAL_PILLAR_UPPER_CRATE_1 CanBreakCrates
 RC_WATER_TEMPLE_MQ_CENTRAL_PILLAR_UPPER_CRATE_2 CanBreakCrates
 RR_WATER_TEMPLE_MQ_CENTRAL_PILLAR_B1 (and MQWaterB1Switch (and (CanUse RG_IRON_BOOTS) (CanUse RG_ZORA_TUNIC)))
 
+//Assuming tunic and irons was checked on entry
 def RR_WATER_TEMPLE_MQ_CENTRAL_PILLAR_B1 SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple MQ Central Pillar B1
+//Can't know water level, so we'll just assume any possibility and skip to MAIN
 RR_WATER_TEMPLE_MQ_MAIN (and MQWaterOpenedPillarB1 (and (CanUse RG_IRON_BOOTS) (HasItem RG_BRONZE_SCALE)))
+//Child needs to release irons for height to push down the larger "peg", however they can push the lower one down by climbing and then hit the switch through the larger peg, but it's a trick
 RR_WATER_TEMPLE_MQ_CENTRAL_PILLAR_B1_FINAL (or (and IsAdult (CanUse RG_LONGSHOT)) (and (CanUse RG_HOOKSHOT) (HasItem RG_BRONZE_SCALE)))
 
 def RR_WATER_TEMPLE_MQ_CENTRAL_PILLAR_B1_FINAL SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
@@ -4681,6 +4891,8 @@ RC_WATER_TEMPLE_MQ_LIZALFOS_HALLWAY_ROOM_CRATE_3 CanBreakCrates
 RC_WATER_TEMPLE_MQ_LIZALFOS_HALLWAY_ROOM_CRATE_4 CanBreakCrates
 RC_WATER_TEMPLE_MQ_LIZALFOS_HALLWAY_ROOM_CRATE_5 CanBreakCrates
 RR_WATER_TEMPLE_MQ_LIZALFOS_CAGE (and (MQWaterLevel WL_LOW_OR_MID) (CanUse RG_DINS_FIRE))
+//this technically exists, but only complicates things, uncomment if some edge case/glitch can use RR_WATER_TEMPLE_MQ_LIZALFOS_HALLWAY to reach RR_WATER_TEMPLE_MQ_3F_CENTRAL, or if a void warp goes here
+//RR_WATER_TEMPLE_MQ_3F_EAST_LEDGE (or (and (CanUse RG_HOOKSHOT) (or (HasItem RG_BRONZE_SCALE) (CanUse RG_IRON_BOOTS))) (and (MQWaterLevel WL_LOW_OR_MID) (CanUse RG_HOOKSHOT)) (and (MQWaterLevel WL_HIGH) (HasItem RG_BRONZE_SCALE)))
 
 def RR_WATER_TEMPLE_MQ_LIZALFOS_CAGE SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple MQ Lizalfos Cage
@@ -4693,6 +4905,7 @@ RC_WATER_TEMPLE_MQ_LIZALFOS_HALLWAY_GATE_CRATE_2 CanBreakCrates
 def RR_WATER_TEMPLE_MQ_3F_EAST_LEDGE SCENE_ID_MAX false
 Invalid Region
 
+//This room exists to hold the wonderitems that drop from the emblems here. Specifically this assumes you are standing on the final ledge
 def RR_WATER_TEMPLE_MQ_WATERFALL SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple Waterfall
 RR_WATER_TEMPLE_MQ_3F_CENTRAL (and (SmallKeys RR_WATER_TEMPLE 1) (CanUse RG_LONGSHOT))
@@ -4707,6 +4920,7 @@ RR_WATER_TEMPLE_MQ_WATERFALL (and MQWaterStalfosPit (and (CanUse RG_HOOKSHOT) (o
 RR_WATER_TEMPLE_MQ_STALFOS_PIT_POTS (or (and IsAdult (CanUse RG_HOOKSHOT)) (and (CanUse RG_HOOKSHOT) (and (or IsAdult (and (CanUse RG_IRON_BOOTS) (>= WaterTimer 8))) (or (CanUse RG_HOVER_BOOTS) MQWaterStalfosPit))))
 RR_WATER_TEMPLE_MQ_STALFOS_PIT_UPPER (and MQWaterStalfosPit (and (or IsAdult (and (CanUse RG_IRON_BOOTS) (>= WaterTimer 8))) (CanUse RG_HOOKSHOT)))
 
+//also includes the suns fairy in the middle
 def RR_WATER_TEMPLE_MQ_STALFOS_PIT_POTS SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple MQ Stalfos Pit Pots
 FairyPot true
@@ -4719,6 +4933,7 @@ RR_WATER_TEMPLE_MQ_WATERFALL (and MQWaterStalfosPit (or (CanUse RG_HOVER_BOOTS) 
 RR_WATER_TEMPLE_MQ_STALFOS_PIT true
 RR_WATER_TEMPLE_MQ_STALFOS_PIT_UPPER (and MQWaterStalfosPit (CanUse RG_HOOKSHOT))
 
+//specifically the area past the spikes
 def RR_WATER_TEMPLE_MQ_STALFOS_PIT_UPPER SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple MQ Stalfos Pit Upper
 RC_WATER_TEMPLE_MQ_BEFORE_DARK_LINK_POT_1 CanBreakPots
@@ -4737,6 +4952,7 @@ RC_WATER_TEMPLE_MQ_AFTER_DARK_LINK_POT_2 CanBreakPots
 RR_WATER_TEMPLE_MQ_STALFOS_PIT_UPPER (CanKillEnemy RE_DARK_LINK)
 RR_WATER_TEMPLE_MQ_RIVER_SKULL (and (CanUse RG_HOOKSHOT) (or (HasItem RG_BRONZE_SCALE) (or (and (CanUse RG_IRON_BOOTS) (>= WaterTimer 8)) (CanUse RG_LONGSHOT))))
 
+//if we can use hookshot, we are standing on the targets, otherwise assume we're in the water
 def RR_WATER_TEMPLE_MQ_RIVER_SKULL SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple MQ River Skull
 RC_WATER_TEMPLE_MQ_GS_RIVER (or (CanUse RG_LONGSHOT) (and (CanUse RG_IRON_BOOTS) (CanUse RG_HOOKSHOT)))
@@ -4748,6 +4964,7 @@ FairyPot true
 RC_WATER_TEMPLE_MQ_RIVER_POT_1 CanBreakPots
 RC_WATER_TEMPLE_MQ_RIVER_POT_2 CanBreakPots
 RR_WATER_TEMPLE_MQ_RIVER_SKULL (or (CanUse RG_LONGSHOT) (and (CanUse RG_IRON_BOOTS) (and (>= WaterTimer 8) (CanUse RG_HOOKSHOT))))
+//You don't need to swim for this if you put irons on in midair and hold forward while aiming for the tunnel with a tight angle, but if you miss you have to void unless you have a hook. It's only relevant with glitches anyway
 RR_WATER_TEMPLE_MQ_DRAGON_ROOM_TUNNEL (and (CanUse RG_IRON_BOOTS) (>= WaterTimer 16))
 RR_WATER_TEMPLE_MQ_DRAGON_ROOM_ALCOVE (or (HasItem RG_SILVER_SCALE) (and IsAdult (and (HasItem RG_BRONZE_SCALE) RT_WATER_DRAGON_JUMP_DIVE)))
 RR_WATER_TEMPLE_MQ_DRAGON_ROOM_DOOR (or (HasItem RG_BRONZE_SCALE) (or (CanUse RG_LONGSHOT) (and (CanUse RG_HOVER_BOOTS) CanJumpslash)))
@@ -4761,6 +4978,7 @@ RR_WATER_TEMPLE_MQ_DRAGON_ROOM_TUNNEL (and (CanUse RG_IRON_BOOTS) (and (>= Water
 RR_WATER_TEMPLE_MQ_DRAGON_ROOM_ALCOVE (HasItem RG_SILVER_SCALE)
 RR_WATER_TEMPLE_MQ_BOSS_KEY_ROOM_SWITCH MQWaterDragonTorches
 
+//This region assumes Iron boots to access
 def RR_WATER_TEMPLE_MQ_DRAGON_ROOM_TUNNEL SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple MQ Dragon Room Tunnel
 RC_WATER_TEMPLE_MQ_DRAGON_ROOM_SUBMERGED_CRATE_1 CanBreakCrates
@@ -4790,6 +5008,7 @@ RR_WATER_TEMPLE_MQ_DRAGON_ROOM_DOOR true
 RR_WATER_TEMPLE_MQ_BOSS_KEY_ROOM_PIT true
 RR_WATER_TEMPLE_MQ_BOSS_KEY_ROOM_CHEST (and CanHitSwitch (Here (CanUse RG_DINS_FIRE)))
 
+//this exists for the crates in preparation for clips through the grate
 def RR_WATER_TEMPLE_MQ_BOSS_KEY_ROOM_PIT SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple MQ Boss Key Room Pit
 RC_WATER_TEMPLE_MQ_BK_ROOM_LOWER_CRATE_1 CanBreakCrates
@@ -4807,6 +5026,8 @@ RR_WATER_TEMPLE_MQ_B1_GATE_SWITCH (or (HasItem RG_SILVER_SCALE) (and (CanUse RG_
 
 def RR_WATER_TEMPLE_MQ_B1_GATE_SWITCH SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple MQ B1 Gate Switch
+//If the water is low, the switch is underwater and needs irons to press, otherwise, the water is too low to climb up and you need irons to hookshot a target
+//If a glitch clips through the gate on low, have it logically press the switch and let entrance logic enter
 MQWaterB1Switch (CanUse RG_IRON_BOOTS)
 RR_WATER_TEMPLE_MQ_MAIN (and MQWaterB1Switch (or (MQWaterLevel WL_LOW) (and (CanUse RG_IRON_BOOTS) (>= WaterTimer 16))))
 RR_WATER_TEMPLE_MQ_BOSS_KEY_ROOM_CHEST (and (CanUse RG_IRON_BOOTS) (and (HasItem RG_BRONZE_SCALE) (or (MQWaterLevel WL_LOW) (>= WaterTimer 24))))
@@ -4819,6 +5040,7 @@ RC_WATER_TEMPLE_MQ_TRIPLE_TORCH_ROOM_SUBMERGED_CRATE_3 (and (CanUse RG_IRON_BOOT
 RC_WATER_TEMPLE_MQ_TRIPLE_TORCH_ROOM_SUBMERGED_CRATE_4 (and (CanUse RG_IRON_BOOTS) (and (>= WaterTimer 16) CanBreakCrates))
 RC_WATER_TEMPLE_MQ_TRIPLE_TORCH_ROOM_SUBMERGED_CRATE_5 (and (CanUse RG_IRON_BOOTS) (and (>= WaterTimer 16) CanBreakCrates))
 RC_WATER_TEMPLE_MQ_TRIPLE_TORCH_ROOM_SUBMERGED_CRATE_6 (and (CanUse RG_IRON_BOOTS) (and (>= WaterTimer 16) CanBreakCrates))
+//we can backflip over the spikes, but land in water.
 RR_WATER_TEMPLE_MQ_MAIN (and MQWaterB1Switch (or (and (MQWaterLevel WL_LOW) (HasItem RG_GOLDEN_SCALE)) (and (CanUse RG_IRON_BOOTS) (and (>= WaterTimer 40) (or (HasItem RG_BRONZE_SCALE) (CanUse RG_LONGSHOT))))))
 RR_WATER_TEMPLE_MQ_TRIANGLE_TORCH_CAGE (and (CanUse RG_FIRE_ARROWS) (or (and IsAdult (CanUse RG_HOVER_BOOTS)) (and (CanUse RG_LONGSHOT) (Here ScarecrowsSong))))
 
@@ -4844,7 +5066,11 @@ RC_WATER_TEMPLE_MQ_WHIRLPOOL_SUBMERGED_CRATE_4 (and (CanUse RG_IRON_BOOTS) (and 
 RC_WATER_TEMPLE_MQ_WHIRLPOOL_SUBMERGED_CRATE_5 (and (CanUse RG_IRON_BOOTS) (and (>= WaterTimer 16) CanBreakCrates))
 RC_WATER_TEMPLE_MQ_WHIRLPOOL_SUBMERGED_CRATE_6 (and (CanUse RG_IRON_BOOTS) (and (>= WaterTimer 16) CanBreakCrates))
 RR_WATER_TEMPLE_MQ_MAIN (and MQWaterB1Switch (and (CanUse RG_IRON_BOOTS) (and (>= WaterTimer 24) (or (CanUse RG_LONGSHOT) (HasItem RG_BRONZE_SCALE)))))
-RR_WATER_TEMPLE_MQ_SINGLE_STALFOS_ROOM (and (CanUse RG_IRON_BOOTS) (and (>= WaterTimer 8) (or (and IsAdult (and (or (CanUse RG_HOVER_BOOTS) RT_WATER_NORTH_BASEMENT_LEDGE_JUMP) (or (CanUse RG_HOOKSHOT) (HasItem RG_BRONZE_SCALE)))) (and (Here ScarecrowsSong) (CanUse RG_HOOKSHOT)))))
+//Child can use crate to get height to make it with hovers, but it's annoyingly tight so would be a trick
+RR_WATER_TEMPLE_MQ_SINGLE_STALFOS_ROOM (and (CanUse RG_IRON_BOOTS) (>= WaterTimer 8)
+	//putting requirement to get out of the water here as scarecrow method in includes hook which satisfies it
+	(or (and IsAdult (and (or (CanUse RG_HOVER_BOOTS) RT_WATER_NORTH_BASEMENT_LEDGE_JUMP) (or (CanUse RG_HOOKSHOT) (HasItem RG_BRONZE_SCALE)))) (and (Here ScarecrowsSong) (CanUse RG_HOOKSHOT)))
+)
 RR_WATER_TEMPLE_MQ_4_TORCH_ROOM (and IsAdult (or (CanUse RG_HOVER_BOOTS) (or RT_WATER_NORTH_BASEMENT_LEDGE_JUMP (and (Here ScarecrowsSong) (CanUse RG_HOOKSHOT)))))
 RR_WATER_TEMPLE_MQ_CRATES_WHIRLPOOLS_CAGE (and RT_WATER_MQ_LOCKED_GS (and (CanUse RG_IRON_BOOTS) (CanUse RG_HOOKSHOT)))
 
@@ -5005,6 +5231,7 @@ RR_SPIRIT_TEMPLE_MQ_BIG_BLOCK_ROOM_SOUTH (and (CanUse RG_LONGSHOT) (CanUse RG_BO
 
 def RR_SPIRIT_TEMPLE_MQ_1F_WEST SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
 Spirit Temple MQ 1F West
+//not technically a rusted switch, but a boulder through a wall, but is part of the same trick on N64
 MQSpiritCrawlBoulder (or (CanUse RG_BOMBCHU_5) (and RT_RUSTED_SWITCHES (CanUse RG_MEGATON_HAMMER)))
 RC_SPIRIT_TEMPLE_MQ_CHILD_HAMMER_SWITCH_CHEST MQSpiritTimeTravelChest
 RC_SPIRIT_TEMPLE_MQ_CHILD_SLUGMA_POT CanBreakPots
@@ -5027,7 +5254,9 @@ RR_SPIRIT_TEMPLE_MQ_TURNTABLE_ROOM (and (CanUse RG_BOMBCHU_5) (and CanHitEyeTarg
 
 def RR_SPIRIT_TEMPLE_MQ_TURNTABLE_ROOM SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
 Spirit Temple Turntable Room
+//For non-fairy pot items, you can also get them with rang without killing the stalfos
 FairyPot (Here (CanKillEnemy RE_STALFOS))
+//implies logic->CanBreakPots()
 RC_SPIRIT_TEMPLE_MQ_CHILD_STALFOS_POT_1 (or (CanUse RG_BOOMERANG) (CanKillEnemy RE_STALFOS))
 RC_SPIRIT_TEMPLE_MQ_CHILD_STALFOS_POT_2 (or (CanUse RG_BOOMERANG) (CanKillEnemy RE_STALFOS))
 RC_SPIRIT_TEMPLE_MQ_CHILD_STALFOS_POT_3 (or (CanUse RG_BOOMERANG) (CanKillEnemy RE_STALFOS))
@@ -5039,12 +5268,14 @@ def RR_SPIRIT_TEMPLE_MQ_MAP_ROOM_NORTH SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPL
 Spirit Temple MQ Map Room North
 MQSpiritMapRoomEnemies (and (CanKillEnemy RE_ANUBIS) (CanKillEnemy RE_KEESE))
 RC_SPIRIT_TEMPLE_MQ_MAP_ROOM_ENEMY_CHEST MQSpiritMapRoomEnemies
+//Stalfos room blocks you in with fire until you kill the stalfos, which won't spawn from behind the fire
 RR_SPIRIT_TEMPLE_MQ_MAP_ROOM_SOUTH true
 
 def RR_SPIRIT_TEMPLE_MQ_MAP_ROOM_SOUTH SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
 Spirit Temple MQ Map Room South
 MQSpiritMapRoomEnemies (and (CanKillEnemy RE_ANUBIS) (CanKillEnemy RE_KEESE ED_BOOMERANG))
 RC_SPIRIT_TEMPLE_MQ_MAP_CHEST true
+//The bridge is a temp flag, so not a way to cross south to north in logic
 RR_SPIRIT_TEMPLE_MQ_MAP_ROOM_NORTH (CanUse RG_HOOKSHOT)
 RR_SPIRIT_TEMPLE_MQ_1F_WEST true
 
@@ -5053,19 +5284,25 @@ Spirit Temple MQ West 1F Rusted Switch
 MQSpiritTimeTravelChest (CanUse RG_MEGATON_HAMMER)
 MQSpiritCrawlBoulder (or (CanUse RG_BOMBCHU_5) (and RT_RUSTED_SWITCHES (CanUse RG_MEGATON_HAMMER)))
 RR_SPIRIT_TEMPLE_MQ_1F_WEST (and IsChild MQSpiritCrawlBoulder)
+//This tracks possible child access, if adult has not entered STATUE_ROOM. Certain Child Access is checked for separately as 7 Keys
 RR_SPIRIT_TEMPLE_MQ_UNDER_LIKE_LIKE (SmallKeys RR_SPIRIT_TEMPLE 1)
 
 def RR_SPIRIT_TEMPLE_MQ_UNDER_LIKE_LIKE SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
 Spirit Temple MQ Under Like Like
 RC_SPIRIT_TEMPLE_MQ_CHILD_LIKE_LIKE_POT (MQSpiritSharedBrokenWallRoom RR_SPIRIT_TEMPLE_MQ_UNDER_LIKE_LIKE CanBreakPots)
+//This covers adult access only, as child arrives here from the other side of this door
 RR_SPIRIT_TEMPLE_MQ_WEST_1F_RUSTED_SWITCH (SmallKeys RR_SPIRIT_TEMPLE 7)
 RR_SPIRIT_TEMPLE_MQ_BROKEN_WALL_ROOM CanHitSwitch
 
 def RR_SPIRIT_TEMPLE_MQ_BROKEN_WALL_ROOM SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
 Spirit Temple MQ Broken Wall Room
+//Implies CanKillEnemy(RE_LIKE_LIKE)
 RC_SPIRIT_TEMPLE_MQ_CHILD_CLIMB_NORTH_CHEST (MQSpiritSharedBrokenWallRoom RR_SPIRIT_TEMPLE_MQ_BROKEN_WALL_ROOM (CanKillEnemy RE_BEAMOS))
+//Sunlights only temp spawn this chest, which is unintuitive/a bug.
+//chest is only reachable as adult glitchlessly, so we can skip the shared in favour of IsAdult as adult access is always Certain
 RC_SPIRIT_TEMPLE_MQ_CHILD_CLIMB_SOUTH_CHEST (and IsAdult (and (or HasExplosives (and RSK_SUNLIGHT_ARROWS (CanUse RG_LIGHT_ARROWS))) (CanUse RG_HOOKSHOT)))
 RR_SPIRIT_TEMPLE_MQ_UNDER_LIKE_LIKE CanHitSwitch
+//This exit only governs child possible access, adult access starts on the other side so never checks this
 RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM (SmallKeys RR_SPIRIT_TEMPLE 2)
 
 def RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
@@ -5079,18 +5316,23 @@ RC_SPIRIT_TEMPLE_MQ_STATUE_2F_EASTMOST_POT (MQSpiritSharedStatueRoom RR_SPIRIT_T
 RC_SPIRIT_TEMPLE_MQ_STATUE_CRATE_1 (MQSpiritSharedStatueRoom RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM CanBreakCrates)
 RC_SPIRIT_TEMPLE_MQ_STATUE_CRATE_2 (MQSpiritSharedStatueRoom RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM CanBreakCrates)
 RC_SPIRIT_TEMPLE_MQ_STATUE_SMALL_CRATE (MQSpiritSharedStatueRoom RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM CanBreakSmallCrates)
+//we check possible adult access directly in MQSpiritSharedBrokenWallRoom, so this exit only covers Certain Access
 RR_SPIRIT_TEMPLE_MQ_BROKEN_WALL_ROOM (SmallKeys RR_SPIRIT_TEMPLE 7)
+//We can use Here instead of Shared here because adult will never need to rely on child access to reach this room, and adult access is Certain
 RR_SPIRIT_TEMPLE_MQ_BIG_BLOCK_ROOM_NORTH (Here (or HasFireSource (and RT_SPIRIT_MQ_FROZEN_EYE (and (CanUse RG_FAIRY_BOW) (CanUse RG_SONG_OF_TIME)))))
 RR_SPIRIT_TEMPLE_MQ_SUN_BLOCK_ROOM (or IsAdult (or RT_SPIRIT_MQ_SUN_BLOCK_SOT (CanUse RG_SONG_OF_TIME)))
+//explicit adult check here is a precaution against possible child logic leaking, child with a hookshot can do this
 RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM_EAST (and IsAdult (CanUse RG_HOOKSHOT))
 
 def RR_SPIRIT_TEMPLE_MQ_SUN_BLOCK_ROOM SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
 Spirit Temple MQ Sun Block Room
+//We don't need Shared here because if we are checking as child, universe 2 adult access needs nothing so it always passes, and if we are checking as adult, it is Certain Access
 RC_SPIRIT_TEMPLE_MQ_SUN_BLOCK_ROOM_CHEST true
 RC_SPIRIT_TEMPLE_MQ_GS_SUN_BLOCK_ROOM (MQSpiritSharedStatueRoom RR_SPIRIT_TEMPLE_MQ_SUN_BLOCK_ROOM (or (CanUse RG_HOOKSHOT) (and RT_SPIRIT_MQ_SUN_BLOCK_GS (CanUse RG_BOOMERANG))))
 RC_SPIRIT_TEMPLE_MQ_SUN_BLOCKS_POT_1 (MQSpiritSharedStatueRoom RR_SPIRIT_TEMPLE_MQ_SUN_BLOCK_ROOM CanBreakPots)
 RC_SPIRIT_TEMPLE_MQ_SUN_BLOCKS_POT_2 (MQSpiritSharedStatueRoom RR_SPIRIT_TEMPLE_MQ_SUN_BLOCK_ROOM CanBreakPots)
 RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM true
+//This door causes the universes to merge as it requires 7 keys for both ages
 RR_SPIRIT_TEMPLE_MQ_WEST_IRON_KNUCKLE (SmallKeys RR_SPIRIT_TEMPLE 7)
 
 def RR_SPIRIT_TEMPLE_MQ_WEST_IRON_KNUCKLE SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
@@ -5101,17 +5343,22 @@ RR_SPIRIT_TEMPLE_MQ_SILVER_GAUNTLETS_HAND (CanKillEnemy RE_IRON_KNUCKLE)
 def RR_SPIRIT_TEMPLE_MQ_SILVER_GAUNTLETS_HAND SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
 Spirit Temple MQ Silver Gauntlets Hand
 RC_SPIRIT_TEMPLE_SILVER_GAUNTLETS_CHEST true
+//If it is ever relevent for 1 age to spawn the mirror shield chest for the other can longshot across, it needs an eventAccess
 RR_SPIRIT_TEMPLE_MQ_WEST_IRON_KNUCKLE true
 RR_DESERT_COLOSSUS true
 
 def RR_SPIRIT_TEMPLE_MQ_BIG_BLOCK_ROOM_SOUTH SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
 Spirit Temple MQ Block Room South
 RR_SPIRIT_TEMPLE_MQ_LOBBY true
+//The block here is unusual in that it is a permanent flag, but reset anyway as child. This is because there's a check that would be blocked off by pushing them otherwise
+//It may be worth considering making this always temp in future so adult doesn't have the same issue
 RR_SPIRIT_TEMPLE_MQ_BIG_BLOCK_ROOM_NORTH (if IsChild (CanUse RG_SILVER_GAUNTLETS) (Here (CanUse RG_SILVER_GAUNTLETS)))
 
 def RR_SPIRIT_TEMPLE_MQ_BIG_BLOCK_ROOM_NORTH SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
 Spirit Temple MQ Block Room North
+//Does not need to be shared as it's hard child locked, because adult pushing the block is a permanent flag that blocks the eye target and cannot be undone
 RC_SPIRIT_TEMPLE_MQ_SILVER_BLOCK_HALLWAY_CHEST (and IsChild (and (SmallKeys RR_SPIRIT_TEMPLE 7) CanHitEyeTargets))
+//if going to RR_SPIRIT_TEMPLE_MQ_BIG_BLOCK_ROOM_SOUTH from here is ever relevant, there needs to be an event to handle the block
 RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM true
 
 def RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM_EAST SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
@@ -5119,12 +5366,17 @@ Spirit Temple MQ Statue Room East
 RC_SPIRIT_TEMPLE_MQ_STATUE_ROOM_LULLABY_CHEST (and (CanUse RG_HOOKSHOT) (and (CanUse RG_ZELDAS_LULLABY) (or CanJumpslash (CanUse RG_HOVER_BOOTS))))
 RC_SPIRIT_TEMPLE_MQ_STATUE_ROOM_INVISIBLE_CHEST (and (or RT_LENS_SPIRIT_MQ (CanUse RG_LENS_OF_TRUTH)) (or (CanUse RG_HOOKSHOT) (CanUse RG_HOVER_BOOTS)))
 RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM true
+//!QUANTUM LOGIC!
+//We only need 4 keys, access to Shield hand and longshot to reach Gauntlets hand, as if we waste the 5th key we have given ourselves Gauntlets hand access through child climb
+//This exit handles that possibility as cleanly as possible without quantum logic, but will not survive glitch logic
+//logic->CanKillEnemy(RE_FLOORMASTER) is implied
 RR_SPIRIT_TEMPLE_MQ_SILVER_GAUNTLETS_HAND (and (SmallKeys RR_SPIRIT_TEMPLE 4) (and (CanAvoidEnemy RE_BEAMOS true 4) (and (CanUse RG_SONG_OF_TIME) (and CanJumpslash (and (or RT_LENS_SPIRIT_MQ (CanUse RG_LENS_OF_TRUTH)) (and (CanKillEnemy RE_IRON_KNUCKLE) (CanUse RG_LONGSHOT)))))))
 RR_SPIRIT_TEMPLE_MQ_FOUR_BEAMOS_ROOM (and (SmallKeys RR_SPIRIT_TEMPLE 5) (CanUse RG_HOOKSHOT))
 RR_SPIRIT_TEMPLE_MQ_THREE_SUNS_ROOM_2F (or (CanUse RG_FIRE_ARROWS) (and RT_SPIRIT_MQ_LOWER_ADULT (CanUse RG_DINS_FIRE)))
 
 def RR_SPIRIT_TEMPLE_MQ_THREE_SUNS_ROOM_2F SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
 Spirit Temple MQ Three Suns Room 2F
+//implies logic->CanKillEnemy(RE_WALLMASTER). If we have lights, we can kill stalfos and wallmasters with bow
 MQSpirit3SunsEnemies (or (and (CanUse RG_MIRROR_SHIELD) (CanKillEnemy RE_STALFOS ED_CLOSE true 2)) (and RSK_SUNLIGHT_ARROWS (CanUse RG_LIGHT_ARROWS)))
 RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM_EAST true
 RR_SPIRIT_TEMPLE_MQ_THREE_SUNS_ROOM_1F MQSpirit3SunsEnemies
@@ -5136,6 +5388,7 @@ RR_SPIRIT_TEMPLE_MQ_1F_EAST true
 
 def RR_SPIRIT_TEMPLE_MQ_1F_EAST SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
 Spirit Temple MQ 1F East
+//Assumes RR_SPIRIT_TEMPLE_MQ_LOBBY access
 Spirit1FSilverRupees (CanUse RG_MEGATON_HAMMER)
 RC_SPIRIT_TEMPLE_MQ_EARLY_ADULT_POT_1 CanBreakPots
 RC_SPIRIT_TEMPLE_MQ_EARLY_ADULT_POT_2 CanBreakPots
@@ -5153,6 +5406,7 @@ RR_SPIRIT_TEMPLE_MQ_1F_EAST (CanUse RG_ZELDAS_LULLABY)
 def RR_SPIRIT_TEMPLE_MQ_SYMPHONY_ROOM SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
 Spirit Temple MQ Symphony Room
 RR_SPIRIT_TEMPLE_MQ_1F_EAST (SmallKeys RR_SPIRIT_TEMPLE 7)
+//Implies CanPassEnemy(RE_MOBLIN_CHIEF)
 RR_SPIRIT_TEMPLE_MQ_AFTER_SYMPHONY_ROOM (and (CanUse RG_MEGATON_HAMMER) (and (CanUse RG_SONG_OF_TIME) (and (CanUse RG_EPONAS_SONG) (and (CanUse RG_SUNS_SONG) (and (CanUse RG_SONG_OF_STORMS) (CanUse RG_ZELDAS_LULLABY))))))
 
 def RR_SPIRIT_TEMPLE_MQ_AFTER_SYMPHONY_ROOM SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
@@ -5204,6 +5458,8 @@ Spirit Temple MQ Big Wall
 RC_SPIRIT_TEMPLE_MQ_LONG_CLIMB_POT_1 CanBreakPots
 RC_SPIRIT_TEMPLE_MQ_LONG_CLIMB_POT_2 CanBreakPots
 RR_SPIRIT_TEMPLE_MQ_FOUR_BEAMOS_ROOM true
+//technically we only need to avoid them, but the sheer height and the moving walls makes getting to the top after only stunning them very difficult/impossible
+//The silver rupees are irrelevant without silver shuffle
 RR_SPIRIT_TEMPLE_MQ_4F_CENTRAL (CanKillEnemy RE_KEESE)
 
 def RR_SPIRIT_TEMPLE_MQ_4F_CENTRAL SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
@@ -5216,6 +5472,7 @@ RR_SPIRIT_TEMPLE_MQ_BIG_MIRROR_ROOM (CanUse RG_ZELDAS_LULLABY)
 
 def RR_SPIRIT_TEMPLE_MQ_NINE_CHAIRS_ROOM SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
 Spirit Temple MQ Nine Chairs Room
+//These skulls rely on the iron knuckle existing without a trick to shoot through the chairs
 RC_SPIRIT_TEMPLE_MQ_GS_NINE_THRONES_ROOM_WEST (CanGetEnemyDrop RE_GOLD_SKULLTULA ED_BOOMERANG)
 RC_SPIRIT_TEMPLE_MQ_GS_NINE_THRONES_ROOM_NORTH (CanGetEnemyDrop RE_GOLD_SKULLTULA)
 RR_SPIRIT_TEMPLE_MQ_4F_CENTRAL true
@@ -5236,6 +5493,7 @@ RR_SPIRIT_TEMPLE_MQ_BIG_MIRROR_CAVE (Here (CanUse RG_MEGATON_HAMMER))
 def RR_SPIRIT_TEMPLE_MQ_BIG_MIRROR_CAVE SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
 Spirit Temple MQ Big Mirror Cave
 RC_SPIRIT_TEMPLE_MQ_MIRROR_PUZZLE_INVISIBLE_CHEST (or RT_LENS_SPIRIT_MQ (CanUse RG_LENS_OF_TRUTH))
+//If it's ever relevant to longshot into head from lobby, this needs to be an event access
 RR_SPIRIT_TEMPLE_MQ_INSIDE_STATUE_HEAD (and (Here (CanUse RG_MIRROR_SHIELD)) (CanUse RG_HOOKSHOT))
 RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM (Here (CanUse RG_MIRROR_SHIELD))
 
@@ -5276,7 +5534,6 @@ RR_SHADOW_TEMPLE_FIRST_BEAMOS (CanUse RG_HOVER_BOOTS)
 
 def RR_SHADOW_TEMPLE_FIRST_BEAMOS SCENE_SHADOW_TEMPLE false RA_SHADOW_TEMPLE
 Shadow Temple First Beamos
-FairyPot true
 RC_SHADOW_TEMPLE_COMPASS_CHEST CanJumpslashExceptHammer
 RC_SHADOW_TEMPLE_EARLY_SILVER_RUPEE_CHEST (or (CanUse RG_HOVER_BOOTS) (CanUse RG_HOOKSHOT))
 RC_SHADOW_TEMPLE_GS_NEAR_SHIP false
@@ -5300,6 +5557,7 @@ RC_SHADOW_TEMPLE_FALLING_SPIKES_POT_1 CanBreakPots
 RC_SHADOW_TEMPLE_FALLING_SPIKES_POT_2 CanBreakPots
 RC_SHADOW_TEMPLE_FALLING_SPIKES_POT_3 (or (and CanBreakPots (and RT_SHADOW_UMBRELLA (CanUse RG_HOVER_BOOTS))) (HasItem RG_GORONS_BRACELET))
 RC_SHADOW_TEMPLE_FALLING_SPIKES_POT_4 (or (and CanBreakPots (and RT_SHADOW_UMBRELLA (CanUse RG_HOVER_BOOTS))) (HasItem RG_GORONS_BRACELET))
+//We cannot repeat the MQ invisible blades trick for these hearts as the like-like does not respawn if the room is cleared
 RC_SHADOW_TEMPLE_INVISIBLE_BLADES_LEFT_HEART (or (and (CanUse RG_SONG_OF_TIME) IsAdult) (CanUse RG_BOOMERANG))
 RC_SHADOW_TEMPLE_INVISIBLE_BLADES_RIGHT_HEART (or (and (CanUse RG_SONG_OF_TIME) IsAdult) (CanUse RG_BOOMERANG))
 RC_SHADOW_TEMPLE_PIT_STORM_FAIRY (CanUse RG_SONG_OF_STORMS)
@@ -5323,6 +5581,7 @@ Shadow Temple Beyond Boat
 RC_SHADOW_TEMPLE_SPIKE_WALLS_LEFT_CHEST (CanUse RG_DINS_FIRE)
 RC_SHADOW_TEMPLE_BOSS_KEY_CHEST (CanUse RG_DINS_FIRE)
 RC_SHADOW_TEMPLE_INVISIBLE_FLOORMASTER_CHEST (CanKillEnemy RE_FLOORMASTER)
+//RANDOTODO check if child can reach the token
 RC_SHADOW_TEMPLE_GS_TRIPLE_GIANT_POT (and IsAdult CanAttack)
 RC_SHADOW_TEMPLE_AFTER_BOAT_POT_1 CanBreakPots
 RC_SHADOW_TEMPLE_AFTER_BOAT_POT_2 CanBreakPots
@@ -5339,6 +5598,7 @@ RR_SHADOW_TEMPLE_BOSS_ENTRYWAY (and (or (CanUse RG_FAIRY_BOW) (or (CanUse RG_DIS
 def RR_SHADOW_TEMPLE_MQ_ENTRYWAY SCENE_ID_MAX false
 Invalid Region
 
+//RANDOTODO doublecheck CanAttack when rewriting, as I assumed it only checked adult due to the entrance
 def RR_SHADOW_TEMPLE_MQ_BEGINNING SCENE_SHADOW_TEMPLE false RA_SHADOW_TEMPLE
 Shadow Temple MQ Beginning
 RR_SHADOW_TEMPLE_ENTRYWAY true
@@ -5354,9 +5614,11 @@ RR_SHADOW_TEMPLE_ENTRYWAY true
 RR_SHADOW_TEMPLE_MQ_FIRST_BEAMOS (and (Here (or (CanUse RG_HOVER_BOOTS) (or RT_LENS_SHADOW_MQ (CanUse RG_LENS_OF_TRUTH)))) (or (CanUse RG_HOVER_BOOTS) (or (Here (CanUse RG_FIRE_ARROWS)) (and RT_SHADOW_MQ_GAP (and (CanUse RG_LONGSHOT) CanJumpslashExceptHammer)))))
 RR_SHADOW_TEMPLE_MQ_DEAD_HAND_AREA (and (Here HasExplosives) (and (SmallKeys RR_SHADOW_TEMPLE 6) (or RT_LENS_SHADOW_MQ (CanUse RG_LENS_OF_TRUTH))))
 
+//Assumes we're in the "main" area and needed lens to enter. logic will need changes if a void warp puts us somewhere weird
 def RR_SHADOW_TEMPLE_MQ_DEAD_HAND_AREA SCENE_SHADOW_TEMPLE false RA_SHADOW_TEMPLE
 Shadow Temple MQ Dead Hand Region
 RC_SHADOW_TEMPLE_MQ_COMPASS_CHEST (CanKillEnemy RE_REDEAD)
+//There's a shared flag tied to some glass here. eye target here and killing an enemy group later in the dungeon toggles. I'm building the logic as "intended", assuming the switch needs flipping
 RC_SHADOW_TEMPLE_MQ_HOVER_BOOTS_CHEST (and (CanKillEnemy RE_DEAD_HAND) (and (or IsChild (CanUse RG_SONG_OF_TIME)) CanHitEyeTargets))
 RC_SHADOW_TEMPLE_MQ_WHISPERING_WALLS_POT_1 CanBreakPots
 RC_SHADOW_TEMPLE_MQ_WHISPERING_WALLS_POT_2 CanBreakPots
@@ -5364,8 +5626,10 @@ RC_SHADOW_TEMPLE_MQ_ENTRANCE_REDEAD_POT_1 CanBreakPots
 RC_SHADOW_TEMPLE_MQ_ENTRANCE_REDEAD_POT_2 CanBreakPots
 RR_SHADOW_TEMPLE_MQ_SPINNER_ROOM true
 
+//also includes the B2 gibdo room
 def RR_SHADOW_TEMPLE_MQ_FIRST_BEAMOS SCENE_SHADOW_TEMPLE false RA_SHADOW_TEMPLE
 Shadow Temple MQ First Beamos
+//Doing this sets the shared flag for the glass in RR_SHADOW_TEMPLE_MQ_DEAD_HAND_AREA, but doesn't seem to affect the chest
 RC_SHADOW_TEMPLE_MQ_EARLY_GIBDOS_CHEST (and (CanKillEnemy RE_GIBDO) (or RT_LENS_SHADOW_MQ (CanUse RG_LENS_OF_TRUTH)))
 RC_SHADOW_TEMPLE_MQ_BEAMOS_STORM_FAIRY (CanUse RG_SONG_OF_STORMS)
 RR_SHADOW_TEMPLE_MQ_UPPER_HUGE_PIT (and HasExplosives (SmallKeys RR_SHADOW_TEMPLE 2))
@@ -5382,11 +5646,14 @@ Shadow Temple MQ Shortcut Path
 RC_SHADOW_TEMPLE_MQ_NEAR_SHIP_INVISIBLE_CHEST (or RT_LENS_SHADOW_MQ (CanUse RG_LENS_OF_TRUTH))
 RR_SHADOW_TEMPLE_MQ_B2_SPINNING_BLADE_ROOM (CanPassEnemy RE_BIG_SKULLTULA)
 RR_SHADOW_TEMPLE_MQ_DOCK ShadowShortcutBlock
+//WARNING if there's any way past here to ship without already reaching the other side the key logic in this dungeon becomes Quantum
 
+//Room exists for if it's ever possible to go backwards or void warp into the middle of shadow
 def RR_SHADOW_TEMPLE_MQ_B2_TO_B3_CORRIDOR SCENE_SHADOW_TEMPLE false RA_SHADOW_TEMPLE
 Shadow Temple MQ B2 to B3 Corridor
 RR_SHADOW_TEMPLE_MQ_FIRST_BEAMOS (SmallKeys RR_SHADOW_TEMPLE 2)
 RR_SHADOW_TEMPLE_MQ_UPPER_HUGE_PIT true
+//bunnyhovers + lens lets you go from the very top of upper pit to the stationary invisible platform below quite easily
 
 def RR_SHADOW_TEMPLE_MQ_UPPER_HUGE_PIT SCENE_SHADOW_TEMPLE false RA_SHADOW_TEMPLE
 Shadow Temple MQ Upper Huge Pit
@@ -5396,6 +5663,9 @@ RR_SHADOW_TEMPLE_MQ_INVISIBLE_BLADES_ROOM (or RT_LENS_SHADOW_MQ (CanUse RG_LENS_
 
 def RR_SHADOW_TEMPLE_MQ_INVISIBLE_BLADES_ROOM SCENE_SHADOW_TEMPLE false RA_SHADOW_TEMPLE
 Shadow Temple MQ Invisible Blades Room
+ //RT_SHADOW_MQ_INVISIBLE_BLADES does not work with NL as like-likes will not swallow you, likewise like-likes will not spit you with a fairy revive
+//you take half a heart base from a spit out, double check EffectiveHealth when damage logic gets reworked
+//Child is too small to get hit by the blades doesn't need the trick or lens for dodging them
 RC_SHADOW_TEMPLE_MQ_INVISIBLE_BLADES_VISIBLE_CHEST (and (or (CanUse RG_SONG_OF_TIME) (and RT_SHADOW_MQ_INVISIBLE_BLADES (> EffectiveHealth 1))) (or RT_LENS_SHADOW_MQ_INVISIBLE_BLADES (or IsChild (or (CanUse RG_NAYRUS_LOVE) (CanUse RG_LENS_OF_TRUTH)))))
 RC_SHADOW_TEMPLE_MQ_INVISIBLE_BLADES_INVISIBLE_CHEST (and (or (CanUse RG_SONG_OF_TIME) (and RT_SHADOW_MQ_INVISIBLE_BLADES (> EffectiveHealth 1))) (or (and RT_LENS_SHADOW_MQ (or RT_LENS_SHADOW_MQ_INVISIBLE_BLADES (or IsChild (CanUse RG_NAYRUS_LOVE)))) (CanUse RG_LENS_OF_TRUTH)))
 RC_SHADOW_TEMPLE_MQ_INVISIBLE_BLADES_LEFT_HEART (or (and (CanUse RG_SONG_OF_TIME) IsAdult) (or (and RT_SHADOW_MQ_INVISIBLE_BLADES (> EffectiveHealth 1)) (CanUse RG_BOOMERANG)))
@@ -5411,11 +5681,14 @@ RR_SHADOW_TEMPLE_MQ_FLOOR_SPIKES_ROOM (and (CanUse RG_HOVER_BOOTS) (and (or RT_L
 def RR_SHADOW_TEMPLE_MQ_STONE_UMBRELLA_ROOM SCENE_SHADOW_TEMPLE false RA_SHADOW_TEMPLE
 Shadow Temple MQ Stone Umbrella Room
 RC_SHADOW_TEMPLE_MQ_FALLING_SPIKES_LOWER_CHEST true
+//Assuming the known setup for RT_SHADOW_UMBRELLA and RT_SHADOW_UMBRELLA_GS, probably possible without sword + shield.
+//Handling the trick here instead of upper as using the block to climb is not a valid method for getting this skull without other tricks to use the block before it is intended
 RC_SHADOW_TEMPLE_MQ_GS_FALLING_SPIKES_ROOM (or (CanGetEnemyDrop RE_GOLD_SKULLTULA ED_BOOMERANG) (and RT_SHADOW_UMBRELLA_GS (and RT_SHADOW_UMBRELLA (and (CanUse RG_HOVER_BOOTS) (and CanStandingShield (CanUse RG_MASTER_SWORD))))))
 RC_SHADOW_TEMPLE_MQ_LOWER_UMBRELLA_WEST_POT CanBreakPots
 RC_SHADOW_TEMPLE_MQ_LOWER_UMBRELLA_EAST_POT CanBreakPots
 RC_SHADOW_TEMPLE_MQ_UPPER_UMBRELLA_SOUTH_POT (CanUse RG_BOOMERANG)
 RR_SHADOW_TEMPLE_MQ_LOWER_HUGE_PIT (Here (or RT_VISIBLE_COLLISION CanHitSwitch))
+//Assuming the known setup for RT_SHADOW_UMBRELLA, probably possible without sword + shield
 RR_SHADOW_TEMPLE_MQ_UPPER_STONE_UMBRELLA (and IsAdult (or (HasItem RG_GORONS_BRACELET) (and RT_SHADOW_UMBRELLA (and (CanUse RG_HOVER_BOOTS) (and CanStandingShield (CanUse RG_MASTER_SWORD))))))
 
 def RR_SHADOW_TEMPLE_MQ_UPPER_STONE_UMBRELLA SCENE_SHADOW_TEMPLE false RA_SHADOW_TEMPLE
@@ -5426,11 +5699,20 @@ RC_SHADOW_TEMPLE_MQ_UPPER_UMBRELLA_NORTH_POT CanBreakPots
 RC_SHADOW_TEMPLE_MQ_UPPER_UMBRELLA_SOUTH_POT CanBreakPots
 RR_SHADOW_TEMPLE_MQ_STONE_UMBRELLA_ROOM true
 
+//while the spikes here are annoying, they don't really stop you doing anything, so I'll assume either lens trick, lens to see them, or taking damage from them. Not hovers though as a new player won't see the threat without lens to react properly
 def RR_SHADOW_TEMPLE_MQ_FLOOR_SPIKES_ROOM SCENE_SHADOW_TEMPLE false RA_SHADOW_TEMPLE
 Shadow Temple MQ Floor Spikes Room
-MQShadowFloorSpikeRupees (and (or RT_LENS_SHADOW_MQ (CanUse RG_LENS_OF_TRUTH)) (and (or (CanUse RG_LONGSHOT) (and IsAdult (and (CanUse RG_HOOKSHOT) (or CanJumpslash (and (CanUse RG_HOVER_BOOTS) (Here (CanKillEnemy RE_REDEAD))))))) (or TakeDamage (CanUse RG_HOVER_BOOTS))))
+//lens or trick is always required for hookshot targets. We handle it here to not complicate the RR_SHADOW_TEMPLE_MQ_FLOOR_SPIKES_UPPER_DOOR logic
+MQShadowFloorSpikeRupees (and (or RT_LENS_SHADOW_MQ (CanUse RG_LENS_OF_TRUTH))
+	//Upper door side high rupee needs (hookshot and redead kill(as either age) for chest and adult) or longshot. hovers can cross from the left side with a backflip but that would be a trick
+	//East midair rupee needs (hookshot and(hover boots or jumpslash from the upper door platform)) or longshot.
+	//Combined these are longshot or (IsAdult && hookshot && (CanJumpslash || (Hover Boots && Here(CanKillRedeads))))
+	(and (or (CanUse RG_LONGSHOT) (and IsAdult (and (CanUse RG_HOOKSHOT) (or CanJumpslash (and (CanUse RG_HOVER_BOOTS) (Here (CanKillEnemy RE_REDEAD)))))))
+	//1 rupee is in spikes, needs hovers or damage
+	(or TakeDamage (CanUse RG_HOVER_BOOTS))))
 RC_SHADOW_TEMPLE_MQ_INVISIBLE_SPIKES_CHEST (and (CanKillEnemy RE_REDEAD) (or RT_LENS_SHADOW_MQ (or TakeDamage (CanUse RG_LENS_OF_TRUTH))))
 RR_SHADOW_TEMPLE_MQ_STALFOS_ROOM MQShadowFloorSpikeRupees
+//We need to assume we can get here with or without the glass platforms
 RR_SHADOW_TEMPLE_MQ_WIND_TUNNEL (and (SmallKeys RR_SHADOW_TEMPLE 4) (and (or (CanUse RG_LONGSHOT) (and IsAdult (and (CanUse RG_HOOKSHOT) (or MQShadowFloorSpikeRupees (Here (CanKillEnemy RE_REDEAD)))))) (or CanJumpslash (CanUse RG_HOVER_BOOTS))))
 
 def RR_SHADOW_TEMPLE_MQ_STALFOS_ROOM SCENE_SHADOW_TEMPLE false RA_SHADOW_TEMPLE
@@ -5459,6 +5741,7 @@ RC_SHADOW_TEMPLE_MQ_AFTER_WIND_HIDDEN_CHEST (and HasExplosives (or RT_LENS_SHADO
 RC_SHADOW_TEMPLE_MQ_GS_AFTER_WIND HasExplosives
 RC_SHADOW_TEMPLE_MQ_BEFORE_BOAT_POT_1 CanBreakPots
 RC_SHADOW_TEMPLE_MQ_BEFORE_BOAT_POT_2 CanBreakPots
+//child can make it using the wind strat
 RR_SHADOW_TEMPLE_MQ_WIND_TUNNEL (or RT_SHADOW_MQ_WINDY_WALKWAY (CanUse RG_HOVER_BOOTS))
 RR_SHADOW_TEMPLE_MQ_DOCK (SmallKeys RR_SHADOW_TEMPLE 5)
 
@@ -5469,10 +5752,13 @@ RC_SHADOW_TEMPLE_MQ_SCARECROW_NORTH_HEART (CanUse RG_DISTANT_SCARECROW)
 RC_SHADOW_TEMPLE_MQ_SCARECROW_SOUTH_HEART (CanUse RG_DISTANT_SCARECROW)
 RR_SHADOW_TEMPLE_MQ_SHORTCUT_PATH ShadowShortcutBlock
 RR_SHADOW_TEMPLE_MQ_B4_GIBDO_ROOM (SmallKeys RR_SHADOW_TEMPLE 5)
+//funnily enough, the wheel jump seems to be in logic as there's no strength requirement in N64
 RR_SHADOW_TEMPLE_MQ_BEYOND_BOAT (and (or IsAdult (CanUse RG_HOOKSHOT)) (CanUse RG_ZELDAS_LULLABY))
 
 def RR_SHADOW_TEMPLE_MQ_BEYOND_BOAT SCENE_SHADOW_TEMPLE false RA_SHADOW_TEMPLE
 Shadow Temple MQ Beyond Boat
+//It's a trick on N64 to kill this and drop down to collect this with normal weapons, as doing so without the statue being dropped voids you to before the boat
+//hilariously, you can also hit this with a pot before you bring down the statue, but there's no great way to reset it without crossing. the statues collision is very inconvenient afterwards
 RC_SHADOW_TEMPLE_MQ_GS_AFTER_SHIP (CanGetEnemyDrop RE_GOLD_SKULLTULA ED_BOOMERANG)
 RC_SHADOW_TEMPLE_MQ_BEFORE_CHASM_WEST_POT CanBreakPots
 RC_SHADOW_TEMPLE_MQ_BEFORE_CHASM_EAST_POT CanBreakPots
@@ -5484,19 +5770,25 @@ RC_SHADOW_TEMPLE_MQ_AFTER_CHASM_WEST_POT CanBreakPots
 RC_SHADOW_TEMPLE_MQ_AFTER_CHASM_EAST_POT CanBreakPots
 RC_SHADOW_TEMPLE_MQ_AFTER_SHIP_UPPER_LEFT_HEART (and (CanUse RG_SONG_OF_TIME) (and CanHitEyeTargets (CanUse RG_LONGSHOT)))
 RC_SHADOW_TEMPLE_MQ_AFTER_SHIP_UPPER_RIGHT_HEART (and (CanUse RG_SONG_OF_TIME) (and CanHitEyeTargets (CanUse RG_LONGSHOT)))
+//There's invisible floor collision that makes aiming for the heart with rang harder than it should be, so it's a trick.
 RC_SHADOW_TEMPLE_MQ_AFTER_SHIP_LOWER_HEART IsAdult
 RR_SHADOW_TEMPLE_MQ_BEYOND_BOAT (and (Here CanDetonateUprightBombFlower) IsAdult)
+//assumes RR_SHADOW_TEMPLE_MQ_BEYOND_BOAT by previous access. If backwards shadow ever exists remember that child cannot jump onto the statue from this side and make an event for the switch
+//Lens isn't needed to reach it but is needed to navigate the next room
 RR_SHADOW_TEMPLE_MQ_INVISIBLE_MAZE (Here (and CanHitEyeTargets (and (CanUse RG_SONG_OF_TIME) (CanUse RG_LONGSHOT))))
 RR_SHADOW_TEMPLE_MQ_BOSS_DOOR (and (CanUse RG_HOVER_BOOTS) (or RT_LENS_SHADOW_MQ (CanUse RG_LENS_OF_TRUTH)))
 
 def RR_SHADOW_TEMPLE_MQ_BOSS_DOOR SCENE_SHADOW_TEMPLE false RA_SHADOW_TEMPLE
 Shadow Temple MQ Boss Door
+//you can drop onto this and the respawn is reasonable
 RC_SHADOW_TEMPLE_MQ_GS_NEAR_BOSS (and (or (CanKillEnemy RE_GOLD_SKULLTULA ED_BOMB_THROW) (CanUse RG_MEGATON_HAMMER)) (or RT_LENS_SHADOW_MQ (CanUse RG_LENS_OF_TRUTH)))
 RR_SHADOW_TEMPLE_MQ_ACROSS_CHASM (and (CanUse RG_HOVER_BOOTS) (or RT_LENS_SHADOW_MQ (CanUse RG_LENS_OF_TRUTH)))
 RR_SHADOW_TEMPLE_BOSS_ENTRYWAY true
 
+//Assumes lens is checked on entry
 def RR_SHADOW_TEMPLE_MQ_INVISIBLE_MAZE SCENE_SHADOW_TEMPLE false RA_SHADOW_TEMPLE
 Shadow Temple MQ Invisible Maze
+//don't use CanDetonateUprightBombFlower as blue fire logic would need to account for player having multiple bottles & taking damage multiple times
 RC_SHADOW_TEMPLE_MQ_BOMB_FLOWER_CHEST (and (or (CanUse RG_LENS_OF_TRUTH) RT_LENS_SHADOW_MQ_DEADHAND) (and (CanKillEnemy RE_DEAD_HAND) (or CanDetonateBombFlowers (HasItem RG_GORONS_BRACELET))))
 RC_SHADOW_TEMPLE_MQ_FREESTANDING_KEY true
 RC_SHADOW_TEMPLE_MQ_DEAD_HAND_POT_1 CanBreakPots
@@ -5525,6 +5817,7 @@ RC_BONGO_BONGO ShadowTempleClear
 RR_SHADOW_TEMPLE_BOSS_ENTRYWAY false
 RR_GRAVEYARD_WARP_PAD_REGION ShadowTempleClear
 
+//Technically involves an fake wall, but passing it lensless is intended in vanilla and it is well telegraphed
 def RR_BOTTOM_OF_THE_WELL_PERIMETER SCENE_BOTTOM_OF_THE_WELL false RA_BOTTOM_OF_THE_WELL
 Bottom of the Well Perimeter
 StickPot true
@@ -5542,20 +5835,26 @@ RR_BOTTOM_OF_THE_WELL_SOUTHWEST_ROOM (or RT_LENS_BOTW (CanUse RG_LENS_OF_TRUTH))
 RR_BOTTOM_OF_THE_WELL_KEESE_BEAMOS_ROOM (and IsChild (SmallKeys RR_BOTTOM_OF_THE_WELL 3))
 RR_BOTTOM_OF_THE_WELL_COFFIN_ROOM (or LoweredWaterInsideBotw (HasItem RG_BRONZE_SCALE))
 RR_BOTTOM_OF_THE_WELL_DEAD_HAND_ROOM (and LoweredWaterInsideBotw IsChild)
+//Falling down into basement requires nothing, but falling down somewhere specific requires lens or lens trick
+//kinda questionable given several drops are blocked by rocks, but that's how it was handled before and on N64
 RR_BOTTOM_OF_THE_WELL_BASEMENT true
 
+//This region combines the Middle with the perimeter's hidden areas. If a warp puts link into the middle without crossing the perimeter or using lens, it will need it's own region
 def RR_BOTTOM_OF_THE_WELL_BEHIND_FAKE_WALLS SCENE_BOTTOM_OF_THE_WELL false RA_BOTTOM_OF_THE_WELL
 Bottom of the Well Behind Fake Walls
 RC_BOTTOM_OF_THE_WELL_FRONT_LEFT_FAKE_WALL_CHEST true
 RC_BOTTOM_OF_THE_WELL_RIGHT_BOTTOM_FAKE_WALL_CHEST true
 RC_BOTTOM_OF_THE_WELL_COMPASS_CHEST true
+//You can just barely pass the spider on the right side without damage or items, but it's probably tight enough to count as as a trick
 RC_BOTTOM_OF_THE_WELL_CENTER_SKULLTULA_CHEST (or (CanPassEnemy RE_BIG_SKULLTULA) TakeDamage)
+//Not technically behind a wall, but still logically needs lens due to pits
 RC_BOTTOM_OF_THE_WELL_BACK_LEFT_BOMBABLE_CHEST HasExplosives
 RR_BOTTOM_OF_THE_WELL_PERIMETER (or RT_LENS_BOTW (CanUse RG_LENS_OF_TRUTH))
 RR_BOTTOM_OF_THE_WELL_INNER_ROOMS (SmallKeys RR_BOTTOM_OF_THE_WELL 3)
 RR_BOTTOM_OF_THE_WELL_BASEMENT true
 RR_BOTTOM_OF_THE_WELL_BASEMENT_PLATFORM (or RT_LENS_BOTW (CanUse RG_LENS_OF_TRUTH))
 
+//This area can be reached without lens in logic from basement, but that could require silver rupees if they are shuffled.
 def RR_BOTTOM_OF_THE_WELL_SOUTHWEST_ROOM SCENE_BOTTOM_OF_THE_WELL false RA_BOTTOM_OF_THE_WELL
 Bottom of the Well Southwest Room
 RC_BOTTOM_OF_THE_WELL_LEFT_SIDE_POT_1 CanBreakPots
@@ -5563,12 +5862,14 @@ RC_BOTTOM_OF_THE_WELL_LEFT_SIDE_POT_2 CanBreakPots
 RC_BOTTOM_OF_THE_WELL_LEFT_SIDE_POT_3 CanBreakPots
 RR_BOTTOM_OF_THE_WELL_PERIMETER (or RT_LENS_BOTW (CanUse RG_LENS_OF_TRUTH))
 
+//Passing through this area needs lens, but entering doesn't, so that the fire keese can be killed without crossing the pits if enemy drops are ever shuffled
 def RR_BOTTOM_OF_THE_WELL_KEESE_BEAMOS_ROOM SCENE_BOTTOM_OF_THE_WELL false RA_BOTTOM_OF_THE_WELL
 Bottom of the Well Keese-Beamos Room
 RC_BOTTOM_OF_THE_WELL_FIRE_KEESE_CHEST (or RT_LENS_BOTW (CanUse RG_LENS_OF_TRUTH))
 RC_BOTTOM_OF_THE_WELL_FIRE_KEESE_POT_1 (and CanBreakPots (or RT_LENS_BOTW (CanUse RG_LENS_OF_TRUTH)))
 RR_BOTTOM_OF_THE_WELL_PERIMETER (and IsChild (and (SmallKeys RR_BOTTOM_OF_THE_WELL 3) (or RT_LENS_BOTW (CanUse RG_LENS_OF_TRUTH))))
 RR_BOTTOM_OF_THE_WELL_LIKE_LIKE_CAGE (or RT_LENS_BOTW (CanUse RG_LENS_OF_TRUTH))
+//not sure if this lens check is needed, these holes are a bit too easy to find, but it matches existing logic
 RR_BOTTOM_OF_THE_WELL_BASEMENT_USEFUL_BOMB_FLOWERS (or RT_LENS_BOTW (CanUse RG_LENS_OF_TRUTH))
 
 def RR_BOTTOM_OF_THE_WELL_LIKE_LIKE_CAGE SCENE_BOTTOM_OF_THE_WELL false RA_BOTTOM_OF_THE_WELL
@@ -5577,6 +5878,7 @@ RC_BOTTOM_OF_THE_WELL_LIKE_LIKE_CHEST true
 RC_BOTTOM_OF_THE_WELL_GS_LIKE_LIKE_CAGE (CanGetEnemyDrop RE_GOLD_SKULLTULA ED_BOOMERANG)
 RR_BOTTOM_OF_THE_WELL_KEESE_BEAMOS_ROOM true
 
+//If the player can voidwarp into one of these rooms they will need splitting up, and Fake walls will need specifying into middle and the rest moved to perimeter
 def RR_BOTTOM_OF_THE_WELL_INNER_ROOMS SCENE_BOTTOM_OF_THE_WELL false RA_BOTTOM_OF_THE_WELL
 Bottom of the Well Inner Rooms
 DekuBabaSticks CanGetDekuBabaSticks
@@ -5596,6 +5898,7 @@ def RR_BOTTOM_OF_THE_WELL_DEAD_HAND_ROOM SCENE_BOTTOM_OF_THE_WELL false RA_BOTTO
 Bottom of the Well Dead Hand Room
 RC_BOTTOM_OF_THE_WELL_LENS_OF_TRUTH_CHEST (CanKillEnemy RE_DEAD_HAND)
 RC_BOTTOM_OF_THE_WELL_INVISIBLE_CHEST (or RT_LENS_BOTW (CanUse RG_LENS_OF_TRUTH))
+//This assumes we spawned in dead hand's room, if whatever trick made this relevant instead puts us in the previous room, remove the kill Dead Hand check.
 RR_BOTTOM_OF_THE_WELL_PERIMETER (and IsChild (CanKillEnemy RE_DEAD_HAND))
 
 def RR_BOTTOM_OF_THE_WELL_BASEMENT SCENE_BOTTOM_OF_THE_WELL false RA_BOTTOM_OF_THE_WELL
@@ -5627,10 +5930,13 @@ RC_BOTTOM_OF_THE_WELL_BASEMENT_BEHIND_ROCKS_GRASS_7 (and CanCutShrubs BlastOrSma
 RC_BOTTOM_OF_THE_WELL_BASEMENT_BEHIND_ROCKS_GRASS_8 (and CanCutShrubs BlastOrSmash)
 RC_BOTTOM_OF_THE_WELL_BASEMENT_BEHIND_ROCKS_GRASS_9 (and CanCutShrubs BlastOrSmash)
 RR_BOTTOM_OF_THE_WELL_SOUTHWEST_ROOM (and IsChild (CanPassEnemy RE_BIG_SKULLTULA))
+//It's possible to abuse boulder's limited range of collision detection to detonate the flowers through the boulder with bow, but this is a glitch
+//the exact range is just past the furthest away plank in the green goo section
 RR_BOTTOM_OF_THE_WELL_BASEMENT_USEFUL_BOMB_FLOWERS (Here (or BlastOrSmash (or (CanUse RG_DINS_FIRE) (and (CanUse RG_STICKS) RT_BOTW_BASEMENT))))
 
 def RR_BOTTOM_OF_THE_WELL_BASEMENT_USEFUL_BOMB_FLOWERS SCENE_BOTTOM_OF_THE_WELL false RA_BOTTOM_OF_THE_WELL
 Bottom of the Well Basement Useful Bomb Flowers
+//Assumes RR_BOTTOM_OF_THE_WELL_BASEMENT access
 RC_BOTTOM_OF_THE_WELL_MAP_CHEST (HasItem RG_GORONS_BRACELET)
 RR_BOTTOM_OF_THE_WELL_BASEMENT CanDetonateUprightBombFlower
 
@@ -5645,8 +5951,13 @@ RR_BOTTOM_OF_THE_WELL_BASEMENT true
 
 def RR_BOTTOM_OF_THE_WELL_MQ_PERIMETER SCENE_BOTTOM_OF_THE_WELL false RA_BOTTOM_OF_THE_WELL
 Bottom of the Well MQ Perimeter
+//technically obsolete due to a wonder item fairy which only needs a projectile, but we don't have an event var for it yet
 FairyPot (and (Here BlastOrSmash) CanHitEyeTargets)
+//It is possible to hit the water switch with a pot from RR_BOTTOM_OF_THE_WELL_MQ_MIDDLE, however the hitbox for making it activate is very unintuitive
+//You have to throw the pot from further back to hit the switch from the front instead of the top, trying to hit the "fingers" directly
+//This unintuitiveness means it should be a trick. ZL is needed to get a clear path to carry the pot
 LoweredWaterInsideBotw (or CanJumpslash CanUseProjectile)
+//Implies CanBreakPots()
 RC_BOTTOM_OF_THE_WELL_MQ_OUTER_LOBBY_POT (and (Here BlastOrSmash) CanHitEyeTargets)
 RC_BOTTOM_OF_THE_WELL_MQ_BOMB_LEFT_HEART HasExplosives
 RC_BOTTOM_OF_THE_WELL_MQ_BOMB_RIGHT_HEART HasExplosives
@@ -5685,12 +5996,21 @@ RC_BOTTOM_OF_THE_WELL_MQ_DEAD_HAND_GRASS_1 CanCutShrubs
 RC_BOTTOM_OF_THE_WELL_MQ_DEAD_HAND_GRASS_2 CanCutShrubs
 RC_BOTTOM_OF_THE_WELL_MQ_DEAD_HAND_GRASS_3 CanCutShrubs
 RC_BOTTOM_OF_THE_WELL_MQ_DEAD_HAND_GRASS_4 CanCutShrubs
+//This assumes we spawned in dead hand's room, if whatever trick made this relevant instead puts us in the previous room, remove the kill Dead Hand check.
 RR_BOTTOM_OF_THE_WELL_MQ_PERIMETER (and IsChild (CanKillEnemy RE_DEAD_HAND))
 
 def RR_BOTTOM_OF_THE_WELL_MQ_MIDDLE SCENE_BOTTOM_OF_THE_WELL false RA_BOTTOM_OF_THE_WELL
 Bottom of the Well MQ Middle
 RC_BOTTOM_OF_THE_WELL_MQ_MAP_CHEST true
+//This location technically involves an invisible platform, but it's intended to do lensless in vanilla and is clearly signposted by pots.
 RC_BOTTOM_OF_THE_WELL_MQ_EAST_INNER_ROOM_FREESTANDING_KEY true
+//The enemies in this room are invisible and crowd around the player, being awkward to deal with blind unless you already know how.
+//the right wall is safe, and can be followed to get behind the grave which you can then pull easily assuming you can tank invisible keese
+//Using a deku nut however stuns everything easily. and if you have a melee weapon you can kill the skull through the grave then grab the drop
+//though it can be hard to tell where the safe direct path to the grave is without lens.
+//Also you get cheap shotted on entry sometimes.
+//An MQ lens trick is recommended here, and a review of this room for OHKO logic what that is added is advised.
+//In the meantime I assume damage taken or the easy answer (nuts)
 RC_BOTTOM_OF_THE_WELL_MQ_GS_WEST_INNER_ROOM (and OpenedWestRoomMQBotw (and (or TakeDamage (CanUse RG_NUTS)) (CanGetEnemyDrop RE_GOLD_SKULLTULA)))
 RC_BOTTOM_OF_THE_WELL_MQ_INNER_LOBBY_POT_1 CanBreakPots
 RC_BOTTOM_OF_THE_WELL_MQ_INNER_LOBBY_POT_2 CanBreakPots
@@ -5699,11 +6019,13 @@ RC_BOTTOM_OF_THE_WELL_MQ_EAST_INNER_ROOM_POT_1 CanBreakPots
 RC_BOTTOM_OF_THE_WELL_MQ_EAST_INNER_ROOM_POT_2 CanBreakPots
 RC_BOTTOM_OF_THE_WELL_MQ_EAST_INNER_ROOM_POT_3 CanBreakPots
 RC_BOTTOM_OF_THE_WELL_MQ_CELL_SUN_FAIRY (CanUse RG_SUNS_SONG)
+//If a relevant trick causes you to be able to warp into here without going through PERIMETER, a new eventAccess will be needed for lowering the gates with ZL
 RR_BOTTOM_OF_THE_WELL_MQ_BASEMENT_SWITCH_PLATFORM OpenedMiddleHoleMQBotw
 RR_BOTTOM_OF_THE_WELL_MQ_BASEMENT true
 
 def RR_BOTTOM_OF_THE_WELL_MQ_BASEMENT SCENE_BOTTOM_OF_THE_WELL false RA_BOTTOM_OF_THE_WELL
 Bottom of the Well MQ Basement
+//behind invisible big skulltulas, but with navi spotting it's easy to avoid them, or at worst, tank your way through as they do not block the path
 RC_BOTTOM_OF_THE_WELL_MQ_GS_BASEMENT (CanGetEnemyDrop RE_GOLD_SKULLTULA)
 RC_BOTTOM_OF_THE_WELL_MQ_BASEMENT_HALLWAY_FRONT_HEART true
 RC_BOTTOM_OF_THE_WELL_MQ_BASEMENT_HALLWAY_LEFT_HEART true
@@ -5713,6 +6035,10 @@ RR_BOTTOM_OF_THE_WELL_MQ_PERIMETER true
 
 def RR_BOTTOM_OF_THE_WELL_MQ_BASEMENT_SWITCH_PLATFORM SCENE_BOTTOM_OF_THE_WELL false RA_BOTTOM_OF_THE_WELL
 Bottom of the Well MQ Basement Switch Platform
+//Assumes RR_BOTTOM_OF_THE_WELL_MQ_BASEMENT access
+//it is technically possible to get the chest before you get screamed at without rolling, but hard enough to be a trick if that is the requirement for something to be logical
+//With some kind of movement tech it's much easier, easy enough to be default logic, as the redeads don't lock on immediately in addition to the extra speed
+//leaving with no requirements for now but up for discussion.
 RC_BOTTOM_OF_THE_WELL_MQ_LENS_OF_TRUTH_CHEST true
 RR_BOTTOM_OF_THE_WELL_MQ_BASEMENT true
 
@@ -5753,6 +6079,7 @@ def RR_ICE_CAVERN_MQ_BEGINNING SCENE_ICE_CAVERN false RA_ICE_CAVERN
 Ice Cavern MQ Beginning
 RC_ICE_CAVERN_MQ_ENTRANCE_POT CanBreakPots
 RR_ICE_CAVERN_ENTRYWAY true
+//It is in logic to use a pot to hit the toggle switch here.
 RR_ICE_CAVERN_MQ_HUB true
 
 def RR_ICE_CAVERN_MQ_HUB SCENE_ICE_CAVERN false RA_ICE_CAVERN
@@ -5764,6 +6091,8 @@ RC_ICE_CAVERN_MQ_EARLY_WOLFOS_POT_1 CanBreakPots
 RC_ICE_CAVERN_MQ_EARLY_WOLFOS_POT_2 CanBreakPots
 RC_ICE_CAVERN_MQ_EARLY_WOLFOS_POT_3 CanBreakPots
 RC_ICE_CAVERN_MQ_EARLY_WOLFOS_POT_4 CanBreakPots
+//the switch for the glass blocking the entrance is linked to the switch that controls the glass around the skulltulla in RR_ICE_CAVERN_MQ_SCARECROW_ROOM
+//if you clear the ice, you can hit it with a pot from here.
 RR_ICE_CAVERN_MQ_BEGINNING BlueFire
 RR_ICE_CAVERN_MQ_MAP_ROOM (Here (and (CanKillEnemy RE_WHITE_WOLFOS) (CanKillEnemy RE_FREEZARD)))
 RR_ICE_CAVERN_MQ_COMPASS_ROOM (and IsAdult BlueFire)
@@ -5771,6 +6100,7 @@ RR_ICE_CAVERN_MQ_SCARECROW_ROOM BlueFire
 
 def RR_ICE_CAVERN_MQ_MAP_ROOM SCENE_ICE_CAVERN false RA_ICE_CAVERN
 Ice Cavern MQ Map Room
+//Child can fit between the stalagmites on the left hand side
 BlueFireAccess (or IsChild (or CanJumpslash HasExplosives))
 RC_ICE_CAVERN_MQ_MAP_CHEST (and BlueFire (Here CanHitSwitch))
 
@@ -5779,6 +6109,7 @@ Ice Cavern MQ Scarecrow Room
 RC_ICE_CAVERN_MQ_GS_ICE_BLOCK (or (and BlueFire (CanGetEnemyDrop RE_GOLD_SKULLTULA)) (and IsAdult (CanHitSwitch ED_LONG_JUMPSLASH)))
 RC_ICE_CAVERN_MQ_GS_SCARECROW (or (CanUse RG_SCARECROW) (and IsAdult (or (CanUse RG_LONGSHOT) RT_ICE_MQ_SCARECROW)))
 RR_ICE_CAVERN_MQ_HUB BlueFire
+//Assumes RR_ICE_CAVERN_MQ_HUB access for a pot if using blue fire
 RR_ICE_CAVERN_MQ_WEST_CORRIDOR (and IsAdult BlueFire)
 
 def RR_ICE_CAVERN_MQ_STALFOS_ROOM SCENE_ICE_CAVERN false RA_ICE_CAVERN
@@ -5799,7 +6130,9 @@ def RR_ICE_CAVERN_MQ_COMPASS_ROOM SCENE_ICE_CAVERN false RA_ICE_CAVERN
 Ice Cavern MQ Compass Room
 BlueFireAccess true
 RC_ICE_CAVERN_MQ_COMPASS_CHEST true
+//It is possible for child with master, BGS or sticks, or adult with BGS, to hit this switch through the ice with a crouchstab, but it's precise and unintuitive for a trick
 RC_ICE_CAVERN_MQ_FREESTANDING_POH HasExplosives
+//doing RT_ICE_MQ_RED_ICE_GS as child is untested, as I could not perform the trick reliably even as adult
 RC_ICE_CAVERN_MQ_GS_RED_ICE (or (and RSK_BLUE_FIRE_ARROWS (CanUse RG_ICE_ARROWS)) (and (CanUse RG_BOTTLE_WITH_BLUE_FIRE) (and (or (CanUse RG_SONG_OF_TIME) (and IsAdult RT_ICE_MQ_RED_ICE_GS)) (CanGetEnemyDrop RE_GOLD_SKULLTULA))))
 RC_ICE_CAVERN_MQ_COMPASS_POT_1 CanBreakPots
 RC_ICE_CAVERN_MQ_COMPASS_POT_2 CanBreakPots
@@ -5884,6 +6217,7 @@ RC_GERUDO_TRAINING_GROUND_MQ_LOBBY_RIGHT_POT_2 CanBreakPots
 RR_GERUDO_TRAINING_GROUND_ENTRYWAY true
 RR_GERUDO_TRAINING_GROUND_MQ_MAZE_HIDDEN_ROOM (or RT_LENS_GTG_MQ (CanUse RG_LENS_OF_TRUTH))
 RR_GERUDO_TRAINING_GROUND_MQ_MAZE_FIRST_LOCK (SmallKeys RR_GERUDO_TRAINING_GROUND 1)
+//It's possible to use the torch in RR_GERUDO_TRAINING_GROUND_MQ_MAZE_HIDDEN_ROOM with flame storage to light these
 RR_GERUDO_TRAINING_GROUND_MQ_SAND_ROOM (Here HasFireSource)
 RR_GERUDO_TRAINING_GROUND_MQ_DINOLFOS_ROOM (Here (or (and IsAdult (CanUse RG_FAIRY_BOW)) (and IsChild (CanUse RG_FAIRY_SLINGSHOT))))
 
@@ -5918,17 +6252,20 @@ RR_GERUDO_TRAINING_GROUND_MQ_STALFOS_ROOM (Here (or (CanUse RG_LONGSHOT) (or RT_
 def RR_GERUDO_TRAINING_GROUND_MQ_STALFOS_ROOM SCENE_GERUDO_TRAINING_GROUND false RA_GERUDO_TRAINING_GROUND
 Gerudo Training Ground MQ Stalfos Room
 BlueFireAccess true
+//implies logic->CanKillEnemy(RE_BIG_SKULLTULA)
 RC_GERUDO_TRAINING_GROUND_MQ_BEFORE_HEAVY_BLOCK_CHEST (CanKillEnemy RE_STALFOS ED_CLOSE true 2 true)
 RR_GERUDO_TRAINING_GROUND_MQ_BEHIND_BLOCK (and (Here (CanKillEnemy RE_STALFOS ED_CLOSE true 2 true)) (CanUse RG_SILVER_GAUNTLETS))
 RR_GERUDO_TRAINING_GROUND_MQ_STATUE_ROOM_LEDGE (and IsAdult (and (Here (CanKillEnemy RE_STALFOS ED_CLOSE true 2 true)) (and (or RT_LENS_GTG_MQ (CanUse RG_LENS_OF_TRUTH)) (and BlueFire (or (CanUse RG_SONG_OF_TIME) (and RT_GTG_FAKE_WALL (CanUse RG_HOVER_BOOTS)))))))
 
 def RR_GERUDO_TRAINING_GROUND_MQ_BEHIND_BLOCK SCENE_GERUDO_TRAINING_GROUND false RA_GERUDO_TRAINING_GROUND
 Gerudo Training Ground MQ Behind Block
+//implies logic->CanKillEnemy(RE_SPIKE)
 RC_GERUDO_TRAINING_GROUND_MQ_HEAVY_BLOCK_CHEST (CanKillEnemy RE_FREEZARD)
 
 def RR_GERUDO_TRAINING_GROUND_MQ_STATUE_ROOM_LEDGE SCENE_GERUDO_TRAINING_GROUND false RA_GERUDO_TRAINING_GROUND
 Gerudo Training Ground MQ Statue Room Ledge
 RR_GERUDO_TRAINING_GROUND_MQ_STALFOS_ROOM true
+//implies dropping down to hit the switch. Using swords, especially master, is a bit awkward, may be trick worthy, but is only relevant with other tricks
 RR_GERUDO_TRAINING_GROUND_MQ_MAGENTA_FIRE_ROOM (Here (or (CanUse RG_HOOKSHOT) (or (CanUse RG_FAIRY_BOW) (or (CanUse RG_MASTER_SWORD) (or (CanUse RG_BIGGORON_SWORD) (or (CanUse RG_STICKS) (or (CanUse RG_FAIRY_SLINGSHOT) (CanUse RG_BOOMERANG))))))))
 RR_GERUDO_TRAINING_GROUND_MQ_STATUE_ROOM true
 
@@ -5945,6 +6282,7 @@ RR_GERUDO_TRAINING_GROUND_MQ_TORCH_SLUG_ROOM true
 
 def RR_GERUDO_TRAINING_GROUND_MQ_TORCH_SLUG_ROOM SCENE_GERUDO_TRAINING_GROUND false RA_GERUDO_TRAINING_GROUND
 Gerudo Training Ground MQ Torch Slug Room
+//implies logic->CanKillEnemy(RE_TORCH_SLUG)
 RC_GERUDO_TRAINING_GROUND_MQ_SECOND_IRON_KNUCKLE_CHEST (CanKillEnemy RE_IRON_KNUCKLE)
 RC_GERUDO_TRAINING_GROUND_MQ_FLAME_CIRCLE_CHEST (CanHitSwitch ED_BOMB_THROW)
 RR_GERUDO_TRAINING_GROUND_MQ_STATUE_ROOM (Here (CanKillEnemy RE_IRON_KNUCKLE))
@@ -5955,19 +6293,29 @@ Gerudo Training Ground MQ Switch Ledge
 MQGTGRightSideSwitch (CanUse RG_MEGATON_HAMMER)
 GTGPlatformSilverRupees (and (CanUse RG_FIRE_ARROWS) (CanUse RG_HOVER_BOOTS))
 RR_GERUDO_TRAINING_GROUND_MQ_LEDGE_SIDE_PLATFORMS (CanUse RG_FIRE_ARROWS)
+//the fire bubble here is a jerk if you are aiming for the nearest hook platform, you have to aim to the right hand side with hook to dodge it
 RR_GERUDO_TRAINING_GROUND_MQ_PLATFORMS_UNLIT_TORCH (or (CanUse RG_LONGSHOT) (or (and GTGPlatformSilverRupees (CanUse RG_HOOKSHOT)) (and (and (CanUse RG_FIRE_ARROWS) GTGPlatformSilverRupees) (CanUse RG_HOVER_BOOTS))))
 RR_GERUDO_TRAINING_GROUND_MQ_MAZE_RIGHT (and MQGTGRightSideSwitch (CanUse RG_LONGSHOT))
 
+//this region exists to place silver rupee items on later, normally it's all on fire and cannot be stood on without access from another area
+//This covers the 2 platforms that can be jumped to directly from RR_GERUDO_TRAINING_GROUND_MQ_SWITCH_LEDGE
+//the unshuffled rupee collection is handled by the event GTGPlatformSilverRupees
 def RR_GERUDO_TRAINING_GROUND_MQ_LEDGE_SIDE_PLATFORMS SCENE_GERUDO_TRAINING_GROUND false RA_GERUDO_TRAINING_GROUND
 Gerudo Training Ground MQ Ledge Side Platforms
+//This is merely to extend this region's logic if you have hovers
 RR_GERUDO_TRAINING_GROUND_MQ_FURTHEST_PLATFORM (CanUse RG_HOVER_BOOTS)
 
+//this region exists to place silver rupee items on later, normally it's all on fire and cannot be stood on without access from another area
+//This covers the platform that needs hover boots or the spawned targets to reach from any starting point other than RR_GERUDO_TRAINING_GROUND_MQ_MAZE_RIGHT
+//the unshuffled rupee collection is handled by the event GTGPlatformSilverRupees
 def RR_GERUDO_TRAINING_GROUND_MQ_FURTHEST_PLATFORM SCENE_GERUDO_TRAINING_GROUND false RA_GERUDO_TRAINING_GROUND
 Gerudo Training Ground MQ Furthest Platform
+//This is merely to extend this region's logic if you have hovers
 RR_GERUDO_TRAINING_GROUND_MQ_LEDGE_SIDE_PLATFORMS (CanUse RG_HOVER_BOOTS)
 
 def RR_GERUDO_TRAINING_GROUND_MQ_TORCH_SIDE_PLATFORMS SCENE_GERUDO_TRAINING_GROUND false RA_GERUDO_TRAINING_GROUND
 Gerudo Training Ground Torch Side Platforms
+//this torch shot is possible as child but tight and obtuse enough to be a trick
 GTGPlatformSilverRupees (and (or (and (CanUse RG_FAIRY_BOW) IsAdult) (CanUse RG_FIRE_ARROWS)) (CanUse RG_HOVER_BOOTS))
 RR_GERUDO_TRAINING_GROUND_MQ_LEDGE_SIDE_PLATFORMS (and (or (and (CanUse RG_FAIRY_BOW) IsAdult) (CanUse RG_FIRE_ARROWS)) (CanUse RG_HOVER_BOOTS))
 RR_GERUDO_TRAINING_GROUND_MQ_PLATFORMS_UNLIT_TORCH (or (and (CanUse RG_FAIRY_BOW) IsAdult) (or (CanUse RG_FIRE_ARROWS) (CanUse RG_LONGSHOT)))
@@ -5984,11 +6332,17 @@ RR_GERUDO_TRAINING_GROUND_MQ_MAZE_RIGHT (and MQGTGRightSideSwitch (or (CanUse RG
 
 def RR_GERUDO_TRAINING_GROUND_MQ_DINOLFOS_ROOM SCENE_GERUDO_TRAINING_GROUND false RA_GERUDO_TRAINING_GROUND
 Gerudo Training Ground MQ Dinolfos Room
+//WallFairy (and IsAdult (CanUse RG_FAIRY_BOW))
+//implies logic->CanKillEnemy(RE_LIZALFOS and logic->CanKillEnemy(RE_DODONGO)
+//is logic->CanKillEnemy(RE_DINOLFOS, ED_CLOSE, true, 2, true) && logic->CanKillEnemy(RE_ARMOS, ED_CLOSE, true, 1, true) broken down to exclude sticks, as it take too many to clear the room
+//Proper enemy kill room ammo logic is needed to handle this room
+//some combinations may be impossible without taking damage, keep an eye out for issues here
 RC_GERUDO_TRAINING_GROUND_MQ_DINOLFOS_CHEST (or (CanUse RG_MASTER_SWORD) (or (CanUse RG_BIGGORON_SWORD) (or (CanUse RG_MEGATON_HAMMER) (or (CanUse RG_FAIRY_BOW) (and (or (CanUse RG_NUTS) (or (CanUse RG_HOOKSHOT) (CanUse RG_BOOMERANG))) (or (CanUse RG_KOKIRI_SWORD) (CanUse RG_FAIRY_SLINGSHOT)))))))
 RR_GERUDO_TRAINING_GROUND_MQ_TORCH_SIDE_PLATFORMS (Here (or (CanUse RG_MASTER_SWORD) (or (CanUse RG_BIGGORON_SWORD) (or (CanUse RG_MEGATON_HAMMER) (or (CanUse RG_FAIRY_BOW) (and (or (CanUse RG_NUTS) (or (CanUse RG_HOOKSHOT) (CanUse RG_BOOMERANG))) (or (CanUse RG_KOKIRI_SWORD) (CanUse RG_FAIRY_SLINGSHOT))))))))
 
 def RR_GERUDO_TRAINING_GROUND_MQ_UNDERWATER SCENE_GERUDO_TRAINING_GROUND false RA_GERUDO_TRAINING_GROUND
 Gerudo Training Ground MQ Underwater
+//it is possible to snipe the stingers with bow or sling before dropping in, or just get really lucky, and avoid needing to take damage, but that might be trick worthy
 RC_GERUDO_TRAINING_GROUND_MQ_UNDERWATER_SILVER_RUPEE_CHEST (and HasFireSource (and (CanUse RG_IRON_BOOTS) (and (>= WaterTimer 24) (and (HasItem RG_BRONZE_SCALE) TakeDamage))))
 RR_GERUDO_TRAINING_GROUND_MQ_PLATFORMS_UNLIT_TORCH true
 
@@ -6102,6 +6456,7 @@ RC_GANONS_CASTLE_LIGHT_TRIAL_POT_2 (and CanBreakPots (and (CanUse RG_HOOKSHOT) (
 def RR_GANONS_CASTLE_MQ_LOBBY SCENE_INSIDE_GANONS_CASTLE false RA_GANONS_CASTLE
 Ganon's Castle MQ Lobby
 RR_GANONS_CASTLE_ENTRYWAY (or (CanPassEnemy RE_GREEN_BUBBLE) (Here (and (CanKillEnemy RE_IRON_KNUCKLE) (CanKillEnemy RE_ARMOS))))
+//Implies CanKillEnemy(RE_GREEN_BUBBLE)
 RR_GANONS_CASTLE_MQ_MAIN (Here (and (CanKillEnemy RE_IRON_KNUCKLE) (CanKillEnemy RE_ARMOS)))
 
 def RR_GANONS_CASTLE_MQ_MAIN SCENE_INSIDE_GANONS_CASTLE false RA_GANONS_CASTLE
@@ -6141,6 +6496,7 @@ RC_GANONS_CASTLE_MQ_FOREST_TRIAL_FREESTANDING_KEY HookshotOrBoomerang
 RR_GANONS_CASTLE_MQ_MAIN true
 RR_GANONS_CASTLE_MQ_FOREST_TRIAL_BEAMOS_ROOM (Here (CanKillEnemy RE_STALFOS ED_CLOSE true 2))
 
+//If it is ever possible to warp into the RR_GANONS_CASTLE_MQ_FOREST_TRIAL_FINAL_ROOM, this needs splitting up as the requirements to reach things from the other side are more complex
 def RR_GANONS_CASTLE_MQ_FOREST_TRIAL_BEAMOS_ROOM SCENE_INSIDE_GANONS_CASTLE false RA_GANONS_CASTLE
 Ganon's Castle MQ Forest Trial Beamos Room
 RC_GANONS_CASTLE_MQ_FOREST_TRIAL_EYE_SWITCH_CHEST CanHitEyeTargets
@@ -6158,6 +6514,7 @@ RR_GANONS_CASTLE_MQ_FOREST_TRIAL_BEAMOS_ROOM true
 def RR_GANONS_CASTLE_MQ_FIRE_TRIAL_MAIN_ROOM SCENE_INSIDE_GANONS_CASTLE false RA_GANONS_CASTLE
 Ganon's Castle MQ Fire Trial Main Room
 RR_GANONS_CASTLE_MQ_MAIN true
+//2 checks, 1 for the rupees, 1 for actually making it, as the rupees are permanent but throwing a pillar is not
 RR_GANONS_CASTLE_MQ_FIRE_TRIAL_FINAL_ROOM (and (Here (and (CanUse RG_GORON_TUNIC) (CanUse RG_GOLDEN_GAUNTLETS))) (and (CanUse RG_GORON_TUNIC) (or (CanUse RG_LONGSHOT) (and (CanUse RG_GOLDEN_GAUNTLETS) (or (CanUse RG_HOVER_BOOTS) (and RT_GANON_MQ_FIRE_TRIAL (and IsAdult (CanUse RG_HOOKSHOT))))))))
 
 def RR_GANONS_CASTLE_MQ_FIRE_TRIAL_FINAL_ROOM SCENE_INSIDE_GANONS_CASTLE false RA_GANONS_CASTLE
@@ -6165,6 +6522,7 @@ Ganon's Castle MQ Fire Trial Final Room
 FireTrialClear (CanUse RG_LIGHT_ARROWS)
 RC_GANONS_CASTLE_MQ_FIRE_TRIAL_POT_1 CanBreakPots
 RC_GANONS_CASTLE_MQ_FIRE_TRIAL_POT_2 CanBreakPots
+//There's no way back across the lava without glitches
 
 def RR_GANONS_CASTLE_MQ_WATER_TRIAL_GEYSER_ROOM SCENE_INSIDE_GANONS_CASTLE false RA_GANONS_CASTLE
 Ganon's Castle MQ Water Trial Geyser Room
@@ -6177,6 +6535,7 @@ RR_GANONS_CASTLE_MQ_WATER_TRIAL_BLOCK_ROOM (and (SmallKeys RR_GANONS_CASTLE 3) (
 def RR_GANONS_CASTLE_MQ_WATER_TRIAL_BLOCK_ROOM SCENE_INSIDE_GANONS_CASTLE false RA_GANONS_CASTLE
 Ganon's Castle MQ Water Trial Block Room
 RR_GANONS_CASTLE_MQ_WATER_TRIAL_GEYSER_ROOM (SmallKeys RR_GANONS_CASTLE 3)
+//This assumes there's no way for child to have blue fire and not adult.
 RR_GANONS_CASTLE_MQ_WATER_TRIAL_FINAL_ROOM (and IsAdult BlueFire)
 
 def RR_GANONS_CASTLE_MQ_WATER_TRIAL_FINAL_ROOM SCENE_INSIDE_GANONS_CASTLE false RA_GANONS_CASTLE
@@ -6196,11 +6555,13 @@ def RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_CHEST_PLATFORM SCENE_INSIDE_GANONS_CASTLE f
 Ganon's Castle MQ Shadow Trial Chest Platform
 ShadowTrialFirstChest (CanUse RG_FAIRY_BOW)
 RC_GANONS_CASTLE_MQ_SHADOW_TRIAL_BOMB_FLOWER_CHEST ShadowTrialFirstChest
+//Hookshot here is possible but very tight, but it's basically never relevant
 RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_STARTING_LEDGE (or (CanUse RG_LONGSHOT) (and IsAdult (CanUse RG_HOVER_BOOTS)))
 RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_MOVING_PLATFORM (and (or RT_LENS_GANON_MQ (CanUse RG_LENS_OF_TRUTH)) (or IsAdult (CanUse RG_HOVER_BOOTS)))
 
 def RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_MOVING_PLATFORM SCENE_INSIDE_GANONS_CASTLE false RA_GANONS_CASTLE
 Ganon's Castle MQ Shadow Trial Moving Platform
+//A torch run from RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_STARTING_LEDGE is possible but tight, so would be a trick
 ShadowTrialFirstChest CanDetonateUprightBombFlower
 RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_CHEST_PLATFORM (or IsAdult (or (CanUse RG_HOOKSHOT) (CanUse RG_HOVER_BOOTS)))
 RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_BEAMOS_TORCH true
@@ -6208,12 +6569,20 @@ RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_BEAMOS_TORCH true
 def RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_BEAMOS_TORCH SCENE_INSIDE_GANONS_CASTLE false RA_GANONS_CASTLE
 Ganon's Castle MQ Shadow Trial Beamos Torch
 RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_MOVING_PLATFORM (or RT_LENS_GANON_MQ (CanUse RG_LENS_OF_TRUTH))
+//A torch run from RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_STARTING_LEDGE is possible but very tight, so would be a trick
+//The bow trick assumes RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_STARTING_LEDGE access, if you can somehow void warp directly here it will need handling properly
+//Hovers is possible as child but a bit tight, requires good rolls
 RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_FAR_SIDE (or HasFireSource (or (CanUse RG_HOVER_BOOTS) (and IsAdult (and RT_GANON_MQ_SHADOW_TRIAL (CanUse RG_FAIRY_BOW)))))
 
 def RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_FAR_SIDE SCENE_INSIDE_GANONS_CASTLE false RA_GANONS_CASTLE
 Ganon's Castle MQ Shadow Trial Far Side
 RC_GANONS_CASTLE_MQ_SHADOW_TRIAL_EYE_SWITCH_CHEST CanHitEyeTargets
 RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_BEAMOS_TORCH (or (CanUse RG_FIRE_ARROWS) (CanUse RG_HOVER_BOOTS))
+//Modelling the silver rupees properly will require a way to check temp flags in different regions.
+//It may be tempting to use a Here-like command for this but it could cause sphere skipping in playthroughs
+//So a system like event access which sets based on TimeAge would be preferable, as the application of these can be tracked and accounted for, unlike Here-like commands
+//For Now I am assuming the player has made it all the way from RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_STARTING_LEDGE, which logically means every rupee is available
+//with no extra requirements except the lens logic needed to reach the door, which also enables the beamos-platform rupee
 RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_FINAL_ROOM (or RT_LENS_GANON_MQ (CanUse RG_LENS_OF_TRUTH))
 
 def RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_FINAL_ROOM SCENE_INSIDE_GANONS_CASTLE false RA_GANONS_CASTLE
@@ -6237,11 +6606,13 @@ RR_GANONS_CASTLE_MQ_SPIRIT_TRIAL_AFTER_SWITCH (Here (CanUse RG_BOMBCHU_5))
 def RR_GANONS_CASTLE_MQ_SPIRIT_TRIAL_AFTER_SWITCH SCENE_INSIDE_GANONS_CASTLE false RA_GANONS_CASTLE
 Ganon's Castle MQ Spirit Trial After Switch
 RC_GANONS_CASTLE_MQ_SPIRIT_TRIAL_INVISIBLE_CHEST (or RT_LENS_GANON_MQ (CanUse RG_LENS_OF_TRUTH))
+//better names for these would be nice.
 RC_GANONS_CASTLE_MQ_SPIRIT_TRIAL_SUN_FRONT_LEFT_CHEST (or (and (CanUse RG_FIRE_ARROWS) (CanUse RG_MIRROR_SHIELD)) (and RSK_SUNLIGHT_ARROWS (CanUse RG_LIGHT_ARROWS)))
 RC_GANONS_CASTLE_MQ_SPIRIT_TRIAL_SUN_BACK_LEFT_CHEST (or (and (CanUse RG_FIRE_ARROWS) (CanUse RG_MIRROR_SHIELD)) (and RSK_SUNLIGHT_ARROWS (CanUse RG_LIGHT_ARROWS)))
 RC_GANONS_CASTLE_MQ_SPIRIT_TRIAL_GOLDEN_GAUNTLETS_CHEST (or (and (CanUse RG_FIRE_ARROWS) (CanUse RG_MIRROR_SHIELD)) (and RSK_SUNLIGHT_ARROWS (CanUse RG_LIGHT_ARROWS)))
 RC_GANONS_CASTLE_MQ_SPIRIT_TRIAL_SUN_BACK_RIGHT_CHEST (or (and (CanUse RG_FIRE_ARROWS) (CanUse RG_MIRROR_SHIELD)) (and RSK_SUNLIGHT_ARROWS (CanUse RG_LIGHT_ARROWS)))
 RR_GANONS_CASTLE_MQ_SPIRIT_TRIAL_BEFORE_SWITCH (Here (CanUse RG_BOMBCHU_5))
+//Sunlight arrows are bugged, should set a perm flag like mirror shield
 RR_GANONS_CASTLE_MQ_SPIRIT_TRIAL_FINAL_ROOM (or (Here (and (CanUse RG_FIRE_ARROWS) (CanUse RG_MIRROR_SHIELD))) (and RSK_SUNLIGHT_ARROWS (CanUse RG_LIGHT_ARROWS)))
 
 def RR_GANONS_CASTLE_MQ_SPIRIT_TRIAL_FINAL_ROOM SCENE_INSIDE_GANONS_CASTLE false RA_GANONS_CASTLE
@@ -6272,6 +6643,7 @@ def RR_GANONS_CASTLE_MQ_LIGHT_TRIAL_BOULDER_ROOM_BACK SCENE_INSIDE_GANONS_CASTLE
 Ganon's Castle MQ Light Trial Boulder Room Back
 RC_GANONS_CASTLE_MQ_LIGHT_TRIAL_LEFT_HEART true
 RC_GANONS_CASTLE_MQ_LIGHT_TRIAL_RIGHT_HEART true
+//I got the trick going backwards, but only while taking damage. this isn't relevant anyway though
 RR_GANONS_CASTLE_MQ_LIGHT_TRIAL_BOULDER_ROOM_FRONT (or (CanUse RG_HOOKSHOT) RT_GANON_MQ_LIGHT_TRIAL)
 RR_GANONS_CASTLE_MQ_LIGHT_TRIAL_FINAL_ROOM (and (SmallKeys RR_GANONS_CASTLE 3) (and (or RT_LENS_GANON_MQ (CanUse RG_LENS_OF_TRUTH)) (or (CanUse RG_FAIRY_SLINGSHOT) (or CanJumpslash (or HasExplosives (or (CanUse RG_FAIRY_BOW) (CanUse RG_BOOMERANG)))))))
 
@@ -6285,6 +6657,7 @@ def RR_GANONS_TOWER_ENTRYWAY SCENE_INSIDE_GANONS_CASTLE false RA_GANONS_CASTLE
 Ganon's Tower Entryway
 RR_GANONS_CASTLE_LOBBY (IsDungeonVanilla GANONS_CASTLE)
 RR_GANONS_CASTLE_MQ_MAIN (IsDungeonMQ GANONS_CASTLE)
+//RANDOTODO could we just set these events automatically based on the setting?
 RR_GANONS_TOWER_FLOOR_1 (and (or ForestTrialClear (IsTrialSkipped TK_FOREST_TRIAL)) (and (or FireTrialClear (IsTrialSkipped TK_FIRE_TRIAL)) (and (or WaterTrialClear (IsTrialSkipped TK_WATER_TRIAL)) (and (or ShadowTrialClear (IsTrialSkipped TK_SHADOW_TRIAL)) (and (or SpiritTrialClear (IsTrialSkipped TK_SPIRIT_TRIAL)) (or LightTrialClear (IsTrialSkipped TK_LIGHT_TRIAL)))))))
 
 def RR_GANONS_TOWER_FLOOR_1 SCENE_GANONS_TOWER false
@@ -6333,7 +6706,11 @@ RR_GANONS_CASTLE_ESCAPE (CanKillEnemy RE_GANONDORF)
 
 def RR_GANONS_CASTLE_ESCAPE SCENE_GANONS_TOWER_COLLAPSE_EXTERIOR false
 Ganon's Castle Escape
+//10 pots
+//RANDOTODO hook potsanity pots up to escape.
 RR_GANONS_CASTLE_GANON_ARENA true
+//real logic once we figure out how to deal with castle escape skip
+//RR_GANONS_CASTLE_GANON_ARENA (CanKillEnemy RE_STALFOS ED_CLOSE true 2 true)
 
 def RR_GANONS_CASTLE_GANON_ARENA SCENE_GANON_BOSS false
 Ganon's Arena

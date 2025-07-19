@@ -113,7 +113,7 @@ class RR:
                 output(f"Here({self.name}, []{{return {self.to_cpp(ast[1])};}})")
             elif f in ("MQSpiritSharedStatueRoom", "MQSpiritSharedBrokenWallRoom"):
                 output(f"{f}({self.to_cpp(ast[1])}, []{{return {self.to_cpp(ast[2])};}})")
-            elif f != "--":
+            elif f != "//":
                 if len(ast) != 1:
                     print("expected atom, got tree", ast)
                 elif f.isupper() or f.isdigit() or f in ("true", "false"):
@@ -253,7 +253,7 @@ for line in open(argv[1], "r", encoding="ascii"):
     if active_rr and not active_rr.ui_name:
         active_rr.ui_name = line
         continue
-    if not active_rr or line.startswith("--"):
+    if not active_rr or line.startswith("//"):
         continue
     open_count += line.count('(')
     close_count += line.count(')')
