@@ -57,6 +57,7 @@ class RR:
                 ast = [f]
             else:
                 f = ast[0]
+                assert isinstance(f, str)
             if f in LOGIC:
                 output(f"logic->{f}")
             elif f in logicFUNC:
@@ -234,13 +235,14 @@ buf = ""
 open_count = close_count = 0
 mode = None
 for line in open(argv[1], "r", encoding="ascii"):
-    line = line.strip()
+    line = line.strip("\n")
     if line == "::":
         mode = None if mode == line else line
         continue
     if mode == "::":
         RRs.append(line)
         continue
+    line = line.strip()
     if line.startswith("def "):
         if open_count != close_count:
             print("error parsing", line)
@@ -257,6 +259,7 @@ for line in open(argv[1], "r", encoding="ascii"):
         continue
     open_count += line.count('(')
     close_count += line.count(')')
+    buf += " "
     buf += line
     if open_count != close_count:
         continue
