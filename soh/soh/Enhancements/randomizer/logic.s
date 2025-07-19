@@ -7,7 +7,7 @@ using namespace Rando;
 extern "C" SaveContext gSaveContext;
 
 void RegionTable_Init_Generated() {
-    // clang-format off
+// clang-format off
 ::
 
 def RR_ROOT SCENE_ID_MAX false RA_LINKS_POCKET
@@ -637,7 +637,7 @@ RC_LH_WARP_PAD_GRASS_1 CanCutShrubs
 RC_LH_WARP_PAD_GRASS_2 CanCutShrubs
 RR_HYRULE_FIELD true
 RR_LH_FROM_SHORTCUT true
-RR_LH_OWL_FLIGHT IsChild
+RR_LH_OWL_FLIGHT @deprioritize IsChild
 RR_LH_FISHING_ISLAND (or (and (or IsChild WaterTempleClear) (HasItem RG_BRONZE_SCALE)) (and IsAdult (or (CanUse RG_SCARECROW) (CanPlantBean RR_LAKE_HYLIA))))
 RR_LH_LAB (CanOpenOverworldDoor RG_HYLIA_LAB_KEY)
 RR_LH_FROM_WATER_TEMPLE true
@@ -660,7 +660,7 @@ RR_LH_FISHING_POND (CanOpenOverworldDoor RG_FISHING_HOLE_KEY)
 
 def RR_LH_OWL_FLIGHT SCENE_LAKE_HYLIA true RA_LAKE_HYLIA
 LH Owl Flight
-RR_HYRULE_FIELD true
+RR_HYRULE_FIELD @deprioritize true
 
 def RR_LH_LAB SCENE_LAKESIDE_LABORATORY false
 LH Lab
@@ -1736,7 +1736,7 @@ RC_GRAVEYARD_DAMPE_RACE_RUPEE_6 true
 RC_GRAVEYARD_DAMPE_RACE_RUPEE_7 true
 RC_GRAVEYARD_DAMPE_RACE_RUPEE_8 true
 RR_THE_GRAVEYARD true
-RR_KAK_WINDMILL (and IsAdult (CanUse RG_SONG_OF_TIME))
+RR_KAK_WINDMILL @deprioritize (and IsAdult (CanUse RG_SONG_OF_TIME))
 
 def RR_GRAVEYARD_DAMPES_HOUSE SCENE_GRAVEKEEPERS_HUT false
 Graveyard Dampes House
@@ -2764,7 +2764,7 @@ RC_DEKU_TREE_QUEEN_GOHMA_GRASS_6 CanCutShrubs
 RC_DEKU_TREE_QUEEN_GOHMA_GRASS_7 CanCutShrubs
 RC_DEKU_TREE_QUEEN_GOHMA_GRASS_8 CanCutShrubs
 RR_DEKU_TREE_BOSS_EXIT true
-RR_KF_OUTSIDE_DEKU_TREE DekuTreeClear
+RR_KF_OUTSIDE_DEKU_TREE @deprioritize DekuTreeClear
 
 def RR_DODONGOS_CAVERN_BEGINNING SCENE_DODONGOS_CAVERN false RA_DODONGOS_CAVERN
 Dodongos Cavern Beginning
@@ -3167,7 +3167,7 @@ RC_DODONGOS_CAVERN_BOSS_ROOM_CHEST true
 RC_DODONGOS_CAVERN_KING_DODONGO_HEART DodongosCavernClear
 RC_KING_DODONGO DodongosCavernClear
 RR_DODONGOS_CAVERN_BOSS_EXIT true
-RR_DEATH_MOUNTAIN_TRAIL DodongosCavernClear
+RR_DEATH_MOUNTAIN_TRAIL @deprioritize DodongosCavernClear
 
 def RR_JABU_JABUS_BELLY_BEGINNING SCENE_JABU_JABU false RA_JABU_JABUS_BELLY
 Jabu Jabus Belly Beginning
@@ -3400,7 +3400,7 @@ RC_JABU_JABUS_BELLY_BARINADE_POT_6 CanBreakPots
 RC_JABU_JABUS_BELLY_BARINADE_HEART JabuJabusBellyClear
 RC_BARINADE JabuJabusBellyClear
 RR_JABU_JABUS_BELLY_BOSS_EXIT false
-RR_ZORAS_FOUNTAIN JabuJabusBellyClear
+RR_ZORAS_FOUNTAIN @deprioritize JabuJabusBellyClear
 
 def RR_FOREST_TEMPLE_FIRST_ROOM SCENE_FOREST_TEMPLE false RA_FOREST_TEMPLE
 Forest Temple First Room
@@ -3805,7 +3805,7 @@ ForestTempleClear (CanKillEnemy RE_PHANTOM_GANON)
 RC_FOREST_TEMPLE_PHANTOM_GANON_HEART ForestTempleClear
 RC_PHANTOM_GANON ForestTempleClear
 RR_FOREST_TEMPLE_BOSS_ENTRYWAY false
-RR_SACRED_FOREST_MEADOW ForestTempleClear
+RR_SACRED_FOREST_MEADOW @deprioritize ForestTempleClear
 
 def RR_FIRE_TEMPLE_FIRST_ROOM SCENE_FIRE_TEMPLE false RA_FIRE_TEMPLE
 Fire Temple First Room
@@ -4315,7 +4315,7 @@ FireTempleClear (and (>= FireTimer 64) (CanKillEnemy RE_VOLVAGIA))
 RC_FIRE_TEMPLE_VOLVAGIA_HEART FireTempleClear
 RC_VOLVAGIA FireTempleClear
 RR_FIRE_TEMPLE_BOSS_ENTRYWAY false
-RR_DMC_CENTRAL_LOCAL FireTempleClear
+RR_DMC_CENTRAL_LOCAL @deprioritize FireTempleClear
 
 def RR_WATER_TEMPLE_LOBBY SCENE_WATER_TEMPLE false RA_WATER_TEMPLE
 Water Temple Lobby
@@ -4898,7 +4898,7 @@ WaterTempleClear (CanKillEnemy RE_MORPHA)
 RC_WATER_TEMPLE_MORPHA_HEART WaterTempleClear
 RC_MORPHA WaterTempleClear
 RR_WATER_TEMPLE_BOSS_ENTRYWAY false
-RR_LAKE_HYLIA WaterTempleClear
+RR_LAKE_HYLIA @deprioritize WaterTempleClear
 
 def RR_SPIRIT_TEMPLE_LOBBY SCENE_SPIRIT_TEMPLE false RA_SPIRIT_TEMPLE
 Spirit Temple Lobby
@@ -5256,7 +5256,7 @@ SpiritTempleClear (CanKillEnemy RE_TWINROVA)
 RC_SPIRIT_TEMPLE_TWINROVA_HEART SpiritTempleClear
 RC_TWINROVA SpiritTempleClear
 RR_SPIRIT_TEMPLE_BOSS_ENTRYWAY false
-RR_DESERT_COLOSSUS SpiritTempleClear
+RR_DESERT_COLOSSUS @deprioritize SpiritTempleClear
 
 def RR_SHADOW_TEMPLE_BEGINNING SCENE_SHADOW_TEMPLE false RA_SHADOW_TEMPLE
 Shadow Temple Beginning
@@ -6340,6 +6340,6 @@ Ganon's Arena
 RC_GANON (CanKillEnemy RE_GANON)
 
 ::
-    // clang-format on
+// clang-format on
 }
 ::

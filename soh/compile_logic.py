@@ -300,7 +300,13 @@ for rr in RRs:
     if rr.exits:
         output("\n")
         for name, code in rr.exits:
-            output(f"\tEntrance({name}, []{{return {rr.gen(code)};}}),\n")
+            deprioritize = code.startswith("@deprioritize ")
+            if deprioritize:
+                _, code = code.split(None, 1)
+            output(f"\tEntrance({name}, []{{return {rr.gen(code)};}}")
+            if deprioritize:
+                output(", \"\", false")
+            output("),\n")
     output("});\n")
 
 source = "".join(result)

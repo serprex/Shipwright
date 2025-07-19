@@ -6,7 +6,7 @@ using namespace Rando;
 extern "C" SaveContext gSaveContext;
 
 void RegionTable_Init_Generated() {
-    // clang-format off
+// clang-format off
 areaTable[RR_ROOT] = Region("Root", SCENE_ID_MAX, false, {RA_LINKS_POCKET}, {
 	EventAccess(&logic->KakarikoVillageGateOpen, []{return ctx->GetOption(RSK_KAK_GATE).Is(RO_KAK_GATE_OPEN);}),
 	EventAccess(&logic->THCouldFree1TorchCarpenter, []{return ctx->GetOption(RSK_GERUDO_FORTRESS).Is(RO_GF_CARPENTERS_FREE);}),
@@ -637,7 +637,7 @@ areaTable[RR_LAKE_HYLIA] = Region("Lake Hylia", SCENE_LAKE_HYLIA, true, {RA_LAKE
 }, {
 	Entrance(RR_HYRULE_FIELD, []{return true;}),
 	Entrance(RR_LH_FROM_SHORTCUT, []{return true;}),
-	Entrance(RR_LH_OWL_FLIGHT, []{return logic->IsChild;}),
+	Entrance(RR_LH_OWL_FLIGHT, []{return logic->IsChild;}, "", false),
 	Entrance(RR_LH_FISHING_ISLAND, []{return (((logic->IsChild || logic->WaterTempleClear) && logic->HasItem(RG_BRONZE_SCALE)) || (logic->IsAdult && (logic->CanUse(RG_SCARECROW) || CanPlantBean(RR_LAKE_HYLIA))));}),
 	Entrance(RR_LH_LAB, []{return logic->CanOpenOverworldDoor(RG_HYLIA_LAB_KEY);}),
 	Entrance(RR_LH_FROM_WATER_TEMPLE, []{return true;}),
@@ -656,7 +656,7 @@ areaTable[RR_LH_FISHING_ISLAND] = Region("LH Fishing Island", SCENE_LAKE_HYLIA, 
 	Entrance(RR_LH_FISHING_POND, []{return logic->CanOpenOverworldDoor(RG_FISHING_HOLE_KEY);}),
 });
 areaTable[RR_LH_OWL_FLIGHT] = Region("LH Owl Flight", SCENE_LAKE_HYLIA, true, {RA_LAKE_HYLIA}, {}, {}, {
-	Entrance(RR_HYRULE_FIELD, []{return true;}),
+	Entrance(RR_HYRULE_FIELD, []{return true;}, "", false),
 });
 areaTable[RR_LH_LAB] = Region("LH Lab", SCENE_LAKESIDE_LABORATORY, false, {}, {}, {
 	LOCATION(RC_LH_LAB_DIVE, (logic->HasItem(RG_GOLDEN_SCALE) || ((bool)ctx->GetTrickOption(RT_LH_LAB_DIVING) && (logic->CanUse(RG_IRON_BOOTS) && (logic->CanUse(RG_HOOKSHOT) && logic->HasItem(RG_BRONZE_SCALE)))))),
@@ -1732,7 +1732,7 @@ areaTable[RR_GRAVEYARD_DAMPES_GRAVE] = Region("Graveyard Dampes Grave", SCENE_WI
 	LOCATION(RC_GRAVEYARD_DAMPE_RACE_RUPEE_8, true),
 }, {
 	Entrance(RR_THE_GRAVEYARD, []{return true;}),
-	Entrance(RR_KAK_WINDMILL, []{return (logic->IsAdult && logic->CanUse(RG_SONG_OF_TIME));}),
+	Entrance(RR_KAK_WINDMILL, []{return (logic->IsAdult && logic->CanUse(RG_SONG_OF_TIME));}, "", false),
 });
 areaTable[RR_GRAVEYARD_DAMPES_HOUSE] = Region("Graveyard Dampes House", SCENE_GRAVEKEEPERS_HUT, false, {}, {}, {
 	LOCATION(RC_DAMPE_HINT, logic->IsAdult),
@@ -2766,7 +2766,7 @@ areaTable[RR_DEKU_TREE_BOSS_ROOM] = Region("Deku Tree Boss Room", SCENE_DEKU_TRE
 	LOCATION(RC_DEKU_TREE_QUEEN_GOHMA_GRASS_8, logic->CanCutShrubs()),
 }, {
 	Entrance(RR_DEKU_TREE_BOSS_EXIT, []{return true;}),
-	Entrance(RR_KF_OUTSIDE_DEKU_TREE, []{return logic->DekuTreeClear;}),
+	Entrance(RR_KF_OUTSIDE_DEKU_TREE, []{return logic->DekuTreeClear;}, "", false),
 });
 areaTable[RR_DODONGOS_CAVERN_BEGINNING] = Region("Dodongos Cavern Beginning", SCENE_DODONGOS_CAVERN, false, {RA_DODONGOS_CAVERN}, {}, {}, {
 	Entrance(RR_DODONGOS_CAVERN_ENTRYWAY, []{return true;}),
@@ -3168,7 +3168,7 @@ areaTable[RR_DODONGOS_CAVERN_BOSS_ROOM] = Region("Dodongos Cavern Boss Room", SC
 	LOCATION(RC_KING_DODONGO, logic->DodongosCavernClear),
 }, {
 	Entrance(RR_DODONGOS_CAVERN_BOSS_EXIT, []{return true;}),
-	Entrance(RR_DEATH_MOUNTAIN_TRAIL, []{return logic->DodongosCavernClear;}),
+	Entrance(RR_DEATH_MOUNTAIN_TRAIL, []{return logic->DodongosCavernClear;}, "", false),
 });
 areaTable[RR_JABU_JABUS_BELLY_BEGINNING] = Region("Jabu Jabus Belly Beginning", SCENE_JABU_JABU, false, {RA_JABU_JABUS_BELLY}, {}, {}, {
 	Entrance(RR_JABU_JABUS_BELLY_ENTRYWAY, []{return true;}),
@@ -3410,7 +3410,7 @@ areaTable[RR_JABU_JABUS_BELLY_BOSS_ROOM] = Region("Jabu Jabus Belly Boss Room", 
 	LOCATION(RC_BARINADE, logic->JabuJabusBellyClear),
 }, {
 	Entrance(RR_JABU_JABUS_BELLY_BOSS_EXIT, []{return false;}),
-	Entrance(RR_ZORAS_FOUNTAIN, []{return logic->JabuJabusBellyClear;}),
+	Entrance(RR_ZORAS_FOUNTAIN, []{return logic->JabuJabusBellyClear;}, "", false),
 });
 areaTable[RR_FOREST_TEMPLE_FIRST_ROOM] = Region("Forest Temple First Room", SCENE_FOREST_TEMPLE, false, {RA_FOREST_TEMPLE}, {}, {
 	LOCATION(RC_FOREST_TEMPLE_FIRST_ROOM_CHEST, true),
@@ -3823,7 +3823,7 @@ areaTable[RR_FOREST_TEMPLE_BOSS_ROOM] = Region("Forest Temple Boss Room", SCENE_
 	LOCATION(RC_PHANTOM_GANON, logic->ForestTempleClear),
 }, {
 	Entrance(RR_FOREST_TEMPLE_BOSS_ENTRYWAY, []{return false;}),
-	Entrance(RR_SACRED_FOREST_MEADOW, []{return logic->ForestTempleClear;}),
+	Entrance(RR_SACRED_FOREST_MEADOW, []{return logic->ForestTempleClear;}, "", false),
 });
 areaTable[RR_FIRE_TEMPLE_FIRST_ROOM] = Region("Fire Temple First Room", SCENE_FIRE_TEMPLE, false, {RA_FIRE_TEMPLE}, {}, {}, {
 	Entrance(RR_FIRE_TEMPLE_ENTRYWAY, []{return true;}),
@@ -4323,7 +4323,7 @@ areaTable[RR_FIRE_TEMPLE_BOSS_ROOM] = Region("Fire Temple Boss Room", SCENE_FIRE
 	LOCATION(RC_VOLVAGIA, logic->FireTempleClear),
 }, {
 	Entrance(RR_FIRE_TEMPLE_BOSS_ENTRYWAY, []{return false;}),
-	Entrance(RR_DMC_CENTRAL_LOCAL, []{return logic->FireTempleClear;}),
+	Entrance(RR_DMC_CENTRAL_LOCAL, []{return logic->FireTempleClear;}, "", false),
 });
 areaTable[RR_WATER_TEMPLE_LOBBY] = Region("Water Temple Lobby", SCENE_WATER_TEMPLE, false, {RA_WATER_TEMPLE}, {}, {
 	LOCATION(RC_WATER_TEMPLE_MAIN_LEVEL_2_POT_1, (logic->CanBreakPots() && (logic->CanWaterTempleLowFromHigh || (logic->CanWaterTempleMiddle || (logic->CanUse(RG_IRON_BOOTS) && logic->CanUse(RG_HOOKSHOT)))))),
@@ -4893,7 +4893,7 @@ areaTable[RR_WATER_TEMPLE_BOSS_ROOM] = Region("Water Temple Boss Room", SCENE_WA
 	LOCATION(RC_MORPHA, logic->WaterTempleClear),
 }, {
 	Entrance(RR_WATER_TEMPLE_BOSS_ENTRYWAY, []{return false;}),
-	Entrance(RR_LAKE_HYLIA, []{return logic->WaterTempleClear;}),
+	Entrance(RR_LAKE_HYLIA, []{return logic->WaterTempleClear;}, "", false),
 });
 areaTable[RR_SPIRIT_TEMPLE_LOBBY] = Region("Spirit Temple Lobby", SCENE_SPIRIT_TEMPLE, false, {RA_SPIRIT_TEMPLE}, {}, {
 	LOCATION(RC_SPIRIT_TEMPLE_LOBBY_POT_1, logic->CanBreakPots()),
@@ -5247,7 +5247,7 @@ areaTable[RR_SPIRIT_TEMPLE_BOSS_ROOM] = Region("Spirit Temple Boss Room", SCENE_
 	LOCATION(RC_TWINROVA, logic->SpiritTempleClear),
 }, {
 	Entrance(RR_SPIRIT_TEMPLE_BOSS_ENTRYWAY, []{return false;}),
-	Entrance(RR_DESERT_COLOSSUS, []{return logic->SpiritTempleClear;}),
+	Entrance(RR_DESERT_COLOSSUS, []{return logic->SpiritTempleClear;}, "", false),
 });
 areaTable[RR_SHADOW_TEMPLE_BEGINNING] = Region("Shadow Temple Beginning", SCENE_SHADOW_TEMPLE, false, {RA_SHADOW_TEMPLE}, {
 	EventAccess(&logic->NutPot, []{return true;}),
@@ -6324,5 +6324,5 @@ areaTable[RR_GANONS_CASTLE_ESCAPE] = Region("Ganon's Castle Escape", SCENE_GANON
 areaTable[RR_GANONS_CASTLE_GANON_ARENA] = Region("Ganon's Arena", SCENE_GANON_BOSS, false, {}, {}, {
 	LOCATION(RC_GANON, logic->CanKillEnemy(RE_GANON)),
 }, {});
-    // clang-format on
+// clang-format on
 }
