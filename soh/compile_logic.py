@@ -305,7 +305,7 @@ for rr in RRs:
                 _, code = code.split(None, 1)
             output(f"\tEntrance({name}, []{{return {rr.gen(code)};}}")
             if deprioritize:
-                output(", \"\", false")
+                output(", false")
             output("),\n")
     output("});\n")
 

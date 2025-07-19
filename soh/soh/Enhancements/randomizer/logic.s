@@ -7,7 +7,7 @@ using namespace Rando;
 extern "C" SaveContext gSaveContext;
 
 void RegionTable_Init_Generated() {
-// clang-format off
+	// clang-format off
 ::
 
 def RR_ROOT SCENE_ID_MAX false RA_LINKS_POCKET
@@ -6717,6 +6717,6 @@ Ganon's Arena
 RC_GANON (CanKillEnemy RE_GANON)
 
 ::
-// clang-format on
+	// clang-format on
 }
 ::
