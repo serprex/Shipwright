@@ -28,8 +28,6 @@ enum class GlitchDifficulty {
 
 class Logic {
   public:
-    bool noVariable = false;
-
     // Mask Quest
     bool CanBorrowMasks = false;
     bool BorrowSkullMask = false;

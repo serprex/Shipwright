@@ -125,6 +125,7 @@ file(GLOB_RECURSE soh__ RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} "soh/*.c" "soh/*.cp
 
 # Add specific files that don't match the pattern
 list(APPEND soh__ ${CMAKE_CURRENT_SOURCE_DIR}/soh/Enhancements/randomizer/generated/regions.cpp)
+list(APPEND soh__ ${CMAKE_CURRENT_SOURCE_DIR}/soh/Enhancements/randomizer/generated/regions.h)
 list(APPEND soh__ ${CMAKE_CURRENT_SOURCE_DIR}/soh/Enhancements/savestates_extern.inc)
 list(APPEND soh__ ${CMAKE_CURRENT_SOURCE_DIR}/soh/Enhancements/speechsynthesizer/DarwinSpeechSynthesizer.mm)
 
@@ -216,6 +217,7 @@ source_group("src\\overlays\\misc" REGULAR_EXPRESSION  "src/overlays/misc/*")
 find_package(Python3 COMPONENTS Interpreter)
 add_custom_command(
     OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/soh/Enhancements/randomizer/generated/regions.cpp
+    OUTPUT ${CMAKE_CURRENT_SOURCE_DIR}/soh/Enhancements/randomizer/generated/regions.h
     DEPENDS
 	${CMAKE_CURRENT_SOURCE_DIR}/compile_logic.py
 	${CMAKE_CURRENT_SOURCE_DIR}/soh/Enhancements/randomizer/logic/dungeons/bottom_of_the_well.s

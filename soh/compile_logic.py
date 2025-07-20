@@ -62,6 +62,14 @@ void RegionTable_Init_Generated() {
         with open(dirname + "/regions.cpp", "w", encoding="ascii") as f:
             for s in result:
                 f.write(s)
+        with open(dirname + "/regions.h", "w", encoding="ascii") as f:
+            f.write("#pragma once\n")
+            f.write("typedef enum {\n")
+            f.write(f"    RR_NONE,\n")
+            for rr in RRs:
+                f.write(f"    {rr.name},\n")
+            f.write(f"    RR_MAX,\n")
+            f.write("} RandomizerRegion;\n")
 
     def compile_rr(self, rr, ast):
         result = []
@@ -285,47 +293,51 @@ ctxFUNC = {
 
 def main():
     RRs = []
-    for root, dirs, files in os.walk(argv[2]):
-        for file in files:
-            active_rr = None
-            buf = ""
-            pcount = 0
-            for line in open(os.path.join(root, file), "r", encoding="ascii"):
-                line = line.strip()
-                if line.startswith("def "):
-                    if pcount != 0:
-                        print("error parsing", line)
-                    defline = line.split()
-                    active_rr = RR(*defline[1:])
-                    RRs.append(active_rr)
-                    buf = ""
-                    pcount = 0
-                    continue
-                if active_rr and not active_rr.ui_name:
-                    active_rr.ui_name = line
-                    continue
-                if not active_rr or line.startswith("//"):
-                    continue
-                pcount += line.count('(') - line.count(')')
-                buf += " "
-                buf += line
+    files = []
+    for root, dirs, names in os.walk(argv[2]):
+        for name in names:
+            files.append(os.path.join(root, name))
+    files.sort(key=lambda f: ((2 if "dungeons" in f else 1 if "overworld" in f else 0), f))
+    for file in files:
+        active_rr = None
+        buf = ""
+        pcount = 0
+        for line in open(file, "r", encoding="ascii"):
+            line = line.strip()
+            if line.startswith("def "):
                 if pcount != 0:
-                    continue
-                if not buf or buf.isspace():
-                    continue
-                try:
-                    thing, code = buf.split(None, 1)
-                except:
-                    print("failed to parse line", repr(buf))
-                    continue
-                if thing.startswith("RR_"):
-                    active_rr.exits.append((thing, parse(code)))
-                elif thing.startswith("RC_"):
-                    active_rr.checks.append((thing, parse(code)))
-                else:
-                    LOGIC.add(thing)
-                    active_rr.events.append((thing, parse(code)))
+                    print("error parsing", line)
+                defline = line.split()
+                active_rr = RR(*defline[1:])
+                RRs.append(active_rr)
                 buf = ""
+                pcount = 0
+                continue
+            if active_rr and not active_rr.ui_name:
+                active_rr.ui_name = line
+                continue
+            if not active_rr or line.startswith("//"):
+                continue
+            pcount += line.count('(') - line.count(')')
+            buf += " "
+            buf += line
+            if pcount != 0:
+                continue
+            if not buf or buf.isspace():
+                continue
+            try:
+                thing, code = buf.split(None, 1)
+            except:
+                print("failed to parse line", repr(buf))
+                continue
+            if thing.startswith("RR_"):
+                active_rr.exits.append((thing, parse(code)))
+            elif thing.startswith("RC_"):
+                active_rr.checks.append((thing, parse(code)))
+            else:
+                LOGIC.add(thing)
+                active_rr.events.append((thing, parse(code)))
+            buf = ""
 
     generator = { "cpp": Cpp }[argv[1]]()
     generator.generate_rr(argv[3], RRs)
