@@ -229,13 +229,6 @@ add_custom_target(
     DEPENDS ZAPD
 )
 
-add_custom_target(
-    CompileLogic
-
-    COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/soh/compile_logic.py ${CMAKE_CURRENT_SOURCE_DIR}/soh/soh/Enhancements/randomizer/logic.s ${CMAKE_CURRENT_SOURCE_DIR}/soh/soh/Enhancements/randomizer/location_access/generated.cpp
-    BYPRODUCTS ${CMAKE_CURRENT_SOURCE_DIR}/soh/soh/Enhancements/randomizer/location_access/generated.cpp
-)
-
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
     find_package(ImageMagick COMPONENTS convert)
     if (ImageMagick_FOUND)
