@@ -1442,6 +1442,12 @@ bool Logic::SmallKeys(RandomizerRegion dungeon, uint8_t requiredAmountGlitchless
     }
 }
 
+bool Logic::IsFireLoopLocked() {
+    return ctx->GetOption(RSK_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_ANYWHERE) ||
+           ctx->GetOption(RSK_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_OVERWORLD) ||
+           ctx->GetOption(RSK_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_ANY_DUNGEON);
+}
+
 std::map<RandomizerGet, uint32_t> Logic::RandoGetToEquipFlag = {
     { RG_KOKIRI_SWORD, EQUIP_FLAG_SWORD_KOKIRI },   { RG_MASTER_SWORD, EQUIP_FLAG_SWORD_MASTER },
     { RG_BIGGORON_SWORD, EQUIP_FLAG_SWORD_BGS },    { RG_DEKU_SHIELD, EQUIP_FLAG_SHIELD_DEKU },
@@ -2338,10 +2344,6 @@ void Logic::Reset(bool resetSaveContext /*= true*/) {
     }
     StartPerformanceTimer(PT_LOGIC_RESET);
     memset(inLogic, false, sizeof(inLogic));
-    // Settings-dependent variables
-    IsFireLoopLocked = ctx->GetOption(RSK_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_ANYWHERE) ||
-                       ctx->GetOption(RSK_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_OVERWORLD) ||
-                       ctx->GetOption(RSK_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_ANY_DUNGEON);
 
     // AmmoCanDrop = /*AmmoDrops.IsNot(AMMODROPS_NONE)*/ false; TODO: AmmoDrop setting
 
@@ -2407,7 +2409,7 @@ void Logic::Reset(bool resetSaveContext /*= true*/) {
 
         // If not keysanity, start with 1 logical key to account for automatically unlocking the basement door in
         // vanilla FiT
-        if (!IsFireLoopLocked && ctx->GetDungeon(Rando::FIRE_TEMPLE)->IsVanilla()) {
+        if (!IsFireLoopLocked() && ctx->GetDungeon(Rando::FIRE_TEMPLE)->IsVanilla()) {
             SetSmallKeyCount(SCENE_FIRE_TEMPLE, 1);
         }
     }

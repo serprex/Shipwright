@@ -59,9 +59,6 @@ class Logic {
     bool ShadowTrialClear = false;
     bool LightTrialClear = false;
 
-    // Logical keysanity
-    bool IsFireLoopLocked = false;
-
     // Bottle Count
     uint8_t Bottles = 0;
     uint8_t NumBottles = 0;
@@ -194,6 +191,7 @@ class Logic {
     bool CanOpenOverworldDoor(RandomizerGet itemName);
     bool SmallKeys(RandomizerRegion dungeon, uint8_t requiredAmount);
     bool SmallKeys(RandomizerRegion dungeon, uint8_t requiredAmountGlitchless, uint8_t requiredAmountGlitched);
+    bool IsFireLoopLocked();
     bool CanOpenUnderwaterChest();
     bool CanDoGlitch(GlitchType glitch);
     bool CanEquipSwap(RandomizerGet itemName);

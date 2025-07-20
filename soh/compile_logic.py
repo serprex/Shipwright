@@ -194,7 +194,6 @@ LOGIC = {
     "AtNight",
     "LoweredWaterInBotw",
     "BigPoes",
-    "IsFireLoopLocked",
 }
 
 RANDO = {
@@ -276,6 +275,7 @@ logicFUNC = {
     "HasBottle",
     "ScarecrowsSong",
     "SmallKeys",
+    "IsFireLoopLocked",
     "OcarinaButtons",
     "Hearts",
     "EffectiveHealth",
