@@ -1,8 +1,10 @@
 def RR_KOKIRI_FOREST SCENE_KOKIRI_FOREST false RA_KOKIRI_FOREST
 Kokiri Forest
+//Events
 BeanPlantFairy (and IsChild (and (CanUse RG_MAGIC_BEAN) (CanUse RG_SONG_OF_STORMS)))
 GossipStoneFairy CallGossipFairyExceptSuns
 ShowedMidoSwordAndShield (and IsChild (and (CanUse RG_KOKIRI_SWORD) (CanUse RG_DEKU_SHIELD)))
+//Checks
 RC_KF_KOKIRI_SWORD_CHEST IsChild
 RC_KF_GS_KNOW_IT_ALL_HOUSE (and IsChild (and CanAttack CanGetNightTimeGS))
 RC_KF_GS_BEAN_PATCH (and CanSpawnSoilSkull CanAttack)
@@ -66,6 +68,7 @@ RC_KF_ADULT_GRASS_17 (and IsAdult CanCutShrubs)
 RC_KF_ADULT_GRASS_18 (and IsAdult CanCutShrubs)
 RC_KF_ADULT_GRASS_19 (and IsAdult CanCutShrubs)
 RC_KF_ADULT_GRASS_20 (and IsAdult CanCutShrubs)
+//Exits
 RR_KF_LINKS_HOUSE true
 RR_KF_MIDOS_HOUSE true
 RR_KF_SARIAS_HOUSE true
@@ -79,40 +82,51 @@ RR_KF_STORMS_GROTTO CanOpenStormsGrotto
 
 def RR_KF_LINKS_HOUSE SCENE_LINKS_HOUSE false
 KF Link's House
+//Checks
 RC_KF_LINKS_HOUSE_COW (and IsAdult (and (CanUse RG_EPONAS_SONG) LinksCow))
 RC_KF_LINKS_HOUSE_POT CanBreakPots
+//Exits
 RR_KOKIRI_FOREST true
 
 def RR_KF_MIDOS_HOUSE SCENE_MIDOS_HOUSE false
 KF Mido's House
+//Checks
 RC_KF_MIDOS_TOP_LEFT_CHEST true
 RC_KF_MIDOS_TOP_RIGHT_CHEST true
 RC_KF_MIDOS_BOTTOM_LEFT_CHEST true
 RC_KF_MIDOS_BOTTOM_RIGHT_CHEST true
+//Exits
 RR_KOKIRI_FOREST true
 
 def RR_KF_SARIAS_HOUSE SCENE_SARIAS_HOUSE false
 KF Saria's House
+//Checks
 RC_KF_SARIAS_TOP_LEFT_HEART true
 RC_KF_SARIAS_TOP_RIGHT_HEART true
 RC_KF_SARIAS_BOTTOM_LEFT_HEART true
 RC_KF_SARIAS_BOTTOM_RIGHT_HEART true
+//Exits
 RR_KOKIRI_FOREST true
 
 def RR_KF_HOUSE_OF_TWINS SCENE_TWINS_HOUSE false
 KF House of Twins
+//Checks
 RC_KF_TWINS_HOUSE_POT_1 CanBreakPots
 RC_KF_TWINS_HOUSE_POT_2 CanBreakPots
+//Exits
 RR_KOKIRI_FOREST true
 
 def RR_KF_KNOW_IT_ALL_HOUSE SCENE_KNOW_IT_ALL_BROS_HOUSE false
 KF Know It All House
+//Checks
 RC_KF_BROTHERS_HOUSE_POT_1 CanBreakPots
 RC_KF_BROTHERS_HOUSE_POT_2 CanBreakPots
+//Exits
 RR_KOKIRI_FOREST true
 
 def RR_KF_KOKIRI_SHOP SCENE_KOKIRI_SHOP false
 KF Kokiri Shop
+//Checks
 RC_KF_SHOP_ITEM_1 true
 RC_KF_SHOP_ITEM_2 true
 RC_KF_SHOP_ITEM_3 true
@@ -121,28 +135,34 @@ RC_KF_SHOP_ITEM_5 true
 RC_KF_SHOP_ITEM_6 true
 RC_KF_SHOP_ITEM_7 true
 RC_KF_SHOP_ITEM_8 true
+//Exits
 RR_KOKIRI_FOREST true
 
 def RR_KF_OUTSIDE_DEKU_TREE SCENE_KOKIRI_FOREST false RA_KOKIRI_FOREST
 KF Outside Deku Tree
+//Events
 DekuBabaSticks CanGetDekuBabaSticks
 DekuBabaNuts CanGetDekuBabaNuts
 ShowedMidoSwordAndShield (and IsChild (and (CanUse RG_KOKIRI_SWORD) (CanUse RG_DEKU_SHIELD)))
+//Checks
 RC_KF_DEKU_TREE_LEFT_GOSSIP_STONE_FAIRY CallGossipFairyExceptSuns
 RC_KF_DEKU_TREE_LEFT_GOSSIP_STONE_FAIRY_BIG (CanUse RG_SONG_OF_STORMS)
 RC_KF_DEKU_TREE_RIGHT_GOSSIP_STONE_FAIRY CallGossipFairyExceptSuns
 RC_KF_DEKU_TREE_RIGHT_GOSSIP_STONE_FAIRY_BIG (CanUse RG_SONG_OF_STORMS)
 RC_KF_DEKU_TREE_LEFT_GOSSIP_STONE true
 RC_KF_DEKU_TREE_RIGHT_GOSSIP_STONE true
+//Exits
 RR_DEKU_TREE_ENTRYWAY (or IsChild (and (!= RSK_SHUFFLE_DUNGEON_ENTRANCES RO_DUNGEON_ENTRANCE_SHUFFLE_OFF) (or (== RSK_FOREST RO_CLOSED_FOREST_OFF) ShowedMidoSwordAndShield)))
 RR_KOKIRI_FOREST (or (and IsAdult (or (CanPassEnemy RE_BIG_SKULLTULA) ForestTempleClear)) (or (== RSK_FOREST RO_CLOSED_FOREST_OFF) ShowedMidoSwordAndShield))
 
 def RR_KF_STORMS_GROTTO SCENE_GROTTOS false
 KF Storms Grotto
+//Events
 GossipStoneFairy CallGossipFairy
 ButterflyFairy (CanUse RG_STICKS)
 BugShrub CanCutShrubs
 LoneFish true
+//Checks
 RC_KF_STORMS_GROTTO_CHEST true
 RC_KF_STORMS_GROTTO_FISH HasBottle
 RC_KF_STORMS_GROTTO_GOSSIP_STONE_FAIRY CallGossipFairy
@@ -154,5 +174,6 @@ RC_KF_STORMS_GROTTO_GRASS_1 CanCutShrubs
 RC_KF_STORMS_GROTTO_GRASS_2 CanCutShrubs
 RC_KF_STORMS_GROTTO_GRASS_3 CanCutShrubs
 RC_KF_STORMS_GROTTO_GRASS_4 CanCutShrubs
+//Exits
 RR_KOKIRI_FOREST true
 

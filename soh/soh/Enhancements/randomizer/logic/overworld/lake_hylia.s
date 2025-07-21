@@ -1,11 +1,13 @@
 def RR_LAKE_HYLIA SCENE_LAKE_HYLIA true RA_LAKE_HYLIA
 Lake Hylia
+//Events
 GossipStoneFairy CallGossipFairy
 BeanPlantFairy (and IsChild (and (CanUse RG_MAGIC_BEAN) (CanUse RG_SONG_OF_STORMS)))
 ButterflyFairy (CanUse RG_STICKS)
 BugShrub (and IsChild CanCutShrubs)
 ChildScarecrow (and IsChild (and (HasItem RG_FAIRY_OCARINA) (>= OcarinaButtons 2)))
 AdultScarecrow (and IsAdult (and (HasItem RG_FAIRY_OCARINA) (>= OcarinaButtons 2)))
+//Checks
 RC_LH_UNDERWATER_ITEM (and IsChild (HasItem RG_SILVER_SCALE))
 RC_LH_SUN (and IsAdult (and (or (and WaterTempleClear (HasItem RG_BRONZE_SCALE)) (CanUse RG_DISTANT_SCARECROW)) (CanUse RG_FAIRY_BOW)))
 RC_LH_FREESTANDING_POH (and IsAdult (or (CanUse RG_SCARECROW) (CanPlantBean RR_LAKE_HYLIA)))
@@ -72,6 +74,7 @@ RC_LH_CHILD_GRASS_3 (and IsChild CanCutShrubs)
 RC_LH_CHILD_GRASS_4 (and IsChild CanCutShrubs)
 RC_LH_WARP_PAD_GRASS_1 CanCutShrubs
 RC_LH_WARP_PAD_GRASS_2 CanCutShrubs
+//Exits
 RR_HYRULE_FIELD true
 RR_LH_FROM_SHORTCUT true
 RR_LH_OWL_FLIGHT @deprioritize IsChild
@@ -82,25 +85,30 @@ RR_LH_GROTTO true
 
 def RR_LH_FROM_SHORTCUT SCENE_LAKE_HYLIA false RA_LAKE_HYLIA
 LH From Shortcut
+//Exits
 RR_LAKE_HYLIA (or (> Hearts 1) (or (HasItem RG_BOTTLE_WITH_FAIRY) (or (HasItem RG_BRONZE_SCALE) (CanUse RG_IRON_BOOTS))))
 RR_ZORAS_DOMAIN (and IsChild (or (HasItem RG_SILVER_SCALE) (CanUse RG_IRON_BOOTS)))
 
 def RR_LH_FROM_WATER_TEMPLE SCENE_LAKE_HYLIA false RA_LAKE_HYLIA
 LH From Water Temple
+//Exits
 RR_LAKE_HYLIA (or (HasItem RG_BRONZE_SCALE) (or (HasItem RG_BOTTLE_WITH_FAIRY) (CanUse RG_IRON_BOOTS)))
 RR_WATER_TEMPLE_ENTRYWAY (and (CanUse RG_HOOKSHOT) (or (or (CanUse RG_IRON_BOOTS) (and RT_LH_WATER_HOOKSHOT (HasItem RG_GOLDEN_SCALE))) (and IsAdult (and (CanUse RG_LONGSHOT) (HasItem RG_GOLDEN_SCALE)))))
 
 def RR_LH_FISHING_ISLAND SCENE_LAKE_HYLIA true RA_LAKE_HYLIA
 LH Fishing Island
+//Exits
 RR_LAKE_HYLIA (HasItem RG_BRONZE_SCALE)
 RR_LH_FISHING_POND (CanOpenOverworldDoor RG_FISHING_HOLE_KEY)
 
 def RR_LH_OWL_FLIGHT SCENE_LAKE_HYLIA true RA_LAKE_HYLIA
 LH Owl Flight
+//Exits
 RR_HYRULE_FIELD @deprioritize true
 
 def RR_LH_LAB SCENE_LAKESIDE_LABORATORY false
 LH Lab
+//Checks
 RC_LH_LAB_DIVE (or (HasItem RG_GOLDEN_SCALE) (and RT_LH_LAB_DIVING (and (CanUse RG_IRON_BOOTS) (and (CanUse RG_HOOKSHOT) (HasItem RG_BRONZE_SCALE)))))
 RC_LH_TRADE_FROG (and IsAdult (CanUse RG_EYEBALL_FROG))
 RC_LH_GS_LAB_CRATE (and (CanUse RG_IRON_BOOTS) (and (CanUse RG_HOOKSHOT) CanBreakCrates))
@@ -108,10 +116,12 @@ RC_LH_LAB_FRONT_RUPEE (or (CanUse RG_IRON_BOOTS) (HasItem RG_GOLDEN_SCALE))
 RC_LH_LAB_LEFT_RUPEE (or (CanUse RG_IRON_BOOTS) (HasItem RG_GOLDEN_SCALE))
 RC_LH_LAB_RIGHT_RUPEE (or (CanUse RG_IRON_BOOTS) (HasItem RG_GOLDEN_SCALE))
 RC_LH_LAB_CRATE (and (CanUse RG_IRON_BOOTS) CanBreakCrates)
+//Exits
 RR_LAKE_HYLIA true
 
 def RR_LH_FISHING_POND SCENE_FISHING_POND false
 LH Fishing Hole
+//Checks
 RC_LH_CHILD_FISHING (and (CanUse RG_FISHING_POLE) IsChild)
 RC_LH_CHILD_FISH_1 (and (CanUse RG_FISHING_POLE) (or IsChild (not RSK_FISHSANITY_AGE_SPLIT)))
 RC_LH_CHILD_FISH_2 (and (CanUse RG_FISHING_POLE) (or IsChild (not RSK_FISHSANITY_AGE_SPLIT)))
@@ -149,12 +159,15 @@ RC_LH_ADULT_FISH_15 (and (CanUse RG_FISHING_POLE) (and IsAdult RSK_FISHSANITY_AG
 RC_LH_ADULT_LOACH (and (CanUse RG_FISHING_POLE) (and IsAdult RSK_FISHSANITY_AGE_SPLIT))
 RC_LH_HYRULE_LOACH (CanUse RG_FISHING_POLE)
 RC_FISHING_POLE_HINT true
+//Exits
 RR_LH_FISHING_ISLAND true
 
 def RR_LH_GROTTO SCENE_GROTTOS false
 LH Grotto
+//Checks
 RC_LH_DEKU_SCRUB_GROTTO_LEFT CanStunDeku
 RC_LH_DEKU_SCRUB_GROTTO_RIGHT CanStunDeku
 RC_LH_DEKU_SCRUB_GROTTO_CENTER CanStunDeku
 RC_LH_GROTTO_BEEHIVE CanBreakUpperBeehives
+//Exits
 RR_LAKE_HYLIA true

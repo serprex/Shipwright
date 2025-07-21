@@ -2287,7 +2287,6 @@ void Logic::Reset(bool resetSaveContext /*= true*/) {
 
     // Adult logic
     FreedEpona = false;
-    // BigPoe        = false;
 
     // Trade Quest Events
     WakeUpAdultTalon = false;

@@ -1,7 +1,9 @@
 def RR_HYRULE_FIELD SCENE_HYRULE_FIELD true RA_HYRULE_FIELD
 Hyrule Field
+//Events
 BigPoeKill (and HasBottle (and (CanUse RG_FAIRY_BOW) (or (CanUse RG_EPONA) RT_HF_BIG_POE_WITHOUT_EPONA)))
 BorrowRightMasks (and IsChild (and BorrowBunnyHood (and (HasItem RG_KOKIRI_EMERALD) (and (HasItem RG_GORON_RUBY) (and (HasItem RG_ZORA_SAPPHIRE) (HasItem RG_CHILD_WALLET))))))
+//Checks
 RC_HF_OCARINA_OF_TIME_ITEM (and IsChild (and (== StoneCount 3) (HasItem RG_BRONZE_SCALE)))
 RC_SONG_FROM_OCARINA_OF_TIME (and IsChild (and (== StoneCount 3) (HasItem RG_BRONZE_SCALE)))
 RC_HF_POND_STORMS_FAIRY (CanUse RG_SONG_OF_STORMS)
@@ -53,6 +55,7 @@ RC_HF_NEAR_KF_GRASS_9 CanCutShrubs
 RC_HF_NEAR_KF_GRASS_10 CanCutShrubs
 RC_HF_NEAR_KF_GRASS_11 CanCutShrubs
 RC_HF_NEAR_KF_GRASS_12 CanCutShrubs
+//Exits
 RR_LW_BRIDGE true
 RR_LAKE_HYLIA true
 RR_GERUDO_VALLEY true
@@ -71,10 +74,12 @@ RR_HF_TEKTITE_GROTTO CanOpenBombGrotto
 
 def RR_HF_SOUTHEAST_GROTTO SCENE_GROTTOS false
 HF Southeast Grotto
+//Events
 GossipStoneFairy CallGossipFairy
 ButterflyFairy (CanUse RG_STICKS)
 BugShrub CanCutShrubs
 LoneFish true
+//Checks
 RC_HF_SOUTHEAST_GROTTO_CHEST true
 RC_HF_SOUTHEAST_GROTTO_FISH HasBottle
 RC_HF_SOUTHEAST_GROTTO_GOSSIP_STONE_FAIRY CallGossipFairy
@@ -86,14 +91,17 @@ RC_HF_SOUTHEAST_GROTTO_GRASS_1 CanCutShrubs
 RC_HF_SOUTHEAST_GROTTO_GRASS_2 CanCutShrubs
 RC_HF_SOUTHEAST_GROTTO_GRASS_3 CanCutShrubs
 RC_HF_SOUTHEAST_GROTTO_GRASS_4 CanCutShrubs
+//Exits
 RR_HYRULE_FIELD true
 
 def RR_HF_OPEN_GROTTO SCENE_GROTTOS false
 HF Open Grotto
+//Events
 GossipStoneFairy CallGossipFairy
 ButterflyFairy (CanUse RG_STICKS)
 BugShrub CanCutShrubs
 LoneFish true
+//Checks
 RC_HF_OPEN_GROTTO_CHEST true
 RC_HF_OPEN_GROTTO_FISH HasBottle
 RC_HF_OPEN_GROTTO_GOSSIP_STONE_FAIRY CallGossipFairy
@@ -105,24 +113,30 @@ RC_HF_OPEN_GROTTO_GRASS_1 CanCutShrubs
 RC_HF_OPEN_GROTTO_GRASS_2 CanCutShrubs
 RC_HF_OPEN_GROTTO_GRASS_3 CanCutShrubs
 RC_HF_OPEN_GROTTO_GRASS_4 CanCutShrubs
+//Exits
 RR_HYRULE_FIELD true
 
 def RR_HF_INSIDE_FENCE_GROTTO SCENE_GROTTOS false
 HF Inside Fence Grotto
+//Checks
 RC_HF_DEKU_SCRUB_GROTTO CanStunDeku
 RC_HF_INSIDE_FENCE_GROTTO_BEEHIVE CanBreakLowerBeehives
 RC_HF_FENCE_GROTTO_STORMS_FAIRY (CanUse RG_SONG_OF_STORMS)
+//Exits
 RR_HYRULE_FIELD true
 
 def RR_HF_COW_GROTTO SCENE_GROTTOS false
 HF Cow Grotto
+//Exits
 RR_HYRULE_FIELD true
 RR_HF_COW_GROTTO_BEHIND_WEBS HasFireSource
 
 def RR_HF_COW_GROTTO_BEHIND_WEBS SCENE_GROTTOS false
 HF Cow Grotto Behind Webs
+//Events
 BugShrub CanCutShrubs
 GossipStoneFairy CallGossipFairy
+//Checks
 RC_HF_GS_COW_GROTTO (CanGetEnemyDrop RE_GOLD_SKULLTULA ED_BOOMERANG)
 RC_HF_COW_GROTTO_COW (CanUse RG_EPONAS_SONG)
 RC_HF_COW_GROTTO_GOSSIP_STONE_FAIRY CallGossipFairy
@@ -132,14 +146,17 @@ RC_HF_COW_GROTTO_POT_1 CanBreakPots
 RC_HF_COW_GROTTO_POT_2 CanBreakPots
 RC_HF_COW_GROTTO_GRASS_1 CanCutShrubs
 RC_HF_COW_GROTTO_GRASS_2 CanCutShrubs
+//Exits
 RR_HF_COW_GROTTO true
 
 def RR_HF_NEAR_MARKET_GROTTO SCENE_GROTTOS false
 HF Near Market Grotto
+//Events
 GossipStoneFairy CallGossipFairy
 ButterflyFairy (CanUse RG_STICKS)
 BugShrub CanCutShrubs
 LoneFish true
+//Checks
 RC_HF_NEAR_MARKET_GROTTO_CHEST true
 RC_HF_NEAR_MARKET_GROTTO_FISH HasBottle
 RC_HF_NEAR_MARKET_GROTTO_GOSSIP_STONE_FAIRY CallGossipFairy
@@ -151,11 +168,14 @@ RC_HF_NEAR_MARKET_GROTTO_GRASS_1 CanCutShrubs
 RC_HF_NEAR_MARKET_GROTTO_GRASS_2 CanCutShrubs
 RC_HF_NEAR_MARKET_GROTTO_GRASS_3 CanCutShrubs
 RC_HF_NEAR_MARKET_GROTTO_GRASS_4 CanCutShrubs
+//Exits
 RR_HYRULE_FIELD true
 
 def RR_HF_FAIRY_GROTTO SCENE_GROTTOS false
 HF Fairy Grotto
+//Events
 FreeFairies true
+//Checks
 RC_HF_FAIRY_GROTTO_FAIRY_1 true
 RC_HF_FAIRY_GROTTO_FAIRY_2 true
 RC_HF_FAIRY_GROTTO_FAIRY_3 true
@@ -164,14 +184,19 @@ RC_HF_FAIRY_GROTTO_FAIRY_5 true
 RC_HF_FAIRY_GROTTO_FAIRY_6 true
 RC_HF_FAIRY_GROTTO_FAIRY_7 true
 RC_HF_FAIRY_GROTTO_FAIRY_8 true
+//Exits
 RR_HYRULE_FIELD true
 
 def RR_HF_NEAR_KAK_GROTTO SCENE_GROTTOS false
 HF Near Kak Grotto
+//Checks
 RC_HF_GS_NEAR_KAK_GROTTO HookshotOrBoomerang
+//Exits
 RR_HYRULE_FIELD true
 
 def RR_HF_TEKTITE_GROTTO SCENE_GROTTOS false
 HF Tektite Grotto
+//Checks
 RC_HF_TEKTITE_GROTTO_FREESTANDING_POH (or (HasItem RG_GOLDEN_SCALE) (CanUse RG_IRON_BOOTS))
+//Exits
 RR_HYRULE_FIELD true

@@ -150,10 +150,12 @@ void RegionTable_Init_Generated() {
             elif f != "//":
                 if len(ast) != 1:
                     print("expected atom, got tree", ast)
+                    assert false
                 elif f.isupper() or f.isdigit() or f in ("true", "false"):
                     output(f)
                 else:
                     print("invalid atom", f)
+                    assert false
         return "".join(result)
 
 class RR:
@@ -202,7 +204,6 @@ LOGIC = {
     "IsAdult",
     "AtDay",
     "AtNight",
-    "LoweredWaterInBotw",
     "BigPoes",
 }
 
@@ -317,6 +318,7 @@ def main():
             if line.startswith("def "):
                 if pcount != 0:
                     print("error parsing", line)
+                    assert false
                 defline = line.split()
                 active_rr = RR(*defline[1:])
                 RRs.append(active_rr)
@@ -339,6 +341,7 @@ def main():
                 thing, code = buf.split(None, 1)
             except:
                 print("failed to parse line", repr(buf))
+                assert false
                 continue
             if thing.startswith("RR_"):
                 active_rr.exits.append((thing, parse(code)))

@@ -1,7 +1,9 @@
 def RR_DESERT_COLOSSUS SCENE_DESERT_COLOSSUS true RA_DESERT_COLOSSUS
 Desert Colossus
+//Events
 FairyPond (CanUse RG_SONG_OF_STORMS)
 BugRock true
+//Checks
 RC_COLOSSUS_FREESTANDING_POH (and IsAdult (CanPlantBean RR_DESERT_COLOSSUS))
 RC_COLOSSUS_GS_BEAN_PATCH (and CanSpawnSoilSkull CanAttack)
 RC_COLOSSUS_GS_TREE (and IsAdult (and HookshotOrBoomerang CanGetNightTimeGS))
@@ -13,6 +15,7 @@ RC_COLOSSUS_GOSSIP_STONE_FAIRY CallGossipFairy
 RC_COLOSSUS_GOSSIP_STONE_FAIRY_BIG (CanUse RG_SONG_OF_STORMS)
 RC_COLOSSUS_GOSSIP_STONE true
 //You can kinda get the fairies without entering the water, but it relies on them cooperating and leevers are jerks. should be a trick
+//Exits
 RR_DESERT_COLOSSUS_OASIS (and (CanUse RG_SONG_OF_STORMS) (or (HasItem RG_BRONZE_SCALE) (CanUse RG_IRON_BOOTS)))
 RR_COLOSSUS_GREAT_FAIRY_FOUNTAIN HasExplosives
 RR_SPIRIT_TEMPLE_ENTRYWAY true
@@ -22,7 +25,9 @@ RR_COLOSSUS_GROTTO (CanUse RG_SILVER_GAUNTLETS)
 //specifically the full oasis, after the fairies have spawned
 def RR_DESERT_COLOSSUS_OASIS SCENE_DESERT_COLOSSUS true RA_DESERT_COLOSSUS
 Desert Colossus Oasis
+//Events
 FairyPond true
+//Checks
 RC_COLOSSUS_OASIS_FAIRY_1 true
 RC_COLOSSUS_OASIS_FAIRY_2 true
 RC_COLOSSUS_OASIS_FAIRY_3 true
@@ -31,21 +36,28 @@ RC_COLOSSUS_OASIS_FAIRY_5 true
 RC_COLOSSUS_OASIS_FAIRY_6 true
 RC_COLOSSUS_OASIS_FAIRY_7 true
 RC_COLOSSUS_OASIS_FAIRY_8 true
+//Exits
 RR_DESERT_COLOSSUS true
 
 def RR_DESERT_COLOSSUS_OUTSIDE_TEMPLE SCENE_DESERT_COLOSSUS true RA_DESERT_COLOSSUS
 Desert Colossus From Spirit Entryway
+//Checks
 RC_SHEIK_AT_COLOSSUS true
+//Exits
 RR_DESERT_COLOSSUS true
 
 def RR_COLOSSUS_GREAT_FAIRY_FOUNTAIN SCENE_GREAT_FAIRYS_FOUNTAIN_SPELLS false
 Colossus Great Fairy Fountain
+//Checks
 RC_COLOSSUS_GREAT_FAIRY_REWARD (CanUse RG_ZELDAS_LULLABY)
+//Exits
 RR_DESERT_COLOSSUS true
 
 def RR_COLOSSUS_GROTTO SCENE_GROTTOS false
 Colossus Grotto
+//Checks
 RC_COLOSSUS_DEKU_SCRUB_GROTTO_REAR CanStunDeku
 RC_COLOSSUS_DEKU_SCRUB_GROTTO_FRONT CanStunDeku
 RC_COLOSSUS_GROTTO_BEEHIVE CanBreakUpperBeehives
+//Exits
 RR_DESERT_COLOSSUS true
