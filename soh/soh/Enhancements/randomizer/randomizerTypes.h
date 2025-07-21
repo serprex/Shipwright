@@ -3,7 +3,8 @@
 #include <stdint.h>
 #include "z64item.h"
 
-#include "./generated/regions.h"
+#include "soh/Enhancements/randomizer/generated/regions.h"
+#include "soh/Enhancements/randomizer/generated/checks.h"
 
 #define MAX_TRICK_NAME_SIZE 50
 

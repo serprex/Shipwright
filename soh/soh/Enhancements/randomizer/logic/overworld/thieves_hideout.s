@@ -1,7 +1,7 @@
 def RR_TH_1_TORCH_CELL SCENE_THIEVES_HIDEOUT false RA_GERUDO_FORTRESS
 Thieves Hideout 1 Torch Cell
 THCouldFree1TorchCarpenter (CanKillEnemy RE_GERUDO_WARRIOR)
-THRescuedAllCarpenters (and (SmallKeys RR_GF_OUTSKIRTS (if (== RSK_GERUDO_FORTRESS RO_GF_CARPENTERS_NORMAL) 4 1)) (and THCouldFree1TorchCarpenter (and THCouldFreeDoubleCellCarpenter (and TH_CouldFreeDeadEndCarpenter THCouldRescueSlopeCarpenter))))
+THRescuedAllCarpenters (and (SmallKeys SCENE_THIEVES_HIDEOUT (if (== RSK_GERUDO_FORTRESS RO_GF_CARPENTERS_NORMAL) 4 1)) (and THCouldFree1TorchCarpenter (and THCouldFreeDoubleCellCarpenter (and TH_CouldFreeDeadEndCarpenter THCouldRescueSlopeCarpenter))))
 RC_TH_1_TORCH_CARPENTER (CanKillEnemy RE_GERUDO_WARRIOR)
 RC_TH_1_TORCH_CELL_RIGHT_POT CanBreakPots
 RC_TH_1_TORCH_CELL_MID_POT CanBreakPots
@@ -14,7 +14,7 @@ RR_GF_NEAR_GROTTO true
 def RR_TH_DOUBLE_CELL SCENE_THIEVES_HIDEOUT false RA_GERUDO_FORTRESS
 Thieves Hideout Double Cell
 THCouldFreeDoubleCellCarpenter (CanKillEnemy RE_GERUDO_WARRIOR)
-THRescuedAllCarpenters (and (== RSK_GERUDO_FORTRESS RO_GF_CARPENTERS_NORMAL) (and (SmallKeys RR_GF_OUTSKIRTS 4) (and THCouldFree1TorchCarpenter (and THCouldFreeDoubleCellCarpenter (and TH_CouldFreeDeadEndCarpenter THCouldRescueSlopeCarpenter)))))
+THRescuedAllCarpenters (and (== RSK_GERUDO_FORTRESS RO_GF_CARPENTERS_NORMAL) (and (SmallKeys SCENE_THIEVES_HIDEOUT 4) (and THCouldFree1TorchCarpenter (and THCouldFreeDoubleCellCarpenter (and TH_CouldFreeDeadEndCarpenter THCouldRescueSlopeCarpenter)))))
 RC_TH_DOUBLE_CELL_CARPENTER (CanKillEnemy RE_GERUDO_WARRIOR)
 RC_TH_NEAR_DOUBLE_CELL_RIGHT_POT CanBreakPots
 RC_TH_NEAR_DOUBLE_CELL_MID_POT CanBreakPots
@@ -32,7 +32,7 @@ RR_GF_NEAR_GROTTO true
 def RR_TH_DEAD_END_CELL SCENE_THIEVES_HIDEOUT false RA_GERUDO_FORTRESS
 Thieves Hideout Dead End Cell
 TH_CouldFreeDeadEndCarpenter (CanKillEnemy RE_GERUDO_WARRIOR)
-THRescuedAllCarpenters (and (== RSK_GERUDO_FORTRESS RO_GF_CARPENTERS_NORMAL) (and (SmallKeys RR_GF_OUTSKIRTS 4) (and THCouldFree1TorchCarpenter (and THCouldFreeDoubleCellCarpenter (and TH_CouldFreeDeadEndCarpenter THCouldRescueSlopeCarpenter)))))
+THRescuedAllCarpenters (and (== RSK_GERUDO_FORTRESS RO_GF_CARPENTERS_NORMAL) (and (SmallKeys SCENE_THIEVES_HIDEOUT 4) (and THCouldFree1TorchCarpenter (and THCouldFreeDoubleCellCarpenter (and TH_CouldFreeDeadEndCarpenter THCouldRescueSlopeCarpenter)))))
 RC_TH_DEAD_END_CARPENTER (CanKillEnemy RE_GERUDO_WARRIOR)
 RC_TH_DEAD_END_CELL_CRATE CanBreakCrates
 RC_TH_FREED_CARPENTERS THRescuedAllCarpenters
@@ -41,7 +41,7 @@ RR_GF_BELOW_GS true
 def RR_TH_STEEP_SLOPE_CELL SCENE_THIEVES_HIDEOUT false RA_GERUDO_FORTRESS
 Thieves Hideout Steep Slope Cell
 THCouldRescueSlopeCarpenter (CanKillEnemy RE_GERUDO_WARRIOR)
-THRescuedAllCarpenters (and (== RSK_GERUDO_FORTRESS RO_GF_CARPENTERS_NORMAL) (and (SmallKeys RR_GF_OUTSKIRTS 4) (and THCouldFree1TorchCarpenter (and THCouldFreeDoubleCellCarpenter (and TH_CouldFreeDeadEndCarpenter THCouldRescueSlopeCarpenter)))))
+THRescuedAllCarpenters (and (== RSK_GERUDO_FORTRESS RO_GF_CARPENTERS_NORMAL) (and (SmallKeys SCENE_THIEVES_HIDEOUT 4) (and THCouldFree1TorchCarpenter (and THCouldFreeDoubleCellCarpenter (and TH_CouldFreeDeadEndCarpenter THCouldRescueSlopeCarpenter)))))
 RC_TH_STEEP_SLOPE_CARPENTER (CanKillEnemy RE_GERUDO_WARRIOR)
 RC_TH_STEEP_SLOPE_RIGHT_POT CanBreakPots
 RC_TH_STEEP_SLOPE_LEFT_POT CanBreakPots

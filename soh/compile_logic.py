@@ -25,6 +25,7 @@ void RegionTable_Init_Generated() {
 }"""
 
     def generate_rr(self, dirname, RRs):
+        checks = {} # relying on ordered inserts, which set lacks
         result = []
         output = result.append
         output(self.RR_PRELUDE)
@@ -43,6 +44,7 @@ void RegionTable_Init_Generated() {
             if rr.checks:
                 output("\n")
                 for name, code in rr.checks:
+                    checks[name] = None
                     output(f"\tLOCATION({name}, {self.compile_rr(rr, code)}),\n")
             output("}, {")
 
@@ -70,6 +72,14 @@ void RegionTable_Init_Generated() {
                 f.write(f"    {rr.name},\n")
             f.write(f"    RR_MAX,\n")
             f.write("} RandomizerRegion;\n")
+        with open(dirname + "/checks.h", "w", encoding="ascii") as f:
+            f.write("#pragma once\n")
+            f.write("typedef enum {\n")
+            f.write(f"    RC_UNKNOWN_CHECK,\n")
+            for check in checks.keys():
+                f.write(f"    {check},\n")
+            f.write(f"    RC_MAX,\n")
+            f.write("} RandomizerCheck;\n")
 
     def compile_rr(self, rr, ast):
         result = []
