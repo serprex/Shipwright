@@ -158,6 +158,95 @@ void RegionTable_Init_Generated() {
                     assert false
         return "".join(result)
 
+class Archipelago:
+    RR_PRELUDE = """
+from typing import TYPE_CHECKING
+
+from BaseClasses import Region
+from worlds.generic.Rules import set_rule
+
+from .Items import SohItem
+from .Locations import SohLocation, SohLocationData, base_location_table
+from .Rules import (can_break_mud_walls, is_adult, has_explosives, can_attack, take_damage, can_shield, can_kill_enemy,
+                    has_fire_source_with_torch, can_use, can_do_trick, can_jump_slash)
+
+if TYPE_CHECKING:
+    from . import SohWorld
+
+def create_regions_and_rules(world: \"SohWorld\") -> None:
+    for name in region_names:
+        region = Region(name, world.player, world.multiworld)
+        world.multiworld.regions.append(region)
+        region.add_locations({loc_name: loc_data.address for loc_name, loc_data in base_location_table.items()
+                              if loc_data.region == region_name}, SohLocation)
+
+    set_rules(world)
+"""
+    def generate_rr(self, dirname, RRs):
+        result = []
+        output = result.append
+        output(self.RR_PRELUDE)
+        output("def set_rules(world: \"SohWorld\") -> None:\n")
+        output("    player = world.player\n")
+        for rr in RRs:
+            if rr.events:
+                for name, code in rr.events:
+                    output(f"    data = SohLocationData({rr.name!r}, event_item={name!r})")
+                    output(f"    world.get_region(data.region).add_event({name!r}, data.event_item, location_type=SohLocation, item_type=SohItem)")
+                    output(f"    set_rule(world.get_location({name!r}, rule=lambda state: {self.compile_rr(rr, code)})")
+
+            if rr.checks:
+                for name, code in rr.checks:
+                    output("      set_rule(world.get_location({name!r}), rule=lambda state: {self.compile_rr(rr, code)})")
+
+            if rr.exits:
+                for name, code in rr.exits:
+                    # TODO Archi needs to handle deprioritization for hints
+                    deprioritize = isinstance(code, list) and isinstance(code[0], str) and code[0] == "@deprioritize"
+                    if deprioritize:
+                        code = code[1]
+
+                    output(f"    world.get_region({rr.name!r}).connect(\n")
+                    if code == "true" or code == ["true"]:
+                        output(f"        world.get_region({name!r}))\n")
+                    else:
+                        output(f"        world.get_region({name!r}),\n")
+                        output(f"        rule=lambda state: {self.compile_rr(rr, code)})\n")
+
+        with open(dirname + "/Generated.py", "w", encoding="ascii") as f:
+            for s in result:
+                f.write(s)
+
+    def compile_rr(self, rr, ast):
+        result = []
+        output = result.append
+        if ast:
+            if isinstance(ast, str):
+                f = ast
+                ast = [f]
+            else:
+                f = ast[0]
+                assert isinstance(f, str)
+            if f == "IsAdult":
+                output("is_adult(state, world)")
+            elif f == "IsChild":
+                output("is_child(state, world)")
+            elif f in logicFUNC or f in FUNC or f in ctxFUNC:
+                output(f"{f}(state, world")
+                output("".join(", " + self.compile_rr(rr, node) for node in ast[1:]))
+                output(")")
+            elif f.startswith("RT_"):
+                output(f"can_do_trick(state, world, {f!r})")
+            elif f in binOP:
+                op = f" {f} " if f in ("and", "or") else binOP[f]
+                output("(")
+                output(op.join(self.compile_rr(rr, node) for node in ast[1:]))
+                output(")")
+            else:
+                output("True")
+                print("TODO", ast)
+        return "".join(result)
+
 class RR:
     __slots__ = "name", "scene", "timepass", "areas", "ui_name", "events", "checks", "exits"
     def __init__(self, name, scene, timepass, *areas):
@@ -186,6 +275,7 @@ def parse(code):
             stack.append(ast)
             ast = []
             lastidx = idx+1
+            
         elif ch == ")":
             if idx > lastidx:
                 ast.append(code[lastidx:idx])
