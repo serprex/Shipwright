@@ -147,6 +147,7 @@ typedef enum {
     VA_CRAWLSPACE,
     VA_TERRAIN_CUE,
     VA_WALL_CUE,
+    VA_VOID,
     VA_CLIMB,
     VA_DOOR,
     VA_AREA_CHANGE,

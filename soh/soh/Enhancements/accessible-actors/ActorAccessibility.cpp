@@ -680,6 +680,10 @@ void ActorAccessibility_InterpretCurrentScene(PlayState* play) {
              func_80041DB8(&play->colCtx, poly, BGCHECK_SCENE) == 3)) {
             ActorAccessibility_PolyToVirtualActor(play, poly, VA_CLIMB, list);
         }
+        s32 bgId;
+        if (func_80041EA4(&play->colCtx, poly, BGCHECK_SCENE) == 12) {
+            ActorAccessibility_PolyToVirtualActor(play, poly, VA_VOID, list);
+        }
         if (SurfaceType_GetSceneExitIndex(&play->colCtx, poly, BGCHECK_SCENE) != 0) {
             ActorAccessibility_PolyToVirtualActor(play, poly, VA_AREA_CHANGE, list);
         }

@@ -1001,6 +1001,10 @@ void ActorAccessibility_InitActors() {
     policy.volume = 1.5;
     policy.distance = 2000;
     ActorAccessibility_AddSupportedActor(VA_CRAWLSPACE, policy);
+    ActorAccessibility_InitPolicy(&policy, "Void", NA_SE_OC_ABYSS);
+    policy.distance = 500;
+    policy.ydist = 500;
+    ActorAccessibility_AddSupportedActor(VA_VOID, policy);
     ActorAccessibility_InitPolicy(&policy, "Ladder/climable", [](AccessibleActor* actor) {
         Player* player = GET_PLAYER(actor->play);
         f32 waterLoc = player->actor.yDistToWater + player->actor.world.pos.y;
