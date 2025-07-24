@@ -833,6 +833,8 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_InitPolicy(&policy, "Ice Barred", NA_SE_EV_CHAIN_KEY_UNLOCK);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_ICE_SHUTTER, policy);
     ActorAccessibility_InitPolicy(&policy, "Ice Block", NA_SE_PL_SLIP_ICE_LELEL);
+    policy.distance = 750;
+    policy.volume = 2;
     ActorAccessibility_AddSupportedActor(ACTOR_BG_GND_ICEBLOCK, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_ICE_OBJECTS, policy);
     ActorAccessibility_InitPolicy(&policy, "Iceberg", NA_SE_EV_ICE_FREEZE);

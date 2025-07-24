@@ -196,9 +196,7 @@ ActorAccessibilityPolicy* ActorAccessibility_GetPolicyForActor(s16 type) {
 }
 
 int ActorAccessibility_GetRandomStartingFrameCount(int min, int max) {
-    static std::mt19937 gen;
-    std::uniform_int_distribution<> dist(min, max);
-    return dist(gen);
+    return min + Rand_ZeroOne() * (max - min);
 }
 
 void ActorAccessibility_TrackNewActor(Actor* actor) {
