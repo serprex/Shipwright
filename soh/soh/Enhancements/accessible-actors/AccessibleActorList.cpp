@@ -27,6 +27,7 @@ extern "C" {
 #include "overlays/actors/ovl_En_G_Switch/z_en_g_switch.h"
 #include "overlays/actors/ovl_En_Ice_Hono/z_en_ice_hono.h"
 #include "overlays/actors/ovl_En_Kakasi2/z_en_kakasi2.h"
+#include "overlays/actors/ovl_En_Kakasi3/z_en_kakasi3.h"
 #include "overlays/actors/ovl_En_Wood02/z_en_wood02.h"
 #include "overlays/actors/ovl_Obj_Switch/z_obj_switch.h"
 #include "overlays/actors/ovl_Obj_Syokudai/z_obj_syokudai.h"
@@ -434,12 +435,17 @@ void ActorAccessibility_InitActors() {
         }
     });
     ActorAccessibility_AddSupportedActor(ACTOR_EN_WOOD02, policy);
+    ActorAccessibility_InitPolicy(&policy, "Scarecrow", NA_SE_IT_KAKASHI_JUMP);
+    policy.volume = 2;
+    policy.distance = 1000;
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_KAKASI, policy);
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_KAKASI3, policy);
     ActorAccessibility_InitPolicy(&policy, "Scarecrow Spawn", [](AccessibleActor* actor) {
         if ((actor->frameCount & 63) == 0) {
             EnKakasi2* kakasi = (EnKakasi2*)actor->actor;
             actor->policy.distance = kakasi->maxSpawnDistance.x;
             actor->policy.ydist = kakasi->maxSpawnDistance.y;
-            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_KAKASHI_SWING);
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_KAKASHI_JUMP);
         }
     });
     policy.distance = 2000;
