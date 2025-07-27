@@ -364,8 +364,8 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
     }
     if (!actor->policy.runsAlways && actor->xyzDistToPlayer > actor->policy.distance) {
         return;
-    } else if (actor->isDrawn == 0 && actor->actor->id != ACTOR_EN_HOLL && actor->actor->id != ACTOR_EN_KAKASI2 &&
-               actor->actor->id != ACTOR_EN_IT && actor->actor->id != ACTOR_EN_OKARINA_TAG &&
+    } else if (actor->isDrawn == 0 && actor->id != ACTOR_EN_HOLL && actor->id != ACTOR_EN_KAKASI2 &&
+               actor->id != ACTOR_EN_IT && actor->id != ACTOR_EN_OKARINA_TAG && actor->id != ACTOR_EN_WONDER_ITEM &&
                !aa->glossary->GlossaryStarted) {
         return;
     }

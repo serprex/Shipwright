@@ -11,6 +11,7 @@
 #include <float.h>
 
 extern "C" {
+#include "z64collision_check.h"
 #include "overlays/actors/ovl_Bg_Bdan_Switch/z_bg_bdan_switch.h"
 #include "overlays/actors/ovl_Bg_Po_Event/z_bg_po_event.h"
 #include "overlays/actors/ovl_Boss_Goma/z_boss_goma.h"
@@ -28,6 +29,7 @@ extern "C" {
 #include "overlays/actors/ovl_En_Ice_Hono/z_en_ice_hono.h"
 #include "overlays/actors/ovl_En_Kakasi2/z_en_kakasi2.h"
 #include "overlays/actors/ovl_En_Wood02/z_en_wood02.h"
+#include "overlays/actors/ovl_En_Wonder_Item/z_en_wonder_item.h"
 #include "overlays/actors/ovl_Obj_Switch/z_obj_switch.h"
 #include "overlays/actors/ovl_Obj_Syokudai/z_obj_syokudai.h"
 
@@ -454,11 +456,13 @@ void ActorAccessibility_InitActors() {
         if (actor->xzDistToPlayer < kakasi->maxSpawnDistance.x) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_KAKASHI_JUMP);
         }
+        if (kakasi->switchFlag >= 0 && Flags_GetSwitch(actor->play, kakasi->switchFlag)) {
+            actor->policy.aimAssist.isProvider = AIM_HOOK;
+        }
     });
     policy.ydist = 0x4000;
     policy.distance = 0x4000;
     policy.n = 40;
-    policy.aimAssist.isProvider = AIM_HOOK;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_KAKASI2, policy);
     ActorAccessibility_InitPolicy(&policy, "Chest", [](AccessibleActor* actor) {
         Player* player = GET_PLAYER(actor->play);
@@ -635,6 +639,27 @@ void ActorAccessibility_InitActors() {
     policy.ydist = 200;
     policy.pitch = 1.1;
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_SWITCH, policy);
+    ActorAccessibility_InitPolicy(&policy, "Wonder", [](AccessibleActor* actor) {
+        auto wonder = (EnWonderItem*)actor->actor;
+        if (wonder->wonderMode == WONDERITEM_INTERACT_SWITCH) {
+            auto colTypeIndex = wonder->actor.world.rot.z & 0xFF;
+            switch (colTypeIndex) {
+            case 1:
+                actor->policy.aimAssist.isProvider = AIM_BOW;
+            case 4:
+                actor->policy.aimAssist.isProvider = AIM_SLING;
+            case 5:
+                actor->policy.aimAssist.isProvider = AIM_BOOM;
+            case 6:
+                actor->policy.aimAssist.isProvider = AIM_HOOK;
+            }
+        } else if (wonder->wonderMode == WONDERITEM_BOMB_SOLDIER) {
+            actor->policy.aimAssist.isProvider = AIM_SLING;
+        }
+    });
+    policy.ydist = 1000;
+    policy.distance = 1000;
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_WONDER_ITEM, policy);
     ActorAccessibility_InitPolicy(&policy, "Jabu Switch", [](AccessibleActor* actor) {
         int type = actor->actor->params & 0xFF;
         if (type == YELLOW_TALL_1 || type == YELLOW_TALL_2) {
