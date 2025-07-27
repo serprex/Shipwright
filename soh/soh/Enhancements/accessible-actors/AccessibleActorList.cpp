@@ -27,7 +27,6 @@ extern "C" {
 #include "overlays/actors/ovl_En_G_Switch/z_en_g_switch.h"
 #include "overlays/actors/ovl_En_Ice_Hono/z_en_ice_hono.h"
 #include "overlays/actors/ovl_En_Kakasi2/z_en_kakasi2.h"
-#include "overlays/actors/ovl_En_Kakasi3/z_en_kakasi3.h"
 #include "overlays/actors/ovl_En_Wood02/z_en_wood02.h"
 #include "overlays/actors/ovl_Obj_Switch/z_obj_switch.h"
 #include "overlays/actors/ovl_Obj_Syokudai/z_obj_syokudai.h"
@@ -380,9 +379,8 @@ void ActorAccessibility_InitActors() {
     policy.englishName = "Gossip Stone";
     policy.pitch = 0.75;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_GS, policy);
-    ActorAccessibility_InitPolicy(&policy, "Scarecrow", NA_SE_EV_KAKASHI_SWING);
-    ActorAccessibility_AddSupportedActor(ACTOR_EN_KAKASI, policy);
-    ActorAccessibility_AddSupportedActor(ACTOR_EN_KAKASI3, policy);
+    ActorAccessibility_InitPolicy(&policy, "Loading Zone", NA_SE_EV_DIG_UP);
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_HOLL, policy);
 
     ActorAccessibility_InitPolicy(&policy, "Dogs", [](AccessibleActor* actor) {
         EnDog* dog = (EnDog*)actor->actor;
@@ -441,15 +439,15 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_EN_KAKASI, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_EN_KAKASI3, policy);
     ActorAccessibility_InitPolicy(&policy, "Scarecrow Spawn", [](AccessibleActor* actor) {
-        if ((actor->frameCount & 63) == 0) {
-            EnKakasi2* kakasi = (EnKakasi2*)actor->actor;
-            actor->policy.distance = kakasi->maxSpawnDistance.x;
-            actor->policy.ydist = kakasi->maxSpawnDistance.y;
+        EnKakasi2* kakasi = (EnKakasi2*)actor->actor;
+        actor->policy.ydist = kakasi->maxSpawnDistance.y;
+        if (actor->xzDistToPlayer < kakasi->maxSpawnDistance.x) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_KAKASHI_JUMP);
         }
     });
-    policy.distance = 2000;
-    policy.n = 1;
+    policy.ydist = 0x4000;
+    policy.distance = 0x4000;
+    policy.n = 40;
     policy.aimAssist.isProvider = AIM_HOOK;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_KAKASI2, policy);
     ActorAccessibility_InitPolicy(&policy, "Chest", [](AccessibleActor* actor) {

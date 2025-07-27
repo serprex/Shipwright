@@ -350,7 +350,6 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
     if (actor->actor != NULL && fabs(actor->actor->yDistToPlayer) > actor->policy.ydist) {
         return;
     }
-    // Send sound parameters to the new audio engine. Eventually remove the old stuff once all actors are carried over.
     for (int i = 0; i < AAE_SLOTS_PER_HANDLE; i++) {
         if (actor->managedSoundSlots & (1 << i)) {
             ActorAccessibility_SetSoundPos(actor, i, &actor->projectedPos, actor->xyzDistToPlayer,
@@ -365,7 +364,8 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
     }
     if (!actor->policy.runsAlways && actor->xyzDistToPlayer > actor->policy.distance) {
         return;
-    } else if (actor->isDrawn == 0 && actor->actor->id != ACTOR_EN_IT && actor->actor->id != ACTOR_EN_OKARINA_TAG &&
+    } else if (actor->isDrawn == 0 && actor->actor->id != ACTOR_EN_HOLL && actor->actor->id != ACTOR_EN_KAKASI2 &&
+               actor->actor->id != ACTOR_EN_IT && actor->actor->id != ACTOR_EN_OKARINA_TAG &&
                !aa->glossary->GlossaryStarted) {
         return;
     }
