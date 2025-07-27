@@ -678,7 +678,6 @@ void ActorAccessibility_InterpretCurrentScene(PlayState* play) {
              func_80041DB8(&play->colCtx, poly, BGCHECK_SCENE) == 3)) {
             ActorAccessibility_PolyToVirtualActor(play, poly, VA_CLIMB, list);
         }
-        s32 bgId;
         if (func_80041EA4(&play->colCtx, poly, BGCHECK_SCENE) == 12) {
             ActorAccessibility_PolyToVirtualActor(play, poly, VA_VOID, list);
         }
@@ -710,6 +709,8 @@ void ActorAccessibility_PolyToVirtualActor(PlayState* play, CollisionPoly* poly,
             s16 nextEntranceIndex = play->setupExitList[sceneIndex - 1];
             actor->sceneIndex = gEntranceTable[nextEntranceIndex].scene;
         }
+    } else if (SurfaceType_IsHookshotSurface(&play->colCtx, poly, BGCHECK_SCENE)) {
+        actor->policy.aimAssist.isProvider = AIM_HOOK;
     }
 }
 

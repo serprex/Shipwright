@@ -370,6 +370,11 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_EN_SKJ, policy);
     policy.englishName = "Boss Carpenter";
     ActorAccessibility_AddSupportedActor(ACTOR_EN_TORYO, policy);
+    policy.englishName = "Carpenter's Son";
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_HS, policy);
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_HS2, policy);
+    policy.englishName = "Bean Salesman";
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_MS, policy);
     policy.englishName = "Carpenters (Kakariko)";
     ActorAccessibility_AddSupportedActor(ACTOR_EN_DAIKU_KAKARIKO, policy);
     policy.englishName = "Kakariko Rooftop Man";
@@ -433,6 +438,11 @@ void ActorAccessibility_InitActors() {
         }
     });
     ActorAccessibility_AddSupportedActor(ACTOR_EN_WOOD02, policy);
+    ActorAccessibility_InitPolicy(&policy, "Hookshot Pillar", NA_SE_IT_HOOKSHOT_STICK_OBJ);
+    policy.distance = 1000;
+    policy.ydist = 1000;
+    policy.aimAssist.isProvider = AIM_HOOK;
+    ActorAccessibility_AddSupportedActor(ACTOR_OBJ_HSBLOCK, policy);
     ActorAccessibility_InitPolicy(&policy, "Scarecrow", NA_SE_IT_KAKASHI_JUMP);
     policy.volume = 2;
     policy.distance = 1000;
@@ -498,8 +508,10 @@ void ActorAccessibility_InitActors() {
 
     // ACTOR_EN_A_OBJ has exactly the same configuration.
     ActorAccessibility_AddSupportedActor(ACTOR_EN_A_OBJ, policy);
-    ActorAccessibility_InitPolicy(&policy, "Large Crate", NA_SE_EV_WOODBOX_BREAK);
+    ActorAccessibility_InitPolicy(&policy, "Small Crate", NA_SE_EV_WOODBOX_BREAK);
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_KIBAKO, policy);
+    policy.englishName = "Crate";
+    policy.aimAssist.isProvider = AIM_HOOK;
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_KIBAKO2, policy);
     ActorAccessibility_InitPolicy(&policy, "deku stick drops", [](AccessibleActor* actor) {
         EnKarebaba* baba = (EnKarebaba*)actor->actor;
