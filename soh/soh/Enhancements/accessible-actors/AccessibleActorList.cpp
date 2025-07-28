@@ -435,10 +435,15 @@ void ActorAccessibility_InitActors() {
         EnWood02* wood = (EnWood02*)actor->actor;
         if (wood->actor.params <= WOOD_TREE_KAKARIKO_ADULT) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_TREE_CUT);
+            if (actor->play->sceneNum == SCENE_HYRULE_FIELD) {
+                actor->policy.distance = 3000;
+                actor->policy.ydist = 1000;
+            }
         } else if (wood->actor.params < WOOD_LEAF_GREEN) {
             ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_TREE_SWING);
         }
     });
+    policy.distance = 1000;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_WOOD02, policy);
     ActorAccessibility_InitPolicy(&policy, "Hookshot Pillar", NA_SE_IT_HOOKSHOT_STICK_OBJ);
     policy.distance = 1000;
@@ -565,6 +570,11 @@ void ActorAccessibility_InitActors() {
     policy.distance = 1500;
     policy.n = 60;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_PO_FIELD, policy);
+
+    ActorAccessibility_InitPolicy(&policy, "market bridge", NA_SE_EV_BRIDGE_OPEN);
+    policy.distance = 1000;
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_SPOT00_HANEBASI, policy);
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_SPOT00_BREAK, policy);
 
     ActorAccessibility_InitPolicy(&policy, "haunted wasteland poe", NA_SE_EN_PO_CRY);
     policy.distance = 600;
