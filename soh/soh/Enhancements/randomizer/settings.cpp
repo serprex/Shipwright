@@ -584,6 +584,9 @@ void Settings::CreateOptions() {
               "Gerudo Valley Crate PoH as Adult with Hover Boots",
               "From the far side of Gerudo Valley, a precise Hover Boots movement and jump-slash recoil can allow "
               "adult to reach the ledge with the crate PoH without needing Longshot. You will take fall damage.");
+    OPT_TRICK(RT_GV_HOOKSHOT_EXTENSION_ACROSS_BRIDGE, RCQUEST_BOTH, RA_GERUDO_VALLEY,
+              { Tricks::Tag::INTERMEDIATE, Tricks::Tag::GLITCH }, "Gerudo Valley Cross Bridge with Hookshot Extension",
+              "It is possible to cross Gerudo Valley with only Hookshot using a hookshot extension.");
     OPT_TRICK(RT_PASS_GUARDS_WITH_NOTHING, RCQUEST_BOTH, RA_GERUDO_FORTRESS, { Tricks::Tag::NOVICE },
               "Sneak Past Moving Gerudo Guards with No Items",
               "The logic normally guarantees Bow or Hookshot to stun them from a distance,"
@@ -1139,6 +1142,9 @@ void Settings::CreateOptions() {
               "Spirit Trial without Hookshot",
               "The highest rupee can be obtained as either age by performing a precise jump and a well-timed jumpslash "
               "off of an Armos.");
+    OPT_TRICK(RT_GANON_SPIRIT_TRIAL_BOW_EXTENSION, RCQUEST_VANILLA, RA_GANONS_CASTLE,
+              { Tricks::Tag::NOVICE, Tricks::Tag::GLITCH }, "Spirit Trial Switch with Bow Extension",
+              "It is possible to shoot through wall to hit switch using a bow extension.");
     OPT_TRICK(RT_LENS_GANON_MQ, RCQUEST_MQ, RA_GANONS_CASTLE, { Tricks::Tag::NOVICE },
               "Ganon\'s Castle MQ without Lens of Truth",
               "Removes the requirements for the Lens of Truth in Ganon's Castle MQ.");
