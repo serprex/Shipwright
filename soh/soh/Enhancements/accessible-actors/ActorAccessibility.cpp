@@ -1,23 +1,25 @@
+#include <sstream>
+#include <unordered_set>
+#include <map>
+#include <random>
+#include <vector>
+
 #include "ActorAccessibility.h"
 #include "AccessibleAudioEngine.h"
 #include "soh/OTRGlobals.h"
 #include "resource/type/Blob.h"
 
-#include <map>
-#include <random>
-#include <vector>
 #include <functions.h>
 #include <variables.h>
 #include <macros.h>
 #include "ResourceType.h"
 #include "SfxExtractor.h"
 
-#include <sstream>
 #include "File.h"
-#include <unordered_set>
 #include "soh/Enhancements/speechsynthesizer/SpeechSynthesizer.h"
 #include "soh/Enhancements/tts/tts.h"
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
+#include "soh/ObjectExtension/ObjectExtension.h"
 
 extern "C" {
 extern PlayState* gPlayState;
@@ -47,9 +49,6 @@ typedef struct {
 
 // Maps actors to their accessibility policies, which describe how accessibility should treat them.
 typedef std::map<s16, ActorAccessibilityPolicy> SupportedActors_t;
-typedef std::map<Actor*, uint64_t>
-    TrackedActors_t; // Maps real actors to internal IDs specific to accessibility.
-                     // Maps internal IDs to wrapped actor objects. These actors can be real or virtual.
 typedef std::map<uint64_t, AccessibleActor> AccessibleActorList_t;
 typedef std::vector<AccessibleActor> VAList_t; // Denotes a list of virtual actors specific to a single room.
 typedef std::map<s32, VAList_t> VAZones_t; // Maps room/scene indices to their corresponding virtual actor collections.
@@ -60,6 +59,10 @@ typedef std::unordered_set<s16> SceneList_t;
 struct SfxRecord {
     std::string path;
     std::shared_ptr<Ship::File> resource;
+};
+
+struct A11yID {
+    uint64_t id;
 };
 
 class AudioGlossaryData {
@@ -78,7 +81,6 @@ class ActorAccessibility {
     bool isOn = false;
     uint64_t nextActorID = 0;
     SupportedActors_t supportedActors;
-    TrackedActors_t trackedActors;
     AccessibleActorList_t accessibleActorList;
     AudioGlossaryData* glossary;
     VAZones_t vaZones;
@@ -220,17 +222,15 @@ void ActorAccessibility_TrackNewActor(Actor* actor) {
     accessibleActor.aimFramesSinceAimAssist = 255;
     accessibleActor.aimFrequency = 10;
 
-    aa->trackedActors[actor] = accessibleActor.instanceID;
+    ObjectExtension::GetInstance().Set<A11yID>(actor, A11yID{ .id = accessibleActor.instanceID });
     aa->accessibleActorList[accessibleActor.instanceID] = accessibleActor;
 }
 
 void ActorAccessibility_RemoveTrackedActor(Actor* actor) {
-    TrackedActors_t::iterator i = aa->trackedActors.find(actor);
-    if (i == aa->trackedActors.end())
+    const auto id = ObjectExtension::GetInstance().Get<A11yID>(actor);
+    if (id == nullptr)
         return;
-    uint64_t id = i->second;
-    aa->trackedActors.erase(i);
-    AccessibleActorList_t::iterator i2 = aa->accessibleActorList.find(id);
+    AccessibleActorList_t::iterator i2 = aa->accessibleActorList.find(id->id);
     if (i2 == aa->accessibleActorList.end())
         return;
     ActorAccessibility_StopAllSoundsForActor(&i2->second);
@@ -828,3 +828,5 @@ void ActorAccessibility_HandleSoundExtractionMode(PlayState* play) {
 void ActorAccessibility_DoSoundExtractionStep() {
     aa->sfxExtractor.captureCallback();
 }
+
+static ObjectExtension::Register<A11yID> RegisterA11yID;

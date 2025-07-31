@@ -602,6 +602,7 @@ void ActorAccessibility_InitActors() {
     ActorAccessibility_AddSupportedActor(ACTOR_BG_HIDAN_KOWARERUKABE, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_MIZU_BWALL, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_JYA_BOMBIWA, policy);
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_HAKA_ZOU, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_BOMBWALL, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_BREAKWALL, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_SPOT08_BAKUDANKABE, policy);
@@ -744,9 +745,12 @@ void ActorAccessibility_InitActors() {
     policy.distance = 800;
     policy.pitch = 1.1;
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_OSHIHIKI, policy);
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_SPOT18_OBJ, policy); // Ideally should only play while adult
     ActorAccessibility_AddSupportedActor(ACTOR_BG_SPOT15_RRBOX, policy);
-    ActorAccessibility_AddSupportedActor(ACTOR_BG_HIDAN_ROCK, policy);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_JYA_BLOCK, policy);
+    policy.distance = 1000;
+    policy.ydist = 500;
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_HIDAN_ROCK, policy);
     ActorAccessibility_InitPolicy(&policy, "Torch", [](AccessibleActor* actor) {
         ObjSyokudai* torch = (ObjSyokudai*)actor->actor;
         // temporary torches
