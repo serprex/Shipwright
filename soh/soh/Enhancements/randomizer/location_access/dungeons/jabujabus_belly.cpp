@@ -28,7 +28,7 @@ void RegionTable_Init_JabuJabusBelly() {
         EventAccess(&logic->JabuWestTentacle, []{return logic->JabuRutoIn1F && logic->CanKillEnemy(RE_TENTACLE, ED_BOOMERANG);}),
     }, {
         //Locations
-        LOCATION(RC_JABU_JABUS_BELLY_DEKU_SCRUB,                    logic->HasItem(RG_BRONZE_SCALE) && (logic->IsChild || logic->HasItem(RG_SILVER_SCALE) || ctx->GetTrickOption(RT_JABU_ALCOVE_JUMP_DIVE) || logic->CanUse(RG_IRON_BOOTS)) && logic->CanStunDeku()),
+        LOCATION(RC_JABU_JABUS_BELLY_DEKU_SCRUB,                    logic->HasItem(RG_BRONZE_SCALE) && (logic->IsChild || logic->HasItem(RG_SILVER_SCALE) || ctx->GetTrickOption(RT_JABU_ALCOVE_JUMP_DIVE) || logic->CanUse(RG_IRON_BOOTS)) && logic->CanStunDeku() && logic->HasItem(RG_SPEAK)),
         //We can kill the Stingers with ruto
         LOCATION(RC_JABU_JABUS_BELLY_BOOMERANG_CHEST,               logic->JabuRutoIn1F),
         LOCATION(RC_JABU_JABUS_BELLY_MAP_CHEST,                     logic->JabuWestTentacle),

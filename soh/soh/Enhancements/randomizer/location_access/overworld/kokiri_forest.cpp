@@ -9,7 +9,7 @@ void RegionTable_Init_KokiriForest() {
         //Events
         EventAccess(&logic->BeanPlantFairy,           []{return logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS);}),
         EventAccess(&logic->GossipStoneFairy,         []{return logic->CallGossipFairyExceptSuns();}),
-        EventAccess(&logic->ShowedMidoSwordAndShield, []{return logic->IsChild && logic->CanUse(RG_KOKIRI_SWORD) && logic->CanUse(RG_DEKU_SHIELD);}),
+        EventAccess(&logic->ShowedMidoSwordAndShield, []{return logic->IsChild && logic->HasItem(RG_SPEAK) && logic->CanUse(RG_KOKIRI_SWORD) && logic->CanUse(RG_DEKU_SHIELD);}),
     }, {
         //Locations
         LOCATION(RC_KF_KOKIRI_SWORD_CHEST,      logic->IsChild),
@@ -93,7 +93,7 @@ void RegionTable_Init_KokiriForest() {
         //Events
         EventAccess(&logic->DekuBabaSticks,           []{return logic->CanGetDekuBabaSticks();}),
         EventAccess(&logic->DekuBabaNuts,             []{return logic->CanGetDekuBabaNuts();}),
-        EventAccess(&logic->ShowedMidoSwordAndShield, []{return logic->IsChild && logic->CanUse(RG_KOKIRI_SWORD) && logic->CanUse(RG_DEKU_SHIELD);}),
+        EventAccess(&logic->ShowedMidoSwordAndShield, []{return logic->IsChild && logic->HasItem(RG_SPEAK) && logic->CanUse(RG_KOKIRI_SWORD) && logic->CanUse(RG_DEKU_SHIELD);}),
     }, {
         //Locations
         LOCATION(RC_KF_DEKU_TREE_LEFT_GOSSIP_STONE_FAIRY,      logic->CallGossipFairyExceptSuns()),
@@ -159,14 +159,14 @@ void RegionTable_Init_KokiriForest() {
 
     areaTable[RR_KF_KOKIRI_SHOP] = Region("KF Kokiri Shop", SCENE_KOKIRI_SHOP, {}, {
         //Locations
-        LOCATION(RC_KF_SHOP_ITEM_1, true),
-        LOCATION(RC_KF_SHOP_ITEM_2, true),
-        LOCATION(RC_KF_SHOP_ITEM_3, true),
-        LOCATION(RC_KF_SHOP_ITEM_4, true),
-        LOCATION(RC_KF_SHOP_ITEM_5, true),
-        LOCATION(RC_KF_SHOP_ITEM_6, true),
-        LOCATION(RC_KF_SHOP_ITEM_7, true),
-        LOCATION(RC_KF_SHOP_ITEM_8, true),
+        LOCATION(RC_KF_SHOP_ITEM_1, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KF_SHOP_ITEM_2, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KF_SHOP_ITEM_3, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KF_SHOP_ITEM_4, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KF_SHOP_ITEM_5, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KF_SHOP_ITEM_6, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KF_SHOP_ITEM_7, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KF_SHOP_ITEM_8, logic->HasItem(RG_SPEAK)),
     }, {
         //Exits
         Entrance(RR_KOKIRI_FOREST, []{return true;}),

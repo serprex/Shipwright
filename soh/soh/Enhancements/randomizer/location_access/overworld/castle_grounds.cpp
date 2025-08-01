@@ -23,7 +23,7 @@ void RegionTable_Init_CastleGrounds() {
         EventAccess(&logic->BugRock,          []{return true;}),
     }, {
         //Locations
-        LOCATION(RC_HC_MALON_EGG,                        true),
+        LOCATION(RC_HC_MALON_EGG,                        logic->HasItem(RG_SPEAK)),
         LOCATION(RC_HC_GS_TREE,                          logic->IsChild && logic->CanKillEnemy(RE_GOLD_SKULLTULA, ED_CLOSE)),
         LOCATION(RC_HC_MALON_GOSSIP_STONE_FAIRY,         logic->CallGossipFairy()),
         LOCATION(RC_HC_MALON_GOSSIP_STONE_FAIRY_BIG,     logic->CanUse(RG_SONG_OF_STORMS)),
@@ -43,8 +43,8 @@ void RegionTable_Init_CastleGrounds() {
 
     areaTable[RR_HC_GARDEN] = Region("HC Garden", SCENE_CASTLE_COURTYARD_ZELDA, {}, {
         //Locations
-        LOCATION(RC_HC_ZELDAS_LETTER, true),
-        LOCATION(RC_SONG_FROM_IMPA,   true),
+        LOCATION(RC_HC_ZELDAS_LETTER, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_SONG_FROM_IMPA,   logic->HasItem(RG_SPEAK)),
     }, {
         //Exits
         Entrance(RR_HYRULE_CASTLE_GROUNDS, []{return true;}),

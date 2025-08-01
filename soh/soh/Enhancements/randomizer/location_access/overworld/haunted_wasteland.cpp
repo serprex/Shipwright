@@ -23,7 +23,7 @@ void RegionTable_Init_HauntedWasteland() {
     }, {
         //Locations
         LOCATION(RC_WASTELAND_CHEST,            logic->HasFireSource()),
-        LOCATION(RC_WASTELAND_BOMBCHU_SALESMAN, logic->CanJumpslash() || logic->CanUse(RG_HOVER_BOOTS)),
+        LOCATION(RC_WASTELAND_BOMBCHU_SALESMAN, (logic->CanJumpslash() || logic->CanUse(RG_HOVER_BOOTS)) && logic->HasItem(RG_SPEAK)),
         LOCATION(RC_WASTELAND_GS,               logic->HookshotOrBoomerang()),
         LOCATION(RC_WASTELAND_NEAR_GS_POT_1,    logic->CanBreakPots()),
         LOCATION(RC_WASTELAND_NEAR_GS_POT_2,    logic->CanBreakPots()),

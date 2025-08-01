@@ -11,12 +11,12 @@ void RegionTable_Init_Kakariko() {
         //Open Gate setting is applied in RR_ROOT
         EventAccess(&logic->KakarikoVillageGateOpen, []{return logic->IsChild && logic->HasItem(RG_ZELDAS_LETTER);}),
         //Needs wallet to be able to get another mask after selling Keaton
-        EventAccess(&logic->BorrowSkullMask,         []{return logic->IsChild && logic->CanBorrowMasks && logic->HasItem(RG_CHILD_WALLET);}),
+        EventAccess(&logic->BorrowSkullMask,         []{return logic->IsChild && logic->CanBorrowMasks && logic->HasItem(RG_CHILD_WALLET) && logic->HasItem(RG_SPEAK);}),
     }, {
         //Locations
         LOCATION(RC_SHEIK_IN_KAKARIKO,                     logic->IsAdult && logic->HasItem(RG_FOREST_MEDALLION) && logic->HasItem(RG_FIRE_MEDALLION) && logic->HasItem(RG_WATER_MEDALLION)),
-        LOCATION(RC_KAK_ANJU_AS_CHILD,                     logic->IsChild && logic->AtDay),
-        LOCATION(RC_KAK_ANJU_AS_ADULT,                     logic->IsAdult && logic->AtDay),
+        LOCATION(RC_KAK_ANJU_AS_CHILD,                     logic->IsChild && logic->AtDay && logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KAK_ANJU_AS_ADULT,                     logic->IsAdult && logic->AtDay && logic->HasItem(RG_SPEAK)),
         LOCATION(RC_KAK_TRADE_POCKET_CUCCO,                logic->IsAdult && logic->AtDay && (logic->CanUse(RG_POCKET_EGG) && logic->WakeUpAdultTalon)),
         //Can kill lower kak skulls with pots
         LOCATION(RC_KAK_GS_HOUSE_UNDER_CONSTRUCTION,       logic->IsChild && logic->CanGetNightTimeGS()),
@@ -108,7 +108,7 @@ void RegionTable_Init_Kakariko() {
 
     areaTable[RR_KAK_ROOFTOP] = Region("Kak Rooftop", SCENE_KAKARIKO_VILLAGE, {}, {
         //Locations
-        LOCATION(RC_KAK_MAN_ON_ROOF, true),
+        LOCATION(RC_KAK_MAN_ON_ROOF, logic->HasItem(RG_SPEAK)),
     }, {
         //Exits
         Entrance(RR_KAK_BACKYARD,     []{return true;}),
@@ -138,12 +138,12 @@ void RegionTable_Init_Kakariko() {
 
     areaTable[RR_KAK_HOUSE_OF_SKULLTULA] = Region("Kak House of Skulltula", SCENE_HOUSE_OF_SKULLTULA, {}, {
         //Locations
-        LOCATION(RC_KAK_10_GOLD_SKULLTULA_REWARD,  logic->GetGSCount() >= 10),
-        LOCATION(RC_KAK_20_GOLD_SKULLTULA_REWARD,  logic->GetGSCount() >= 20),
-        LOCATION(RC_KAK_30_GOLD_SKULLTULA_REWARD,  logic->GetGSCount() >= 30),
-        LOCATION(RC_KAK_40_GOLD_SKULLTULA_REWARD,  logic->GetGSCount() >= 40),
-        LOCATION(RC_KAK_50_GOLD_SKULLTULA_REWARD,  logic->GetGSCount() >= 50),
-        LOCATION(RC_KAK_100_GOLD_SKULLTULA_REWARD, logic->GetGSCount() >= 100),
+        LOCATION(RC_KAK_10_GOLD_SKULLTULA_REWARD,  logic->HasItem(RG_SPEAK) && logic->GetGSCount() >= 10),
+        LOCATION(RC_KAK_20_GOLD_SKULLTULA_REWARD,  logic->HasItem(RG_SPEAK) && logic->GetGSCount() >= 20),
+        LOCATION(RC_KAK_30_GOLD_SKULLTULA_REWARD,  logic->HasItem(RG_SPEAK) && logic->GetGSCount() >= 30),
+        LOCATION(RC_KAK_40_GOLD_SKULLTULA_REWARD,  logic->HasItem(RG_SPEAK) && logic->GetGSCount() >= 40),
+        LOCATION(RC_KAK_50_GOLD_SKULLTULA_REWARD,  logic->HasItem(RG_SPEAK) && logic->GetGSCount() >= 50),
+        LOCATION(RC_KAK_100_GOLD_SKULLTULA_REWARD, logic->HasItem(RG_SPEAK) && logic->GetGSCount() >= 100),
     }, {
         //Exits
         Entrance(RR_KAKARIKO_VILLAGE, []{return true;}),
@@ -180,14 +180,14 @@ void RegionTable_Init_Kakariko() {
 
     areaTable[RR_KAK_BAZAAR] = Region("Kak Bazaar", SCENE_BAZAAR, {}, {
         //Locations
-        LOCATION(RC_KAK_BAZAAR_ITEM_1, true),
-        LOCATION(RC_KAK_BAZAAR_ITEM_2, true),
-        LOCATION(RC_KAK_BAZAAR_ITEM_3, true),
-        LOCATION(RC_KAK_BAZAAR_ITEM_4, true),
-        LOCATION(RC_KAK_BAZAAR_ITEM_5, true),
-        LOCATION(RC_KAK_BAZAAR_ITEM_6, true),
-        LOCATION(RC_KAK_BAZAAR_ITEM_7, true),
-        LOCATION(RC_KAK_BAZAAR_ITEM_8, true),
+        LOCATION(RC_KAK_BAZAAR_ITEM_1, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KAK_BAZAAR_ITEM_2, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KAK_BAZAAR_ITEM_3, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KAK_BAZAAR_ITEM_4, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KAK_BAZAAR_ITEM_5, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KAK_BAZAAR_ITEM_6, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KAK_BAZAAR_ITEM_7, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KAK_BAZAAR_ITEM_8, logic->HasItem(RG_SPEAK)),
     }, {
         //Exits
         Entrance(RR_KAKARIKO_VILLAGE, []{return true;}),
@@ -195,7 +195,7 @@ void RegionTable_Init_Kakariko() {
 
     areaTable[RR_KAK_SHOOTING_GALLERY] = Region("Kak Shooting Gallery", SCENE_SHOOTING_GALLERY, {}, {
         //Locations
-        LOCATION(RC_KAK_SHOOTING_GALLERY_REWARD, logic->HasItem(RG_CHILD_WALLET) && logic->IsAdult && logic->CanUse(RG_FAIRY_BOW)),
+        LOCATION(RC_KAK_SHOOTING_GALLERY_REWARD, logic->IsAdult && logic->HasItem(RG_CHILD_WALLET) && logic->HasItem(RG_SPEAK) && logic->CanUse(RG_FAIRY_BOW)),
     }, {
         //Exits
         Entrance(RR_KAKARIKO_VILLAGE, []{return true;}),
@@ -203,14 +203,14 @@ void RegionTable_Init_Kakariko() {
 
     areaTable[RR_KAK_POTION_SHOP_FRONT] = Region("Kak Potion Shop Front", SCENE_POTION_SHOP_KAKARIKO, {}, {
         //Locations
-        LOCATION(RC_KAK_POTION_SHOP_ITEM_1, logic->IsAdult),
-        LOCATION(RC_KAK_POTION_SHOP_ITEM_2, logic->IsAdult),
-        LOCATION(RC_KAK_POTION_SHOP_ITEM_3, logic->IsAdult),
-        LOCATION(RC_KAK_POTION_SHOP_ITEM_4, logic->IsAdult),
-        LOCATION(RC_KAK_POTION_SHOP_ITEM_5, logic->IsAdult),
-        LOCATION(RC_KAK_POTION_SHOP_ITEM_6, logic->IsAdult),
-        LOCATION(RC_KAK_POTION_SHOP_ITEM_7, logic->IsAdult),
-        LOCATION(RC_KAK_POTION_SHOP_ITEM_8, logic->IsAdult),
+        LOCATION(RC_KAK_POTION_SHOP_ITEM_1, logic->IsAdult && logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KAK_POTION_SHOP_ITEM_2, logic->IsAdult && logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KAK_POTION_SHOP_ITEM_3, logic->IsAdult && logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KAK_POTION_SHOP_ITEM_4, logic->IsAdult && logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KAK_POTION_SHOP_ITEM_5, logic->IsAdult && logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KAK_POTION_SHOP_ITEM_6, logic->IsAdult && logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KAK_POTION_SHOP_ITEM_7, logic->IsAdult && logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_KAK_POTION_SHOP_ITEM_8, logic->IsAdult && logic->HasItem(RG_SPEAK)),
     }, {
         //Exits
         Entrance(RR_KAKARIKO_VILLAGE,     []{return true;}),
@@ -229,7 +229,7 @@ void RegionTable_Init_Kakariko() {
     }, {
         //Locations
         LOCATION(RC_KAK_TRADE_ODD_MUSHROOM, logic->IsAdult && logic->CanUse(RG_ODD_MUSHROOM)),
-        LOCATION(RC_KAK_GRANNYS_SHOP,       logic->IsAdult && (logic->CanUse(RG_ODD_MUSHROOM) || logic->TradeQuestStep(RG_ODD_MUSHROOM))),
+        LOCATION(RC_KAK_GRANNYS_SHOP,       logic->IsAdult && logic->HasItem(RG_SPEAK) && (logic->CanUse(RG_ODD_MUSHROOM) || logic->TradeQuestStep(RG_ODD_MUSHROOM))),
     }, {
         // Exits
         Entrance(RR_KAK_BACKYARD, []{return true;}),

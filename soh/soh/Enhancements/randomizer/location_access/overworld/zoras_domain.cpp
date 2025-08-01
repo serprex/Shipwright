@@ -15,9 +15,9 @@ void RegionTable_Init_ZorasDomain() {
         EventAccess(&logic->DeliverLetter,    []{return logic->CanUse(RG_RUTOS_LETTER) && logic->IsChild && ctx->GetOption(RSK_ZORAS_FOUNTAIN).IsNot(RO_ZF_OPEN);}),
     }, {
         //Locations
-        LOCATION(RC_ZD_DIVING_MINIGAME,                     logic->HasItem(RG_BRONZE_SCALE) && logic->HasItem(RG_CHILD_WALLET) && logic->IsChild),
+        LOCATION(RC_ZD_DIVING_MINIGAME,                     logic->HasItem(RG_BRONZE_SCALE) && logic->HasItem(RG_CHILD_WALLET) && logic->HasItem(RG_SPEAK) && logic->IsChild),
         LOCATION(RC_ZD_CHEST,                               logic->IsChild && logic->CanUse(RG_STICKS)),
-        LOCATION(RC_ZD_KING_ZORA_THAWED,                    logic->IsAdult && logic->KingZoraThawed),
+        LOCATION(RC_ZD_KING_ZORA_THAWED,                    logic->IsAdult && logic->KingZoraThawed && logic->HasItem(RG_SPEAK)),
         LOCATION(RC_ZD_TRADE_PRESCRIPTION,                  logic->IsAdult && logic->KingZoraThawed && logic->CanUse(RG_PRESCRIPTION)),
         LOCATION(RC_ZD_GS_FROZEN_WATERFALL,                 logic->IsAdult && (logic->HookshotOrBoomerang() || logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_FAIRY_BOW) || (logic->CanUse(RG_MAGIC_SINGLE) && (logic->CanUse(RG_MASTER_SWORD) || logic->CanUse(RG_KOKIRI_SWORD) || logic->CanUse(RG_BIGGORON_SWORD))) || (ctx->GetTrickOption(RT_ZD_GS) && logic->CanJumpslashExceptHammer())) && logic->CanGetNightTimeGS()),
         LOCATION(RC_ZD_FISH_1,                              logic->IsChild && logic->HasBottle()),
@@ -64,14 +64,14 @@ void RegionTable_Init_ZorasDomain() {
 
     areaTable[RR_ZD_SHOP] = Region("ZD Shop", SCENE_ZORA_SHOP, {}, {
         //Locations
-        LOCATION(RC_ZD_SHOP_ITEM_1, true),
-        LOCATION(RC_ZD_SHOP_ITEM_2, true),
-        LOCATION(RC_ZD_SHOP_ITEM_3, true),
-        LOCATION(RC_ZD_SHOP_ITEM_4, true),
-        LOCATION(RC_ZD_SHOP_ITEM_5, true),
-        LOCATION(RC_ZD_SHOP_ITEM_6, true),
-        LOCATION(RC_ZD_SHOP_ITEM_7, true),
-        LOCATION(RC_ZD_SHOP_ITEM_8, true),
+        LOCATION(RC_ZD_SHOP_ITEM_1, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_ZD_SHOP_ITEM_2, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_ZD_SHOP_ITEM_3, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_ZD_SHOP_ITEM_4, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_ZD_SHOP_ITEM_5, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_ZD_SHOP_ITEM_6, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_ZD_SHOP_ITEM_7, logic->HasItem(RG_SPEAK)),
+        LOCATION(RC_ZD_SHOP_ITEM_8, logic->HasItem(RG_SPEAK)),
     }, {
         //Exits
         Entrance(RR_ZORAS_DOMAIN, []{return true;}),
