@@ -65,6 +65,17 @@ void SohMenu::AddMenuRandomizer() {
                          "applies to seeds with maps & compasses shuffled to \"Any Dungeon\", \"Overworld\", or "
                          "\"Anywhere\".")
                 .DefaultValue(true));
+    AddWidget(path, "Jabbernut Colors Match Kind", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_RANDOMIZER_ENHANCEMENT("GenericJabbernutModel"))
+        .PreFunc([](WidgetInfo& info) {
+            info.options->disabled = !OTRGlobals::Instance->gRandoContext->GetOption(RSK_SHUFFLE_SPEAK);
+            info.options->disabledTooltip =
+                "This setting is disabled because a savefile is loaded without Shuffle Speak.";
+        })
+        .RaceDisable(false)
+        .Options(CheckboxOptions()
+                     .Tooltip("With Shuffle Speak, jabbernut model & color will be generic.")
+                     .DefaultValue(true));
     AddWidget(path, "Quest Item Fanfares", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_RANDOMIZER_ENHANCEMENT("QuestItemFanfares"))
         .RaceDisable(false)
