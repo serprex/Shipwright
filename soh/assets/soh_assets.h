@@ -137,6 +137,9 @@ static const ALIGN_ASSET(2) char gRandoCuttableGrassHeartDL[] = dgRandoCuttableG
 #define dgRandoCuttableGrassJunkDL "__OTR__objects/gameplay_keep/gRandoCuttableGrassJunkDL"
 static const ALIGN_ASSET(2) char gRandoCuttableGrassJunkDL[] = dgRandoCuttableGrassJunkDL;
 
+#define dgGiJabbernutDL "__OTR__objects/object_jabbernut/gGiJabbernutDL"
+static const ALIGN_ASSET(2) char gGiJabbernutDL[] = dgGiJabbernutDL;
+
 #define dgFishingPoleGiDL "__OTR__objects/object_gi_fishing_pole/gFishingPoleGiDL"
 static const ALIGN_ASSET(2) char gFishingPoleGiDL[] = dgFishingPoleGiDL;
 
