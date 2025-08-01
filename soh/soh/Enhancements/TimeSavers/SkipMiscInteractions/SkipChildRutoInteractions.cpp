@@ -1,4 +1,5 @@
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
+#include "soh/Enhancements/randomizer/context.h"
 #include "soh/ShipInit.hpp"
 
 extern "C" {
@@ -9,6 +10,11 @@ Actor* func_80AEB124(PlayState* play);
 }
 
 void Ru1Init(void* actorRef) {
+    if (IS_RANDO && RAND_GET_OPTION(RSK_SHUFFLE_SPEAK) && !Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_ZORA)) {
+        // require zora jabbernut
+        return;
+    }
+
     EnRu1* enRu1 = static_cast<EnRu1*>(actorRef);
 
     if (enRu1->action == 22) {

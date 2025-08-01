@@ -2115,7 +2115,8 @@ void RandomizerOnActorInitHandler(void* actorRef) {
         return;
     }
 
-    if (actor->id == ACTOR_EN_NB && (actor->params & 0xFF) == NB_TYPE_CRAWLSPACE && !RAND_GET_OPTION(RSK_SHUFFLE_SPEAK)) {
+    if (actor->id == ACTOR_EN_NB && (actor->params & 0xFF) == NB_TYPE_CRAWLSPACE &&
+        !RAND_GET_OPTION(RSK_SHUFFLE_SPEAK)) {
         Actor_Kill(actor);
     }
 

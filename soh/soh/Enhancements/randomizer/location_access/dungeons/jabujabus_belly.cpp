@@ -48,7 +48,7 @@ void RegionTable_Init_JabuJabusBelly() {
     //contains B1 of hole room (aside from the ledge leading to big octo), 2 octorock room and north water switch room
     areaTable[RR_JABU_JABUS_BELLY_B1_NORTH] = Region("Jabu Jabus Belly B1 North", SCENE_JABU_JABU, {
         //Events
-        EventAccess(&logic->JabuRutoIn1F, []{return logic->IsAdult || logic->HasItem(RG_BRONZE_SCALE);}),
+        EventAccess(&logic->JabuRutoIn1F, []{return (logic->IsAdult || logic->HasItem(RG_BRONZE_SCALE)) && logic->HasItem(RG_SPEAK_ZORA);}),
         EventAccess(&logic->FairyPot,     []{return logic->CanUse(RG_BOOMERANG) || (logic->CanUse(RG_HOVER_BOOTS) && logic->CanKillEnemy(RE_OCTOROK));}),
     }, {
         //Locations
