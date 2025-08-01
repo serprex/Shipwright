@@ -20,8 +20,9 @@ void RegisterShuffleSpeak() {
                     inf = RAND_INF_CAN_SPEAK_DEKU;
                     break;
                 case ACTOR_EN_GE1:
-                case ACTOR_EN_GE2:
                 case ACTOR_EN_GE3:
+                case ACTOR_EN_NB:
+                    // skip ACTOR_EN_GE2 to always be able to ask to be thrown in jail
                     inf = RAND_INF_CAN_SPEAK_GERUDO;
                     break;
                 case ACTOR_EN_GO:

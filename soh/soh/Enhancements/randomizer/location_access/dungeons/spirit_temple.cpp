@@ -23,7 +23,7 @@ void RegionTable_Init_SpiritTemple() {
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_ENTRYWAY,    []{return true;}),
-        Entrance(RR_SPIRIT_TEMPLE_CHILD,       []{return logic->IsChild;}),
+        Entrance(RR_SPIRIT_TEMPLE_CHILD,       []{return logic->IsChild && logic->HasItem(RG_SPEAK_GERUDO);}),
         Entrance(RR_SPIRIT_TEMPLE_EARLY_ADULT, []{return logic->CanUse(RG_SILVER_GAUNTLETS);}),
     });
 
@@ -164,7 +164,7 @@ void RegionTable_Init_SpiritTemple() {
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_ENTRYWAY,                []{return true;}),
-        Entrance(RR_SPIRIT_TEMPLE_MQ_1F_WEST,              []{return logic->IsChild;}),
+        Entrance(RR_SPIRIT_TEMPLE_MQ_1F_WEST,              []{return logic->IsChild && logic->HasItem(RG_SPEAK_GERUDO);}),
         Entrance(RR_SPIRIT_TEMPLE_MQ_BIG_BLOCK_ROOM_SOUTH, []{return logic->CanUse(RG_LONGSHOT) && logic->CanUse(RG_BOMBCHU_5);}),
     });
 
