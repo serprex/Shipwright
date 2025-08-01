@@ -10,11 +10,11 @@ void RegionTable_Init_Graveyard() {
         EventAccess(&logic->ButterflyFairy, []{return logic->CanUse(RG_STICKS) && logic->AtDay;}),
         EventAccess(&logic->BeanPlantFairy, []{return logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS);}),
         EventAccess(&logic->BugRock,        []{return true;}),
-        EventAccess(&logic->BorrowBunnyHood, []{return logic->IsChild && logic->AtDay && logic->BorrowSpookyMask && logic->HasItem(RG_CHILD_WALLET) && logic->HasItem(RG_SPEAK);}),
+        EventAccess(&logic->BorrowBunnyHood, []{return logic->IsChild && logic->AtDay && logic->BorrowSpookyMask && logic->HasItem(RG_CHILD_WALLET) && logic->HasItem(RG_SPEAK_HYLIAN);}),
     }, {
         //Locations
         LOCATION(RC_GRAVEYARD_FREESTANDING_POH,        (((logic->IsAdult && CanPlantBean(RR_THE_GRAVEYARD)) || logic->CanUse(RG_LONGSHOT)) && logic->CanBreakCrates()) || (ctx->GetTrickOption(RT_GY_POH) && logic->CanUse(RG_BOOMERANG))),
-        LOCATION(RC_GRAVEYARD_DAMPE_GRAVEDIGGING_TOUR, logic->HasItem(RG_CHILD_WALLET) && logic->HasItem(RG_SPEAK) && logic->IsChild && logic->AtNight), //TODO: This needs to change
+        LOCATION(RC_GRAVEYARD_DAMPE_GRAVEDIGGING_TOUR, logic->HasItem(RG_CHILD_WALLET) && logic->HasItem(RG_SPEAK_HYLIAN) && logic->IsChild && logic->AtNight), //TODO: This needs to change
         LOCATION(RC_GRAVEYARD_GS_WALL,                 logic->IsChild && logic->HookshotOrBoomerang() && logic->AtNight && logic->CanGetNightTimeGS()),
         LOCATION(RC_GRAVEYARD_GS_BEAN_PATCH,           logic->CanSpawnSoilSkull() && logic->CanAttack()),
         LOCATION(RC_GRAVEYARD_BEAN_SPROUT_FAIRY_1,     logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS)),
@@ -92,8 +92,8 @@ void RegionTable_Init_Graveyard() {
         EventAccess(&logic->DampesWindmillAccess, []{return logic->IsAdult && logic->CanUse(RG_SONG_OF_TIME);}),
     }, {
         //Locations
-        LOCATION(RC_GRAVEYARD_HOOKSHOT_CHEST,              logic->HasItem(RG_SPEAK)),
-        LOCATION(RC_GRAVEYARD_DAMPE_RACE_FREESTANDING_POH, logic->HasItem(RG_SPEAK) && (logic->IsAdult || ctx->GetTrickOption(RT_GY_CHILD_DAMPE_RACE_POH))),
+        LOCATION(RC_GRAVEYARD_HOOKSHOT_CHEST,              logic->HasItem(RG_SPEAK_HYLIAN)),
+        LOCATION(RC_GRAVEYARD_DAMPE_RACE_FREESTANDING_POH, logic->HasItem(RG_SPEAK_HYLIAN) && (logic->IsAdult || ctx->GetTrickOption(RT_GY_CHILD_DAMPE_RACE_POH))),
         LOCATION(RC_GY_DAMPES_GRAVE_POT_1,                 logic->CanBreakPots()),
         LOCATION(RC_GY_DAMPES_GRAVE_POT_2,                 logic->CanBreakPots()),
         LOCATION(RC_GY_DAMPES_GRAVE_POT_3,                 logic->CanBreakPots()),

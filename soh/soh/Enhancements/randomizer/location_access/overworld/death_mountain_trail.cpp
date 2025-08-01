@@ -47,7 +47,7 @@ void RegionTable_Init_DeathMountainTrail() {
         //Exits
         Entrance(RR_DEATH_MOUNTAIN_TRAIL,     []{return true;}),
         Entrance(RR_DMC_UPPER_LOCAL,          []{return true;}),
-        Entrance(RR_DMT_OWL_FLIGHT,           []{return logic->IsChild && logic->HasItem(RG_SPEAK);}, false),
+        Entrance(RR_DMT_OWL_FLIGHT,           []{return logic->IsChild && logic->HasItem(RG_SPEAK_HYLIAN);}, false),
         Entrance(RR_DMT_COW_GROTTO,           []{return Here(RR_DEATH_MOUNTAIN_SUMMIT, []{return logic->BlastOrSmash();});}),
         Entrance(RR_DMT_GREAT_FAIRY_FOUNTAIN, []{return Here(RR_DEATH_MOUNTAIN_SUMMIT, []{return logic->BlastOrSmash();});}),
     });

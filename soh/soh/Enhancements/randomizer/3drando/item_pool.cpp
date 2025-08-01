@@ -592,7 +592,12 @@ void GenerateItemPool() {
     }
 
     if (ctx->GetOption(RSK_SHUFFLE_SPEAK)) {
-        AddItemToMainPool(RG_SPEAK);
+        AddItemToMainPool(RG_SPEAK_DEKU);
+        AddItemToMainPool(RG_SPEAK_GERUDO);
+        AddItemToMainPool(RG_SPEAK_GORON);
+        AddItemToMainPool(RG_SPEAK_HYLIAN);
+        AddItemToMainPool(RG_SPEAK_KOKIRI);
+        AddItemToMainPool(RG_SPEAK_ZORA);
     }
 
     if (ctx->GetOption(RSK_SHUFFLE_BEEHIVES)) {

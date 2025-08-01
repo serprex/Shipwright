@@ -127,7 +127,12 @@ bool Logic::HasItem(RandomizerGet itemName) {
         case RG_ZELDAS_LETTER:
         case RG_WEIRD_EGG:
         case RG_GREG_RUPEE:
-        case RG_SPEAK:
+        case RG_SPEAK_DEKU:
+        case RG_SPEAK_GERUDO:
+        case RG_SPEAK_GORON:
+        case RG_SPEAK_HYLIAN:
+        case RG_SPEAK_KOKIRI:
+        case RG_SPEAK_ZORA:
             // Ocarina Buttons
         case RG_OCARINA_A_BUTTON:
         case RG_OCARINA_C_LEFT_BUTTON:
@@ -1473,7 +1478,12 @@ std::map<RandomizerGet, uint32_t> Logic::RandoGetToRandInf = {
     { RG_OCARINA_C_RIGHT_BUTTON, RAND_INF_HAS_OCARINA_C_RIGHT },
     { RG_SKELETON_KEY, RAND_INF_HAS_SKELETON_KEY },
     { RG_GREG_RUPEE, RAND_INF_GREG_FOUND },
-    { RG_SPEAK, RAND_INF_CAN_SPEAK },
+    { RG_SPEAK_DEKU, RAND_INF_CAN_SPEAK_DEKU },
+    { RG_SPEAK_GERUDO, RAND_INF_CAN_SPEAK_GERUDO },
+    { RG_SPEAK_GORON, RAND_INF_CAN_SPEAK_GORON },
+    { RG_SPEAK_HYLIAN, RAND_INF_CAN_SPEAK_HYLIAN },
+    { RG_SPEAK_KOKIRI, RAND_INF_CAN_SPEAK_KOKIRI },
+    { RG_SPEAK_ZORA, RAND_INF_CAN_SPEAK_ZORA },
     { RG_FISHING_POLE, RAND_INF_FISHING_POLE_FOUND },
     { RG_GUARD_HOUSE_KEY, RAND_INF_GUARD_HOUSE_KEY_OBTAINED },
     { RG_MARKET_BAZAAR_KEY, RAND_INF_MARKET_BAZAAR_KEY_OBTAINED },
@@ -1839,7 +1849,12 @@ void Logic::ApplyItemEffect(Item& item, bool state) {
                 case RG_OCARINA_C_LEFT_BUTTON:
                 case RG_OCARINA_C_RIGHT_BUTTON:
                 case RG_GREG_RUPEE:
-                case RG_SPEAK:
+                case RG_SPEAK_DEKU:
+                case RG_SPEAK_GERUDO:
+                case RG_SPEAK_GORON:
+                case RG_SPEAK_HYLIAN:
+                case RG_SPEAK_KOKIRI:
+                case RG_SPEAK_ZORA:
                 case RG_FISHING_POLE:
                 case RG_GUARD_HOUSE_KEY:
                 case RG_MARKET_BAZAAR_KEY:

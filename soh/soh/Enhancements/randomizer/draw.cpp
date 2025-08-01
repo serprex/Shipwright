@@ -1116,6 +1116,27 @@ extern "C" void Randomizer_DrawJabbernut(PlayState* play, GetItemEntry* getItemE
     gSPMatrix(POLY_OPA_DISP++, Matrix_NewMtx(play->state.gfxCtx, (char*)__FILE__, __LINE__),
               G_MTX_MODELVIEW | G_MTX_LOAD);
 
+    switch (getItemEntry->drawItemId) {
+        case RG_SPEAK_DEKU:
+            gDPSetEnvColor(POLY_OPA_DISP++, 255, 160, 64, 255);
+            break;
+        case RG_SPEAK_GERUDO:
+            gDPSetEnvColor(POLY_OPA_DISP++, 255, 32, 0, 255);
+            break;
+        case RG_SPEAK_GORON:
+            gDPSetEnvColor(POLY_OPA_DISP++, 128, 48, 0, 255);
+            break;
+        case RG_SPEAK_HYLIAN:
+            gDPSetEnvColor(POLY_OPA_DISP++, 255, 255, 0, 255);
+            break;
+        case RG_SPEAK_KOKIRI:
+            gDPSetEnvColor(POLY_OPA_DISP++, 32, 192, 32, 255);
+            break;
+        case RG_SPEAK_ZORA:
+            gDPSetEnvColor(POLY_OPA_DISP++, 96, 255, 255, 255);
+            break;
+    }
+
     gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gGiJabbernutDL);
     CLOSE_DISPS(play->state.gfxCtx);
 }

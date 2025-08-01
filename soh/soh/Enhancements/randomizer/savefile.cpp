@@ -259,7 +259,12 @@ extern "C" void Randomizer_InitSaveFile() {
     }
 
     if (Randomizer_GetSettingValue(RSK_SHUFFLE_SPEAK) == RO_GENERIC_OFF) {
-        Flags_SetRandomizerInf(RAND_INF_CAN_SPEAK);
+        Flags_SetRandomizerInf(RAND_INF_CAN_SPEAK_DEKU);
+        Flags_SetRandomizerInf(RAND_INF_CAN_SPEAK_GERUDO);
+        Flags_SetRandomizerInf(RAND_INF_CAN_SPEAK_GORON);
+        Flags_SetRandomizerInf(RAND_INF_CAN_SPEAK_HYLIAN);
+        Flags_SetRandomizerInf(RAND_INF_CAN_SPEAK_KOKIRI);
+        Flags_SetRandomizerInf(RAND_INF_CAN_SPEAK_ZORA);
     }
 
     if (Randomizer_GetSettingValue(RSK_SHUFFLE_CHILD_WALLET) == RO_GENERIC_OFF) {
