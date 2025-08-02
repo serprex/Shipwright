@@ -11,7 +11,6 @@ Actor* func_80AEB124(PlayState* play);
 
 void Ru1Init(void* actorRef) {
     if (IS_RANDO && RAND_GET_OPTION(RSK_SHUFFLE_SPEAK) && !Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_ZORA)) {
-        // require zora jabbernut
         return;
     }
 
