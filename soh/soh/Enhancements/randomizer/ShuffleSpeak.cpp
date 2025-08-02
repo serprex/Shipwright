@@ -17,6 +17,9 @@ void RegisterShuffleSpeak() {
                 case ACTOR_EN_DNS:
                 case ACTOR_EN_HINTNUTS:
                 case ACTOR_OBJ_DEKUJR:
+                case ACTOR_EN_KAKASI:
+                case ACTOR_EN_KAKASI2:
+                case ACTOR_EN_KAKASI3:
                     inf = RAND_INF_CAN_SPEAK_DEKU;
                     break;
                 case ACTOR_EN_GE1:
@@ -31,8 +34,9 @@ void RegisterShuffleSpeak() {
                 case ACTOR_EN_DU:
                     inf = RAND_INF_CAN_SPEAK_GORON;
                     break;
-                case ACTOR_DEMO_IM:
                 case ACTOR_EN_ANI:
+                case ACTOR_EN_BOM_BOWL_MAN:
+                case ACTOR_EN_CS:
                 case ACTOR_EN_DAIKU:
                 case ACTOR_EN_DAIKU_KAKARIKO:
                 case ACTOR_EN_DS:
@@ -44,10 +48,13 @@ void RegisterShuffleSpeak() {
                 case ACTOR_EN_HEISHI2:
                 case ACTOR_EN_HEISHI3:
                 case ACTOR_EN_HEISHI4:
+                case ACTOR_EN_HS:
+                case ACTOR_EN_HS2:
                 case ACTOR_EN_HY:
                 case ACTOR_EN_JS:
                 case ACTOR_EN_MA1:
                 case ACTOR_EN_MA3:
+                case ACTOR_EN_MK:
                 case ACTOR_EN_MM:
                 case ACTOR_EN_MM2:
                 case ACTOR_EN_MS:
@@ -58,8 +65,10 @@ void RegisterShuffleSpeak() {
                 case ACTOR_EN_SSH:
                 case ACTOR_EN_STH:
                 case ACTOR_EN_TA:
+                case ACTOR_EN_TAKARA_MAN:
                 case ACTOR_EN_TG:
                 case ACTOR_EN_TK:
+                case ACTOR_EN_PO_RELAY:
                 case ACTOR_EN_TORYO:
                 case ACTOR_EN_XC:
                 case ACTOR_EN_ZL1:
@@ -71,6 +80,7 @@ void RegisterShuffleSpeak() {
                 case ACTOR_EN_KO:
                 case ACTOR_EN_SA:
                 case ACTOR_EN_MD:
+                case ACTOR_EN_SKJ:
                     inf = RAND_INF_CAN_SPEAK_KOKIRI;
                     break;
                 case ACTOR_EN_KZ:
