@@ -45,6 +45,7 @@ void RegisterShuffleSpeak() {
                     inf = RAND_INF_CAN_SPEAK_HYLIAN;
                     break;
                 case ACTOR_EN_KO:
+                case ACTOR_EN_MD:
                     inf = RAND_INF_CAN_SPEAK_KOKIRI;
                     break;
                 case ACTOR_EN_KZ:
