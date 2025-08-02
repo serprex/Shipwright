@@ -133,7 +133,7 @@ void StaticData::HintTable_Init_Exclude_Dungeon() {
 
     hintTextTable[RHT_DEKU_BOULDER] = HintText(CustomMessage("They say that a #boulder in the Deku Tree# contains #[[1]]#.",
                                                                        /*german*/ "!!!",
-                                                                       /*french*/ "!!!", {QM_RED, QM_GREEN}));
+                                                                       /*french*/ "Selon moi, un #rocher dans l'Arbre Mojo# cache #[[1]]#.", {QM_RED, QM_GREEN}));
 
   /*--------------------------
   |     DODONGOS CAVERN      |
@@ -319,7 +319,7 @@ void StaticData::HintTable_Init_Exclude_Dungeon() {
 
     hintTextTable[RHT_DODONGOS_BOULDER] = HintText(CustomMessage("They say that a #boulder in Dodongo's Cavern# contains #[[1]]#.",
                                                                        /*german*/ "!!!",
-                                                                       /*french*/ "!!!", {QM_RED, QM_GREEN}));
+                                                                       /*french*/ "Selon moi, un #rocher dans la Caverne Dodongo# cache #[[1]]#.", {QM_RED, QM_GREEN}));
 
   /*--------------------------
   |     JABU JABUS BELLY     |
@@ -351,7 +351,7 @@ void StaticData::HintTable_Init_Exclude_Dungeon() {
 
     hintTextTable[RHT_JABU_JABUS_BELLY_MQ_MAP_CHEST] = HintText(CustomMessage("They say that a #boulder before cows# hides #[[1]]#.",
                                                                    /*german*/ "Man erzählt sich, daß ein #Felsen vor Kühen# #[[1]]# verstecke.",
-                                                                   /*french*/ "Selon moi, des #rochers près des vaches# cachent #[[1]]#.", {QM_RED, QM_GREEN}),
+                                                                   /*french*/ "Selon moi, un #rocher près des vaches# cache #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                 // /*spanish*/ Según dicen, cierta #roca rodeada de vacas# esconde #[[1]]#.
                                                                 {}, {
                                                                 CustomMessage("They say that #pop rocks# hide #[[1]]#.",
@@ -490,7 +490,7 @@ void StaticData::HintTable_Init_Exclude_Dungeon() {
 
     hintTextTable[RHT_JABU_BOULDER] = HintText(CustomMessage("They say that a #boulder in Jabu Jabu's Belly# contains #[[1]]#.",
                                                                        /*german*/ "!!!",
-                                                                       /*french*/ "!!!", {QM_RED, QM_GREEN}));
+                                                                       /*french*/ "Selon moi, un #rocher dans le Ventre de Jabu-Jabu# cache #[[1]]#.", {QM_RED, QM_GREEN}));
   /*--------------------------
   |      FOREST TEMPLE       |
   ---------------------------*/
@@ -1335,7 +1335,7 @@ void StaticData::HintTable_Init_Exclude_Dungeon() {
 
     hintTextTable[RHT_SPIRIT_TEMPLE_BOULDER] = HintText(CustomMessage("They say that a #boulder in the Spirit Temple# contains #[[1]]#.",
                                                                        /*german*/ "!!!",
-                                                                       /*french*/ "!!!", {QM_RED, QM_GREEN}));
+                                                                       /*french*/ "Selon moi, un #rocher dans le Temple de l'Esprit# cache #[[1]]#.", {QM_RED, QM_GREEN}));
   /*--------------------------
   |      SHADOW TEMPLE       |
   ---------------------------*/
@@ -1751,7 +1751,7 @@ void StaticData::HintTable_Init_Exclude_Dungeon() {
 
     hintTextTable[RHT_BOTW_BOULDER] = HintText(CustomMessage("They say that a #boulder in Bottom of the Well# contains #[[1]]#.",
                                                                        /*german*/ "!!!",
-                                                                       /*french*/ "!!!", {QM_RED, QM_GREEN}));
+                                                                       /*french*/ "Selon moi, un #rocher dans le Puits# cache #[[1]]#.", {QM_RED, QM_GREEN}));
 
   /*--------------------------
   |        ICE CAVERN        |
