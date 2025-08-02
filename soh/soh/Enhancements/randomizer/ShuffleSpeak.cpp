@@ -27,16 +27,40 @@ void RegisterShuffleSpeak() {
                     break;
                 case ACTOR_EN_GO:
                 case ACTOR_EN_GO2:
+                case ACTOR_EN_GM:
+                case ACTOR_EN_DU:
                     inf = RAND_INF_CAN_SPEAK_GORON;
                     break;
                 case ACTOR_DEMO_IM:
+                case ACTOR_EN_ANI:
+                case ACTOR_EN_DAIKU:
+                case ACTOR_EN_DAIKU_KAKARIKO:
                 case ACTOR_EN_DS:
+                case ACTOR_EN_FU:
                 case ACTOR_EN_GB:
                 case ACTOR_EN_GIRLA:
                 case ACTOR_EN_GUEST:
+                case ACTOR_EN_HEISHI1:
+                case ACTOR_EN_HEISHI2:
+                case ACTOR_EN_HEISHI3:
+                case ACTOR_EN_HEISHI4:
                 case ACTOR_EN_HY:
+                case ACTOR_EN_JS:
+                case ACTOR_EN_MA1:
+                case ACTOR_EN_MA3:
+                case ACTOR_EN_MM:
+                case ACTOR_EN_MM2:
+                case ACTOR_EN_MS:
+                case ACTOR_EN_MU:
+                case ACTOR_EN_NIW_GIRL:
+                case ACTOR_EN_NIW_LADY:
                 case ACTOR_EN_OWL:
+                case ACTOR_EN_SSH:
+                case ACTOR_EN_STH:
+                case ACTOR_EN_TA:
+                case ACTOR_EN_TG:
                 case ACTOR_EN_TK:
+                case ACTOR_EN_TORYO:
                 case ACTOR_EN_XC:
                 case ACTOR_EN_ZL1:
                 case ACTOR_EN_ZL2:
@@ -45,6 +69,7 @@ void RegisterShuffleSpeak() {
                     inf = RAND_INF_CAN_SPEAK_HYLIAN;
                     break;
                 case ACTOR_EN_KO:
+                case ACTOR_EN_SA:
                 case ACTOR_EN_MD:
                     inf = RAND_INF_CAN_SPEAK_KOKIRI;
                     break;
