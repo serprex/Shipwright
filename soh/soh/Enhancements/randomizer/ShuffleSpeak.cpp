@@ -11,7 +11,8 @@ void RegisterShuffleSpeak() {
 
     COND_VB_SHOULD(VB_SPEAK, shouldRegister, {
         Actor* talkActor = GET_PLAYER(gPlayState)->talkActor;
-        if (talkActor != NULL && talkActor->category == ACTORCAT_NPC && !(talkActor->flags & ACTOR_FLAG_TALK_OFFER_AUTO_ACCEPTED)) {
+        if (talkActor != NULL && talkActor->category == ACTORCAT_NPC &&
+            !(talkActor->flags & ACTOR_FLAG_TALK_OFFER_AUTO_ACCEPTED)) {
             RandomizerInf inf = RAND_INF_MAX;
             switch (talkActor->id) {
                 case ACTOR_EN_DNS:
