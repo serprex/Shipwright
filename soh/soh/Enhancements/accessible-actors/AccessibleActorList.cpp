@@ -655,14 +655,14 @@ void ActorAccessibility_InitActors() {
         if (wonder->wonderMode == WONDERITEM_INTERACT_SWITCH) {
             auto colTypeIndex = wonder->actor.world.rot.z & 0xFF;
             switch (colTypeIndex) {
-            case 1:
-                actor->policy.aimAssist.isProvider = AIM_BOW;
-            case 4:
-                actor->policy.aimAssist.isProvider = AIM_SLING;
-            case 5:
-                actor->policy.aimAssist.isProvider = AIM_BOOM;
-            case 6:
-                actor->policy.aimAssist.isProvider = AIM_HOOK;
+                case 1:
+                    actor->policy.aimAssist.isProvider = AIM_BOW;
+                case 4:
+                    actor->policy.aimAssist.isProvider = AIM_SLING;
+                case 5:
+                    actor->policy.aimAssist.isProvider = AIM_BOOM;
+                case 6:
+                    actor->policy.aimAssist.isProvider = AIM_HOOK;
             }
         } else if (wonder->wonderMode == WONDERITEM_BOMB_SOLDIER) {
             actor->policy.aimAssist.isProvider = AIM_SLING;
