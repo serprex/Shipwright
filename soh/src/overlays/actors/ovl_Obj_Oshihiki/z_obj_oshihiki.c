@@ -7,6 +7,7 @@
 #include "z_obj_oshihiki.h"
 #include "overlays/actors/ovl_Obj_Switch/z_obj_switch.h"
 #include "objects/gameplay_dangeon_keep/gameplay_dangeon_keep.h"
+#include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "soh/ResourceManagerHelpers.h"
 
 #define FLAGS ACTOR_FLAG_UPDATE_CULLING_DISABLED
@@ -111,7 +112,7 @@ void ObjOshihiki_RotateXZ(Vec3f* out, Vec3f* in, f32 sn, f32 cs) {
 s32 ObjOshihiki_StrongEnough(ObjOshihiki* this) {
     s32 strength;
 
-    if (this->cantMove) {
+    if (GameInteractor_Should(VB_PREVENT_STRENGTH, this->cantMove)) {
         return 0;
     }
     strength = Player_GetStrength();
