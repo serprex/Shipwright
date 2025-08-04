@@ -1648,6 +1648,10 @@ void Settings::CreateOptions() {
     OPT_TRICK(RT_DC_STAIRS_WITH_BOW, RCQUEST_VANILLA, RA_DODONGOS_CAVERN, { Tricks::Tag::NOVICE },
               "Dodongo\'s Cavern Stairs with Bow",
               "The Bow can be used to knock down the stairs with two well-timed shots.");
+    OPT_TRICK(RT_DC_CLIMB_ARMOS, RCQUEST_VANILLA, RA_DODONGOS_CAVERN, { Tricks::Tag::NOVICE },
+              "Dodongo\'s Cavern Climb Armos",
+              "Reaching the switch between 4 armos as child can be done without moving armos from ladder by back "
+              "flipping atop armos and climbing ledge beside ladder.");
     OPT_TRICK(RT_DC_SLINGSHOT_SKIP, RCQUEST_VANILLA, RA_DODONGOS_CAVERN, { Tricks::Tag::EXPERT },
               "Dodongo\'s Cavern Child Slingshot Skips",
               "With precise platforming, child can cross the platforms while the flame circles are there. When "
@@ -2050,7 +2054,8 @@ void Settings::CreateOptions() {
     OPT_TRICK(RT_SPIRIT_SUN_CHEST, RCQUEST_VANILLA, RA_SPIRIT_TEMPLE, { Tricks::Tag::ADVANCED },
               "Spirit Temple Sun Block Room Chest with Bow",
               "Using the blocks in the room as platforms you can get lines of sight to all three torches. The timer on "
-              "the torches is quite short so you must move quickly in order to light all three.");
+              "the torches is quite short so you must move quickly in order to light all three.\n"
+              "A backflip can be used instead to light torches without pushing blocks.");
     OPT_TRICK(
         RT_SPIRIT_WALL, RCQUEST_VANILLA, RA_SPIRIT_TEMPLE, { Tricks::Tag::INTERMEDIATE },
         "Spirit Temple Shifting Wall with No Additional Items",
@@ -2083,6 +2088,8 @@ void Settings::CreateOptions() {
     OPT_TRICK(RT_ICE_STALAGMITE_HOOKSHOT, RCQUEST_BOTH, RA_ICE_CAVERN, { Tricks::Tag::NOVICE },
               "Ice Cavern Stalagmites with Hookshot",
               "Shooting stalagmites with hookshot in the right way also breaks them. Also applies to Water Trial.");
+    OPT_TRICK(RT_ICE_SLIDING_JUMP, RCQUEST_BOTH, RA_ICE_CAVERN, { Tricks::Tag::NOVICE }, "Ice Cavern Sliding Jumps",
+              "Running forward while sliding sideways on ice can be used to jump on platforms.");
     OPT_TRICK(RT_ICE_BLOCK_GS, RCQUEST_VANILLA, RA_ICE_CAVERN, { Tricks::Tag::INTERMEDIATE },
               "Ice Cavern Block Room GS with Hover Boots",
               "The Hover Boots can be used to get in front of the Skulltula to kill it with a jump slash. Then, the "
@@ -2091,9 +2098,6 @@ void Settings::CreateOptions() {
               "Ice Cavern MQ Red Ice GS without Song of Time",
               "If you side-hop into the perfect position, you can briefly stand on the platform with the red ice just "
               "long enough to dump some blue fire.");
-    OPT_TRICK(RT_ICE_MQ_SCARECROW, RCQUEST_MQ, RA_ICE_CAVERN, { Tricks::Tag::INTERMEDIATE },
-              "Ice Cavern MQ Scarecrow GS with No Additional Items",
-              "As adult a precise jump can be used to reach this alcove.");
     OPT_TRICK(RT_LENS_GTG, RCQUEST_VANILLA, RA_GERUDO_TRAINING_GROUND, { Tricks::Tag::NOVICE },
               "Gerudo Training Ground without Lens of Truth",
               "Removes the requirements for the Lens of Truth in Gerudo Training Ground.");

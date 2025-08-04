@@ -148,14 +148,14 @@ void RegionTable_Init_GanonsCastle() {
     areaTable[RR_GANONS_CASTLE_WATER_TRIAL_BLOCK_ROOM] = Region("Ganon's Castle Water Trial Block Room", SCENE_INSIDE_GANONS_CASTLE, {
         //Events
         EventAccess(LOGIC_FAIRY_ACCESS,              []{return logic->CanBreakPots();}),
-        EventAccess(LOGIC_WATER_TRIAL_RUSTED_SWITCH, []{return (logic->BlueFire() || ctx->GetTrickOption(RT_RUSTED_SWITCHES)) && logic->CanUse(RG_MEGATON_HAMMER);}),
+        EventAccess(LOGIC_WATER_TRIAL_RUSTED_SWITCH, []{return logic->HasItem(RG_POWER_BRACELET) && (logic->BlueFire() || ctx->GetTrickOption(RT_RUSTED_SWITCHES)) && logic->CanUse(RG_MEGATON_HAMMER);}),
     }, {
         //Locations
         LOCATION(RC_GANONS_CASTLE_WATER_TRIAL_POT_3, logic->CanBreakPots()),
     }, {
         //Exits
         Entrance(RR_GANONS_CASTLE_WATER_TRIAL_BLUE_FIRE_ROOM, []{return true;}),
-        Entrance(RR_GANONS_CASTLE_WATER_TRIAL_BLOCK_ROOM_END, []{return logic->IsAdult || logic->CanGroundJump();}),
+        Entrance(RR_GANONS_CASTLE_WATER_TRIAL_BLOCK_ROOM_END, []{return logic->IsAdult || (logic->HasItem(RG_POWER_BRACELET) && logic->CanUse(RG_HOVER_BOOTS)) || logic->CanGroundJump();}),
     });
 
     areaTable[RR_GANONS_CASTLE_WATER_TRIAL_BLOCK_ROOM_END] = Region("Ganon's Castle Water Trial Block Room End", SCENE_INSIDE_GANONS_CASTLE, {}, {}, {
@@ -472,12 +472,12 @@ void RegionTable_Init_GanonsCastle() {
 
     areaTable[RR_GANONS_CASTLE_MQ_WATER_TRIAL_BLOCK_ROOM] = Region("Ganon's Castle MQ Water Trial Block Room", SCENE_INSIDE_GANONS_CASTLE, {
         //Events
-        EventAccess(LOGIC_WATER_TRIAL_MQ_SILVER_RUPEES,             []{return logic->IsAdult && logic->BlueFire();}),
-        EventAccess(LOGIC_WATER_TRIAL_MQ_MELTED_FINAL_DOOR_RED_ICE, []{return logic->IsAdult && logic->BlueFire();}),
+        EventAccess(LOGIC_WATER_TRIAL_MQ_SILVER_RUPEES,             []{return logic->IsAdult && logic->HasItem(RG_POWER_BRACELET) && logic->BlueFire();}),
+        EventAccess(LOGIC_WATER_TRIAL_MQ_MELTED_FINAL_DOOR_RED_ICE, []{return (ctx->GetOption(RSK_BLUE_FIRE_ARROWS) && logic->CanUse(RG_ICE_ARROWS)) || (logic->IsAdult || logic->CanUse(RG_HOVER_BOOTS)) && logic->HasItem(RG_POWER_BRACELET) && logic->CanUse(RG_BOTTLE_WITH_BLUE_FIRE);}),
     }, {}, {
         //Exits
         Entrance(RR_GANONS_CASTLE_MQ_WATER_TRIAL_GEYSER_ROOM,    []{return logic->SmallKeys(SCENE_INSIDE_GANONS_CASTLE, 3);}),
-        Entrance(RR_GANONS_CASTLE_MQ_WATER_TRIAL_BLOCK_ROOM_END, []{return logic->Get(LOGIC_WATER_TRIAL_MQ_MELTED_FINAL_DOOR_RED_ICE) && (logic->IsAdult || logic->CanGroundJump());}),
+        Entrance(RR_GANONS_CASTLE_MQ_WATER_TRIAL_BLOCK_ROOM_END, []{return logic->Get(LOGIC_WATER_TRIAL_MQ_MELTED_FINAL_DOOR_RED_ICE) && (logic->IsAdult || (logic->CanUse(RG_HOVER_BOOTS) && logic->HasItem(RG_POWER_BRACELET)) || logic->CanGroundJump());}),
     });
 
     areaTable[RR_GANONS_CASTLE_MQ_WATER_TRIAL_BLOCK_ROOM_END] = Region("Ganon's Castle MQ Water Trial Block Room End", SCENE_INSIDE_GANONS_CASTLE, {

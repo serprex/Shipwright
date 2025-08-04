@@ -288,7 +288,7 @@ void RegionTable_Init_BottomOfTheWell() {
                                                           (logic->IsAdult && logic->CanUse(RG_IRON_BOOTS) && logic->CanUse(RG_HOOKSHOT))/*&& CanClimb()*/);}),
         Entrance(RR_BOTW_MQ_CORNER_CRAWLSPACE, []{return logic->IsChild/*CanCrawl()*/;}),
         Entrance(RR_BOTW_MQ_NEAR_BOSS_LOWER,   []{return logic->IsChild/*CanCrawl()*/ && logic->Get(LOGIC_BOTW_LOWERED_WATER);}),
-        Entrance(RR_BOTW_MQ_B3,           []{return true;}),
+        Entrance(RR_BOTW_MQ_B3,                []{return true;}),
     });
 
     areaTable[RR_BOTW_MQ_MIDDLE] = Region("Bottom of the Well MQ Middle", SCENE_BOTTOM_OF_THE_WELL, {}, {
@@ -303,8 +303,8 @@ void RegionTable_Init_BottomOfTheWell() {
         Entrance(RR_BOTW_MQ_PERIMETER,      []{return logic->Get(LOGIC_BOTW_MQ_OPENED_GATES);}),
         Entrance(RR_BOTW_MQ_PIT_CAGE,       []{return (bool)ctx->GetTrickOption(RT_BOTW_PITS);}),
         Entrance(RR_BOTW_MQ_B3_PLATFORM,    []{return logic->Get(LOGIC_BOTW_MQ_OPENED_MIDDLE_HOLE);}),
-        Entrance(RR_BOTW_MQ_B3,        []{return true;}),
-        Entrance(RR_BOTW_MQ_INVISIBLE_PATH, []{return true/*str0 or CanHitSwitch(ED_BOMB_THROW)*/;}),
+        Entrance(RR_BOTW_MQ_B3,             []{return true;}),
+        Entrance(RR_BOTW_MQ_INVISIBLE_PATH, []{return logic->HasItem(RG_POWER_BRACELET) || logic->CanHitSwitch(ED_BOMB_THROW);}),
         Entrance(RR_BOTW_MQ_GRAVE_ROOM,     []{return logic->Get(LOGIC_BOTW_MQ_OPENED_WEST_ROOM);}),
     });
 
@@ -317,8 +317,8 @@ void RegionTable_Init_BottomOfTheWell() {
         LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_EAST_INNER_ROOM_POT_3, logic->CanBreakPots()),
     }, {
         //Exits
-        Entrance(RR_BOTW_MQ_MIDDLE,  []{return true;}),
-        Entrance(RR_BOTW_MQ_B3, []{return true;}),
+        Entrance(RR_BOTW_MQ_MIDDLE, []{return true;}),
+        Entrance(RR_BOTW_MQ_B3,     []{return true;}),
     });
 
     areaTable[RR_BOTW_MQ_GRAVE_ROOM] = Region("Bottom of the Well Grave Room", SCENE_BOTTOM_OF_THE_WELL, {}, {
