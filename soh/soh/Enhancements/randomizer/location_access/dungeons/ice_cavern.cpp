@@ -32,8 +32,8 @@ void RegionTable_Init_IceCavern() {
         //Locations
         LOCATION(RC_ICE_CAVERN_MAP_CHEST,               logic->BlueFire() && logic->IsAdult),
         LOCATION(RC_ICE_CAVERN_COMPASS_CHEST,           logic->BlueFire()),
-        LOCATION(RC_ICE_CAVERN_IRON_BOOTS_CHEST,        logic->BlueFire() && logic->CanKillEnemy(RE_WOLFOS)),
-        LOCATION(RC_SHEIK_IN_ICE_CAVERN,                logic->BlueFire() && logic->CanKillEnemy(RE_WOLFOS) && logic->IsAdult),
+        LOCATION(RC_ICE_CAVERN_IRON_BOOTS_CHEST,        logic->BlueFire() && logic->CanKillEnemy(RE_WOLFOS) && logic->HasItem(RG_POWER_BRACELET)),
+        LOCATION(RC_SHEIK_IN_ICE_CAVERN,                logic->BlueFire() && logic->CanKillEnemy(RE_WOLFOS) && logic->IsAdult && logic->HasItem(RG_POWER_BRACELET)),
         LOCATION(RC_ICE_CAVERN_FREESTANDING_POH,        logic->BlueFire()),
         LOCATION(RC_ICE_CAVERN_GS_SPINNING_SCYTHE_ROOM, logic->HookshotOrBoomerang()),
         LOCATION(RC_ICE_CAVERN_GS_HEART_PIECE_ROOM,     logic->BlueFire() && logic->HookshotOrBoomerang()),
@@ -43,16 +43,16 @@ void RegionTable_Init_IceCavern() {
         LOCATION(RC_ICE_CAVERN_SPINNING_BLADE_POT_1,    logic->CanBreakPots()),
         LOCATION(RC_ICE_CAVERN_SPINNING_BLADE_POT_2,    logic->CanBreakPots()),
         LOCATION(RC_ICE_CAVERN_SPINNING_BLADE_POT_3,    logic->CanBreakPots()),
-        LOCATION(RC_ICE_CAVERN_NEAR_END_POT_1,          logic->CanBreakPots() && logic->BlueFire()),
-        LOCATION(RC_ICE_CAVERN_NEAR_END_POT_2,          logic->CanBreakPots() && logic->BlueFire()),
+        LOCATION(RC_ICE_CAVERN_NEAR_END_POT_1,          logic->CanBreakPots() && logic->BlueFire() && logic->HasItem(RG_POWER_BRACELET)),
+        LOCATION(RC_ICE_CAVERN_NEAR_END_POT_2,          logic->CanBreakPots() && logic->BlueFire() && logic->HasItem(RG_POWER_BRACELET)),
         LOCATION(RC_ICE_CAVERN_FROZEN_POT_1,            logic->CanBreakPots() && logic->BlueFire() && logic->IsAdult),
         LOCATION(RC_ICE_CAVERN_LOBBY_RUPEE,             logic->BlueFire()),
         LOCATION(RC_ICE_CAVERN_MAP_ROOM_LEFT_HEART,     logic->IsAdult),
         LOCATION(RC_ICE_CAVERN_MAP_ROOM_MIDDLE_HEART,   logic->IsAdult),
         LOCATION(RC_ICE_CAVERN_MAP_ROOM_RIGHT_HEART,    logic->IsAdult),
-        LOCATION(RC_ICE_CAVERN_SLIDING_BLOCK_RUPEE_1,   logic->BlueFire() && (logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_BOOMERANG))),
-        LOCATION(RC_ICE_CAVERN_SLIDING_BLOCK_RUPEE_2,   logic->BlueFire() && (logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_BOOMERANG))),
-        LOCATION(RC_ICE_CAVERN_SLIDING_BLOCK_RUPEE_3,   logic->BlueFire() && (logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_BOOMERANG))),
+        LOCATION(RC_ICE_CAVERN_SLIDING_BLOCK_RUPEE_1,   logic->BlueFire() && (logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_BOOMERANG)) && logic->HasItem(RG_POWER_BRACELET)),
+        LOCATION(RC_ICE_CAVERN_SLIDING_BLOCK_RUPEE_2,   logic->BlueFire() && (logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_BOOMERANG)) && logic->HasItem(RG_POWER_BRACELET)),
+        LOCATION(RC_ICE_CAVERN_SLIDING_BLOCK_RUPEE_3,   logic->BlueFire() && (logic->CanUse(RG_SONG_OF_TIME) || logic->CanUse(RG_BOOMERANG)) && logic->HasItem(RG_POWER_BRACELET)),
     }, {});
 
 #pragma endregion
@@ -71,7 +71,7 @@ void RegionTable_Init_IceCavern() {
 
     areaTable[RR_ICE_CAVERN_MQ_HUB] = Region("Ice Cavern MQ Hub", SCENE_ICE_CAVERN, {
         //Events
-        EventAccess(&logic->FairyPot, []{return true;}),
+        EventAccess(&logic->FairyPot, []{return logic->CanBreakPots();}),
     }, {
         //Locations
         LOCATION(RC_ICE_CAVERN_MQ_FIRST_CRYSTAL_POT_1, logic->CanBreakPots()),

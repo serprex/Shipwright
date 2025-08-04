@@ -20,7 +20,7 @@ void RegionTable_Init_CastleGrounds() {
         //Events
         EventAccess(&logic->GossipStoneFairy, []{return logic->CallGossipFairy();}),
         EventAccess(&logic->ButterflyFairy,   []{return logic->CanUse(RG_STICKS);}),
-        EventAccess(&logic->BugRock,          []{return true;}),
+        EventAccess(&logic->BugRock,          []{return logic->HasItem(RG_POWER_BRACELET);}),
     }, {
         //Locations
         LOCATION(RC_HC_MALON_EGG,                        true),
@@ -36,7 +36,7 @@ void RegionTable_Init_CastleGrounds() {
     }, {
         //Exits
         Entrance(RR_CASTLE_GROUNDS,          []{return true;}),
-        Entrance(RR_HC_GARDEN,               []{return logic->CanUse(RG_WEIRD_EGG) || (ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->HasExplosives() && logic->CanJumpslash());}),
+        Entrance(RR_HC_GARDEN,               []{return (logic->CanUse(RG_WEIRD_EGG) && logic->HasItem(RG_POWER_BRACELET)) || (ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->HasExplosives() && logic->CanJumpslash());}),
         Entrance(RR_HC_GREAT_FAIRY_FOUNTAIN, []{return logic->BlastOrSmash();}),
         Entrance(RR_HC_STORMS_GROTTO,        []{return logic->CanOpenStormsGrotto();}),
     });
@@ -69,7 +69,7 @@ void RegionTable_Init_CastleGrounds() {
 
     areaTable[RR_HC_STORMS_GROTTO_BEHIND_WALLS] = Region("HC Storms Grotto Behind Walls", SCENE_GROTTOS, {
         //Events
-        EventAccess(&logic->NutPot,           []{return true;}),
+        EventAccess(&logic->NutPot,           []{return logic->CanBreakPots();}),
         EventAccess(&logic->GossipStoneFairy, []{return logic->CallGossipFairy();}),
         EventAccess(&logic->WanderingBugs,    []{return true;}),
     }, {

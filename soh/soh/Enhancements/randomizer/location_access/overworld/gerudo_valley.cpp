@@ -7,7 +7,7 @@ void RegionTable_Init_GerudoValley() {
     // clang-format off
     areaTable[RR_GERUDO_VALLEY] = Region("Gerudo Valley", SCENE_GERUDO_VALLEY, {
         //Events
-        EventAccess(&logic->BugRock, []{return logic->IsChild;}),
+        EventAccess(&logic->BugRock, []{return logic->IsChild && logic->HasItem(RG_POWER_BRACELET);}),
     }, {
         //Locations
         LOCATION(RC_GV_GS_SMALL_BRIDGE, logic->IsChild && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
@@ -18,7 +18,7 @@ void RegionTable_Init_GerudoValley() {
         Entrance(RR_GV_CRATE_LEDGE,   []{return logic->IsChild || logic->CanUse(RG_LONGSHOT);}),
         Entrance(RR_GV_GROTTO_LEDGE,  []{return true;}),
         Entrance(RR_GV_FORTRESS_SIDE, []{return (logic->IsAdult && (logic->CanUse(RG_EPONA) || logic->CanUse(RG_LONGSHOT) || ctx->GetOption(RSK_GERUDO_FORTRESS).Is(RO_GF_CARPENTERS_FREE) || logic->THRescuedAllCarpenters)) || (logic->IsChild && logic->CanUse(RG_HOOKSHOT));}),
-        Entrance(RR_GV_LOWER_STREAM,  []{return logic->IsChild;}), //can use cucco as child
+        Entrance(RR_GV_LOWER_STREAM,  []{return logic->IsChild && logic->HasItem(RG_POWER_BRACELET);}),
     });
 
     areaTable[RR_GV_UPPER_STREAM] = Region("GV Upper Stream", SCENE_GERUDO_VALLEY, {
@@ -27,16 +27,16 @@ void RegionTable_Init_GerudoValley() {
         EventAccess(&logic->BeanPlantFairy,   []{return logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS);}),
     }, {
         //Locations
-        LOCATION(RC_GV_WATERFALL_FREESTANDING_POH, logic->IsChild || logic->HasItem(RG_BRONZE_SCALE)),//can use cucco as child
+        LOCATION(RC_GV_WATERFALL_FREESTANDING_POH, (logic->IsChild && logic->HasItem(RG_POWER_BRACELET)) || logic->HasItem(RG_BRONZE_SCALE)),
         LOCATION(RC_GV_GS_BEAN_PATCH,              logic->CanSpawnSoilSkull() && logic->CanAttack()),
-        LOCATION(RC_GV_COW,                        logic->IsChild && logic->CanUse(RG_EPONAS_SONG)),
-        LOCATION(RC_GV_BEAN_SPROUT_FAIRY_1,        logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS)),
-        LOCATION(RC_GV_BEAN_SPROUT_FAIRY_2,        logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS)),
-        LOCATION(RC_GV_BEAN_SPROUT_FAIRY_3,        logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS)),
-        LOCATION(RC_GV_GOSSIP_STONE_FAIRY,         logic->CallGossipFairy()),
-        LOCATION(RC_GV_GOSSIP_STONE_FAIRY_BIG,     logic->CanUse(RG_SONG_OF_STORMS)),
-        LOCATION(RC_GV_GOSSIP_STONE,               true),
-        LOCATION(RC_GV_NEAR_COW_CRATE,             logic->IsChild && logic->CanBreakCrates()),
+        LOCATION(RC_GV_COW,                        logic->IsChild && (logic->TakeDamage() || logic->HasItem(RG_POWER_BRACELET) || logic->HasItem(RG_BRONZE_SCALE)) && logic->CanUse(RG_EPONAS_SONG)),
+        LOCATION(RC_GV_BEAN_SPROUT_FAIRY_1,        logic->IsChild && (logic->TakeDamage() || logic->HasItem(RG_POWER_BRACELET) || logic->HasItem(RG_BRONZE_SCALE)) && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS)),
+        LOCATION(RC_GV_BEAN_SPROUT_FAIRY_2,        logic->IsChild && (logic->TakeDamage() || logic->HasItem(RG_POWER_BRACELET) || logic->HasItem(RG_BRONZE_SCALE)) && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS)),
+        LOCATION(RC_GV_BEAN_SPROUT_FAIRY_3,        logic->IsChild && (logic->TakeDamage() || logic->HasItem(RG_POWER_BRACELET) || logic->HasItem(RG_BRONZE_SCALE)) && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS)),
+        LOCATION(RC_GV_GOSSIP_STONE_FAIRY,         (logic->TakeDamage() || (logic->IsChild && logic->HasItem(RG_POWER_BRACELET)) || logic->HasItem(RG_BRONZE_SCALE)) && logic->CallGossipFairy()),
+        LOCATION(RC_GV_GOSSIP_STONE_FAIRY_BIG,     (logic->TakeDamage() || (logic->IsChild && logic->HasItem(RG_POWER_BRACELET)) || logic->HasItem(RG_BRONZE_SCALE)) && logic->CanUse(RG_SONG_OF_STORMS)),
+        LOCATION(RC_GV_GOSSIP_STONE,               logic->TakeDamage() || (logic->IsChild && logic->HasItem(RG_POWER_BRACELET)) || logic->HasItem(RG_BRONZE_SCALE)),
+        LOCATION(RC_GV_NEAR_COW_CRATE,             logic->IsChild && (logic->TakeDamage() || logic->HasItem(RG_POWER_BRACELET) || logic->HasItem(RG_BRONZE_SCALE)) && logic->CanBreakCrates()),
     }, {
         //Exits
         Entrance(RR_GV_LOWER_STREAM, []{return logic->HasItem(RG_BRONZE_SCALE) || logic->CanUse(RG_IRON_BOOTS);}),

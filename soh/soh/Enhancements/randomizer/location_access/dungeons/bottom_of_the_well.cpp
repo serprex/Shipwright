@@ -19,8 +19,8 @@ void RegionTable_Init_BottomOfTheWell() {
 
     areaTable[RR_BOTTOM_OF_THE_WELL_PERIMETER] = Region("Bottom of the Well Perimeter", SCENE_BOTTOM_OF_THE_WELL, {
         //Events
-        EventAccess(&logic->StickPot,               []{return true;}),
-        EventAccess(&logic->NutPot,                 []{return true;}),
+        EventAccess(&logic->StickPot,               []{return logic->CanBreakPots();}),
+        EventAccess(&logic->NutPot,                 []{return logic->CanBreakPots();}),
         EventAccess(&logic->LoweredWaterInsideBotw, []{return logic->CanUse(RG_ZELDAS_LULLABY);}),
     }, {
         //Locations

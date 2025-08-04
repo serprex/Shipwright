@@ -8,7 +8,7 @@ void RegionTable_Init_DesertColossus() {
     areaTable[RR_DESERT_COLOSSUS] = Region("Desert Colossus", SCENE_DESERT_COLOSSUS, {
         //Events
         EventAccess(&logic->FairyPond, []{return logic->CanUse(RG_SONG_OF_STORMS);}),
-        EventAccess(&logic->BugRock,   []{return true;}),
+        EventAccess(&logic->BugRock,   []{return logic->HasItem(RG_POWER_BRACELET);}),
     }, {
         //Locations
         LOCATION(RC_COLOSSUS_FREESTANDING_POH,       logic->IsAdult && CanPlantBean(RR_DESERT_COLOSSUS)),

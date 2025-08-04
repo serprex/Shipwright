@@ -27,7 +27,7 @@ void RegionTable_Init_FireTemple() {
 
     areaTable[RR_FIRE_TEMPLE_NEAR_BOSS_ROOM] = Region("Fire Temple Near Boss Room", SCENE_FIRE_TEMPLE, {
         //Events
-        EventAccess(&logic->FairyPot, []{return logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_HOOKSHOT);}),
+        EventAccess(&logic->FairyPot, []{return (logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_HOOKSHOT)) && logic->CanBreakPots();}),
     }, {
         //Locations
         LOCATION(RC_FIRE_TEMPLE_NEAR_BOSS_CHEST, true),
@@ -387,7 +387,7 @@ void RegionTable_Init_FireTemple() {
 
     areaTable[RR_FIRE_TEMPLE_MQ_IRON_KNUCKLE_ROOM] = Region("Fire Temple MQ Iron Knuckle Room", SCENE_FIRE_TEMPLE, {
         //Events
-        EventAccess(&logic->FairyPot, []{return true;}),
+        EventAccess(&logic->FairyPot, []{return logic->CanBreakPots();}),
     }, {
         //Locations
         LOCATION(RC_FIRE_TEMPLE_MQ_LOOP_KNUCKLE_SUN_FAIRY, logic->CanUse(RG_SUNS_SONG)),
@@ -568,7 +568,7 @@ void RegionTable_Init_FireTemple() {
         LOCATION(RC_FIRE_TEMPLE_MQ_LIZALFOS_MAZE_UPPER_SMALL_CRATE_1,   logic->CanBreakSmallCrates()),
         LOCATION(RC_FIRE_TEMPLE_MQ_LIZALFOS_MAZE_UPPER_SMALL_CRATE_2,   logic->CanBreakSmallCrates()),
         //Assumes maze access
-        LOCATION(RC_FIRE_TEMPLE_MQ_LIZALFOS_MAZE_SIDE_ROOM_CHEST, logic->HasExplosives()),
+        LOCATION(RC_FIRE_TEMPLE_MQ_LIZALFOS_MAZE_SIDE_ROOM_CHEST, logic->HasItem(RG_POWER_BRACELET) && logic->HasExplosives()),
     }, {
         //Exits
         Entrance(RR_FIRE_TEMPLE_MQ_UPPER_MAZE, []{return true;}),
@@ -614,7 +614,7 @@ void RegionTable_Init_FireTemple() {
 
     areaTable[RR_FIRE_TEMPLE_MQ_NARROW_PATH_ROOM] = Region("Fire Temple MQ Narrow Path Room", SCENE_FIRE_TEMPLE, {
         //Events
-        EventAccess(&logic->FairyPot, []{return true;}),
+        EventAccess(&logic->FairyPot, []{return logic->CanBreakPots();}),
     }, {
         //Locations
         LOCATION(RC_FIRE_TEMPLE_MQ_ABOVE_LAVA_POT_1, logic->CanBreakPots()),

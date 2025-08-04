@@ -7,9 +7,9 @@ void RegionTable_Init_Graveyard() {
     // clang-format off
     areaTable[RR_THE_GRAVEYARD] = Region("The Graveyard", SCENE_GRAVEYARD, {
         //Events
-        EventAccess(&logic->ButterflyFairy, []{return logic->CanUse(RG_STICKS) && logic->AtDay;}),
-        EventAccess(&logic->BeanPlantFairy, []{return logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS);}),
-        EventAccess(&logic->BugRock,        []{return true;}),
+        EventAccess(&logic->ButterflyFairy,  []{return logic->CanUse(RG_STICKS) && logic->AtDay;}),
+        EventAccess(&logic->BeanPlantFairy,  []{return logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->CanUse(RG_SONG_OF_STORMS);}),
+        EventAccess(&logic->BugRock,         []{return logic->HasItem(RG_POWER_BRACELET);}),
         EventAccess(&logic->BorrowBunnyHood, []{return logic->IsChild && logic->AtDay && logic->BorrowSpookyMask && logic->HasItem(RG_CHILD_WALLET);}),
     }, {
         //Locations
@@ -35,10 +35,10 @@ void RegionTable_Init_Graveyard() {
         LOCATION(RC_GRAVEYARD_CRATE,                   ((logic->IsAdult && CanPlantBean(RR_THE_GRAVEYARD)) || logic->CanUse(RG_LONGSHOT)) && logic->CanBreakCrates()),
     }, {
         //Exits
-        Entrance(RR_GRAVEYARD_SHIELD_GRAVE,       []{return logic->IsAdult || logic->AtNight;}),
+        Entrance(RR_GRAVEYARD_SHIELD_GRAVE,       []{return (logic->IsAdult || logic->AtNight) && logic->HasItem(RG_POWER_BRACELET);}),
         Entrance(RR_GRAVEYARD_COMPOSERS_GRAVE,    []{return logic->CanUse(RG_ZELDAS_LULLABY);}),
-        Entrance(RR_GRAVEYARD_HEART_PIECE_GRAVE,  []{return logic->IsAdult || logic->AtNight;}),
-        Entrance(RR_GRAVEYARD_DAMPES_GRAVE,       []{return logic->IsAdult;}),
+        Entrance(RR_GRAVEYARD_HEART_PIECE_GRAVE,  []{return (logic->IsAdult || logic->AtNight) && logic->HasItem(RG_POWER_BRACELET);}),
+        Entrance(RR_GRAVEYARD_DAMPES_GRAVE,       []{return logic->IsAdult && logic->HasItem(RG_POWER_BRACELET);}),
         Entrance(RR_GRAVEYARD_DAMPES_HOUSE,       []{return logic->IsAdult && logic->CanOpenOverworldDoor(RG_DAMPES_HUT_KEY) /*|| logic->AtDampeTime*/;}), //TODO: This needs to be handled in ToD rework
         Entrance(RR_KAKARIKO_VILLAGE,             []{return true;}),
         Entrance(RR_GRAVEYARD_WARP_PAD_REGION,    []{return false;}),
@@ -88,7 +88,7 @@ void RegionTable_Init_Graveyard() {
 
     areaTable[RR_GRAVEYARD_DAMPES_GRAVE] = Region("Graveyard Dampes Grave", SCENE_WINDMILL_AND_DAMPES_GRAVE, {
         //Events
-        EventAccess(&logic->NutPot,               []{return true;}),
+        EventAccess(&logic->NutPot,               []{return logic->CanBreakPots();}),
         EventAccess(&logic->DampesWindmillAccess, []{return logic->IsAdult && logic->CanUse(RG_SONG_OF_TIME);}),
     }, {
         //Locations

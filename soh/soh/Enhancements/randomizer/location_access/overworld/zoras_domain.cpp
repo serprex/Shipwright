@@ -8,7 +8,7 @@ void RegionTable_Init_ZorasDomain() {
     areaTable[RR_ZORAS_DOMAIN] = Region("Zoras Domain", SCENE_ZORAS_DOMAIN, {
         //Events
         EventAccess(&logic->GossipStoneFairy, []{return logic->CallGossipFairyExceptSuns();}),
-        EventAccess(&logic->NutPot,           []{return true;}),
+        EventAccess(&logic->NutPot,           []{return logic->CanBreakPots();}),
         EventAccess(&logic->StickPot,         []{return logic->IsChild;}),
         EventAccess(&logic->FishGroup,        []{return logic->IsChild;}),
         EventAccess(&logic->KingZoraThawed,   []{return logic->IsAdult && logic->BlueFire();}),

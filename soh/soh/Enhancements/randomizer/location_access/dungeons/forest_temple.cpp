@@ -64,7 +64,7 @@ void RegionTable_Init_ForestTemple() {
 
     areaTable[RR_FOREST_TEMPLE_LOWER_STALFOS] = Region("Forest Temple Lower Stalfos", SCENE_FOREST_TEMPLE, {
         //Events
-        EventAccess(&logic->FairyPot, []{return true;}),
+        EventAccess(&logic->FairyPot, []{return logic->CanBreakPots();}),
     }, {
         //Locations
         LOCATION(RC_FOREST_TEMPLE_FIRST_STALFOS_CHEST, logic->CanKillEnemy(RE_STALFOS, ED_CLOSE, true, 2)),
@@ -274,7 +274,7 @@ void RegionTable_Init_ForestTemple() {
 
     areaTable[RR_FOREST_TEMPLE_GREEN_POE_ROOM] = Region("Forest Temple Green Poe Room", SCENE_FOREST_TEMPLE, {
         //Events
-        EventAccess(&logic->ForestTempleAmy, []{return logic->CanUse(RG_FAIRY_BOW);}),
+        EventAccess(&logic->ForestTempleAmy, []{return logic->CanUse(RG_FAIRY_BOW) && logic->HasItem(RG_POWER_BRACELET);}),
     }, {
         //Locations
         LOCATION(RC_FOREST_TEMPLE_GREEN_POE_POT_1, logic->CanBreakPots()),
@@ -339,7 +339,7 @@ void RegionTable_Init_ForestTemple() {
 
     areaTable[RR_FOREST_TEMPLE_MQ_WOLFOS_ROOM] = Region("Forest Temple MQ Wolfos Room", SCENE_FOREST_TEMPLE, {
         //Events
-        EventAccess(&logic->FairyPot,                 []{return true;}),
+        EventAccess(&logic->FairyPot,                 []{return logic->CanBreakPots();}),
         EventAccess(&logic->ForestClearBelowBowChest, []{return logic->CanKillEnemy(RE_WOLFOS);}),
     }, {
         //Locations

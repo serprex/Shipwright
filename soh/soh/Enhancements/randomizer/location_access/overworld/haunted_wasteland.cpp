@@ -17,8 +17,8 @@ void RegionTable_Init_HauntedWasteland() {
 
     areaTable[RR_HAUNTED_WASTELAND] = Region("Haunted Wasteland", SCENE_HAUNTED_WASTELAND, {
         //Events
-        EventAccess(&logic->FairyPot,       []{return true;}),
-        EventAccess(&logic->NutPot,         []{return true;}),
+        EventAccess(&logic->FairyPot,       []{return logic->CanBreakPots();}),
+        EventAccess(&logic->NutPot,         []{return logic->CanBreakPots();}),
         EventAccess(&logic->CarpetMerchant, []{return logic->HasItem(RG_ADULT_WALLET) && CanBuyAnother(RC_WASTELAND_BOMBCHU_SALESMAN) && (logic->CanJumpslash() || logic->CanUse(RG_HOVER_BOOTS));}),
     }, {
         //Locations

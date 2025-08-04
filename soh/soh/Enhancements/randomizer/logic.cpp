@@ -83,6 +83,8 @@ bool Logic::HasItem(RandomizerGet itemName) {
         case RG_IRON_BOOTS:
         case RG_HOVER_BOOTS:
             return CheckEquipment(RandoGetToEquipFlag.at(itemName));
+        case RG_POWER_BRACELET:
+            return CheckRandoInf(RAND_INF_CAN_GRAB);
         case RG_GORONS_BRACELET:
             return CurrentUpgrade(UPG_STRENGTH);
         case RG_SILVER_GAUNTLETS:
@@ -1141,7 +1143,8 @@ bool Logic::BlueFire() {
 }
 
 bool Logic::CanBreakPots() {
-    return true;
+    return CanUseSword() || BlastOrSmash() || CanUse(RG_FAIRY_SLINGSHOT) || CanUse(RG_FAIRY_BOW) ||
+           CanUse(RG_HOOKSHOT) || CanUse(RG_BOOMERANG) || HasItem(RG_POWER_BRACELET);
 }
 
 bool Logic::CanBreakCrates() {
@@ -1149,7 +1152,7 @@ bool Logic::CanBreakCrates() {
 }
 
 bool Logic::CanBreakSmallCrates() {
-    return true;
+    return CanUseSword() || BlastOrSmash() || HasItem(RG_POWER_BRACELET);
 }
 
 bool Logic::HasExplosives() {
