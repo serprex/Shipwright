@@ -5716,7 +5716,7 @@ void Randomizer::CreateCustomMessages() {
                   "Du hast die %rBronzene Schuppe%w&erhalten! Die Fähigkeit zu&Schwimmen ist nun dein!",
                   "Vous obtenez l'%rÉcaille de Bronze%w!&Le pouvoir de la flottabilité est&à vous!"),
         GIMESSAGE(RG_POWER_BRACELET, ITEM_BRACELET, "You got the %rPower Bracelet%w!&Wimp no more!", TODO_TRANSLATE,
-                  TODO_TRANSLATE),
+                  "Vous obtenez le %rBracelet de&Force%w!&Vous pouvez maintenant attraper&des trucs avec %b\x9f%w!"),
         GIMESSAGE(RG_FISHING_POLE, ITEM_FISHING_POLE, "You found a lost %rFishing Pole%w!&Time to hit the pond!",
                   "Du hast eine verlorene %rAngelrute%w&gefunden!&Zeit, im Teich&zu angeln!",
                   "Vous obtenez une %rCanne à pêche%w&perdue!&Il est temps d'aller à %gl'étang%w!"),
