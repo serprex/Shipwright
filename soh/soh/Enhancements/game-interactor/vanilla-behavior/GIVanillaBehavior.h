@@ -1840,6 +1840,14 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // varies
+    // ```
+    // #### `args`
+    // - None
+    VB_PREVENT_STRENGTH,
+
+    // #### `result`
+    // ```c
     // true
     // ```
     // #### `args`

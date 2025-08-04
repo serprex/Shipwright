@@ -2566,6 +2566,11 @@ void Logic::Reset(bool resetSaveContext /*= true*/) {
             SetRandoInf(RAND_INF_CAN_SWIM, true);
         }
 
+        // If we're not shuffling grab, we start with it
+        if (ctx->GetOption(RSK_SHUFFLE_GRAB).Is(false)) {
+            SetRandoInf(RAND_INF_CAN_GRAB, true);
+        }
+
         // If we're not shuffling child's wallet, we start with it
         if (ctx->GetOption(RSK_SHUFFLE_CHILD_WALLET).Is(false)) {
             SetRandoInf(RAND_INF_HAS_WALLET, true);
