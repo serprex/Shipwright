@@ -2259,7 +2259,7 @@ void StaticData::HintTable_Init() {
 
     hintTextTable[RHT_MIDO_HINT] = HintText(CustomMessage("You'll never find the #Kokiri Sword# I hid in #[[1]]#!",
                                                /*german*/ TODO_TRANSLATE,
-                                               /*french*/ TODO_TRANSLATE,
+                                               /*french*/ "Pfeuuh! Tu n'trouveras jamais l'#Epée Kokiri# que j'ai cachée dans #[[1]]#!",
                                                           {QM_GREEN, QM_RED}));
 
     hintTextTable[RHT_LOACH_HINT] = HintText(CustomMessage("What?^You wanna know about the&%rHyrule Loach%w?^It's a big fish, but it's so rare that I'll give my %g[[1]]%w to anyone who catches it. Seriously!",
