@@ -677,12 +677,12 @@ void ActorAccessibility_InterpretCurrentScene(PlayState* play) {
         if ((func_80041DB8(&play->colCtx, poly, BGCHECK_SCENE) == 8 ||
              func_80041DB8(&play->colCtx, poly, BGCHECK_SCENE) == 3)) {
             ActorAccessibility_PolyToVirtualActor(play, poly, VA_CLIMB, list);
-        }
-        if (func_80041EA4(&play->colCtx, poly, BGCHECK_SCENE) == 12) {
-            ActorAccessibility_PolyToVirtualActor(play, poly, VA_VOID, list);
-        }
-        if (SurfaceType_GetSceneExitIndex(&play->colCtx, poly, BGCHECK_SCENE) != 0) {
+        } else if (SurfaceType_GetSceneExitIndex(&play->colCtx, poly, BGCHECK_SCENE) != 0) {
             ActorAccessibility_PolyToVirtualActor(play, poly, VA_AREA_CHANGE, list);
+        } else if (func_80041EA4(&play->colCtx, poly, BGCHECK_SCENE) == 12) {
+            ActorAccessibility_PolyToVirtualActor(play, poly, VA_VOID, list);
+        } else if (SurfaceType_IsHookshotSurface(&play->colCtx, poly, BGCHECK_SCENE)) {
+            ActorAccessibility_PolyToVirtualActor(play, poly, VA_MARKER, list);
         }
     }
 }
@@ -692,17 +692,22 @@ void ActorAccessibility_PolyToVirtualActor(PlayState* play, CollisionPoly* poly,
                                            VirtualActorList* destination) {
     Vec3f polyVerts[3];
     CollisionPoly_GetVertices(poly, play->colCtx.colHeader->vtxList, polyVerts);
-    Vec3f where;
-    where.y = std::min(polyVerts[0].y, std::min(polyVerts[1].y, polyVerts[2].y));
     f32 minX = std::min(polyVerts[0].x, std::min(polyVerts[1].x, polyVerts[2].x));
     f32 maxX = std::max(polyVerts[0].x, std::max(polyVerts[1].x, polyVerts[2].x));
     f32 minZ = std::min(polyVerts[0].z, std::min(polyVerts[1].z, polyVerts[2].z));
     f32 maxZ = std::max(polyVerts[0].z, std::max(polyVerts[1].z, polyVerts[2].z));
-    where.x = maxX - ((maxX - minX) / 2);
-    where.z = maxZ - ((maxZ - minZ) / 2);
+    Vec3f where = {
+        .x = maxX - (maxX - minX) / 2,
+        .y = std::min(polyVerts[0].y, std::min(polyVerts[1].y, polyVerts[2].y)),
+        .z = maxZ - (maxZ - minZ) / 2,
+    };
     AccessibleActor* actor = ActorAccessibility_AddVirtualActor(destination, va, where);
     if (actor == NULL)
         return;
+    if (va == VA_MARKER) {
+        actor->policy.sound = 0;
+    }
+
     if (va == VA_AREA_CHANGE) {
         if (play->sceneNum != SCENE_GROTTOS && play->sceneNum != SCENE_FAIRYS_FOUNTAIN) {
             u32 sceneIndex = SurfaceType_GetSceneExitIndex(&play->colCtx, poly, BGCHECK_SCENE);
@@ -710,6 +715,10 @@ void ActorAccessibility_PolyToVirtualActor(PlayState* play, CollisionPoly* poly,
             actor->sceneIndex = gEntranceTable[nextEntranceIndex].scene;
         }
     } else if (SurfaceType_IsHookshotSurface(&play->colCtx, poly, BGCHECK_SCENE)) {
+        if (va == VA_MARKER) {
+            f32 maxY = std::max(polyVerts[0].y, std::max(polyVerts[1].y, polyVerts[2].y));
+            actor->pos.y = (actor->pos.y + maxY) / 2;
+        }
         actor->policy.aimAssist.isProvider = AIM_HOOK;
     }
 }
