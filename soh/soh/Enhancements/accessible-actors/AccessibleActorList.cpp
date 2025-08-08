@@ -13,6 +13,7 @@
 extern "C" {
 #include "z64collision_check.h"
 #include "overlays/actors/ovl_Bg_Bdan_Switch/z_bg_bdan_switch.h"
+#include "overlays/actors/ovl_Bg_Mizu_Movebg/z_bg_mizu_movebg.h"
 #include "overlays/actors/ovl_Bg_Po_Event/z_bg_po_event.h"
 #include "overlays/actors/ovl_Boss_Goma/z_boss_goma.h"
 #include "overlays/actors/ovl_En_Karebaba/z_en_karebaba.h"
@@ -43,6 +44,8 @@ void EnGSwitch_SilverRupeeIdle(EnGSwitch*, PlayState*);
 
 extern u8 sBgPoEventPuzzleState;
 }
+
+#define MOVEBG_TYPE(params) (((u16)(params) >> 0xC) & 0xF)
 
 void accessible_switch(AccessibleActor* actor) {
     Player* player = GET_PLAYER(actor->play);
@@ -450,6 +453,24 @@ void ActorAccessibility_InitActors() {
     policy.ydist = 1000;
     policy.aimAssist.isProvider = AIM_HOOK;
     ActorAccessibility_AddSupportedActor(ACTOR_OBJ_HSBLOCK, policy);
+    ActorAccessibility_InitPolicy(&policy, "Water Temple Hookshot Platform", [](AccessibleActor *actor) {
+        if ((actor->frameCount & 31) == 0) {
+            BgMizuMovebg* movebg = (BgMizuMovebg*)actor->actor;
+            if (MOVEBG_TYPE(actor->actor->params) < 4) {
+            actor->policy.aimAssist.isProvider = 0;
+            }
+            if (movebg->sfxFlags & 1) {
+                ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_ROLL_STAND_2);
+            }
+            if (movebg->sfxFlags & 2) {
+                ActorAccessibility_PlaySoundForActor(actor, 1, NA_SE_EV_ELEVATOR_MOVE);
+            }
+        }
+    });
+    policy.distance = 1000;
+    policy.ydist = 1000;
+    policy.aimAssist.isProvider = AIM_HOOK;
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_MIZU_MOVEBG, policy);
     ActorAccessibility_InitPolicy(&policy, "Scarecrow", NA_SE_IT_KAKASHI_JUMP);
     policy.volume = 2;
     policy.distance = 1000;
@@ -885,8 +906,9 @@ void ActorAccessibility_InitActors() {
     policy.distance = 900;
     policy.volume = 2;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_ICE_HONO, policy);
-    ActorAccessibility_InitPolicy(&policy, "Ice Barred", NA_SE_EV_CHAIN_KEY_UNLOCK);
+    ActorAccessibility_InitPolicy(&policy, "Barred", NA_SE_EV_CHAIN_KEY_UNLOCK);
     ActorAccessibility_AddSupportedActor(ACTOR_BG_ICE_SHUTTER, policy);
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_MIZU_SHUTTER, policy);
     ActorAccessibility_InitPolicy(&policy, "Ice Block", NA_SE_PL_SLIP_ICE_LELEL);
     policy.distance = 750;
     policy.volume = 2;
