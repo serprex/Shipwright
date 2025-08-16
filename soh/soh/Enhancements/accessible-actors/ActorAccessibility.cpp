@@ -1,7 +1,6 @@
 #include <sstream>
 #include <unordered_set>
 #include <map>
-#include <random>
 #include <vector>
 
 #include "ActorAccessibility.h"
@@ -17,7 +16,6 @@
 
 #include "File.h"
 #include "soh/Enhancements/speechsynthesizer/SpeechSynthesizer.h"
-#include "soh/Enhancements/tts/tts.h"
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/ObjectExtension/ObjectExtension.h"
 
@@ -737,8 +735,14 @@ AimAssistProps ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* acto
     angle = angle / -14000.0 * 16384;
     f32 cos_angle = Math_CosS(angle);
     f32 slope = cos_angle == 0.0f ? 0.0f : Math_SinS(angle) / cos_angle;
-    s32 yIntercept = slope * actor->xzDistToPlayer + player->actor.focus.pos.y;
+    f32 x = actor->pos.x, z = actor->pos.z, xzDist = actor->xzDistToPlayer;
     s32 yHeight = actor->pos.y + 25;
+    if (actor->id == ACTOR_BG_MIZU_MOVEBG) {
+        x += Math_SinS(actor->actor->shape.rot.y) * 50;
+        z += Math_CosS(actor->actor->shape.rot.y) * 50;
+        xzDist = sqrtf(SQ(player->actor.world.pos.x - x) + SQ(player->actor.world.pos.z - z));
+    }
+    s32 yIntercept = slope * xzDist + player->actor.focus.pos.y;
     AimAssistProps aimAssistProps;
     if (yIntercept > yHeight + 25) {
         aimAssistProps.pitch = 1.5;
@@ -757,8 +761,7 @@ AimAssistProps ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* acto
     } else {
         actor->aimFrequency = 1 + (uint8_t)(yDiff / 5);
     }
-    s16 yawdiff =
-        player->yaw - Math_Atan2S(actor->pos.z - player->actor.world.pos.z, actor->pos.x - player->actor.world.pos.x);
+    s16 yawdiff = player->yaw - Math_Atan2S(z - player->actor.world.pos.z, x - player->actor.world.pos.x);
     if (yawdiff > -0x1000 && yawdiff < 0x1000) {
         aimAssistProps.volume = 1.0 - (yawdiff * yawdiff) / (float)0x2000000;
     } else if (yawdiff > -0x2000 && yawdiff < 0x2000) {

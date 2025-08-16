@@ -23,9 +23,9 @@ struct ActorAccessibilityPolicy {
     s16 sound;                           // The ID of a sound to play. Ignored if the callback is set.
     bool runsAlways;                     // If set, then the distance policy is ignored.
 
-    int n;        // How often to run the callback in frames.
-    f32 distance; // Maximum xz distance from player before the actor should be considered out of range.
-    f32 ydist;    // Maximum y distance from player before the actor should be considered out of range.
+    u8 n;         // How often to run callback in frames.
+    f32 distance; // Maximum xz distance from player before actor should be considered out of range.
+    f32 ydist;    // Maximum y distance from player before actor should be considered out of range.
     f32 pitch;
     f32 volume;
     f32 pitchModifier;
