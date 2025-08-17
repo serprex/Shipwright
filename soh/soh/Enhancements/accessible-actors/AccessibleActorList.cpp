@@ -1,12 +1,8 @@
 #include "ActorAccessibility.h"
 #include "soh/OTRGlobals.h"
 
-#include <map>
-
 #include <functions.h>
 #include <macros.h>
-#include <stdio.h>
-#include <string>
 #include <float.h>
 
 extern "C" {
@@ -1083,6 +1079,7 @@ void ActorAccessibility_InitActors() {
     policy.distance = 500;
     policy.ydist = 500;
     ActorAccessibility_AddSupportedActor(VA_VOID, policy);
+    ActorAccessibility_AddSupportedActor(ACTOR_EN_STREAM, policy);
     ActorAccessibility_InitPolicy(&policy, "Ladder/climable", [](AccessibleActor* actor) {
         Player* player = GET_PLAYER(actor->play);
         f32 waterLoc = player->actor.yDistToWater + player->actor.world.pos.y;
