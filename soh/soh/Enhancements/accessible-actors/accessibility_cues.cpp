@@ -10,14 +10,11 @@ void Player_GetSlopeDirection(CollisionPoly* floorPoly, Vec3f* slopeNormal, s16*
 void CollisionPoly_GetVertices(CollisionPoly* poly, Vec3s* vtxList, Vec3f* dest);
 f32 BgCheck_RaycastFloorImpl(PlayState* play, CollisionContext* colCtx, u16 xpFlags, CollisionPoly** outPoly,
                              s32* outBgId, Vec3f* pos, Actor* actor, u32 arg7, f32 chkDist);
-//#include "soh/Enhancements/speechsynthesizer/SpeechSynthesizer.h"
-//#include "soh/Enhancements/tts/tts.h"
 }
 #define DETECTION_DISTANCE 500.0
 #define MIN_INCLINE_DISTANCE 5.0
 #define MIN_DECLINE_DISTANCE 5.0
 #define DEFAULT_PROBE_SPEED 5.5
-#define NOMINMAX
 static Player fakePlayer;                        // Used for wall height detection.
 static Vec3f D_80854798 = { 0.0f, 18.0f, 0.0f }; // From z_player.c.
 
@@ -44,25 +41,24 @@ class TerrainCueSound {
     Vec3f terrainProjectedPos;
     f32 currentPitch;
     f32 xzDistToPlayer;
-    s16 currentSFX;
-    int restFrames; // Used to control how often sounds get played.
+    s8 restFrames; // Used to control how often sounds get played.
 
     // Call to start playback.
-    void play() {
-        ActorAccessibility_PlaySound(this, 0, currentSFX);
+    void play(s16 sfx) {
+        ActorAccessibility_PlaySound(this, 0, sfx);
         ActorAccessibility_SetSoundPos(this, 0, &terrainProjectedPos, xzDistToPlayer, actor->policy.distance);
         ActorAccessibility_SetSoundPitch(this, 0, currentPitch);
     }
 
     // Call when terrain is no longer present to stop playback.
-    virtual void stop() {
+    void stop() {
         ActorAccessibility_StopSound(this, 0);
     }
 
     // Custom terrain sound behaviour.
     virtual void run() = 0;
     // Update sound position and volume once per frame.
-    virtual void updatePositions(Vec3f& pos) {
+    void updatePositions(Vec3f& pos) {
         terrainPos = pos;
         Player* player = GET_PLAYER(actor->play);
 
@@ -72,17 +68,14 @@ class TerrainCueSound {
 
         // Set xzDistToPlayer.
         xzDistToPlayer = Math_Vec3f_DistXZ(&terrainPos, &player->actor.world.pos);
-        ActorAccessibility_SetSoundPos(this, 0, &terrainProjectedPos, xzDistToPlayer, actor->policy.distance);
+        f32 distance = actor->policy.distance * (player->stateFlags1 & PLAYER_STATE1_FIRST_PERSON ? 2.0 : 1.0);
+        ActorAccessibility_SetSoundPos(this, 0, &terrainProjectedPos, xzDistToPlayer, distance);
         ActorAccessibility_SetSoundPitch(this, 0, currentPitch);
     }
 
   public:
-    TerrainCueSound(AccessibleActor* actor, Vec3f pos) {
-        this->actor = actor;
-        currentPitch = 1.0;
-        restFrames = 0;
-        xzDistToPlayer = 0;
-        currentSFX = 0;
+    TerrainCueSound(AccessibleActor* actor, Vec3f pos)
+        : actor(actor), currentPitch(1.0), xzDistToPlayer(0), restFrames(0) {
     }
     virtual ~TerrainCueSound() {
         stop();
@@ -99,17 +92,16 @@ class Incline : protected TerrainCueSound {
   public:
     Incline(AccessibleActor* actor, Vec3f pos, float pitchModifier = 0) : TerrainCueSound(actor, pos) {
         currentPitch = 0.5;
-        currentSFX = NA_SE_PL_MAGIC_SOUL_FLASH;
         this->pitchModifier = pitchModifier;
 
-        play();
+        play(NA_SE_PL_MAGIC_SOUL_FLASH);
     }
     virtual ~Incline() = default;
     virtual void run() {
         if (restFrames > 0) {
             restFrames--;
             if (restFrames == 0)
-                play();
+                play(NA_SE_PL_MAGIC_SOUL_FLASH);
 
             return;
         }
@@ -127,27 +119,20 @@ class Decline : protected TerrainCueSound {
     Decline(AccessibleActor* actor, Vec3f pos, float pitchModifier) : TerrainCueSound(actor, pos) {
         restFrames = 0;
         currentPitch = 2.0;
-        currentSFX = NA_SE_PL_MAGIC_SOUL_FLASH;
         this->pitchModifier = 0.0;
 
-        play();
+        play(NA_SE_PL_MAGIC_SOUL_FLASH);
     }
     virtual ~Decline() = default;
     virtual void run() {
         if (restFrames > 0) {
             restFrames--;
             if (restFrames == 0)
-                play();
+                play(NA_SE_PL_MAGIC_SOUL_FLASH);
 
             return;
         }
         ActorAccessibility_SetSoundPitch(this, 0, 1.0 + pitchModifier);
-        /*currentPitch -= 0.1;
-        if (currentPitch < 0.5) {
-            stop();
-            currentPitch = 2.0;
-            restFrames = 5;
-        }*/
     }
     void setPitchModifier(float mod) {
         pitchModifier = mod;
@@ -156,42 +141,40 @@ class Decline : protected TerrainCueSound {
 
 class Ledge : protected TerrainCueSound {
     s8 savedType; // Distinguishes between a ledge link can fall from and one he can climb up.
-    Vec3s probeRot;
 
   public:
     Ledge(AccessibleActor* actor, Vec3f pos, Vec3s probeRot, s8 type = 0) : TerrainCueSound(actor, pos) {
         if (type == 1)
             currentPitch = 2.0;
         savedType = type;
-        switch (type) {
-            case 0:
-                currentSFX = NA_SE_EV_WIND_TRAP;
-                break;
-            case 1:
-                currentSFX = NA_SE_EV_WOOD_BOUND;
-                break;
-            case 2:
-                currentSFX = NA_SE_PL_LAND_WATER0;
-                break;
-            case 3:
-                currentSFX = NA_SE_SY_WARNING_COUNT_N;
-                break;
-        }
 
-        this->probeRot = probeRot;
         if (type == 0) {
             currentPitch = probeRot.y == 0 ? 0.4 : probeRot.y < 0 ? 0.2 : 0.8;
         }
 
-        play();
+        play(sfx());
     }
     virtual ~Ledge() = default;
     s8 type() {
         return savedType;
     }
+    s16 sfx() {
+        switch (savedType) {
+            case 0:
+                return NA_SE_EV_WIND_TRAP;
+            case 1:
+                return NA_SE_EV_WOOD_BOUND;
+            case 2:
+                return NA_SE_PL_LAND_WATER0;
+            case 3:
+                return NA_SE_SY_WARNING_COUNT_N;
+            default:
+                return 0;
+        }
+    }
     void run() {
         if (restFrames == 0) {
-            play();
+            play(sfx());
             restFrames = 10;
         } else {
             restFrames--;
@@ -204,7 +187,6 @@ class Platform : protected TerrainCueSound {
     Platform(AccessibleActor* actor, Vec3f pos) : TerrainCueSound(actor, pos) {
         currentPitch = 2.0;
         // actor->policy.volume = 1.5;
-        currentSFX = NA_SE_IT_SHIELD_REFLECT_SW;
     }
     virtual ~Platform() = default;
     void setActor(AccessibleActor* actor) {
@@ -215,7 +197,7 @@ class Platform : protected TerrainCueSound {
     }
     void run() {
         if (restFrames == 0) {
-            play();
+            play(NA_SE_IT_SHIELD_REFLECT_SW);
             restFrames = 10;
         } else {
             restFrames--;
@@ -224,41 +206,33 @@ class Platform : protected TerrainCueSound {
 };
 
 class Wall : protected TerrainCueSound {
-    int frames;
-    Vec3s probeRot;
     f32 targetPitch;
 
   public:
     Wall(AccessibleActor* actor, Vec3f pos, Vec3s rot) : TerrainCueSound(actor, pos) {
-        probeRot = rot;
         currentPitch = 0.5;
 
-        targetPitch = (f32)probeRot.y / (16384.0f * 2.0f);
-        if (probeRot.y != 0 && targetPitch < -0.4)
+        targetPitch = (f32)rot.y / (16384.0f * 2.0f);
+        if (rot.y != 0 && targetPitch < -0.4)
             targetPitch = -0.4;
 
-        currentSFX = NA_SE_IT_SWORD_CHARGE;
-
-        frames = 0;
-
-        play();
+        play(NA_SE_IT_SWORD_CHARGE);
     }
     virtual ~Wall() = default;
     void run() {
+        restFrames++;
 
-        frames++;
-
-        if (frames == 20) {
-            frames = 0;
-            play();
+        if (restFrames == 20) {
+            restFrames = 0;
+            play(NA_SE_IT_SWORD_CHARGE);
             ActorAccessibility_SeekSound(this, 0, 44100 * 2);
         }
         f32 pitchModifier = 0.0;
 
         if (targetPitch < 0)
-            pitchModifier = LERP(2.5, 0.5 + targetPitch, (f32)frames / 20.0f);
+            pitchModifier = LERP(2.5, 0.5 + targetPitch, (f32)restFrames / 20.0f);
         else if (targetPitch > 0)
-            pitchModifier = LERP(0.1, (0.5 + targetPitch), (f32)frames / 20.0f);
+            pitchModifier = LERP(0.1, (0.5 + targetPitch), (f32)restFrames / 20.0f);
 
         ActorAccessibility_SetSoundPitch(this, 0, pitchModifier);
     }
@@ -268,13 +242,12 @@ class Spike : protected TerrainCueSound {
   public:
     Spike(AccessibleActor* actor, Vec3f pos) : TerrainCueSound(actor, pos) {
         currentPitch = 0.5;
-        currentSFX = NA_SE_IT_SWORD_PICKOUT;
-        play();
+        play(NA_SE_IT_SWORD_PICKOUT);
     }
     virtual ~Spike() = default;
     void run() {
         if (restFrames == 0) {
-            play();
+            play(NA_SE_IT_SWORD_PICKOUT);
             restFrames = 10;
             return;
         }
@@ -286,13 +259,12 @@ class Water : protected TerrainCueSound {
   public:
     Water(AccessibleActor* actor, Vec3f pos) : TerrainCueSound(actor, pos) {
         currentPitch = 0.5;
-        currentSFX = NA_SE_PL_LAND_WATER0; // NA_SE_EN_DAIOCTA_LAND_WATER; // change?
-        play();
+        play(NA_SE_PL_LAND_WATER0);
     }
     virtual ~Water() = default;
     void run() {
         if (restFrames == 0) {
-            play();
+            play(NA_SE_PL_LAND_WATER0);
             restFrames = 10;
         } else {
             restFrames--;
@@ -306,14 +278,13 @@ class Ground : protected TerrainCueSound {
   public:
     Ground(AccessibleActor* actor, Vec3f pos, float pitchModifier) : TerrainCueSound(actor, pos) {
         currentPitch = 1.0;
-        currentSFX = NA_SE_EV_WOOD_BOUND;
         this->pitchModifier = 0.0;
-        play();
+        play(NA_SE_EV_WOOD_BOUND);
     }
     virtual ~Ground() = default;
     void run() {
         if (restFrames == 0) {
-            play();
+            play(NA_SE_EV_WOOD_BOUND);
             restFrames = 10;
         } else {
             ActorAccessibility_SetSoundPitch(this, 0, 1.0 + (2 * pitchModifier));
@@ -329,13 +300,12 @@ class Lava : protected TerrainCueSound {
   public:
     Lava(AccessibleActor* actor, Vec3f pos) : TerrainCueSound(actor, pos) {
         currentPitch = 1.0;
-        currentSFX = NA_SE_SY_WARNING_COUNT_N; // change?
-        play();
+        play(NA_SE_SY_WARNING_COUNT_N);
     }
     virtual ~Lava() = default;
     void run() {
         if (restFrames == 0) {
-            play();
+            play(NA_SE_SY_WARNING_COUNT_N);
             restFrames = 10;
         } else {
             restFrames--;
@@ -345,8 +315,8 @@ class Lava : protected TerrainCueSound {
 
 class TerrainCueDirection final {
     AccessibleActor* actor;
-    int startingBodyPart; // Decides where the probe starts from. Probes going out to the left or right of the player
-                          // start from the shoulders.
+    PlayerBodyPart startingBodyPart; // Decides where the probe starts from. Probes going out to the left or right of
+                                     // the player start from the shoulders.
     Vec3f pos;
     Vec3f prevPos;
     Vec3s relRot; // Relative angle.
@@ -658,9 +628,8 @@ class TerrainCueDirection final {
     }
 
     bool checkVinePlatform(Vec3f_ ppos, Vec3s_ ogRot, f32 playerHeight) {
-        f32 floorHeight;
         rot = ogRot;
-        floorHeight = BgCheck_EntityRaycastFloor3(&actor->play->colCtx, &floorPoly, &floorBgId, &pos);
+        f32 floorHeight = BgCheck_EntityRaycastFloor3(&actor->play->colCtx, &floorPoly, &floorBgId, &pos);
         if ((floorHeight - playerHeight) > 100.0) {
             destroyCurrentSound();
             pos.y -= floorHeight; // TODO remove?
@@ -730,7 +699,7 @@ class TerrainCueDirection final {
 
   public:
     // Initialize a TerrainCueDirection based on a relative angle and position offset.
-    TerrainCueDirection(AccessibleActor* actor, Vec3s rot, int startingBodyPart = PLAYER_BODYPART_MAX)
+    TerrainCueDirection(AccessibleActor* actor, Vec3s rot, PlayerBodyPart startingBodyPart = PLAYER_BODYPART_MAX)
         : platform(actor, { 0, 0, 0 }) {
         this->actor = actor;
         this->relRot = rot;

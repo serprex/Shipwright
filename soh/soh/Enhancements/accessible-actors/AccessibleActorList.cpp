@@ -939,11 +939,12 @@ void ActorAccessibility_InitActors() {
     policy.aimAssist.isProvider = AIM_SHOOT;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_FIREFLY, policy);
     ActorAccessibility_InitPolicy(&policy, "gold skulltula token", NA_SE_EN_NUTS_DAMAGE);
+    policy.aimAssist.isProvider = AIM_BOOM | AIM_HOOK;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_SI, policy);
     ActorAccessibility_InitPolicy(&policy, "Gold and Wall skulltulas", nullptr);
     policy.aimAssist.isProvider = AIM_ALL | AIM_CUP;
-    policy.ydist = 500;
-    policy.distance = 750;
+    policy.ydist = 600;
+    policy.distance = 700;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_SW, policy);
     ActorAccessibility_InitPolicy(&policy, "Big Skulltula", [](AccessibleActor* actor) {
         s16 angleTowardsLink = ABS((s16)(actor->actor->yawTowardsPlayer - actor->actor->shape.rot.y));

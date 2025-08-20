@@ -6,12 +6,10 @@
 #include "ActorAccessibility.h"
 #include "AccessibleAudioEngine.h"
 #include "soh/OTRGlobals.h"
-#include "resource/type/Blob.h"
 
 #include <functions.h>
 #include <variables.h>
 #include <macros.h>
-#include "ResourceType.h"
 #include "SfxExtractor.h"
 
 #include "File.h"
@@ -345,35 +343,13 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
         actor->yDistToPlayer = fabs((actor->pos.y) - (player->actor.world.pos.y));
     }
 
-    if (actor->actor != NULL && fabs(actor->actor->yDistToPlayer) > actor->policy.ydist) {
-        return;
-    }
-    for (int i = 0; i < AAE_SLOTS_PER_HANDLE; i++) {
-        if (actor->managedSoundSlots & (1 << i)) {
-            ActorAccessibility_SetSoundPos(actor, i, &actor->projectedPos, actor->xyzDistToPlayer,
-                                           actor->policy.distance);
-            // Judgement call: pitch changes are rare enough that it doesn't make sense to pay the cost of updating it
-            // every frame. If you want a pitch change, call the function as needed.
-        }
-    }
-    actor->frameCount++;
-    if (aa->glossary->GlossaryStarted) {
-        aa->glossary->frameCount++;
-    }
-    if (!actor->policy.runsAlways && actor->xyzDistToPlayer > actor->policy.distance) {
-        return;
-    } else if (actor->isDrawn == 0 && actor->id != ACTOR_EN_HOLL && actor->id != ACTOR_EN_KAKASI2 &&
-               actor->id != ACTOR_EN_IT && actor->id != ACTOR_EN_OKARINA_TAG && actor->id != ACTOR_EN_WONDER_ITEM &&
-               !aa->glossary->GlossaryStarted) {
-        return;
-    }
-
     if (actor->policy.aimAssist.isProvider) {
         Player* player = GET_PLAYER(play);
         if ((player->stateFlags1 & PLAYER_STATE1_FIRST_PERSON) &&
             ((actor->policy.aimAssist.isProvider & AIM_CUP) ||
              (player->stateFlags1 & (PLAYER_STATE1_USING_BOOMERANG | PLAYER_STATE1_ITEM_IN_HAND)))) {
             bool aim = false;
+            f32 dist = 1000;
             if (player->unk_6AD == 2) {
                 switch (player->heldItemAction) {
                     case PLAYER_IA_BOW:
@@ -389,10 +365,15 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
                         aim = actor->policy.aimAssist.isProvider & AIM_SLING;
                         break;
                     case PLAYER_IA_HOOKSHOT:
+                        dist = 380;
+                        aim = actor->policy.aimAssist.isProvider & AIM_HOOK;
+                        break;
                     case PLAYER_IA_LONGSHOT:
+                        dist = 770;
                         aim = actor->policy.aimAssist.isProvider & AIM_HOOK;
                         break;
                     case PLAYER_IA_BOOMERANG:
+                        dist = 380;
                         aim = actor->policy.aimAssist.isProvider & AIM_BOOM;
                         break;
                     case PLAYER_IA_NONE:
@@ -402,7 +383,7 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
             } else {
                 aim = actor->policy.aimAssist.isProvider & AIM_CUP;
             }
-            if (aim) {
+            if (aim && actor->xyzDistToPlayer < dist) {
                 auto aimAssistProps = ActorAccessibility_ProvideAimAssistForActor(actor);
                 if (++actor->aimFramesSinceAimAssist >= actor->aimFrequency) {
                     actor->aimFramesSinceAimAssist = 0;
@@ -415,6 +396,30 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
         } else {
             // Make sure there's no delay the next time you draw your bow or whatever.
             actor->aimFramesSinceAimAssist = 255;
+        }
+    }
+
+    actor->frameCount++;
+    if (aa->glossary->GlossaryStarted) {
+        aa->glossary->frameCount++;
+    }
+
+    if (actor->actor != NULL && fabs(actor->actor->yDistToPlayer) > actor->policy.ydist) {
+        return;
+    } else if (!actor->policy.runsAlways && actor->xyzDistToPlayer > actor->policy.distance) {
+        return;
+    } else if (actor->isDrawn == 0 && actor->id != ACTOR_EN_HOLL && actor->id != ACTOR_EN_KAKASI2 &&
+               actor->id != ACTOR_EN_IT && actor->id != ACTOR_EN_OKARINA_TAG && actor->id != ACTOR_EN_WONDER_ITEM &&
+               !aa->glossary->GlossaryStarted) {
+        return;
+    }
+
+    for (int i = 0; i < AAE_SLOTS_PER_HANDLE; i++) {
+        if (actor->managedSoundSlots & (1 << i)) {
+            ActorAccessibility_SetSoundPos(actor, i, &actor->projectedPos, i == 7 ? 0 : actor->xyzDistToPlayer,
+                                           i == 7 ? 1 : actor->policy.distance);
+            // Judgement call: pitch changes are rare enough that it doesn't make sense to pay the cost of updating it
+            // every frame. If you want a pitch change, call the function as needed.
         }
     }
 
