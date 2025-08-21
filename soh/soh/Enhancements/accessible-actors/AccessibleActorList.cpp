@@ -442,6 +442,19 @@ void ActorAccessibility_InitActors() {
     });
     policy.distance = 1000;
     ActorAccessibility_AddSupportedActor(ACTOR_EN_WOOD02, policy);
+    ActorAccessibility_InitPolicy(&policy, "Lake Hylia Sun", [](AccessibleActor* actor) {
+        s32 params = actor->actor->params & 0xFF;
+        if (params != 0x40 && params != 0x41 && gSaveContext.dayTime >= 0x4555 && gSaveContext.dayTime < 0x5000) {
+            if (actor->xzDistToPlayer <= 120 && (actor->frameCount & 31) == 0) {
+                ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_IT_BOW_FLICK);
+            }
+            actor->policy.aimAssist.isProvider = AIM_BOW;
+        } else {
+            actor->policy.aimAssist.isProvider = 0;
+        }
+    });
+    policy.runsAlways = true;
+    ActorAccessibility_AddSupportedActor(ACTOR_SHOT_SUN, policy);
     ActorAccessibility_InitPolicy(&policy, "Hookshot Pillar", NA_SE_IT_HOOKSHOT_STICK_OBJ);
     policy.distance = 1000;
     policy.ydist = 1000;

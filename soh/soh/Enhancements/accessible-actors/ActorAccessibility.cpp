@@ -18,6 +18,7 @@
 #include "soh/ObjectExtension/ObjectExtension.h"
 
 extern "C" {
+#include "overlays/actors/ovl_Shot_Sun/z_shot_sun.h"
 extern PlayState* gPlayState;
 extern bool freezeGame;
 extern bool freezeActors;
@@ -410,7 +411,7 @@ void ActorAccessibility_RunAccessibilityForActor(PlayState* play, AccessibleActo
         return;
     } else if (actor->isDrawn == 0 && actor->id != ACTOR_EN_HOLL && actor->id != ACTOR_EN_KAKASI2 &&
                actor->id != ACTOR_EN_IT && actor->id != ACTOR_EN_OKARINA_TAG && actor->id != ACTOR_EN_WONDER_ITEM &&
-               !aa->glossary->GlossaryStarted) {
+               actor->id != ACTOR_SHOT_SUN && !aa->glossary->GlossaryStarted) {
         return;
     }
 
@@ -745,6 +746,12 @@ AimAssistProps ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* acto
     if (actor->id == ACTOR_BG_MIZU_MOVEBG) {
         x += Math_SinS(actor->actor->shape.rot.y) * 50;
         z += Math_CosS(actor->actor->shape.rot.y) * 50;
+        xzDist = sqrtf(SQ(player->actor.world.pos.x - x) + SQ(player->actor.world.pos.z - z));
+    } else if (actor->id == ACTOR_SHOT_SUN) {
+        ShotSun* sun = (ShotSun*)actor->actor;
+        x = sun->hitboxPos.x;
+        z = sun->hitboxPos.z;
+        yHeight = sun->hitboxPos.y + 55;
         xzDist = sqrtf(SQ(player->actor.world.pos.x - x) + SQ(player->actor.world.pos.z - z));
     }
     s32 yIntercept = slope * xzDist + player->actor.focus.pos.y;
