@@ -2275,30 +2275,33 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
                         entrance = ENTR_HYRULE_FIELD_FENCE_EXIT;
                     }
                     break;
-                case TEXT_HC_GF:
+                case TEXT_HC_GREAT_FAIRY_SIGN:
                     entrance = ENTR_GREAT_FAIRYS_FOUNTAIN_SPELLS_DINS_HC;
                     break;
-                case TEXT_KAK_SIGN:
+                case TEXT_DMT_KAK_SIGN:
                     if (gPlayState->sceneNum == SCENE_HYRULE_FIELD) {
                         entrance = ENTR_KAKARIKO_VILLAGE_FRONT_GATE;
                     } else {
                         entrance = ENTR_KAKARIKO_VILLAGE_GUARD_GATE;
                     }
                     break;
-                case TEXT_KAK_GY:
+                case TEXT_KAK_TO_GY_SIGN:
                     entrance = ENTR_GRAVEYARD_ENTRANCE;
                     break;
-                case TEXT_KAK_WELL:
+                case TEXT_KAK_WELL_SIGN:
                     entrance = ENTR_BOTTOM_OF_THE_WELL_ENTRANCE;
                     break;
-                case TEXT_KAK_DMT:
+                case TEXT_KAK_DMT_SIGN:
                     entrance = ENTR_DEATH_MOUNTAIN_TRAIL_BOTTOM_EXIT;
                     break;
-                case TEXT_DMT_DMT:
+                case TEXT_DMT_SIGN:
                     entrance = ENTR_GROTTOS_13;
                     break;
-                case TEXT_DMT_DC:
+                case TEXT_DMT_DC_SIGN:
                     entrance = ENTR_DEATH_MOUNTAIN_TRAIL_OUTSIDE_DODONGOS_CAVERN;
+                    break;
+                case TEXT_DMT_GC_SIGN:
+                    entrance = ENTR_GORON_CITY_UPPER_EXIT;
                     break;
                 case TEXT_GC_SIGN:
                     if (gPlayState->sceneNum == SCENE_DEATH_MOUNTAIN_TRAIL) {
@@ -2307,13 +2310,13 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
                         entrance = ENTR_GORON_CITY_DARUNIA_ROOM_EXIT;
                     }
                     break;
-                case TEXT_DMT_DMC:
+                case TEXT_DMT_DMC_SIGN:
                     entrance = ENTR_DEATH_MOUNTAIN_CRATER_UPPER_EXIT;
                     break;
-                case TEXT_DMT_SUMMIT:
+                case TEXT_DMT_SUMMIT_SIGN:
                     entrance = ENTR_GREAT_FAIRYS_FOUNTAIN_MAGIC_DMT;
                     break;
-                case TEXT_HF_ZR:
+                case TEXT_HF_ZR_SIGN:
                     entrance = ENTR_ZORAS_RIVER_WEST_EXIT;
                     break;
                 case TEXT_KF_SHOP_SIGN:
@@ -2335,16 +2338,16 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
                 case TEXT_ZF_JABU_SIGN:
                     entrance = ENTR_JABU_JABU_ENTRANCE;
                     break;
-                case TEXT_KF_LW:
+                case TEXT_KF_LW_SIGN:
                     entrance = ENTR_LOST_WOODS_SOUTH_EXIT;
                     break;
-                case TEXT_HF_LON_LON:
+                case TEXT_HF_LON_LON_SIGN:
                     entrance = ENTR_LON_LON_RANCH_ENTRANCE;
                     break;
                 case TEXT_LA_SIGN:
                     entrance = ENTR_LAKE_HYLIA_NORTH_EXIT;
                     break;
-                case TEXT_LA_LAB:
+                case TEXT_LA_LAB_SIGN:
                     entrance = ENTR_LAKESIDE_LABORATORY_0;
                     break;
                 case TEXT_GV_SIGN:
@@ -2366,7 +2369,7 @@ extern "C" int CustomMessage_RetrieveIfExists(PlayState* play) {
                 case TEXT_MIDO_HOUSE_SIGN:
                     entrance = ENTR_MIDOS_HOUSE_0;
                     break;
-                case TEXT_KNOW_IT_ALL_HOUSE:
+                case TEXT_KNOW_IT_ALL_HOUSE_SIGN:
                     entrance = ENTR_KNOW_IT_ALL_BROS_HOUSE_0;
                     break;
                 case TEXT_TWINS_HOUSE_SIGN:
