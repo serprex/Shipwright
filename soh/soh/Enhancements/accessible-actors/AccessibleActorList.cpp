@@ -20,6 +20,7 @@ extern "C" {
 #include "overlays/actors/ovl_En_Eiyer/z_en_eiyer.h"
 #include "overlays/actors/ovl_En_Elf/z_en_elf.h"
 #include "overlays/actors/ovl_En_Fz/z_en_fz.h"
+#include "overlays/actors/ovl_Bg_Haka_Gate/z_bg_haka_gate.h"
 #include "overlays/actors/ovl_En_Ik/z_en_ik.h"
 #include "overlays/actors/ovl_En_G_Switch/z_en_g_switch.h"
 #include "overlays/actors/ovl_En_Kakasi2/z_en_kakasi2.h"
@@ -650,6 +651,21 @@ void ActorAccessibility_InitActors() {
     policy.n = 30;
     policy.pitch = 1.0;
     ActorAccessibility_AddSupportedActor(ACTOR_DOOR_ANA, policy);
+    ActorAccessibility_InitPolicy(&policy, "Truth Spinner", [](AccessibleActor* actor) {
+        if (actor->actor->params == BGHAKAGATE_SKULL) {
+            if (((BgHakaGate*)actor->actor)->actionVar4) {
+                ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_FLUTTER_FLAG);
+            }
+        } else if (actor->actor->params == BGHAKAGATE_GATE) {
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_METALGATE_OPEN);
+        } else if (actor->actor->params == BGHAKAGATE_STATUE) {
+            actor->policy.volume = 0.5;
+            ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_TRAP_BOUND);
+        }
+    });
+    policy.n = 30;
+    policy.distance = 500;
+    ActorAccessibility_AddSupportedActor(ACTOR_BG_HAKA_GATE, policy);
     ActorAccessibility_InitPolicy(&policy, "Web", NA_SE_EV_WEB_BROKEN);
     policy.n = 40;
     policy.ydist = 2000;
