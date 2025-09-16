@@ -1299,6 +1299,10 @@ void ActorAccessibility_InitActors() {
     temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 2960, -410, -2000 });
     temp->policy.distance = 500;
 
+    list = ActorAccessibility_GetVirtualActorList(SCENE_GRAVEYARD, 0);
+    temp = ActorAccessibility_AddVirtualActor(list, VA_MARKER, { 2135, 124, 85 });
+    temp->policy.distance = 300;
+
     auto forest_basement = [](AccessibleActor* actor) {
         Actor* walls = Actor_Find(&actor->play->actorCtx, ACTOR_BG_MORI_KAITENKABE, ACTORCAT_BG);
         if (walls != nullptr) {
