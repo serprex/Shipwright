@@ -363,7 +363,7 @@ void RegionTable_Init_FireTemple() {
         //Exits
         Entrance(RR_FIRE_TEMPLE_ENTRYWAY,            []{return true;}),
         Entrance(RR_FIRE_TEMPLE_MQ_MAP_ROOM_SOUTH,   []{return true;}),
-        Entrance(RR_FIRE_TEMPLE_MQ_FIRST_ROOM_UPPER, []{return logic->IsAdult || logic->CanUse(RG_HOOKSHOT);}),
+        Entrance(RR_FIRE_TEMPLE_MQ_FIRST_ROOM_UPPER, []{return logic->IsAdult || logic->CanUse(RG_HOOKSHOT) || ctx->GetTrickOption(RT_FIRE_MQ_CHILD);}),
         Entrance(RR_FIRE_TEMPLE_MQ_STALFOS_ROOM,     []{return logic->SmallKeys(SCENE_FIRE_TEMPLE, 5);}),
     });
 

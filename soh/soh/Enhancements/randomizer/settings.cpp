@@ -851,6 +851,8 @@ void Settings::CreateOptions() {
               "If you move quickly you can sneak past the edge of a flame wall before it can rise up to block you. To "
               "do it without taking damage is more precise. Allows you to progress without needing either a Small Key "
               "or Hover Boots.");
+    OPT_TRICK(RT_FIRE_MQ_CHILD, RCQUEST_MQ, RA_FIRE_TEMPLE, { Tricks::Tag::NOVICE }, "Fire Temple MQ as Child",
+              "As child a sidehop can get past fire wall in lobby.");
     OPT_TRICK(RT_FIRE_MQ_NEAR_BOSS, RCQUEST_MQ, RA_FIRE_TEMPLE, { Tricks::Tag::NOVICE },
               "Fire Temple MQ Chest Near Boss without Breaking Crate",
               "The hitbox for the torch extends a bit outside of the crate. Shoot a flaming arrow at the side of the "
