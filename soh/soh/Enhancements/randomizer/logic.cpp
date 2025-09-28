@@ -264,7 +264,7 @@ bool Logic::CanUse(RandomizerGet itemName) {
     switch (itemName) {
         // Magic items
         case RG_MAGIC_SINGLE:
-            return HasBottle() && Get(LOGIC_BUY_MAGIC_POTION);
+            return true; // AmmoCanDrop || (HasBottle() && Get(LOGIC_BUY_MAGIC_POTION))
         case RG_DINS_FIRE:
         case RG_FARORES_WIND:
         case RG_NAYRUS_LOVE:
@@ -278,7 +278,7 @@ bool Logic::CanUse(RandomizerGet itemName) {
         // Adult items
         // TODO: Uncomment those if we ever implement more item usability settings
         case RG_FAIRY_BOW:
-            return IsAdult; // || BowAsChild;
+            return IsAdult; // || BowAsChild && (AmmoCanDrop || Get(LOGIC_BUY_ARROW));
         case RG_MEGATON_HAMMER:
             return IsAdult; // || HammerAsChild;
         case RG_IRON_BOOTS:
@@ -317,7 +317,7 @@ bool Logic::CanUse(RandomizerGet itemName) {
 
         // Child items
         case RG_FAIRY_SLINGSHOT:
-            return IsChild; // || SlingshotAsAdult;
+            return IsChild; // || SlingshotAsAdult && (AmmoCanDrop || Get(LOGIC_LOGIC_BUY_SEED));
         case RG_BOOMERANG:
             return IsChild; // || BoomerangAsAdult;
         case RG_KOKIRI_SWORD:
@@ -331,7 +331,7 @@ bool Logic::CanUse(RandomizerGet itemName) {
             return IsChild; // || DekuShieldAsAdult;
         case RG_PROGRESSIVE_BOMB_BAG:
         case RG_BOMB_BAG:
-            return true;
+            return true; // AmmoCanDrop || Get(LOGIC_BUY_BOMB)
         case RG_PROGRESSIVE_BOMBCHUS:
         case RG_BOMBCHU_5:
         case RG_BOMBCHU_10:
