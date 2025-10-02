@@ -1,6 +1,7 @@
 #include <soh/OTRGlobals.h>
 #include "soh_assets.h"
 #include "static_data.h"
+#include "soh/ObjectExtension/ObjectExtension.h"
 
 extern "C" {
 #include "variables.h"
@@ -35,10 +36,14 @@ static Gfx* D_80B3BF70[] = {
 extern void EnItem00_DrawRandomizedItem(EnItem00* enItem00, PlayState* play);
 
 uint8_t EnWood02_RandomizerHoldsItem(EnWood02* treeActor, PlayState* play) {
+    const auto treeIdentity = ObjectExtension::GetInstance().Get<TreeIdentity>(&treeActor->actor);
+    if (treeIdentity == nullptr) {
+        return false;
+    }
+
     // Don't pull randomized item if tree isn't randomized or is already checked
     return IS_RANDO && Rando::Context::GetInstance()->GetOption(RSK_SHUFFLE_TREES).Get() &&
-           !Flags_GetRandomizerInf(treeActor->treeId.randomizerInf) &&
-           treeActor->treeId.randomizerCheck != RC_UNKNOWN_CHECK;
+           !Flags_GetRandomizerInf(treeIdentity->randomizerInf) && treeIdentity->randomizerCheck != RC_UNKNOWN_CHECK;
 }
 
 extern "C" void EnWood02_RandomizerDraw(Actor* thisx, PlayState* play) {
@@ -51,11 +56,15 @@ extern "C" void EnWood02_RandomizerDraw(Actor* thisx, PlayState* play) {
     int isVanilla =
         csmc == CSMC_DISABLED || csmc == CSMC_SIZE || (requiresStoneAgony && !CHECK_QUEST_ITEM(QUEST_STONE_OF_AGONY));
 
-    if (isVanilla || treeActor->treeId.randomizerCheck == RC_UNKNOWN_CHECK) {
+    const auto treeIdentity = ObjectExtension::GetInstance().Get<TreeIdentity>(&treeActor->actor);
+    if (treeIdentity == nullptr) {
+        return;
+    }
+
+    if (isVanilla || treeIdentity == nullptr || treeIdentity->randomizerCheck == RC_UNKNOWN_CHECK) {
         getItemCategory = ITEM_CATEGORY_JUNK;
     } else {
-        smallCrateItem =
-            Rando::Context::GetInstance()->GetFinalGIEntry(treeActor->treeId.randomizerCheck, true, GI_NONE);
+        smallCrateItem = Rando::Context::GetInstance()->GetFinalGIEntry(treeIdentity->randomizerCheck, true, GI_NONE);
         getItemCategory = smallCrateItem.getItemCategory;
 
         // If they have bombchus, don't consider the bombchu item major
@@ -123,10 +132,14 @@ extern "C" void EnWood02_RandomizerDraw(Actor* thisx, PlayState* play) {
 }
 
 void EnWood02_RandomizerSpawnCollectible(EnWood02* treeActor, PlayState* play) {
+    const auto treeIdentity = ObjectExtension::GetInstance().Get<TreeIdentity>(&treeActor->actor);
+    if (treeIdentity == nullptr) {
+        return;
+    }
+
     EnItem00* item00 = (EnItem00*)Item_DropCollectible2(play, &treeActor->actor.world.pos, ITEM00_SOH_DUMMY);
-    item00->randoInf = treeActor->treeId.randomizerInf;
-    item00->itemEntry =
-        Rando::Context::GetInstance()->GetFinalGIEntry(treeActor->treeId.randomizerCheck, true, GI_NONE);
+    item00->randoInf = treeIdentity->randomizerInf;
+    item00->itemEntry = Rando::Context::GetInstance()->GetFinalGIEntry(treeIdentity->randomizerCheck, true, GI_NONE);
     item00->actor.draw = (ActorFunc)EnItem00_DrawRandomizedItem;
     item00->actor.velocity.y = 0.0f;
     item00->actor.world.pos.y += 120.0f;
@@ -134,14 +147,15 @@ void EnWood02_RandomizerSpawnCollectible(EnWood02* treeActor, PlayState* play) {
     item00->actor.world.rot.y = Rand_CenteredFloat(65536.0f);
     // clear randomizerCheck to prevent multiple bonks,
     // reloading area without collecting drop won't persist this
-    treeActor->treeId.randomizerCheck = RC_UNKNOWN_CHECK;
+    treeIdentity->randomizerCheck = RC_UNKNOWN_CHECK;
 }
 
 void EnWood02_RandomizerInit(void* actorRef) {
     EnWood02* treeActor = static_cast<EnWood02*>(actorRef);
     if (treeActor->actor.params <= WOOD_TREE_KAKARIKO_ADULT) {
-        treeActor->treeId = OTRGlobals::Instance->gRandomizer->IdentifyTree(
+        auto treeIdentity = OTRGlobals::Instance->gRandomizer->IdentifyTree(
             gPlayState->sceneNum, (s16)treeActor->actor.world.pos.x, (s16)treeActor->actor.world.pos.z);
+        ObjectExtension::GetInstance().Set<TreeIdentity>(actorRef, std::move(treeIdentity));
     }
 }
 
@@ -175,8 +189,6 @@ void RegisterShuffleTrees() {
         }
     });
 }
-
-static RegisterShipInitFunc initFunc(RegisterShuffleTrees, { "IS_RANDO" });
 
 void Rando::StaticData::RegisterTreeLocations() {
     // clang-format off
@@ -248,4 +260,6 @@ void Rando::StaticData::RegisterTreeLocations() {
     // clang-format on
 }
 
-static RegisterShipInitFunc registerFunc(Rando::StaticData::RegisterTreeLocations);
+static ObjectExtension::Register<TreeIdentity> RegisterPotIdentity;
+static RegisterShipInitFunc registerShuffleTrees(RegisterShuffleTrees, { "IS_RANDO" });
+static RegisterShipInitFunc registerShuffleTreeLocations(Rando::StaticData::RegisterTreeLocations);
