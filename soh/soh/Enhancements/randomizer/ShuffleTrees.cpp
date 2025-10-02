@@ -43,6 +43,7 @@ uint8_t EnWood02_RandomizerHoldsItem(EnWood02* treeActor, PlayState* play) {
 
 extern "C" void EnWood02_RandomizerDraw(Actor* thisx, PlayState* play) {
     GetItemCategory getItemCategory;
+    GetItemEntry smallCrateItem;
     auto treeActor = (EnWood02*)thisx;
     int csmc = CVarGetInteger(CVAR_ENHANCEMENT("ChestSizeAndTextureMatchContents"), CSMC_DISABLED);
     int requiresStoneAgony = CVarGetInteger(CVAR_ENHANCEMENT("ChestSizeDependsStoneOfAgony"), 0);
@@ -51,27 +52,28 @@ extern "C" void EnWood02_RandomizerDraw(Actor* thisx, PlayState* play) {
         csmc == CSMC_DISABLED || csmc == CSMC_SIZE || (requiresStoneAgony && !CHECK_QUEST_ITEM(QUEST_STONE_OF_AGONY));
 
     if (isVanilla || treeActor->treeId.randomizerCheck == RC_UNKNOWN_CHECK) {
-        return;
-    }
-
-    GetItemEntry smallCrateItem =
-        Rando::Context::GetInstance()->GetFinalGIEntry(treeActor->treeId.randomizerCheck, true, GI_NONE);
-    getItemCategory = smallCrateItem.getItemCategory;
-
-    // If they have bombchus, don't consider the bombchu item major
-    if (INV_CONTENT(ITEM_BOMBCHU) == ITEM_BOMBCHU &&
-        ((smallCrateItem.modIndex == MOD_RANDOMIZER && smallCrateItem.getItemId == RG_PROGRESSIVE_BOMBCHUS) ||
-         (smallCrateItem.modIndex == MOD_NONE &&
-          (smallCrateItem.getItemId == GI_BOMBCHUS_5 || smallCrateItem.getItemId == GI_BOMBCHUS_10 ||
-           smallCrateItem.getItemId == GI_BOMBCHUS_20)))) {
         getItemCategory = ITEM_CATEGORY_JUNK;
-        // If it's a bottle and they already have one, consider the item lesser
-    } else if ((smallCrateItem.modIndex == MOD_RANDOMIZER && smallCrateItem.getItemId >= RG_BOTTLE_WITH_RED_POTION &&
-                smallCrateItem.getItemId <= RG_BOTTLE_WITH_POE) ||
-               (smallCrateItem.modIndex == MOD_NONE &&
-                (smallCrateItem.getItemId == GI_BOTTLE || smallCrateItem.getItemId == GI_MILK_BOTTLE))) {
-        if (gSaveContext.inventory.items[SLOT_BOTTLE_1] != ITEM_NONE) {
-            getItemCategory = ITEM_CATEGORY_LESSER;
+    } else {
+        smallCrateItem =
+            Rando::Context::GetInstance()->GetFinalGIEntry(treeActor->treeId.randomizerCheck, true, GI_NONE);
+        getItemCategory = smallCrateItem.getItemCategory;
+
+        // If they have bombchus, don't consider the bombchu item major
+        if (INV_CONTENT(ITEM_BOMBCHU) == ITEM_BOMBCHU &&
+            ((smallCrateItem.modIndex == MOD_RANDOMIZER && smallCrateItem.getItemId == RG_PROGRESSIVE_BOMBCHUS) ||
+             (smallCrateItem.modIndex == MOD_NONE &&
+              (smallCrateItem.getItemId == GI_BOMBCHUS_5 || smallCrateItem.getItemId == GI_BOMBCHUS_10 ||
+               smallCrateItem.getItemId == GI_BOMBCHUS_20)))) {
+            getItemCategory = ITEM_CATEGORY_JUNK;
+            // If it's a bottle and they already have one, consider the item lesser
+        } else if ((smallCrateItem.modIndex == MOD_RANDOMIZER &&
+                    smallCrateItem.getItemId >= RG_BOTTLE_WITH_RED_POTION &&
+                    smallCrateItem.getItemId <= RG_BOTTLE_WITH_POE) ||
+                   (smallCrateItem.modIndex == MOD_NONE &&
+                    (smallCrateItem.getItemId == GI_BOTTLE || smallCrateItem.getItemId == GI_MILK_BOTTLE))) {
+            if (gSaveContext.inventory.items[SLOT_BOTTLE_1] != ITEM_NONE) {
+                getItemCategory = ITEM_CATEGORY_LESSER;
+            }
         }
     }
 
