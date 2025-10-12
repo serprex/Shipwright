@@ -624,7 +624,7 @@ void SaveManager::InitMeta(int fileNum) {
     auto randoContext = Rando::Context::GetInstance();
 
     fileMetaInfo[fileNum].maxTriforcePieces = IS_RANDO && (bool)randoContext->GetOption(RSK_TRIFORCE_HUNT)
-                                                  ? randoContext->GetOption(RSK_TRIFORCE_HUNT_PIECES_REQUIRED).Get() + 1
+                                                  ? randoContext->GetOption(RSK_TRIFORCE_HUNT_PIECES_TOTAL).Get() + 1
                                                   : 0;
     fileMetaInfo[fileNum].fishingPoleShuffled =
         IS_RANDO ? (bool)randoContext->GetOption(RSK_SHUFFLE_FISHING_POLE) : false;

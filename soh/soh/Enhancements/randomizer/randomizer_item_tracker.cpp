@@ -768,8 +768,7 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         std::string currentString = "";
         std::string requiredString = "";
         std::string maxString = "";
-        uint8_t piecesRequired =
-            (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT_PIECES_REQUIRED) + 1);
+        uint8_t piecesRequired = OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_WINCON_TRIFORCE_COUNT);
         uint8_t piecesTotal =
             (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT_PIECES_TOTAL) + 1);
         ImU32 currentColor = gSaveContext.ship.quest.data.randomizer.triforcePiecesCollected >= piecesRequired
@@ -834,11 +833,15 @@ void DrawQuest(ItemTrackerItem item) {
 };
 
 bool HasBossSoul(RandomizerInf bossSoul) {
-    uint8_t soulSetting = OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_BOSS_SOULS);
-    bool isSoulRandomized = IS_RANDO && (soulSetting == RO_BOSS_SOULS_ON_PLUS_GANON ||
-                                         (soulSetting == RO_BOSS_SOULS_ON && bossSoul != RAND_INF_GANON_SOUL));
-
-    return isSoulRandomized ? Flags_GetRandomizerInf(bossSoul) : true;
+    if (!IS_RANDO) {
+        return false;
+    } else if (bossSoul == RAND_INF_GANON_SOUL) {
+        return OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_GANONS_SOUL) == RO_GANONS_SOUL_STARTWITH ||
+               Flags_GetRandomizerInf(RAND_INF_GANON_SOUL);
+    } else {
+        return OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_BOSS_SOULS) &&
+               Flags_GetRandomizerInf(bossSoul);
+    }
 }
 
 void DrawItem(ItemTrackerItem item) {

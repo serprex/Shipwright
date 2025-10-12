@@ -313,7 +313,6 @@ ItemObtainability Randomizer::GetItemObtainabilityFromRandomizerGet(RandomizerGe
     u8 numWallets = 2 + (u8)tycoonWallet + (infiniteUpgrades != RO_INF_UPGRADES_OFF ? 1 : 0);
     switch (randoGet) {
         case RG_NONE:
-        case RG_TRIFORCE:
         case RG_HINT:
         case RG_MAX:
         case RG_SOLD_OUT:
@@ -717,6 +716,7 @@ ItemObtainability Randomizer::GetItemObtainabilityFromRandomizerGet(RandomizerGe
         case RG_TREASURE_GAME_GREEN_RUPEE:
         case RG_BUY_HEART:
         case RG_TRIFORCE_PIECE:
+        case RG_TRIFORCE:
         default:
             return CAN_OBTAIN;
     }
@@ -1351,13 +1351,16 @@ extern "C" u16 Randomizer_Item_Give(PlayState* play, GetItemEntry giEntry) {
             Flags_SetRandomizerInf(RAND_INF_GREG_FOUND);
             gSaveContext.ship.stats.itemTimestamp[TIMESTAMP_FOUND_GREG] = static_cast<u32>(GAMEPLAYSTAT_TOTAL_TIME);
             break;
+        case RG_TRIFORCE:
+            GameInteractor_SetTriforceHuntCreditsWarpActive(true);
+            break;
         case RG_TRIFORCE_PIECE:
             gSaveContext.ship.quest.data.randomizer.triforcePiecesCollected++;
             GameInteractor_SetTriforceHuntPieceGiven(true);
 
             // Give Ganon's Boss Key and teleport to credits if set to Win when goal is reached.
             if (gSaveContext.ship.quest.data.randomizer.triforcePiecesCollected ==
-                (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT_PIECES_REQUIRED) + 1)) {
+                OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_WINCON_TRIFORCE_COUNT)) {
                 Flags_SetRandomizerInf(RAND_INF_GRANT_GANONS_BOSSKEY);
 
                 if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT) ==

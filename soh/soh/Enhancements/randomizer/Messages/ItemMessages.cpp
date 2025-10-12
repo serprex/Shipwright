@@ -25,7 +25,7 @@ extern PlayState* gPlayState;
 
 void BuildTriforcePieceMessage(CustomMessage& msg) {
     uint8_t current = gSaveContext.ship.quest.data.randomizer.triforcePiecesCollected + 1;
-    uint8_t required = OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT_PIECES_REQUIRED) + 1;
+    uint8_t required = OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT_PIECES_TOTAL) + 1;
     uint8_t remaining = required - current;
     float percentageCollected = (float)current / (float)required;
 
@@ -65,6 +65,13 @@ void BuildTriforcePieceMessage(CustomMessage& msg) {
     msg.Replace("[[current]]", std::to_string(current));
     msg.Replace("[[remaining]]", std::to_string(remaining));
     msg.Replace("[[required]]", std::to_string(required));
+    msg.Format(ITEM_CUSTOM);
+}
+
+void BuildTriforceMessage(CustomMessage& msg) {
+    msg = { "You completed the %yTriforce of&Courage%w! %gGG%w!",
+            "Das %yTriforce des Mutes%w! Du hast&alle Splitter gefunden. %gGut gemacht%w!",
+            "Vous avez complété la %yTriforce&du Courage%w! %gFélicitations%w!" };
     msg.Format(ITEM_CUSTOM);
 }
 
@@ -150,6 +157,8 @@ void BuildItemMessage(u16* textId, bool* loadFromMessageTable) {
         Rando::Traps::BuildIceTrapMessage(msg, player->getItemEntry);
     } else if (player->getItemEntry.getItemId == RG_TRIFORCE_PIECE) {
         BuildTriforcePieceMessage(msg);
+    } else if (player->getItemEntry.getItemId == RG_TRIFORCE) {
+        BuildTriforceMessage(msg);
     } else {
         BuildCustomItemMessage(player, msg);
     }

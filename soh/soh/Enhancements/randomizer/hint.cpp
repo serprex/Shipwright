@@ -597,25 +597,21 @@ CustomMessage Hint::GetGanonBossKeyText() {
         return StaticData::hintTextTable[RHT_GANON_BK_OVERWORLD_HINT].GetHintMessage();
     } else if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_ANYWHERE)) {
         return StaticData::hintTextTable[RHT_GANON_BK_ANYWHERE_HINT].GetHintMessage();
-    } else if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_KAK_TOKENS)) {
-        return StaticData::hintTextTable[RHT_GANON_BK_SKULLTULA_HINT].GetHintMessage();
-    } else if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_LACS_VANILLA)) {
-        return StaticData::hintTextTable[RHT_LACS_VANILLA_HINT].GetHintMessage();
-    } else if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_LACS_STONES)) {
-        ganonBossKeyMessage = StaticData::hintTextTable[RHT_LACS_STONES_HINT].GetHintMessage();
-        ganonBossKeyMessage.InsertNumber(ctx->GetOption(RSK_LACS_STONE_COUNT).Get());
-    } else if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_LACS_MEDALLIONS)) {
-        ganonBossKeyMessage = StaticData::hintTextTable[RHT_LACS_MEDALLIONS_HINT].GetHintMessage();
-        ganonBossKeyMessage.InsertNumber(ctx->GetOption(RSK_LACS_MEDALLION_COUNT).Get());
-    } else if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_LACS_REWARDS)) {
-        ganonBossKeyMessage = StaticData::hintTextTable[RHT_LACS_REWARDS_HINT].GetHintMessage();
-        ganonBossKeyMessage.InsertNumber(ctx->GetOption(RSK_LACS_REWARD_COUNT).Get());
-    } else if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_LACS_DUNGEONS)) {
-        ganonBossKeyMessage = StaticData::hintTextTable[RHT_LACS_DUNGEONS_HINT].GetHintMessage();
-        ganonBossKeyMessage.InsertNumber(ctx->GetOption(RSK_LACS_DUNGEON_COUNT).Get());
-    } else if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_LACS_TOKENS)) {
-        ganonBossKeyMessage = StaticData::hintTextTable[RHT_LACS_TOKENS_HINT].GetHintMessage();
-        ganonBossKeyMessage.InsertNumber(ctx->GetOption(RSK_LACS_TOKEN_COUNT).Get());
+    } else if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_STONES)) {
+        ganonBossKeyMessage = StaticData::hintTextTable[RHT_GBK_STONES_HINT].GetHintMessage();
+        ganonBossKeyMessage.InsertNumber(ctx->GetOption(RSK_GBK_STONE_COUNT).Get());
+    } else if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_MEDALLIONS)) {
+        ganonBossKeyMessage = StaticData::hintTextTable[RHT_GBK_MEDALLIONS_HINT].GetHintMessage();
+        ganonBossKeyMessage.InsertNumber(ctx->GetOption(RSK_GBK_MEDALLION_COUNT).Get());
+    } else if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_REWARDS)) {
+        ganonBossKeyMessage = StaticData::hintTextTable[RHT_GBK_REWARDS_HINT].GetHintMessage();
+        ganonBossKeyMessage.InsertNumber(ctx->GetOption(RSK_GBK_REWARD_COUNT).Get());
+    } else if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_DUNGEONS)) {
+        ganonBossKeyMessage = StaticData::hintTextTable[RHT_GBK_DUNGEONS_HINT].GetHintMessage();
+        ganonBossKeyMessage.InsertNumber(ctx->GetOption(RSK_GBK_DUNGEON_COUNT).Get());
+    } else if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_TOKENS)) {
+        ganonBossKeyMessage = StaticData::hintTextTable[RHT_GBK_TOKENS_HINT].GetHintMessage();
+        ganonBossKeyMessage.InsertNumber(ctx->GetOption(RSK_GBK_TOKEN_COUNT).Get());
     }
     return ganonBossKeyMessage;
 }

@@ -2072,39 +2072,33 @@ void StaticData::HintTable_Init() {
                                                                         {QM_PINK, QM_YELLOW}));
                                                           // /*spanish*/$bY el rico maldito entregará la llave&del #señor de mal# tras obtener&100 símbolos de skulltula dorada#.^
 
-    hintTextTable[RHT_LACS_VANILLA_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s key will be provided by #Zelda# once the #Shadow and Spirit Medallions# are retrieved.^",
-                                                       /*german*/ "$bUnd der #Schlüssel des Bösen# wird von #Zelda# verliehen, sobald #die Amulette des Schattens und der Geister# geborgen wurden.^",
-                                                       /*french*/ "$bAussi, la #clé du Malin# sera fournie par #Zelda# une fois que les #Médaillons de l'Ombre et de l'Esprit# seront récupérés.^",
-                                                                  {QM_PINK, QM_YELLOW, QM_RED}));
-                                                    // /*spanish*/$bY #Zelda# entregará la llave del #señor del mal# tras obtener #el medallón de las sombras y del espíritu#.^
-
-    hintTextTable[RHT_LACS_MEDALLIONS_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s key will be provided by #Zelda# once #[[d]] Medallion|# is|s# are| retrieved.^",
-                                                          /*german*/ "$bUnd der #Schlüssel des Bösen# wird von #Zelda# verliehen, sobald #[[d]] Amulett|# geborgen wurde|e# geborgen wurden|.^",
-                                                          /*french*/ "$bAussi, la #clé du Malin# sera fournie par #Zelda# une fois |qu' #[[d]] Médaillon# aura été récupéré|que #[[d]] Médaillons# auront été récupérés|.^",
+    hintTextTable[RHT_GBK_MEDALLIONS_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s key will be provided once #[[d]] Medallion|# is|s# are| retrieved.^",
+                                                          /*german*/ "$bUnd der #Schlüssel des Bösen# wird verliehen, sobald #[[d]] Amulett|# geborgen wurde|e# geborgen wurden|.^",
+                                                          /*french*/ "$bAussi, la #clé du Malin# sera fournie une fois |qu' #[[d]] Médaillon# aura été récupéré|que #[[d]] Médaillons# auront été récupérés|.^",
                                                                      {QM_PINK, QM_YELLOW, QM_RED}));
                                                        // /*spanish*/$bY #Zelda# entregará la llave&del #señor del mal# tras obtener #[[d]] |medallón|medallones|#.^
 
-    hintTextTable[RHT_LACS_STONES_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s key will be provided by #Zelda# once #[[d]] Spiritual Stone|# is|s# are| retrieved.^",
-                                                      /*german*/ "$bUnd der #Schlüssel des Bösen# wird von #Zelda# verliehen, sobald #[[d]] Heilige|r Stein# geborgen wurde| Steine# geborgen wurden|.^",
-                                                      /*french*/ "$bAussi, la #clé du Malin# sera fournie par #Zelda# une fois |qu' #[[d]] Pierre Ancestrale# aura été&récupérée|que #[[d]] Pierres Ancestrales# auront été récupérées|.^",
+    hintTextTable[RHT_GBK_STONES_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s key will be provided once #[[d]] Spiritual Stone|# is|s# are| retrieved.^",
+                                                      /*german*/ "$bUnd der #Schlüssel des Bösen# wird verliehen, sobald #[[d]] Heilige|r Stein# geborgen wurde| Steine# geborgen wurden|.^",
+                                                      /*french*/ "$bAussi, la #clé du Malin# sera fournie une fois |qu' #[[d]] Pierre Ancestrale# aura été&récupérée|que #[[d]] Pierres Ancestrales# auront été récupérées|.^",
                                                                  {QM_PINK, QM_YELLOW, QM_BLUE}));
                                                    // /*spanish*/$bY #Zelda# entregará la llave del #señor del mal# tras obtener #[[d]] piedra| espiritual|s espirituales|#.^
 
-    hintTextTable[RHT_LACS_REWARDS_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s key will be provided by #Zelda# once #[[d]]# #Spiritual Stone|# or #Medallion# is|s# and #Medallions# are| retrieved.^",
-                                                       /*german*/ "$bUnd der #Schlüssel des Bösen# wird von #Zelda# verliehen, sobald #[[d]]# #Heilige|r Stein# oder #Amulett#&geborgen wurde| Steine# oder #Amulette#&geborgen wurden|.^",
-                                                       /*french*/ "$bAussi, la #clé du Malin# sera fournie par #Zelda# une fois qu|' #[[d]]# #Pierre Ancestrale# ou #[[d]] Médaillon# sera récupéré|e&#[[d]]# #Pierres Ancestrales# et&#Médaillons# seront récupérés|.^",
+    hintTextTable[RHT_GBK_REWARDS_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s key will be provided once #[[d]]# #Spiritual Stone|# or #Medallion# is|s# and #Medallions# are| retrieved.^",
+                                                       /*german*/ "$bUnd der #Schlüssel des Bösen# wird verliehen, sobald #[[d]]# #Heilige|r Stein# oder #Amulett#&geborgen wurde| Steine# oder #Amulette#&geborgen wurden|.^",
+                                                       /*french*/ "$bAussi, la #clé du Malin# sera fournie une fois qu|' #[[d]]# #Pierre Ancestrale# ou #[[d]] Médaillon# sera récupéré|e&#[[d]]# #Pierres Ancestrales# et&#Médaillons# seront récupérés|.^",
                                                                   {QM_PINK, QM_YELLOW, QM_YELLOW, QM_BLUE, QM_RED}));
                                                     // /*spanish*/$bY #Zelda# entregará la llave del #señor del mal# tras obtener #[[d]]# piedra| espiritual o medallón|s espirituales o medallones|#.^
 
-    hintTextTable[RHT_LACS_DUNGEONS_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s key will be provided by #Zelda# once #[[d]] Dungeon|# is|s# are| conquered.^",
-                                                        /*german*/ "$bUnd der #Schlüssel des Bösen# wird von #Zelda# verliehen, sobald #[[d]] Labyrinth|# abgeschloßen wurde|e# abgeschloßen wurden|.^",
-                                                        /*french*/ "$bAussi, la #clé du Malin# sera fournie par #Zelda# une fois qu|' #[[d]] donjon #sera conquis|e #[[d]] donjons# seront conquis|.^",
+    hintTextTable[RHT_GBK_DUNGEONS_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s key will be provided once #[[d]] Dungeon|# is|s# are| conquered.^",
+                                                        /*german*/ "$bUnd der #Schlüssel des Bösen# wird verliehen, sobald #[[d]] Labyrinth|# abgeschloßen wurde|e# abgeschloßen wurden|.^",
+                                                        /*french*/ "$bAussi, la #clé du Malin# sera fournie une fois qu|' #[[d]] donjon #sera conquis|e #[[d]] donjons# seront conquis|.^",
                                                                   {QM_PINK, QM_YELLOW, QM_PINK}));
                                                      // /*spanish*/$bY #Zelda# entregará la llave del #señor del mal# tras completar #[[d]] mazmorra||s|#.^
 
-    hintTextTable[RHT_LACS_TOKENS_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s key will be provided by #Zelda# once #[[d]] Gold Skulltula Token|# is|s# are| retrieved.^",
-                                                      /*german*/ "$bUnd der #Schlüssel des Bösen# wird von #Zelda# verliehen, sobald #[[d]] Skulltula-Symbol|# gesammelt wurde|e# gesammelt wurden|.^",
-                                                      /*french*/ "$bAussi, la #clé du Malin# sera fournie par #Zelda# une fois |qu' #[[d]] symbole de Skulltula d'or #sera récupuéré"
+    hintTextTable[RHT_GBK_TOKENS_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s key will be provided once #[[d]] Gold Skulltula Token|# is|s# are| retrieved.^",
+                                                      /*german*/ "$bUnd der #Schlüssel des Bösen# wird verliehen, sobald #[[d]] Skulltula-Symbol|# gesammelt wurde|e# gesammelt wurden|.^",
+                                                      /*french*/ "$bAussi, la #clé du Malin# sera fournie une fois |qu' #[[d]] symbole de Skulltula d'or #sera récupuéré"
                                                                  "|que &#[[d]] symboles de Skulltula d'or&#seront recupérés|.^",
                                                                   {QM_PINK, QM_YELLOW, QM_YELLOW}));
                                                     // /*spanish*/$bY #Zelda# entregará la llave del #señor del mal# tras obtener #[[d]] símbolo

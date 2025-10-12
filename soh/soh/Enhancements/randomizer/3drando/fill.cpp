@@ -230,16 +230,6 @@ void ProcessExits(Region* region, GetAccessibleLocationsStruct& gals, Randomizer
 // Get the max number of tokens that can possibly be useful
 static int GetMaxGSCount() {
     auto ctx = Rando::Context::GetInstance();
-    // If bridge or LACS is set to tokens, get how many are required
-    int maxBridge = 0;
-    int maxLACS = 0;
-    if (ctx->GetOption(RSK_RAINBOW_BRIDGE).Is(RO_BRIDGE_TOKENS)) {
-        maxBridge = ctx->GetOption(RSK_RAINBOW_BRIDGE_TOKEN_COUNT).Get();
-    }
-    if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_LACS_TOKENS)) {
-        maxLACS = ctx->GetOption(RSK_LACS_TOKEN_COUNT).Get();
-    }
-    maxBridge = std::max(maxBridge, maxLACS);
     // Get the max amount of GS which could be useful from token reward locations
     int maxUseful = 0;
     // If the highest advancement item is a token, we know it is useless since it won't lead to an otherwise useful item
@@ -262,8 +252,18 @@ static int GetMaxGSCount() {
                ctx->GetItemLocation(RC_KAK_10_GOLD_SKULLTULA_REWARD)->GetPlacedItem().GetItemType() != ITEMTYPE_TOKEN) {
         maxUseful = 10;
     }
+    // If bridge or GBK or Ganon's Soul is set to tokens, get how many are required
+    if (ctx->GetOption(RSK_RAINBOW_BRIDGE).Is(RO_BRIDGE_TOKENS)) {
+        maxUseful = std::max(maxUseful, (int)ctx->GetOption(RSK_RAINBOW_BRIDGE_TOKEN_COUNT).Get());
+    }
+    if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_TOKENS)) {
+        maxUseful = std::max(maxUseful, (int)ctx->GetOption(RSK_GBK_TOKEN_COUNT).Get());
+    }
+    if (ctx->GetOption(RSK_GANONS_SOUL).Is(RO_GANONS_SOUL_TOKENS)) {
+        maxUseful = std::max(maxUseful, (int)ctx->GetOption(RSK_GANONS_SOUL_TOKEN_COUNT).Get());
+    }
     // Return max of the two possible reasons tokens could be important, minus the tokens in the starting inventory
-    return std::max(maxUseful, maxBridge) - ctx->GetOption(RSK_STARTING_SKULLTULA_TOKEN).Get();
+    return maxUseful - ctx->GetOption(RSK_STARTING_SKULLTULA_TOKEN).Get();
 }
 
 std::string GetShopItemBaseName(std::string itemName) {
