@@ -411,7 +411,7 @@ void Entrance_SetSavewarpEntrance(void) {
                scene == SCENE_GANON_BOSS || scene == SCENE_GANONS_TOWER_COLLAPSE_EXTERIOR) {
         gSaveContext.entranceIndex = ENTR_GANONS_TOWER_0; // Inside Ganon's Castle -> Ganon's Tower Climb
     } else if (scene == SCENE_THIEVES_HIDEOUT &&
-               !Randomizer_GetSettingValue(RSK_SHUFFLE_GERUDO_FORTRESS_ENTRANCES)) { // Thieves' Hideout
+               !Randomizer_GetSettingValue(RSK_SHUFFLE_THIEVES_HIDEOUT_ENTRANCES)) { // Thieves' Hideout
         gSaveContext.entranceIndex = ENTR_THIEVES_HIDEOUT_0; // Gerudo Fortress -> Thieves' Hideout spawn 0
     } else if (scene == SCENE_LINKS_HOUSE &&
                Randomizer_GetSettingValue(RSK_SHUFFLE_INTERIOR_ENTRANCES) != RO_INTERIOR_ENTRANCE_SHUFFLE_ALL) {
@@ -675,8 +675,8 @@ void Entrance_OverrideWeatherState() {
 // placed at the fortress entrance from valley when caught in the fortress
 void Entrance_OverrideGerudoGuardCapture(void) {
     if (gPlayState->sceneNum == SCENE_THIEVES_HIDEOUT &&
-        Randomizer_GetSettingValue(RSK_MIX_GERUDO_FORTRESS_ENTRANCES)) {
-        // If GF entrances in mixed shuffle, TH captures stay in TH
+        Randomizer_GetSettingValue(RSK_MIX_THIEVES_HIDEOUT_ENTRANCES)) {
+        // If TH entrances in mixed shuffle, TH captures stay in TH
         gPlayState->nextEntranceIndex = gSaveContext.entranceIndex;
     } else {
         if (LINK_IS_CHILD) {

@@ -166,7 +166,7 @@ void Settings::CreateOptionDescriptions() {
         "- Link's House\n"
         "- Temple of Time\n"
         "- Kakariko Potion Shop";
-    mOptionDescriptions[RSK_SHUFFLE_GERUDO_FORTRESS_ENTRANCES] =
+    mOptionDescriptions[RSK_SHUFFLE_THIEVES_HIDEOUT_ENTRANCES] =
         "Shuffle the pool of entrances between Gerudo Fortress & Thieves' Hideout.";
     mOptionDescriptions[RSK_SHUFFLE_GROTTO_ENTRANCES] =
         "Shuffle the pool of grotto entrances, including all graves, small Fairy fountains and the Deku Theatre.";
