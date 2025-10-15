@@ -1307,6 +1307,73 @@ bool Logic::CanDetonateUprightBombFlower() {
             (EffectiveHealth() > 8 || CanUse(RG_NAYRUS_LOVE)));
 }
 
+bool Logic::BeanPlanted(LogicVal beanEvent) {
+    // rely on Get, rest is to track bean being planted out of logic
+    if (Get(beanEvent)) {
+        return true;
+    }
+
+    // swchFlag found using the Actor Viewer to get the Obj_Bean parameters & 0x3F
+    // not tested with multiple OTRs, but can be automated similarly to GetDungeonSmallKeyDoors
+    SceneID sceneID;
+    uint8_t swchFlag;
+    switch (beanEvent) {
+        case LOGIC_PLANT_ZORAS_RIVER_BEAN:
+            sceneID = SceneID::SCENE_ZORAS_RIVER;
+            swchFlag = 3;
+            break;
+        case LOGIC_PLANT_GRAVEYARD_BEAN:
+            sceneID = SceneID::SCENE_GRAVEYARD;
+            swchFlag = 3;
+            break;
+        case LOGIC_PLANT_KOKIRI_FOREST_BEAN:
+            sceneID = SceneID::SCENE_KOKIRI_FOREST;
+            swchFlag = 9;
+            break;
+        case LOGIC_PLANT_LOST_WOODS_BRIDGE_BEAN:
+            sceneID = SceneID::SCENE_LOST_WOODS;
+            swchFlag = 4;
+            break;
+        case LOGIC_PLANT_LOST_WOODS_THEATER_BEAN:
+            sceneID = SceneID::SCENE_LOST_WOODS;
+            swchFlag = 18;
+            break;
+        case LOGIC_PLANT_DEATH_MOUNTAIN_TRAIL_BEAN:
+            sceneID = SceneID::SCENE_DEATH_MOUNTAIN_TRAIL;
+            swchFlag = 6;
+            break;
+        case LOGIC_PLANT_LAKE_HYLIA_BEAN:
+            sceneID = SceneID::SCENE_LAKE_HYLIA;
+            swchFlag = 1;
+            break;
+        case LOGIC_PLANT_GERUDO_VALLEY_BEAN:
+            sceneID = SceneID::SCENE_GERUDO_VALLEY;
+            swchFlag = 3;
+            break;
+        case LOGIC_PLANT_DEATH_MOUNTAIN_CRATER_BEAN:
+            sceneID = SceneID::SCENE_DEATH_MOUNTAIN_CRATER;
+            swchFlag = 3;
+            break;
+        case LOGIC_PLANT_DESERT_COLOSSUS_BEAN:
+            sceneID = SceneID::SCENE_DESERT_COLOSSUS;
+            swchFlag = 24;
+            break;
+        default:
+            assert(false);
+            return false;
+    }
+
+    // Get the swch value for the scene
+    uint32_t swch;
+    if (gPlayState != nullptr && gPlayState->sceneNum == sceneID) {
+        swch = gPlayState->actorCtx.flags.swch;
+    } else {
+        swch = GetSaveContext()->sceneFlags[sceneID].swch;
+    }
+
+    return swch >> swchFlag & 1;
+}
+
 bool Logic::CanHammerRecoilHover(bool needShield) {
     return CanUse(RG_HOVER_BOOTS) && ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && CanUse(RG_MEGATON_HAMMER) &&
            (!needShield || CanStandingShield());
