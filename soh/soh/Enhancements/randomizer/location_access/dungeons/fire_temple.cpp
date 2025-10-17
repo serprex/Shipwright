@@ -143,11 +143,14 @@ void RegionTable_Init_FireTemple() {
     }, {
         //Exits
         Entrance(RR_FIRE_TEMPLE_FIRE_PILLAR_ROOM,   []{return logic->SmallKeys(SCENE_FIRE_TEMPLE, 4);}),
-        Entrance(RR_FIRE_TEMPLE_SHORTCUT_CLIMB,     []{return Here(RR_FIRE_TEMPLE_SHORTCUT_CLIMB, []{return true;});}),
+        Entrance(RR_FIRE_TEMPLE_SHORTCUT_CLIMB,     []{return logic->Get(LOGIC_FIRE_OPENED_SHORTCUT_CLIMB);}),
         Entrance(RR_FIRE_TEMPLE_BOULDER_MAZE_LOWER, []{return logic->IsAdult && (logic->HasItem(RG_GORONS_BRACELET) || ctx->GetTrickOption(RT_FIRE_STRENGTH) || logic->CanGroundJump()) && (logic->HasExplosives() || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_FAIRY_SLINGSHOT));}),
     });
 
-    areaTable[RR_FIRE_TEMPLE_SHORTCUT_CLIMB] = Region("Fire Temple Shortcut Climb", SCENE_FIRE_TEMPLE, {}, {
+    areaTable[RR_FIRE_TEMPLE_SHORTCUT_CLIMB] = Region("Fire Temple Shortcut Climb", SCENE_FIRE_TEMPLE, {
+        //Events
+        EventAccess(LOGIC_FIRE_OPENED_SHORTCUT_CLIMB, []{return true;}),
+    }, {
         //Locations
         LOCATION(RC_FIRE_TEMPLE_BOULDER_MAZE_SHORTCUT_CHEST, true),
     }, {
@@ -376,7 +379,7 @@ void RegionTable_Init_FireTemple() {
         LOCATION(RC_FIRE_TEMPLE_MQ_MAP_ROOM_SIDE_CHEST, logic->CanKillEnemy(RE_LIKE_LIKE)),
     }, {
         //Exits
-        Entrance(RR_FIRE_TEMPLE_MQ_FIRST_ROOM_LOWER, []{return Here(RR_FIRE_TEMPLE_MQ_FIRST_ROOM_LOWER, []{return logic->CanKillEnemy(RE_LIKE_LIKE);});}),
+        Entrance(RR_FIRE_TEMPLE_MQ_FIRST_ROOM_LOWER, []{return Here(RR_FIRE_TEMPLE_MQ_MAP_ROOM_SOUTH, []{return logic->CanKillEnemy(RE_LIKE_LIKE);});}),
         Entrance(RR_FIRE_TEMPLE_MQ_MAP_ROOM_CAGE,    []{return logic->Get(LOGIC_FIRE_OPENED_LOWEST_GORON_CAGE);}),
     });
 
