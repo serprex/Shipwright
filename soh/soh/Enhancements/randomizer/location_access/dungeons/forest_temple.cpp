@@ -556,7 +556,7 @@ void RegionTable_Init_ForestTemple() {
         Entrance(RR_FOREST_TEMPLE_MQ_LOBBY,                []{return true;}),
         Entrance(RR_FOREST_TEMPLE_MQ_NW_COURTYARD,         []{return (((logic->CanUse(RG_IRON_BOOTS) || logic->CanUse(RG_LONGSHOT)) && logic->HasItem(RG_BRONZE_SCALE)) || logic->HasItem(RG_GOLDEN_SCALE)) && logic->WaterTimer() >= 16;}),
         Entrance(RR_FOREST_TEMPLE_MQ_COURTYARD_TOP_LEDGES, []{return logic->CanUse(RG_LONGSHOT) || (logic->CanUse(RG_HOOKSHOT) && ((logic->IsAdult && logic->CanUse(RG_HOVER_BOOTS)) || logic->CanUse(RG_SONG_OF_TIME)));}),
-        Entrance(RR_FOREST_TEMPLE_MQ_NE_COURTYARD_LEDGE,   []{return logic->CanUse(RG_LONGSHOT);}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NE_COURTYARD_ISLAND,  []{return logic->CanUse(RG_LONGSHOT);}),
     });
 
     areaTable[RR_FOREST_TEMPLE_MQ_COURTYARD_TOP_LEDGES] = Region("Forest Temple MQ Courtyard Top Ledges", SCENE_FOREST_TEMPLE, {}, {
@@ -566,20 +566,25 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_MQ_GS_RAISED_ISLAND_COURTYARD,         ((logic->IsAdult && logic->CanUse(RG_SONG_OF_TIME)) || (logic->CanUse(RG_HOVER_BOOTS) && ctx->GetTrickOption(RT_FOREST_DOORFRAME))) && logic->CanJumpslash() && (logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->BlastOrSmash() || logic->CanUse(RG_DINS_FIRE) || logic->CanUse(RG_FAIRY_BOW) || logic->HookshotOrBoomerang() || (logic->CanStandingShield() && (logic->CanUse(RG_STICKS) || logic->CanUse(RG_BIGGORON_SWORD) || logic->CanUse(RG_MASTER_SWORD) || (logic->IsChild && logic->CanUse(RG_KOKIRI_SWORD)))))),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_MQ_NORTH_PASSAGE,      []{return true;}),
-        Entrance(RR_FOREST_TEMPLE_MQ_NE_COURTYARD,       []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NORTH_PASSAGE,       []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NE_COURTYARD,        []{return true;}),
         //N64 logic doesn't check damage but I always take some so I'm adding it
-        Entrance(RR_FOREST_TEMPLE_MQ_NE_COURTYARD_LEDGE, []{return ctx->GetTrickOption(RT_FOREST_COURTYARD_LEDGE) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanJumpslash() && logic->TakeDamage();}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NE_COURTYARD_ISLAND, []{return ctx->GetTrickOption(RT_FOREST_COURTYARD_LEDGE) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanJumpslash() && logic->TakeDamage();}),
     });
 
-    areaTable[RR_FOREST_TEMPLE_MQ_NE_COURTYARD_LEDGE] = Region("Forest Temple MQ NE Courtyard Ledge", SCENE_FOREST_TEMPLE, {}, {
+    areaTable[RR_FOREST_TEMPLE_MQ_NE_COURTYARD_ISLAND] = Region("Forest Temple MQ NE Courtyard Island", SCENE_FOREST_TEMPLE, {}, {
         //Locations
         LOCATION(RC_FOREST_TEMPLE_MQ_RAISED_ISLAND_COURTYARD_LOWER_CHEST, true),
     }, {
         //Exits
         //Skipping swim here is non-trival, needs a roll-jump. If a swim lock is added it's probably wise to copy deku baba events here
-        Entrance(RR_FOREST_TEMPLE_MQ_NE_COURTYARD, []{return true;}),
-        Entrance(RR_FOREST_TEMPLE_MQ_FALLING_ROOM, []{return logic->CanUse(RG_SONG_OF_TIME);}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NE_COURTYARD,                    []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NE_COURTYARD_LEDGE_ABOVE_ISLAND, []{return logic->CanUse(RG_SONG_OF_TIME);}),
+    });
+
+    areaTable[RR_FOREST_TEMPLE_MQ_NE_COURTYARD_LEDGE_ABOVE_ISLAND] = Region("Forest Temple MQ NE Courtyard Ledge Above Island", SCENE_FOREST_TEMPLE, {}, {}, {
+        Entrance(RR_FOREST_TEMPLE_MQ_NE_COURTYARD_ISLAND, []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_FALLING_ROOM,        []{return true;}),
     });
 
     areaTable[RR_FOREST_TEMPLE_MQ_JOELLE_ROOM] = Region("Forest Temple MQ Joelle Room", SCENE_FOREST_TEMPLE, {
@@ -646,8 +651,8 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_MQ_FALLING_CEILING_ROOM_CHEST, true),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_MQ_NE_COURTYARD_LEDGE, []{return true;}),
-        Entrance(RR_FOREST_TEMPLE_MQ_AMY_ROOM,           []{return logic->SmallKeys(SCENE_FOREST_TEMPLE, 6);}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NE_COURTYARD_LEDGE_ABOVE_ISLAND, []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_AMY_ROOM,                        []{return logic->SmallKeys(SCENE_FOREST_TEMPLE, 6);}),
     });
 
     areaTable[RR_FOREST_TEMPLE_MQ_AMY_ROOM] = Region("Forest Temple MQ Amy Room", SCENE_FOREST_TEMPLE, {
