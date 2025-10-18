@@ -161,7 +161,7 @@ void RegionTable_Init_BottomOfTheWell() {
         Entrance(RR_BOTTOM_OF_THE_WELL_SOUTHWEST_ROOM,               []{return logic->IsChild && logic->CanPassEnemy(RE_BIG_SKULLTULA);}),
         //It's possible to abuse boulder's limited range of collision detection to detonate the flowers through the boulder with bow, but this is a glitch
         //the exact range is just past the furthest away plank in the green goo section
-        Entrance(RR_BOTTOM_OF_THE_WELL_BASEMENT_USEFUL_BOMB_FLOWERS, []{return Here(RR_BOTTOM_OF_THE_WELL_BASEMENT, []{return logic->BlastOrSmash() || logic->CanUse(RG_DINS_FIRE) || (logic->CanUse(RG_STICKS) && ctx->GetTrickOption(RT_BOTW_BASEMENT));});}),
+        Entrance(RR_BOTTOM_OF_THE_WELL_BASEMENT_USEFUL_BOMB_FLOWERS, []{return Here([]{return logic->BlastOrSmash() || logic->CanUse(RG_DINS_FIRE) || (logic->CanUse(RG_STICKS) && ctx->GetTrickOption(RT_BOTW_BASEMENT));});}),
     });
 
     areaTable[RR_BOTTOM_OF_THE_WELL_BASEMENT_USEFUL_BOMB_FLOWERS] = Region("Bottom of the Well Basement Useful Bomb Flowers", SCENE_BOTTOM_OF_THE_WELL, {}, {
@@ -192,7 +192,7 @@ void RegionTable_Init_BottomOfTheWell() {
     areaTable[RR_BOTTOM_OF_THE_WELL_MQ_PERIMETER] = Region("Bottom of the Well MQ Perimeter", SCENE_BOTTOM_OF_THE_WELL, {
         //Events
         //technically obsolete due to a wonder item fairy which only needs a projectile, but we don't have an event var for it yet
-        EventAccess(LOGIC_FAIRY_POT,               []{return Here(RR_BOTTOM_OF_THE_WELL_MQ_PERIMETER, []{return logic->BlastOrSmash();}) && logic->CanHitEyeTargets();}),
+        EventAccess(LOGIC_FAIRY_POT,               []{return Here([]{return logic->BlastOrSmash();}) && logic->CanHitEyeTargets();}),
         //It is possible to hit the water switch with a pot from RR_BOTTOM_OF_THE_WELL_MQ_MIDDLE, however the hitbox for making it activate is very unintuitive
         //You have to throw the pot from further back to hit the switch from the front instead of the top, trying to hit the "fingers" directly
         //This unintuitiveness means it should be a trick. ZL is needed to get a clear path to carry the pot
@@ -200,13 +200,13 @@ void RegionTable_Init_BottomOfTheWell() {
     }, {
         //Locations
         //Implies CanBreakPots()
-        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_OUTER_LOBBY_POT,  Here(RR_BOTTOM_OF_THE_WELL_MQ_PERIMETER, []{return logic->BlastOrSmash();}) && logic->CanHitEyeTargets()),
+        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_OUTER_LOBBY_POT,  Here([]{return logic->BlastOrSmash();}) && logic->CanHitEyeTargets()),
         LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_BOMB_LEFT_HEART,  logic->HasExplosives()),
         LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_BOMB_RIGHT_HEART, logic->HasExplosives()),
     }, {
         //Exits
         Entrance(RR_BOTTOM_OF_THE_WELL_ENTRYWAY,            []{return logic->IsChild;}),
-        Entrance(RR_BOTTOM_OF_THE_WELL_MQ_WEST_ROOM_SWITCH, []{return Here(RR_BOTTOM_OF_THE_WELL_MQ_PERIMETER, []{return logic->BlastOrSmash();}) && logic->CanPassEnemy(RE_BIG_SKULLTULA);}),
+        Entrance(RR_BOTTOM_OF_THE_WELL_MQ_WEST_ROOM_SWITCH, []{return Here([]{return logic->BlastOrSmash();}) && logic->CanPassEnemy(RE_BIG_SKULLTULA);}),
         Entrance(RR_BOTTOM_OF_THE_WELL_MQ_COFFIN_ROOM,      []{return (logic->Get(LOGIC_BOTW_LOWERED_WATER) || logic->HasItem(RG_BRONZE_SCALE)) && logic->SmallKeys(SCENE_BOTTOM_OF_THE_WELL, 2);}),
         Entrance(RR_BOTTOM_OF_THE_WELL_MQ_LOCKED_CAGE,      []{return logic->IsChild && logic->SmallKeys(SCENE_BOTTOM_OF_THE_WELL, 2) && logic->CanUseProjectile();}),
         Entrance(RR_BOTTOM_OF_THE_WELL_MQ_DEAD_HAND_ROOM,   []{return logic->IsChild && logic->Get(LOGIC_BOTW_LOWERED_WATER);}),

@@ -30,6 +30,7 @@ class Logic {
     uint8_t BaseHearts = 0;
     bool AtDay = false;
     bool AtNight = false;
+    RandomizerRegion CurrentRegionKey = RR_NONE;
 
     bool CalculatingAvailableChecks = false;
     bool ACProcessUndiscoveredExits = false;

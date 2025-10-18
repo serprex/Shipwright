@@ -669,8 +669,9 @@ void Region::printAgeTimeAccess() {
 
 std::array<Region, RR_MAX> areaTable;
 
-bool Here(const RandomizerRegion region, ConditionFn condition) {
-    return areaTable[region].Here(condition);
+bool Here(ConditionFn condition) {
+    assert(logic->CurrentRegionKey != RR_NONE);
+    return areaTable[logic->CurrentRegionKey].Here(condition);
 }
 
 bool MQSpiritSharedStatueRoom(const RandomizerRegion region, ConditionFn condition, bool anyAge) {
@@ -895,6 +896,7 @@ void RegionTable_Init() {
 
     // Set parent regions
     for (uint32_t i = RR_ROOT; i < RR_MAX; i++) {
+        areaTable[i].randomizerRegionKey = (RandomizerRegion)i;
         for (LocationAccess& locPair : areaTable[i].locations) {
             RandomizerCheck location = locPair.GetLocation();
             Rando::Context::GetInstance()->GetItemLocation(location)->SetParentRegion((RandomizerRegion)i);

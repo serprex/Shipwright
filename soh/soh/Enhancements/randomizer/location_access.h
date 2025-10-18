@@ -133,6 +133,8 @@ class Region {
     bool adultNight = false;
     bool addedToPool = false;
 
+    RandomizerRegion randomizerRegionKey = RR_NONE;
+
     bool TimePass();
 
     void ApplyTimePass();
@@ -222,8 +224,7 @@ class Region {
 extern std::array<Region, RR_MAX> areaTable;
 extern std::vector<EventAccess> grottoEvents;
 
-bool Here(const RandomizerRegion region,
-          ConditionFn
+bool Here(ConditionFn
               condition); // RANDOTODO make a less stupid way to check own at either age than self referencing with this
 bool MQSpiritSharedStatueRoom(const RandomizerRegion region, ConditionFn condition, bool anyAge = false);
 bool MQSpiritSharedBrokenWallRoom(const RandomizerRegion region, ConditionFn condition, bool anyAge = false);

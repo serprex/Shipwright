@@ -146,8 +146,8 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_MAP_CHEST, logic->CanKillEnemy(RE_BLUE_BUBBLE)),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_NW_OUTDOORS_LOWER, []{return Here(RR_FOREST_TEMPLE_MAP_ROOM, []{return logic->CanKillEnemy(RE_BLUE_BUBBLE);});}),
-        Entrance(RR_FOREST_TEMPLE_NE_OUTDOORS_UPPER, []{return Here(RR_FOREST_TEMPLE_MAP_ROOM, []{return logic->CanKillEnemy(RE_BLUE_BUBBLE);});}),
+        Entrance(RR_FOREST_TEMPLE_NW_OUTDOORS_LOWER, []{return Here([]{return logic->CanKillEnemy(RE_BLUE_BUBBLE);});}),
+        Entrance(RR_FOREST_TEMPLE_NE_OUTDOORS_UPPER, []{return Here([]{return logic->CanKillEnemy(RE_BLUE_BUBBLE);});}),
     });
 
     areaTable[RR_FOREST_TEMPLE_SEWER] = Region("Forest Temple Sewer", SCENE_FOREST_TEMPLE, {}, {
@@ -174,7 +174,7 @@ void RegionTable_Init_ForestTemple() {
 
     areaTable[RR_FOREST_TEMPLE_BELOW_BOSS_KEY_CHEST] = Region("Forest Temple Below Boss Key Chest", SCENE_FOREST_TEMPLE, {}, {}, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_NW_OUTDOORS_UPPER, []{return Here(RR_FOREST_TEMPLE_BELOW_BOSS_KEY_CHEST, []{return logic->CanKillEnemy(RE_BLUE_BUBBLE);});}),
+        Entrance(RR_FOREST_TEMPLE_NW_OUTDOORS_UPPER, []{return Here([]{return logic->CanKillEnemy(RE_BLUE_BUBBLE);});}),
     });
 
     areaTable[RR_FOREST_TEMPLE_FLOORMASTER_ROOM] = Region("Forest Temple Floormaster Room", SCENE_FOREST_TEMPLE, {}, {
@@ -350,7 +350,7 @@ void RegionTable_Init_ForestTemple() {
         Entrance(RR_FOREST_TEMPLE_MQ_WOLFOS_ROOM,        []{return logic->IsChild || logic->CanUse(RG_SONG_OF_TIME);}),
         Entrance(RR_FOREST_TEMPLE_MQ_NW_OUTDOORS,        []{return logic->CanHitEyeTargets();}),
         Entrance(RR_FOREST_TEMPLE_MQ_NE_OUTDOORS,        []{return logic->CanHitEyeTargets();}),
-        Entrance(RR_FOREST_TEMPLE_MQ_LOWER_BLOCK_PUZZLE, []{return Here(RR_FOREST_TEMPLE_MQ_CENTRAL_AREA, []{return logic->CanKillEnemy(RE_STALFOS);});}),
+        Entrance(RR_FOREST_TEMPLE_MQ_LOWER_BLOCK_PUZZLE, []{return Here([]{return logic->CanKillEnemy(RE_STALFOS);});}),
         //implies the other 3 poes
         Entrance(RR_FOREST_TEMPLE_MQ_BASEMENT,           []{return logic->Get(LOGIC_FOREST_MEG);}),
     });
@@ -379,7 +379,7 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_MQ_GS_BLOCK_PUSH_ROOM, logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA)),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_MQ_CENTRAL_AREA,        []{return Here(RR_FOREST_TEMPLE_MQ_LOWER_BLOCK_PUZZLE, []{return logic->CanKillEnemy(RE_STALFOS);});}),
+        Entrance(RR_FOREST_TEMPLE_MQ_CENTRAL_AREA,        []{return Here([]{return logic->CanKillEnemy(RE_STALFOS);});}),
         Entrance(RR_FOREST_TEMPLE_MQ_MIDDLE_BLOCK_PUZZLE, []{return logic->HasItem(RG_GORONS_BRACELET) || (logic->Get(LOGIC_FOREST_MQ_BLOCK_ROOM_TARGETS) && logic->CanUse(RG_HOOKSHOT));}),
         //Assumes RR_FOREST_TEMPLE_MQ_MIDDLE_BLOCK_PUZZLE access
         Entrance(RR_FOREST_TEMPLE_MQ_UPPER_BLOCK_PUZZLE,  []{return (logic->IsAdult && logic->HasItem(RG_GORONS_BRACELET)) || (logic->Get(LOGIC_FOREST_MQ_BLOCK_ROOM_TARGETS) && logic->CanUse(RG_HOOKSHOT));}),
@@ -409,7 +409,7 @@ void RegionTable_Init_ForestTemple() {
         //As there is no way in default logic to reach the other possible key use without going through RR_FOREST_TEMPLE_MQ_NW_OUTDOORS, this is logically safe for now
         //Breaks if there's any other way to RR_FOREST_TEMPLE_MQ_FALLING_ROOM than going through the eye targets in RR_FOREST_TEMPLE_MQ_CENTRAL_AREA
         //Requires a bow/sling ammo source once ammo logic is done, to avoid edge cases.
-        Entrance(RR_FOREST_TEMPLE_MQ_NW_OUTDOORS,      []{return logic->SmallKeys(SCENE_FOREST_TEMPLE, 2) && Here(RR_FOREST_TEMPLE_MQ_UPPER_BLOCK_PUZZLE, []{return logic->CanKillEnemy(RE_FLOORMASTER);});}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NW_OUTDOORS,      []{return logic->SmallKeys(SCENE_FOREST_TEMPLE, 2) && Here([]{return logic->CanKillEnemy(RE_FLOORMASTER);});}),
     });
 
     areaTable[RR_FOREST_TEMPLE_MQ_STRAIGHT_HALLWAY] = Region("Forest Temple MQ Straight Hallway", SCENE_FOREST_TEMPLE, {}, {
@@ -422,7 +422,7 @@ void RegionTable_Init_ForestTemple() {
 
     areaTable[RR_FOREST_TEMPLE_MQ_FLOORMASTER_ROOM] = Region("Forest Temple MQ Floormaster Room", SCENE_FOREST_TEMPLE, {}, {}, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_MQ_OUTDOOR_LEDGE, []{return Here(RR_FOREST_TEMPLE_MQ_FLOORMASTER_ROOM, []{return logic->CanKillEnemy(RE_FLOORMASTER);});}),
+        Entrance(RR_FOREST_TEMPLE_MQ_OUTDOOR_LEDGE, []{return Here([]{return logic->CanKillEnemy(RE_FLOORMASTER);});}),
     });
 
     areaTable[RR_FOREST_TEMPLE_MQ_OUTDOOR_LEDGE] = Region("Forest Temple MQ Outdoor Ledge", SCENE_FOREST_TEMPLE, {
@@ -542,7 +542,7 @@ void RegionTable_Init_ForestTemple() {
         //!QUANTUM LOGIC!
         //This key logic assumes that you can get to falling room either by spending the 5th key here, or by wasting a key in falling room itself.
         //While being the 5th key makes this simpler in theory, if a different age can waste the key compared to reaching this room it breaks
-        Entrance(RR_FOREST_TEMPLE_MQ_FALLING_ROOM,    []{return logic->SmallKeys(SCENE_FOREST_TEMPLE, 5) && Here(RR_FOREST_TEMPLE_MQ_BETH_ROOM, []{return logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_DINS_FIRE);});}),
+        Entrance(RR_FOREST_TEMPLE_MQ_FALLING_ROOM,    []{return logic->SmallKeys(SCENE_FOREST_TEMPLE, 5) && Here([]{return logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_DINS_FIRE);});}),
         Entrance(RR_FOREST_TEMPLE_MQ_TORCH_SHOT_ROOM, []{return logic->SmallKeys(SCENE_FOREST_TEMPLE, 6);}),
         Entrance(RR_FOREST_TEMPLE_MQ_3_STALFOS_ROOM,  []{return true;}),
     });
