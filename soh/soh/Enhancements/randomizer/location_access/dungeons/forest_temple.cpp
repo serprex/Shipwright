@@ -22,14 +22,20 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_GS_FIRST_ROOM,    (logic->IsAdult && logic->CanUse(RG_BOMB_BAG)) || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_BOOMERANG) || logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_BOMBCHU_5) || logic->CanUse(RG_DINS_FIRE) || (ctx->GetTrickOption(RT_FOREST_FIRST_GS) && (logic->CanJumpslashExceptHammer() || (logic->IsChild && logic->CanUse(RG_BOMB_BAG))))),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_ENTRYWAY,       []{return true;}),
-        Entrance(RR_FOREST_TEMPLE_SOUTH_CORRIDOR, []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_ENTRYWAY,             []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_SOUTH_CORRIDOR_SOUTH, []{return true;}),
     });
 
-    areaTable[RR_FOREST_TEMPLE_SOUTH_CORRIDOR] = Region("Forest Temple South Corridor", SCENE_FOREST_TEMPLE, {}, {}, {
+    areaTable[RR_FOREST_TEMPLE_SOUTH_CORRIDOR_SOUTH] = Region("Forest Temple South Corridor South", SCENE_FOREST_TEMPLE, {}, {}, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_TREES, []{return true;}),
-        Entrance(RR_FOREST_TEMPLE_LOBBY, []{return logic->CanPassEnemy(RE_BIG_SKULLTULA);}),
+        Entrance(RR_FOREST_TEMPLE_TREES,                []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_SOUTH_CORRIDOR_NORTH, []{return logic->CanPassEnemy(RE_BIG_SKULLTULA);}),
+    });
+
+    areaTable[RR_FOREST_TEMPLE_SOUTH_CORRIDOR_NORTH] = Region("Forest Temple South Corridor North", SCENE_FOREST_TEMPLE, {}, {}, {
+        //Exits
+        Entrance(RR_FOREST_TEMPLE_SOUTH_CORRIDOR_SOUTH, []{return logic->CanPassEnemy(RE_BIG_SKULLTULA);}),
+        Entrance(RR_FOREST_TEMPLE_LOBBY,                []{return true;}),
     });
 
     areaTable[RR_FOREST_TEMPLE_LOBBY] = Region("Forest Temple Lobby", SCENE_FOREST_TEMPLE, {
@@ -46,14 +52,14 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_LOBBY_POT_6, logic->CanBreakPots()),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_SOUTH_CORRIDOR,     []{return true;}),
-        Entrance(RR_FOREST_TEMPLE_NORTH_CORRIDOR,     []{return true;}),
-        Entrance(RR_FOREST_TEMPLE_NW_COURTYARD_LOWER, []{return logic->CanUse(RG_SONG_OF_TIME) || logic->IsChild;}),
-        Entrance(RR_FOREST_TEMPLE_NE_COURTYARD_LOWER, []{return logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT);}),
-        Entrance(RR_FOREST_TEMPLE_WEST_CORRIDOR,      []{return logic->SmallKeys(SCENE_FOREST_TEMPLE, 1);}),
-        Entrance(RR_FOREST_TEMPLE_EAST_CORRIDOR,      []{return false;}),
-        Entrance(RR_FOREST_TEMPLE_BASEMENT,           []{return logic->Get(LOGIC_FOREST_MEG);}),
-        Entrance(RR_FOREST_TEMPLE_BOSS_ENTRYWAY,      []{return false;}),
+        Entrance(RR_FOREST_TEMPLE_SOUTH_CORRIDOR_NORTH, []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_NORTH_CORRIDOR,       []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_NW_COURTYARD_LOWER,   []{return logic->CanUse(RG_SONG_OF_TIME) || logic->IsChild;}),
+        Entrance(RR_FOREST_TEMPLE_NE_COURTYARD_LOWER,   []{return logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT);}),
+        Entrance(RR_FOREST_TEMPLE_WEST_CORRIDOR,        []{return logic->SmallKeys(SCENE_FOREST_TEMPLE, 1);}),
+        Entrance(RR_FOREST_TEMPLE_EAST_CORRIDOR_WEST,   []{return false;}),
+        Entrance(RR_FOREST_TEMPLE_BASEMENT,             []{return logic->Get(LOGIC_FOREST_MEG);}),
+        Entrance(RR_FOREST_TEMPLE_BOSS_ENTRYWAY,        []{return false;}),
     });
 
     areaTable[RR_FOREST_TEMPLE_NORTH_CORRIDOR] = Region("Forest Temple North Corridor", SCENE_FOREST_TEMPLE, {}, {}, {
@@ -87,11 +93,11 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_COURTYARD_LEFT_HEART,      logic->CanUse(RG_BOOMERANG) && ctx->GetTrickOption(RT_FOREST_COURTYARD_HEARTS_BOOMERANG)),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_LOBBY,             []{return logic->CanUse(RG_SONG_OF_TIME);}),
+        Entrance(RR_FOREST_TEMPLE_LOBBY,              []{return true;}),
         Entrance(RR_FOREST_TEMPLE_NW_COURTYARD_UPPER, []{return logic->CanUse(RG_HOVER_BOOTS) && ((ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->HasExplosives()) || (ctx->GetTrickOption(RT_GROUND_JUMP_HARD) && logic->CanGroundJump()));}),
-        Entrance(RR_FOREST_TEMPLE_MAP_ROOM,          []{return true;}),
-        Entrance(RR_FOREST_TEMPLE_SEWER,             []{return logic->HasItem(RG_GOLDEN_SCALE) || logic->CanUse(RG_IRON_BOOTS);}),
-        Entrance(RR_FOREST_TEMPLE_BOSS_ENTRYWAY,     []{return false;}),
+        Entrance(RR_FOREST_TEMPLE_MAP_ROOM,           []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_SEWER,              []{return logic->HasItem(RG_GOLDEN_SCALE) || logic->CanUse(RG_IRON_BOOTS);}),
+        Entrance(RR_FOREST_TEMPLE_BOSS_ENTRYWAY,      []{return false;}),
     });
 
     areaTable[RR_FOREST_TEMPLE_NW_COURTYARD_UPPER] = Region("Forest Temple NW Courtyard Upper", SCENE_FOREST_TEMPLE, {
@@ -128,24 +134,26 @@ void RegionTable_Init_ForestTemple() {
 
     areaTable[RR_FOREST_TEMPLE_NE_COURTYARD_UPPER] = Region("Forest Temple NE Courtyard Upper", SCENE_FOREST_TEMPLE, {
         //Events
-        EventAccess(LOGIC_STICK_ACCESS, []{return logic->CanGetDekuBabaSticks();}),
-        EventAccess(LOGIC_NUT_ACCESS,   []{return logic->CanGetDekuBabaNuts();}),
+        EventAccess(LOGIC_STICK_ACCESS,               []{return logic->CanGetDekuBabaSticks();}),
+        EventAccess(LOGIC_NUT_ACCESS,                 []{return logic->CanGetDekuBabaNuts();}),
+        EventAccess(LOGIC_FOREST_SUMMON_NE_SCARECROW, []{return ctx->GetTrickOption(RT_FOREST_DOORFRAME) && logic->CanJumpslashExceptHammer() && logic->CanUse(RG_HOVER_BOOTS) && logic->ScarecrowsSong();}),
     }, {}, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_NE_COURTYARD_LOWER,           []{return true;}),
-        Entrance(RR_FOREST_TEMPLE_NE_COURTYARD_ISLAND,          []{return logic->IsAdult && ctx->GetTrickOption(RT_FOREST_COURTYARD_LEDGE) && logic->CanUse(RG_HOVER_BOOTS);}),
-        Entrance(RR_FOREST_TEMPLE_NE_COURTYARD_SCARECROW_LEDGE, []{return ctx->GetTrickOption(RT_FOREST_DOORFRAME) && logic->CanJumpslashExceptHammer() && logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_SCARECROW);}),
-        Entrance(RR_FOREST_TEMPLE_MAP_ROOM,                     []{return true;}),
-        Entrance(RR_FOREST_TEMPLE_DRAINED_SEWER,                []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_NE_COURTYARD_LOWER,  []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_NE_COURTYARD_ISLAND, []{return logic->IsAdult && ctx->GetTrickOption(RT_FOREST_COURTYARD_LEDGE) && logic->CanUse(RG_HOVER_BOOTS);}),
+        Entrance(RR_FOREST_TEMPLE_MAP_ROOM,            []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_DRAINED_SEWER,       []{return true;}),
     });
 
-    areaTable[RR_FOREST_TEMPLE_NE_COURTYARD_ISLAND] = Region("Forest Temple NE Courtyard Island", SCENE_FOREST_TEMPLE, {}, {
+    areaTable[RR_FOREST_TEMPLE_NE_COURTYARD_ISLAND] = Region("Forest Temple NE Courtyard Island", SCENE_FOREST_TEMPLE, {
+        EventAccess(LOGIC_FOREST_SUMMON_NE_SCARECROW, []{return logic->ScarecrowsSong();}),
+    }, {
         //Locations
         LOCATION(RC_FOREST_TEMPLE_RAISED_ISLAND_COURTYARD_CHEST, true),
     }, {
         //Exits
         Entrance(RR_FOREST_TEMPLE_NE_COURTYARD_LOWER,           []{return true;}),
-        Entrance(RR_FOREST_TEMPLE_NE_COURTYARD_SCARECROW_LEDGE, []{return logic->CanUse(RG_HOOKSHOT);}),
+        Entrance(RR_FOREST_TEMPLE_NE_COURTYARD_SCARECROW_LEDGE, []{return logic->Get(LOGIC_FOREST_SUMMON_NE_SCARECROW) && logic->CanUse(RG_HOOKSHOT);}),
     });
 
     areaTable[RR_FOREST_TEMPLE_NE_COURTYARD_SCARECROW_LEDGE] = Region("Forest Temple NE Courtyard Scarecrow Ledge", SCENE_FOREST_TEMPLE, {}, {
@@ -301,7 +309,7 @@ void RegionTable_Init_ForestTemple() {
 
     areaTable[RR_FOREST_TEMPLE_FALLING_ROOM] = Region("Forest Temple Falling Room", SCENE_FOREST_TEMPLE, {}, {
         //Locations
-        LOCATION(RC_FOREST_TEMPLE_FALLING_CEILING_ROOM_CHEST,    true),
+        LOCATION(RC_FOREST_TEMPLE_FALLING_CEILING_ROOM_CHEST, true),
     }, {
         //Exits
         Entrance(RR_FOREST_TEMPLE_NE_COURTYARD_SCARECROW_LEDGE, []{return true;}),
@@ -317,14 +325,20 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_GREEN_POE_POT_2, logic->CanBreakPots()),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_FALLING_ROOM,  []{return true;}),
-        Entrance(RR_FOREST_TEMPLE_EAST_CORRIDOR, []{return logic->Get(LOGIC_FOREST_AMY);}),
+        Entrance(RR_FOREST_TEMPLE_FALLING_ROOM,       []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_EAST_CORRIDOR_EAST, []{return logic->Get(LOGIC_FOREST_AMY);}),
     });
 
-    areaTable[RR_FOREST_TEMPLE_EAST_CORRIDOR] = Region("Forest Temple East Corridor", SCENE_FOREST_TEMPLE, {}, {}, {
+    areaTable[RR_FOREST_TEMPLE_EAST_CORRIDOR_EAST] = Region("Forest Temple East Corridor East", SCENE_FOREST_TEMPLE, {}, {}, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_LOBBY,          []{return logic->CanAttack() || logic->CanUse(RG_NUTS);}),
-        Entrance(RR_FOREST_TEMPLE_GREEN_POE_ROOM, []{return logic->CanAttack() || logic->CanUse(RG_NUTS);}),
+        Entrance(RR_FOREST_TEMPLE_GREEN_POE_ROOM,     []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_EAST_CORRIDOR_WEST, []{return logic->CanPassEnemy(RE_BIG_SKULLTULA);}),
+    });
+
+    areaTable[RR_FOREST_TEMPLE_EAST_CORRIDOR_WEST] = Region("Forest Temple East Corridor West", SCENE_FOREST_TEMPLE, {}, {}, {
+        //Exits
+        Entrance(RR_FOREST_TEMPLE_EAST_CORRIDOR_EAST, []{return logic->CanPassEnemy(RE_BIG_SKULLTULA);}),
+        Entrance(RR_FOREST_TEMPLE_LOBBY,              []{return true;}),
     });
 
     areaTable[RR_FOREST_TEMPLE_BASEMENT] = Region("Forest Temple Boss Region", SCENE_FOREST_TEMPLE, {
@@ -349,17 +363,23 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_MQ_FIRST_ROOM_CHEST, logic->CanPassEnemy(RE_BIG_SKULLTULA, ED_SHORT_JUMPSLASH, false) || logic->CanUse(RG_HOVER_BOOTS)),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_ENTRYWAY,          []{return true;}),
-        Entrance(RR_FOREST_TEMPLE_MQ_SOUTH_CORRIDOR, []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_ENTRYWAY,                []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_SOUTH_CORRIDOR_SOUTH, []{return true;}),
     });
 
-    areaTable[RR_FOREST_TEMPLE_MQ_SOUTH_CORRIDOR] = Region("Forest Temple MQ South Corridor", SCENE_FOREST_TEMPLE, {}, {
+    areaTable[RR_FOREST_TEMPLE_MQ_SOUTH_CORRIDOR_SOUTH] = Region("Forest Temple MQ South Corridor South", SCENE_FOREST_TEMPLE, {}, {}, {
+        //Exits
+        Entrance(RR_FOREST_TEMPLE_MQ_TREES,                []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_SOUTH_CORRIDOR_NORTH, []{return logic->CanPassEnemy(RE_BIG_SKULLTULA);}),
+    });
+
+    areaTable[RR_FOREST_TEMPLE_MQ_SOUTH_CORRIDOR_NORTH] = Region("Forest Temple MQ South Corridor North", SCENE_FOREST_TEMPLE, {}, {
         //Locations
         LOCATION(RC_FOREST_TEMPLE_MQ_GS_FIRST_HALLWAY, logic->HookshotOrBoomerang()),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_MQ_TREES, []{return logic->CanPassEnemy(RE_BIG_SKULLTULA);}),
-        Entrance(RR_FOREST_TEMPLE_MQ_LOBBY, []{return logic->CanPassEnemy(RE_BIG_SKULLTULA) && logic->SmallKeys(SCENE_FOREST_TEMPLE, 1);}),
+        Entrance(RR_FOREST_TEMPLE_MQ_SOUTH_CORRIDOR_SOUTH, []{return logic->CanPassEnemy(RE_BIG_SKULLTULA);}),
+        Entrance(RR_FOREST_TEMPLE_MQ_LOBBY,                []{return logic->SmallKeys(SCENE_FOREST_TEMPLE, 1);}),
     });
 
     areaTable[RR_FOREST_TEMPLE_MQ_LOBBY] = Region("Forest Temple MQ Lobby", SCENE_FOREST_TEMPLE, {
@@ -375,14 +395,14 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_MQ_LOBBY_POT_6, logic->CanBreakPots()),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_MQ_SOUTH_CORRIDOR, []{return logic->SmallKeys(SCENE_FOREST_TEMPLE, 1);}),
-        Entrance(RR_FOREST_TEMPLE_MQ_NORTH_CORRIDOR, []{return true;}),
-        Entrance(RR_FOREST_TEMPLE_MQ_WEST_CORRIDOR,  []{return true;}),
-        Entrance(RR_FOREST_TEMPLE_MQ_EAST_CORRIDOR,  []{return false;}),
-        Entrance(RR_FOREST_TEMPLE_MQ_NW_COURTYARD,   []{return logic->CanHitEyeTargets();}),
-        Entrance(RR_FOREST_TEMPLE_MQ_NE_COURTYARD,   []{return logic->CanHitEyeTargets();}),
+        Entrance(RR_FOREST_TEMPLE_MQ_SOUTH_CORRIDOR_NORTH, []{return logic->SmallKeys(SCENE_FOREST_TEMPLE, 1);}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NORTH_CORRIDOR,       []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_WEST_CORRIDOR,        []{return true;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_EAST_CORRIDOR,        []{return false;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NW_COURTYARD,         []{return logic->CanHitEyeTargets();}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NE_COURTYARD,         []{return logic->CanHitEyeTargets();}),
         //implies the other 3 poes
-        Entrance(RR_FOREST_TEMPLE_MQ_BASEMENT,           []{return logic->Get(LOGIC_FOREST_MEG);}),
+        Entrance(RR_FOREST_TEMPLE_MQ_BASEMENT,             []{return logic->Get(LOGIC_FOREST_MEG);}),
     });
 
     areaTable[RR_FOREST_TEMPLE_MQ_NORTH_CORRIDOR] = Region("Forest Temple MQ North Corridor", SCENE_FOREST_TEMPLE, {}, {}, {
@@ -509,7 +529,7 @@ void RegionTable_Init_ForestTemple() {
         //Exits
         Entrance(RR_FOREST_TEMPLE_MQ_NE_COURTYARD,       []{return (((logic->CanUse(RG_IRON_BOOTS) || logic->CanUse(RG_LONGSHOT) || (ctx->GetTrickOption(RT_FOREST_MQ_WELL_SWIM) && logic->CanUse(RG_HOOKSHOT))) && logic->HasItem(RG_BRONZE_SCALE)) || logic->HasItem(RG_GOLDEN_SCALE)) && logic->WaterTimer() >= 16;}),
         Entrance(RR_FOREST_TEMPLE_MQ_NORTH_PASSAGE,      []{return logic->CanUse(RG_FIRE_ARROWS);}), // temp flag, can't be event
-        Entrance(RR_FOREST_TEMPLE_MQ_NW_COURTYARD_LEDGE, []{return ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->HasExplosives() && logic->CanUse(RG_HOVER_BOOTS);}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NW_COURTYARD_LEDGE, []{return logic->CanUse(RG_HOVER_BOOTS) && ((ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->HasExplosives()) || (ctx->GetTrickOption(RT_GROUND_JUMP_HARD) && logic->CanGroundJump()));}),
     });
 
     areaTable[RR_FOREST_TEMPLE_MQ_NORTH_PASSAGE] = Region("Forest Temple MQ North Passage", SCENE_FOREST_TEMPLE, {}, {}, {
