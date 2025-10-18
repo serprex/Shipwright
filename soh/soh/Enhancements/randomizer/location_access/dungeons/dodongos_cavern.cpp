@@ -293,7 +293,7 @@ void RegionTable_Init_DodongosCavern() {
         Entrance(RR_DODONGOS_CAVERN_MQ_GOSSIP_STONE,      []{return Here(RR_DODONGOS_CAVERN_MQ_LOBBY, []{return logic->CanBreakMudWalls() || logic->HasItem(RG_GORONS_BRACELET);});}),
         Entrance(RR_DODONGOS_CAVERN_MQ_MOUTH_SIDE_BRIDGE, []{return Here(RR_DODONGOS_CAVERN_MQ_LOBBY, []{return logic->BlastOrSmash() || logic->HasItem(RG_GORONS_BRACELET);});}),
         Entrance(RR_DODONGOS_CAVERN_MQ_STAIRS_LOWER,      []{return Here(RR_DODONGOS_CAVERN_MQ_LOBBY, []{return logic->BlastOrSmash() || logic->HasItem(RG_GORONS_BRACELET);});}),
-        Entrance(RR_DODONGOS_CAVERN_MQ_LOWER_RIGHT_SIDE,  []{return Here(RR_DODONGOS_CAVERN_MQ_LOBBY, []{return logic->CanBreakMudWalls();}) || Here(RR_DODONGOS_CAVERN_MQ_TORCH_PUZZLE_UPPER, []{return logic->HasItem(RG_GORONS_BRACELET) && logic->TakeDamage();});}), //strength 1 and bunny speed works too
+        Entrance(RR_DODONGOS_CAVERN_MQ_LOWER_RIGHT_SIDE,  []{return Here(RR_DODONGOS_CAVERN_MQ_LOBBY, []{return logic->CanBreakMudWalls();});}),
         Entrance(RR_DODONGOS_CAVERN_MQ_POES_ROOM,         []{return logic->IsAdult || logic->CanGroundJump(true);}),
         Entrance(RR_DODONGOS_CAVERN_MQ_BEHIND_MOUTH,      []{return logic->Get(LOGIC_DC_EYES_LIT);}),
     });
@@ -475,6 +475,8 @@ void RegionTable_Init_DodongosCavern() {
         Entrance(RR_DODONGOS_CAVERN_MQ_MOUTH_SIDE_BRIDGE,  []{return logic->Get(LOGIC_DC_MQ_CLEAR_UPPER_LOBBY_ROCKS);}),
         Entrance(RR_DODONGOS_CAVERN_MQ_TORCH_PUZZLE_LOWER, []{return true;}),
         Entrance(RR_DODONGOS_CAVERN_MQ_TWO_FIRES_ROOM,     []{return true;}),
+        // Implied drop to LOWER_RIGHT_SIDE
+        Entrance(RR_DODONGOS_CAVERN_MQ_LOWER_RIGHT_SIDE,   []{return logic->HasItem(RG_GORONS_BRACELET) && logic->TakeDamage();}), //strength 1 and bunny speed works too
     });
 
     areaTable[RR_DODONGOS_CAVERN_MQ_LOWER_RIGHT_SIDE] = Region("Dodongos Cavern MQ Lower Right Side", SCENE_DODONGOS_CAVERN, {}, {
