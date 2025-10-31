@@ -620,7 +620,7 @@ bool Region::MQSpiritShared(ConditionFn condition, bool IsBrokenWall, bool anyAg
     // adult is here it's also Certain Access
     if (logic->SmallKeys(SCENE_SPIRIT_TEMPLE, 7)) {
         if (anyAge) {
-            return Here(condition);
+            return AnyAgeTime(condition);
         }
         return condition();
         // else, if we are here as adult, we have Certain Access from that and don't need special handling for
@@ -669,9 +669,9 @@ void Region::printAgeTimeAccess() {
 
 std::array<Region, RR_MAX> areaTable;
 
-bool Here(ConditionFn condition) {
+bool AnyAgeTime(ConditionFn condition) {
     assert(logic->CurrentRegionKey != RR_NONE);
-    return areaTable[logic->CurrentRegionKey].Here(condition);
+    return areaTable[logic->CurrentRegionKey].AnyAgeTime(condition);
 }
 
 bool MQSpiritSharedStatueRoom(const RandomizerRegion region, ConditionFn condition, bool anyAge) {

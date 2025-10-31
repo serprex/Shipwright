@@ -22,7 +22,7 @@ void RegionTable_Init_IceCavern() {
     }, {
         //Exits
         Entrance(RR_ICE_CAVERN_ENTRYWAY, []{return true;}),
-        Entrance(RR_ICE_CAVERN_MAIN,     []{return Here([]{return logic->CanKillEnemy(RE_FREEZARD, ED_CLOSE, true, 4);});}),
+        Entrance(RR_ICE_CAVERN_MAIN,     []{return AnyAgeTime([]{return logic->CanKillEnemy(RE_FREEZARD, ED_CLOSE, true, 4);});}),
     });
 
     areaTable[RR_ICE_CAVERN_MAIN] = Region("Ice Cavern", SCENE_ICE_CAVERN, {
@@ -85,7 +85,7 @@ void RegionTable_Init_IceCavern() {
         //the switch for the glass blocking the entrance is linked to the switch that controls the glass around the skulltulla in RR_ICE_CAVERN_MQ_SCARECROW_ROOM
         //if you clear the ice, you can hit it with a pot from here.
         Entrance(RR_ICE_CAVERN_MQ_BEGINNING,      []{return logic->BlueFire();}),
-        Entrance(RR_ICE_CAVERN_MQ_MAP_ROOM,       []{return Here([]{return logic->CanKillEnemy(RE_WHITE_WOLFOS) && logic->CanKillEnemy(RE_FREEZARD);});}),
+        Entrance(RR_ICE_CAVERN_MQ_MAP_ROOM,       []{return AnyAgeTime([]{return logic->CanKillEnemy(RE_WHITE_WOLFOS) && logic->CanKillEnemy(RE_FREEZARD);});}),
         Entrance(RR_ICE_CAVERN_MQ_COMPASS_ROOM,   []{return (logic->IsAdult || (ctx->GetTrickOption(RT_GROUND_JUMP_HARD) && logic->CanGroundJump())) && logic->BlueFire();}),
         Entrance(RR_ICE_CAVERN_MQ_SCARECROW_ROOM, []{return logic->BlueFire();}),
     });
@@ -96,7 +96,7 @@ void RegionTable_Init_IceCavern() {
         EventAccess(LOGIC_BLUE_FIRE_ACCESS,  []{return logic->IsChild || logic->CanJumpslash() || logic->HasExplosives();}),
     }, {
         //Locations
-        LOCATION(RC_ICE_CAVERN_MQ_MAP_CHEST, logic->BlueFire() && Here([]{return logic->CanHitSwitch();})),
+        LOCATION(RC_ICE_CAVERN_MQ_MAP_CHEST, logic->BlueFire() && AnyAgeTime([]{return logic->CanHitSwitch();})),
     }, {});
 
     areaTable[RR_ICE_CAVERN_MQ_SCARECROW_ROOM] = Region("Ice Cavern MQ Scarecrow Room", SCENE_ICE_CAVERN, {}, {
@@ -126,8 +126,8 @@ void RegionTable_Init_IceCavern() {
         LOCATION(RC_SHEIK_IN_ICE_CAVERN,            logic->CanKillEnemy(RE_STALFOS)),
     }, {
         //Exits
-        Entrance(RR_ICE_CAVERN_MQ_WEST_CORRIDOR, []{return Here([]{return logic->CanKillEnemy(RE_STALFOS);});}),
-        Entrance(RR_ICE_CAVERN_MQ_BEGINNING,     []{return logic->CanUse(RG_IRON_BOOTS) && Here([]{return logic->CanKillEnemy(RE_STALFOS);});}),
+        Entrance(RR_ICE_CAVERN_MQ_WEST_CORRIDOR, []{return AnyAgeTime([]{return logic->CanKillEnemy(RE_STALFOS);});}),
+        Entrance(RR_ICE_CAVERN_MQ_BEGINNING,     []{return logic->CanUse(RG_IRON_BOOTS) && AnyAgeTime([]{return logic->CanKillEnemy(RE_STALFOS);});}),
     });
 
     areaTable[RR_ICE_CAVERN_MQ_COMPASS_ROOM] = Region("Ice Cavern MQ Compass Room", SCENE_ICE_CAVERN, {
