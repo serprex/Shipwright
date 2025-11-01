@@ -131,7 +131,7 @@ void RegionTable_Init_ForestTemple() {
         Entrance(RR_FOREST_TEMPLE_LOBBY,               []{return true;}),
         Entrance(RR_FOREST_TEMPLE_NE_COURTYARD_UPPER,  []{return logic->CanUse(RG_LONGSHOT) || (ctx->GetTrickOption(RT_FOREST_VINES) && logic->CanUse(RG_HOOKSHOT));}),
         Entrance(RR_FOREST_TEMPLE_NE_COURTYARD_ISLAND, []{return logic->CanUse(RG_HOOKSHOT);}),
-        Entrance(RR_FOREST_TEMPLE_SEWER,               []{return logic->HasItem(RG_GOLDEN_SCALE) || logic->CanUse(RG_IRON_BOOTS);}),
+        Entrance(RR_FOREST_TEMPLE_SEWER,               []{return (((logic->CanUse(RG_IRON_BOOTS) || logic->CanUse(RG_LONGSHOT) || (ctx->GetTrickOption(RT_FOREST_WELL_SWIM) && logic->CanUse(RG_HOOKSHOT))) && logic->HasItem(RG_BRONZE_SCALE)) || logic->HasItem(RG_GOLDEN_SCALE)) && logic->WaterTimer() >= 16;}),
     });
 
     areaTable[RR_FOREST_TEMPLE_NE_COURTYARD_UPPER] = Region("Forest Temple NE Courtyard Upper", SCENE_FOREST_TEMPLE, {
@@ -553,7 +553,7 @@ void RegionTable_Init_ForestTemple() {
         LOCATION(RC_FOREST_TEMPLE_MQ_WELL_EAST_HEART,           logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8),
     }, {
         //Exits
-        Entrance(RR_FOREST_TEMPLE_MQ_NE_COURTYARD,       []{return (((logic->CanUse(RG_IRON_BOOTS) || logic->CanUse(RG_LONGSHOT) || (ctx->GetTrickOption(RT_FOREST_MQ_WELL_SWIM) && logic->CanUse(RG_HOOKSHOT))) && logic->HasItem(RG_BRONZE_SCALE)) || logic->HasItem(RG_GOLDEN_SCALE)) && logic->WaterTimer() >= 16;}),
+        Entrance(RR_FOREST_TEMPLE_MQ_NE_COURTYARD,       []{return (((logic->CanUse(RG_IRON_BOOTS) || logic->CanUse(RG_LONGSHOT) || (ctx->GetTrickOption(RT_FOREST_WELL_SWIM) && logic->CanUse(RG_HOOKSHOT))) && logic->HasItem(RG_BRONZE_SCALE)) || logic->HasItem(RG_GOLDEN_SCALE)) && logic->WaterTimer() >= 16;}),
         Entrance(RR_FOREST_TEMPLE_MQ_NORTH_PASSAGE,      []{return logic->CanUse(RG_FIRE_ARROWS);}), // temp flag, can't be event
         Entrance(RR_FOREST_TEMPLE_MQ_NW_COURTYARD_LEDGE, []{return logic->CanUse(RG_HOVER_BOOTS) && ((ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->HasExplosives()) || (ctx->GetTrickOption(RT_GROUND_JUMP_HARD) && logic->IsAdult && logic->CanGroundJump()));}),
     });

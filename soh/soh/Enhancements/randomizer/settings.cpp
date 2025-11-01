@@ -799,14 +799,14 @@ void Settings::CreateOptions() {
               "Forest Temple Courtyard Hearts with Boomerang",
               "A well aimed boomerang from the water's edge can reach the hearts from ground level. If unable to swim, "
               "you can back away from the water while the boomerang is returning so the hearts land on the ground.");
-    OPT_TRICK(RT_FOREST_MQ_WELL_SWIM, RCQUEST_MQ, RA_FOREST_TEMPLE, { Tricks::Tag::ADVANCED },
-              "Swim Through Forest Temple MQ Well with Hookshot",
+    OPT_TRICK(RT_FOREST_WELL_SWIM, RCQUEST_BOTH, RA_FOREST_TEMPLE, { Tricks::Tag::NOVICE },
+              "Swim Through Forest Temple Well with Hookshot",
               "Shoot the vines in the well as low and as far to the right as possible, and then immediately swim under "
-              "the ceiling to the right. This can only be required if Forest Temple is in its Master Quest form.");
+              "the ceiling to the right. This is usually only useful in Master Quest.");
     OPT_TRICK(RT_FOREST_MQ_BLOCK_PUZZLE, RCQUEST_MQ, RA_FOREST_TEMPLE, { Tricks::Tag::NOVICE },
               "Skip Forest Temple MQ Block Puzzle with Bombchu",
               "Send the Bombchu straight up the center of the wall directly to the left upon entering the room.");
-    // Child with hovers cannot do this from the lower floor, and most go to the upper floor which needs goron bracelet.
+    // Child with hovers cannot do this from the lower floor, and must go to the upper floor which needs goron bracelet.
     // Adult can do this with hammer and KSword, But child cannot.
     OPT_TRICK(RT_FOREST_MQ_JS_HALLWAY_SWITCH, RCQUEST_MQ, RA_FOREST_TEMPLE, { Tricks::Tag::NOVICE },
               "Forest Temple MQ Twisted Hallway Switch with Jump Slash",
