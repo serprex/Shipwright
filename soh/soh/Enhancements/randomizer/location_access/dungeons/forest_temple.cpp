@@ -4,6 +4,8 @@
 
 using namespace Rando;
 
+// Poe sisters: Joelle is red, Beth is blue, Amy is green, Meg is purple
+
 void RegionTable_Init_ForestTemple() {
     // clang-format off
     // Vanilla/MQ Decider
