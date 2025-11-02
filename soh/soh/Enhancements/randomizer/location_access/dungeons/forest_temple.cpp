@@ -138,7 +138,7 @@ void RegionTable_Init_ForestTemple() {
         //Events
         EventAccess(LOGIC_STICK_ACCESS,               []{return logic->CanGetDekuBabaSticks();}),
         EventAccess(LOGIC_NUT_ACCESS,                 []{return logic->CanGetDekuBabaNuts();}),
-        EventAccess(LOGIC_FOREST_SUMMON_NE_SCARECROW, []{return ctx->GetTrickOption(RT_FOREST_DOORFRAME) && logic->CanJumpslashExceptHammer() && logic->CanUse(RG_HOVER_BOOTS) && logic->ScarecrowsSong();}),
+        EventAccess(LOGIC_FOREST_SUMMON_NE_SCARECROW, []{return ctx->GetTrickOption(RT_FOREST_DOORFRAME) && logic->CanJumpslash() && logic->CanUse(RG_HOVER_BOOTS) && logic->ScarecrowsSong();}),
     }, {}, {
         //Exits
         Entrance(RR_FOREST_TEMPLE_NE_COURTYARD_LOWER,  []{return true;}),
