@@ -1089,6 +1089,10 @@ bool Logic::CanJumpslash() {
     return CanJumpslashExceptHammer() || CanUse(RG_MEGATON_HAMMER);
 }
 
+bool Logic::CanClearStalagmite() {
+    return CanJumpslash() || HasExplosives();
+}
+
 bool Logic::CanHitSwitch(EnemyDistance distance, bool inWater) {
     bool hit = false;
     switch (distance) {
@@ -2190,7 +2194,7 @@ const std::vector<uint8_t>& GetDungeonSmallKeyDoors(SceneID sceneId) {
                 dungeonSmallKeyDoors[key].emplace_back(transitionActor.params & 0x3F);
             }
         } else if (transitionActor.id == ACTOR_DOOR_SHUTTER) {
-            uint8_t doorType = (transitionActor.params >> 7) & 15;
+            uint8_t doorType = (transitionActor.params >> 6) & 15;
             if (doorType == SHUTTER_KEY_LOCKED) {
                 dungeonSmallKeyDoors[key].emplace_back(transitionActor.params & 0x3F);
             }
