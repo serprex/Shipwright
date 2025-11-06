@@ -44,8 +44,9 @@ class EventAccess {
         return logic->Get(event);
     }
 
-  private:
     LogicVal event;
+
+  private:
     ConditionFn condition_function;
 };
 
@@ -139,7 +140,7 @@ class Region {
 
     void ApplyTimePass();
 
-    bool UpdateEvents();
+    bool UpdateEvents(std::unordered_set<RandomizerRegion> &deps);
 
     void AddExit(RandomizerRegion parentKey, RandomizerRegion newExitKey, ConditionFn condition);
 

@@ -457,7 +457,7 @@ void Region::ApplyTimePass() {
     }
 }
 
-bool Region::UpdateEvents() {
+bool Region::UpdateEvents(std::unordered_set<RandomizerRegion> &deps) {
     bool eventsUpdated = false;
     StartPerformanceTimer(PT_EVENT_ACCESS);
     for (EventAccess& event : events) {
@@ -472,6 +472,8 @@ bool Region::UpdateEvents() {
             (adultNight && event.CheckConditionAtAgeTime(logic->IsAdult, logic->AtNight))) {
             event.EventOccurred();
             eventsUpdated = true;
+            auto &logicDeps = logic->logicDependencies[event.event];
+            deps.insert(logicDeps.begin(), logicDeps.end());
         }
     }
     StopPerformanceTimer(PT_EVENT_ACCESS);

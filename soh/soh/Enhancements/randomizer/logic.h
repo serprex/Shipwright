@@ -142,6 +142,7 @@ class Logic {
     static std::map<uint32_t, uint32_t> RandoGetToDungeonScene;
     static std::map<RandomizerGet, uint32_t> RandoGetToEquipFlag;
     static std::map<RandomizerGet, uint32_t> RandoGetToRandInf;
+    std::unordered_map<LogicVal, std::unordered_set<RandomizerRegion>> logicDependencies;
 
   private:
     std::shared_ptr<Context> ctx;

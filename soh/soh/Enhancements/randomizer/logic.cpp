@@ -2274,6 +2274,10 @@ void Logic::SetContext(std::shared_ptr<Context> _ctx) {
 }
 
 bool Logic::Get(LogicVal logicVal) {
+    if (!inLogic[logicVal]) {
+        assert(this->CurrentRegionKey != RR_NONE);
+        this->logicDependencies[logicVal].insert(this->CurrentRegionKey);
+    }
     return inLogic[logicVal];
 }
 

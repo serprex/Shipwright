@@ -500,8 +500,12 @@ void ProcessRegion(Region* region, GetAccessibleLocationsStruct& gals, Randomize
         }
     }
 
-    if (region->UpdateEvents()) {
+    std::unordered_set<RandomizerRegion> deps;
+    if (region->UpdateEvents(deps)) {
         gals.logicUpdated = true;
+        for (auto dep : deps) {
+            ProcessRegion(RegionTable(dep), gals, ignore, stopOnBeatable, addToPlaythrough);
+        }
         // if we are working in spheres, reset the sphere on an event being enabled to avoid sphere skipping
         if (addToPlaythrough) {
             gals.resetSphere = true;
