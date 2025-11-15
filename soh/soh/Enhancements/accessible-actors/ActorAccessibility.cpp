@@ -5,14 +5,14 @@
 
 #include "ActorAccessibility.h"
 #include "AccessibleAudioEngine.h"
-#include "soh/OTRGlobals.h"
 
 #include <functions.h>
 #include <variables.h>
 #include <macros.h>
 #include "SfxExtractor.h"
 
-#include "File.h"
+#include <libultraship/controller/controldeck/ControlDeck.h>
+#include "ship/resource/File.h"
 #include "soh/Enhancements/speechsynthesizer/SpeechSynthesizer.h"
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/ObjectExtension/ObjectExtension.h"
