@@ -13,7 +13,7 @@
 #include <libultraship/libultraship.h>
 
 #ifdef __APPLE__
-#include "graphic/Fast3D/backends/gfx_metal.h"
+#include <fast/backends/gfx_metal.h>
 #endif
 
 #ifdef __SWITCH__
@@ -33,6 +33,8 @@
 #include "soh/Enhancements/debugger/MessageViewer.h"
 #include "soh/Notification/Notification.h"
 #include "soh/Enhancements/TimeDisplay/TimeDisplay.h"
+#include "soh/Enhancements/mod_menu.h"
+#include "soh/Network/Anchor/Anchor.h"
 
 namespace SohGui {
 
@@ -72,6 +74,7 @@ std::shared_ptr<SohStatsWindow> mStatsWindow;
 std::shared_ptr<Ship::GuiWindow> mGfxDebuggerWindow;
 
 std::shared_ptr<SohMenu> mSohMenu;
+std::shared_ptr<ModMenuWindow> mModMenuWindow;
 std::shared_ptr<AudioEditor> mAudioEditorWindow;
 std::shared_ptr<InputViewer> mInputViewer;
 std::shared_ptr<InputViewerSettingsWindow> mInputViewerSettings;
@@ -96,6 +99,7 @@ std::shared_ptr<RandomizerSettingsWindow> mRandomizerSettingsWindow;
 std::shared_ptr<SohModalWindow> mModalWindow;
 std::shared_ptr<Notification::Window> mNotificationWindow;
 std::shared_ptr<TimeDisplayWindow> mTimeDisplayWindow;
+std::shared_ptr<AnchorRoomWindow> mAnchorRoomWindow;
 
 UIWidgets::Colors GetMenuThemeColor() {
     return mSohMenu->GetMenuThemeColor();
@@ -134,6 +138,8 @@ void SetupGuiElements() {
         SPDLOG_ERROR("Could not find input editor window");
     }*/
 
+    mModMenuWindow = std::make_shared<ModMenuWindow>(CVAR_WINDOW("ModMenu"), "Mod Menu", ImVec2(820, 630));
+    gui->AddGuiWindow(mModMenuWindow);
     mAudioEditorWindow = std::make_shared<AudioEditor>(CVAR_WINDOW("AudioEditor"), "Audio Editor", ImVec2(820, 630));
     gui->AddGuiWindow(mAudioEditorWindow);
     mInputViewer = std::make_shared<InputViewer>(CVAR_WINDOW("InputViewer"), "Input Viewer");
@@ -201,6 +207,8 @@ void SetupGuiElements() {
     mNotificationWindow->Show();
     mTimeDisplayWindow = std::make_shared<TimeDisplayWindow>(CVAR_WINDOW("TimeDisplayEnabled"), "Additional Timers");
     gui->AddGuiWindow(mTimeDisplayWindow);
+    mAnchorRoomWindow = std::make_shared<AnchorRoomWindow>(CVAR_WINDOW("AnchorRoom"), "Anchor Room");
+    gui->AddGuiWindow(mAnchorRoomWindow);
 }
 
 void Destroy() {
@@ -225,6 +233,7 @@ void Destroy() {
     mColViewerWindow = nullptr;
     mActorViewerWindow = nullptr;
     mCosmeticsEditorWindow = nullptr;
+    mModMenuWindow = nullptr;
     mAudioEditorWindow = nullptr;
     mStatsWindow = nullptr;
     mConsoleWindow = nullptr;
@@ -235,6 +244,7 @@ void Destroy() {
     mTimeSplitWindow = nullptr;
     mPlandomizerWindow = nullptr;
     mTimeDisplayWindow = nullptr;
+    mAnchorRoomWindow = nullptr;
 }
 
 void RegisterPopup(std::string title, std::string message, std::string button1, std::string button2,
