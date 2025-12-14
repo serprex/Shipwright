@@ -220,7 +220,7 @@ void RegionTable_Init_WaterTemple() {
     }, {
         //Exits
         Entrance(RR_WATER_TEMPLE_SPIKE_MOAT,     []{return logic->SmallKeys(SCENE_WATER_TEMPLE, 4);}),
-        Entrance(RR_WATER_TEMPLE_BOULDERS_NORTH, []{return logic->HasItem(RG_BRONZE_SCALE);}),
+        Entrance(RR_WATER_TEMPLE_BOULDERS_NORTH, []{return logic->HasItem(RG_BRONZE_SCALE) || (ctx->GetTrickOption(RT_WATER_INVISIBLE_HOOKSHOT_TARGET) && logic->CanUse(RG_HOOKSHOT) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8);}),
         Entrance(RR_WATER_TEMPLE_BOULDER_CANAL,  []{return (logic->IsAdult && (logic->CanUse(RG_HOVER_BOOTS) || ctx->GetTrickOption(RT_WATER_NORTH_BASEMENT_LEDGE_JUMP))) ||
                                                            // A midair ground jump gets child onto the ledge, but they can't reasonably do anything without irons, and this may need TakeDamage due to the boulders
                                                            // swim can be skipped by boots changing during the ledge climb
@@ -1252,10 +1252,10 @@ void RegionTable_Init_WaterTemple() {
         Entrance(RR_WATER_TEMPLE_MQ_SCARECROW_CANAL,   []{return ((logic->IsAdult && (logic->CanUse(RG_HOVER_BOOTS) || ctx->GetTrickOption(RT_WATER_NORTH_BASEMENT_LEDGE_JUMP))) ||
                                                                   (AnyAgeTime([]{return logic->ScarecrowsSong();}) && logic->CanUse(RG_HOOKSHOT))) &&
                                                                  (logic->IsAdult || (logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8));}),
-        });
+        Entrance(RR_WATER_TEMPLE_MQ_CRATE_VORTEX_CAGE, []{return ctx->GetTrickOption(RT_WATER_INVISIBLE_HOOKSHOT_TARGET) && logic->CanUse(RG_HOOKSHOT) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8;}),
+    });
 
-    areaTable[RR_WATER_TEMPLE_MQ_SCARECROW_CANAL] = Region("Water Temple MQ Scarecrow Canal", SCENE_WATER_TEMPLE, {},
-    {}, {
+    areaTable[RR_WATER_TEMPLE_MQ_SCARECROW_CANAL] = Region("Water Temple MQ Scarecrow Canal", SCENE_WATER_TEMPLE, {}, {}, {
         //Exits
         //making the jump as adult without jumpslash is possible, but hard enough to be a trick
         Entrance(RR_WATER_TEMPLE_MQ_CRATE_VORTEX_ROOM, []{return logic->HasItem(RG_BRONZE_SCALE) ||
@@ -1322,7 +1322,9 @@ void RegionTable_Init_WaterTemple() {
         LOCATION(RC_WATER_TEMPLE_MQ_WHIRLPOOL_BEHIND_GATE_CRATE_3,  logic->CanBreakCrates()),
         LOCATION(RC_WATER_TEMPLE_MQ_WHIRLPOOL_BEHIND_GATE_CRATE_4,  logic->CanBreakCrates()),
     }, {
-        Entrance(RR_WATER_TEMPLE_MQ_DODONGO_ROOM, []{return true;})
+        //Exits
+        Entrance(RR_WATER_TEMPLE_MQ_DODONGO_ROOM,      []{return true;}),
+        Entrance(RR_WATER_TEMPLE_MQ_CRATE_VORTEX_ROOM, []{return logic->CanUse(RG_LONGSHOT) && (logic->HasItem(RG_BRONZE_SCALE) || logic->CanUse(RG_IRON_BOOTS));}), // stand on crate to aim
     });
 
 #pragma endregion
