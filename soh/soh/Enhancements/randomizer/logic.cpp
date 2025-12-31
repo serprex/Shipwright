@@ -1024,7 +1024,7 @@ bool Logic::CanDetonateUprightBombFlower() {
 
 bool Logic::Water3FCentralToHighEmblem() {
     return (IsAdult && (CanUse(RG_HOVER_BOOTS) ||
-                        (ctx->GetTrickOption(RT_DAMAGE_BOOST) && CanUse(RG_BOMB_BAG) && TakeDamage()))) ||
+                        (ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && CanUse(RG_BOMB_BAG) && TakeDamage()))) ||
            (ctx->GetTrickOption(RT_GROUND_JUMP_HARD) && CanGroundJump() && CanUse(RG_HOVER_BOOTS)) ||
            (Get(LOGIC_WATER_SCARECROW) && CanUse(RG_HOOKSHOT));
 }
