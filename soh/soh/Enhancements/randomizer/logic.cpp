@@ -801,7 +801,7 @@ bool Logic::CanKillEnemy(RandomizerEnemy enemy, EnemyDistance distance, bool wal
             //  all swords can at least trade blows with dark link, and even with 1 damage a slash it works out
             return CanUseSword() ||
                    // Boomerang is a relaible, infinite ammo stun, so it enables any way to get enough damage with the
-                   // ammo we have Max HP dark link has 40 HP, bows and bombs do 2 so 2 ammo, stick jumpslash does 4 so
+                   // ammo we have Max HP dark link has 40 HP, bows and bombs do 2 so 20 ammo, stick jumpslash does 4 so
                    // 10 sticks
                    (CanUse(RG_BOOMERANG) &&
                     (CanUse(RG_FAIRY_BOW) || CanUse(RG_STICKS) || CanUse(RG_MEGATON_HAMMER) || HasExplosives())) ||
@@ -1060,8 +1060,7 @@ bool Logic::WaterLevel(RandoWaterLevel level) {
             return Get(LOGIC_WATER_LOW) ||
                    // if we could get LOW from HIGH and HIGH from MID, then we can move to LOW from any water level
                    (Get(LOGIC_WATER_COULD_LOW_FROM_HIGH) &&
-                    (Get(LOGIC_WATER_COULD_HIGH_FROM_MID) || Get(LOGIC_WATER_HIGH)) && CanUse(RG_ZELDAS_LULLABY)) ||
-                   (Get(LOGIC_WATER_LOW) && CanUse(RG_ZELDAS_LULLABY));
+                    (Get(LOGIC_WATER_COULD_HIGH_FROM_MID) || Get(LOGIC_WATER_HIGH)) && CanUse(RG_ZELDAS_LULLABY));
         case WL_LOW_OR_MID:
             return Get(LOGIC_WATER_LOW) || Get(LOGIC_WATER_MIDDLE) ||
                    // The water level is either at HIGH, in which case we can set it to LOW, LOW, or MID, so we only
@@ -1074,8 +1073,8 @@ bool Logic::WaterLevel(RandoWaterLevel level) {
                    (Get(LOGIC_WATER_LOW) && Get(LOGIC_WATER_COULD_MIDDLE)) ||
                    // If we have COULD_MIDDLE, we know we could move to LOW from HIGH,
                    // we're either already MID, on LOW can set MID, or on HIGH so you can set LOW and thus MID.
-                   ((Get(LOGIC_WATER_COULD_LOW_FROM_HIGH) || Get(LOGIC_WATER_LOW)) && Get(LOGIC_WATER_COULD_MIDDLE) &&
-                    CanUse(RG_ZELDAS_LULLABY));
+                   ((Get(LOGIC_WATER_COULD_LOW_FROM_HIGH) || Get(LOGIC_WATER_COULD_LOW)) &&
+                    Get(LOGIC_WATER_COULD_MIDDLE) && CanUse(RG_ZELDAS_LULLABY));
         case WL_HIGH:
             // If we don't have ZL, we're stuck on high anyway, so we only need to check for if we can reset it to high
             return Get(LOGIC_WATER_HIGH) ||
@@ -1216,14 +1215,14 @@ bool Logic::BlueFire() {
     return CanUse(RG_BOTTLE_WITH_BLUE_FIRE) || (ctx->GetOption(RSK_BLUE_FIRE_ARROWS) && CanUse(RG_ICE_ARROWS));
 }
 
-bool Logic::CanBreakPots(EnemyDistance distance, bool inWater) {
+bool Logic::CanBreakPots(EnemyDistance distance, bool wallOrFloor, bool inWater) {
     bool hit = false;
     switch (distance) {
         case ED_CLOSE:
             hit = true; // str0
             [[fallthrough]];
         case ED_SHORT_JUMPSLASH:
-            hit = CanUse(RG_KOKIRI_SWORD) || CanUse(RG_MEGATON_HAMMER);
+            hit = hit || CanUse(RG_KOKIRI_SWORD) || CanUse(RG_MEGATON_HAMMER);
             [[fallthrough]];
         case ED_MASTER_SWORD_JUMPSLASH:
             hit = hit || CanUse(RG_MASTER_SWORD);
@@ -1238,8 +1237,7 @@ bool Logic::CanBreakPots(EnemyDistance distance, bool inWater) {
             hit = hit || CanUse(RG_BOOMERANG);
             [[fallthrough]];
         case ED_HOOKSHOT:
-            // RANDOTODO test chu range in a practical example
-            hit = hit || CanUse(RG_HOOKSHOT) || CanUse(RG_BOMBCHU_5);
+            hit = hit || CanUse(RG_HOOKSHOT);
             [[fallthrough]];
         case ED_LONGSHOT:
             hit = hit || CanUse(RG_LONGSHOT);
@@ -1248,7 +1246,7 @@ bool Logic::CanBreakPots(EnemyDistance distance, bool inWater) {
             hit = hit || CanUse(RG_FAIRY_SLINGSHOT) || CanUse(RG_FAIRY_BOW);
             break;
     }
-    return hit;
+    return hit || (wallOrFloor && CanUse(RG_BOMBCHU_5));
 }
 
 bool Logic::CanBreakCrates() {
