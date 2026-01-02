@@ -485,8 +485,8 @@ void RegionTable_Init_WaterTemple() {
     //This region is not able to finish pushing the block out of the way to reach the chest
     areaTable[RR_WATER_TEMPLE_BLOCK_LOOP_3F_A] = Region("Water Temple Block Loop 3F Any Water", SCENE_WATER_TEMPLE, {}, {
         //Locations
-        LOCATION(RC_WATER_TEMPLE_MAIN_LEVEL_2_POT_1, logic->CanUse(RG_BOMBCHU_5) && (logic->HasItem(RG_GOLDEN_SCALE) || (logic->HasItem(RG_BRONZE_SCALE) && logic->CanUse(RG_IRON_BOOTS)))),
-        LOCATION(RC_WATER_TEMPLE_MAIN_LEVEL_2_POT_2, logic->CanUse(RG_BOMBCHU_5) && (logic->HasItem(RG_GOLDEN_SCALE) || (logic->HasItem(RG_BRONZE_SCALE) && logic->CanUse(RG_IRON_BOOTS)))),
+        LOCATION(RC_WATER_TEMPLE_MAIN_LEVEL_2_POT_1, logic->CanUse(RG_BOMBCHU_5) && (logic->HasItem(RG_GOLDEN_SCALE) || logic->CanUse(RG_IRON_BOOTS))),
+        LOCATION(RC_WATER_TEMPLE_MAIN_LEVEL_2_POT_2, logic->CanUse(RG_BOMBCHU_5) && (logic->HasItem(RG_GOLDEN_SCALE) || logic->CanUse(RG_IRON_BOOTS))),
     }, {
         //Exits
         Entrance(RR_WATER_TEMPLE_MAIN,         []{return true;}),
@@ -507,6 +507,7 @@ void RegionTable_Init_WaterTemple() {
         //Exits
         Entrance(RR_WATER_TEMPLE_BLOCK_LOOP_3F_A, []{return true;}),
         Entrance(RR_WATER_TEMPLE_3F_CENTRAL_LM,   []{return logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS);}),
+        Entrance(RR_WATER_TEMPLE_2F_CENTRAL_LM,   []{return true;}),
     });
 
     areaTable[RR_WATER_TEMPLE_OUTSIDE_WATERFALL] = Region("Water Temple Outside Waterfall", SCENE_WATER_TEMPLE, {}, {}, {
