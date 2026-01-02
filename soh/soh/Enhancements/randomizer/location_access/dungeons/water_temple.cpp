@@ -218,9 +218,9 @@ void RegionTable_Init_WaterTemple() {
         LOCATION(RC_WATER_TEMPLE_GS_NEAR_BOSS_KEY_CHEST, logic->CanUse(RG_LONGSHOT)),
     }, {
         //Exits
-        Entrance(RR_WATER_TEMPLE_SPIKE_MOAT,     []{return logic->SmallKeys(SCENE_WATER_TEMPLE, 4);}),
-        Entrance(RR_WATER_TEMPLE_BOULDERS_NORTH, []{return logic->HasItem(RG_BRONZE_SCALE) || (ctx->GetTrickOption(RT_WATER_INVISIBLE_HOOKSHOT_TARGET) && logic->CanUse(RG_HOOKSHOT) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8);}),
-        Entrance(RR_WATER_TEMPLE_BOULDER_CANAL,  []{return (logic->IsAdult && (logic->CanUse(RG_HOVER_BOOTS) || ctx->GetTrickOption(RT_WATER_NORTH_BASEMENT_LEDGE_JUMP))) ||
+        Entrance(RR_WATER_TEMPLE_BEHIND_SPIKE_MOAT, []{return logic->SmallKeys(SCENE_WATER_TEMPLE, 4);}),
+        Entrance(RR_WATER_TEMPLE_BOULDERS_NORTH,    []{return logic->HasItem(RG_BRONZE_SCALE) || (ctx->GetTrickOption(RT_WATER_INVISIBLE_HOOKSHOT_TARGET) && logic->CanUse(logic->IsAdult ? RG_HOOKSHOT : RG_LONGSHOT) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8);}),
+        Entrance(RR_WATER_TEMPLE_BOULDER_CANAL,     []{return (logic->IsAdult && (logic->CanUse(RG_HOVER_BOOTS) || ctx->GetTrickOption(RT_WATER_NORTH_BASEMENT_LEDGE_JUMP))) ||
                                                            // A midair ground jump gets child onto the ledge, but they can't reasonably do anything without irons, and this may need TakeDamage due to the boulders
                                                            // swim can be skipped by boots changing during the ledge climb
                                                            (ctx->GetTrickOption(RT_GROUND_JUMP_HARD) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanGroundJump() && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8);}),
@@ -302,9 +302,9 @@ void RegionTable_Init_WaterTemple() {
         LOCATION(RC_WATER_TEMPLE_GS_NEAR_BOSS_KEY_CHEST, (logic->IsAdult && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG)) || (logic->CanUse(RG_IRON_BOOTS) && logic->CanUse(RG_HOOKSHOT))),
     }, {
         //Exits
-        //walking downriver as child in irons gets you stuck with no way onto a ledge without swim
         //making the jump as adult without jumpslash is possible, but hard enough to be a trick
         Entrance(RR_WATER_TEMPLE_BOULDERS_SOUTH, []{return logic->HasItem(RG_BRONZE_SCALE) || (logic->IsAdult && (logic->CanJumpslash() || logic->CanUse(RG_HOVER_BOOTS)));}),
+        Entrance(RR_WATER_TEMPLE_BOULDERS_NORTH, []{return logic->HasItem(RG_BRONZE_SCALE) || (ctx->GetTrickOption(RT_WATER_INVISIBLE_HOOKSHOT_TARGET) && logic->CanUse(logic->IsAdult ? RG_HOOKSHOT : RG_LONGSHOT) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8);}),
         Entrance(RR_WATER_TEMPLE_CANAL_ALCOVE,   []{return logic->IsAdult;}),
         Entrance(RR_WATER_TEMPLE_BEHIND_CANAL,   []{return logic->CanUse(RG_IRON_BOOTS) && logic->HasItem(RG_BRONZE_SCALE) && logic->WaterTimer() >= 8;}),
     });
@@ -1292,7 +1292,7 @@ void RegionTable_Init_WaterTemple() {
         Entrance(RR_WATER_TEMPLE_MQ_SCARECROW_CANAL,   []{return ((logic->IsAdult && (logic->CanUse(RG_HOVER_BOOTS) || ctx->GetTrickOption(RT_WATER_NORTH_BASEMENT_LEDGE_JUMP))) ||
                                                                   (AnyAgeTime([]{return logic->ScarecrowsSong();}) && logic->CanUse(RG_HOOKSHOT))) &&
                                                                  (logic->IsAdult || (logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8));}),
-        Entrance(RR_WATER_TEMPLE_MQ_CRATE_VORTEX_CAGE, []{return ctx->GetTrickOption(RT_WATER_INVISIBLE_HOOKSHOT_TARGET) && logic->CanUse(RG_HOOKSHOT) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8;}),
+        Entrance(RR_WATER_TEMPLE_MQ_CRATE_VORTEX_CAGE, []{return ctx->GetTrickOption(RT_WATER_INVISIBLE_HOOKSHOT_TARGET) && logic->CanUse(logic->IsAdult ? RG_HOOKSHOT : RG_LONGSHOT) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 8;}),
     });
 
     areaTable[RR_WATER_TEMPLE_MQ_SCARECROW_CANAL] = Region("Water Temple MQ Scarecrow Canal", SCENE_WATER_TEMPLE, {}, {}, {
