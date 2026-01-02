@@ -203,9 +203,6 @@ void Kaleido::Draw(PlayState* play) {
     Matrix_Translate(-108.f, 58.f, 0.0f, MTXMODE_APPLY);
     // Invert the matrix to render vertices with positive going down
     Matrix_Scale(1.0f, -1.0f, 1.0f, MTXMODE_APPLY);
-    // The scrolling logic is in here because the built in kaleido input throttling happens
-    // in its Draw functions, which get called after their update functions. I hate it but fixing
-    // it would be a much larger Kaleido change.
     bool dpad = CVarGetInteger(CVAR_SETTING("DPadOnPause"), 0);
     if (((pauseCtx->unk_1E4 == 0) || (pauseCtx->unk_1E4 == 5) || (pauseCtx->unk_1E4 == 8)) &&
         (pauseCtx->pageIndex == PAUSE_QUEST)) {
