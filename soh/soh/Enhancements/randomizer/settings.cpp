@@ -1565,6 +1565,11 @@ void Settings::CreateOptions() {
               "Gerudo Valley Crate PoH as Adult with Hover Boots",
               "From the far side of Gerudo Valley, a precise Hover Boots movement and jump-slash recoil can allow "
               "adult to reach the ledge with the crate PoH without needing Longshot. You will take fall damage.");
+    OPT_TRICK(RT_GV_CHILD_CUCCO_JUMP, RCQUEST_BOTH, RA_GERUDO_VALLEY, { Tricks::Tag::INTERMEDIATE },
+              "Gerudo Valley Jump Fence with Cucco", "Using cucco as child, it's possible to jumpslash over the gate.");
+    OPT_TRICK(RT_GV_CHILD_TENT, RCQUEST_BOTH, RA_GERUDO_VALLEY, { Tricks::Tag::NOVICE },
+              "Gerudo Valley Enter Carpenter's Tent as Child",
+              "The loading zone for Carpenter's Tent is accessible to child.");
     OPT_TRICK(RT_PASS_GUARDS_WITH_NOTHING, RCQUEST_BOTH, RA_GERUDO_FORTRESS, { Tricks::Tag::NOVICE },
               "Sneak Past Moving Gerudo Guards with No Items",
               "The logic normally guarantees Bow or Hookshot to stun them from a distance,"
@@ -1572,6 +1577,12 @@ void Settings::CreateOptions() {
     OPT_TRICK(RT_GF_JUMP, RCQUEST_BOTH, RA_GERUDO_FORTRESS, { Tricks::Tag::NOVICE }, "Gerudo\'s Fortress Ledge Jumps",
               "It is possible to navigate the rooves of Fortress with unintuative jumps to reach additional areas "
               "without going inside.");
+    OPT_TRICK(RT_GF_CHILD_SKIP_WASTELAND_GATE, RCQUEST_BOTH, RA_GERUDO_FORTRESS, { Tricks::Tag::NOVICE },
+              "Gerudo\'s Fortress Skip Wasteland Gate as Child",
+              "As child a sidehop out of bounds off the tower can be used to get past the gate.");
+    OPT_TRICK(RT_GF_ADULT_SKIP_WASTELAND_GATE, RCQUEST_BOTH, RA_GERUDO_FORTRESS, { Tricks::Tag::INTERMEDIATE },
+              "Gerudo\'s Fortress Skip Wasteland Gate as Adult",
+              "As adult a precise jumpslash out of bounds with hoverboots can be used to get past the gate.");
     OPT_TRICK(RT_GF_WARRIOR_WITH_DIFFICULT_WEAPON, RCQUEST_BOTH, RA_GERUDO_FORTRESS, { Tricks::Tag::NOVICE },
               "Gerudo\'s Fortress Warriors with Difficult Weapons",
               "Warriors can be defeated with Slingshot or Bombchus.");
@@ -2242,7 +2253,135 @@ void Settings::CreateOptions() {
           &mOptions[RSK_MIX_BOSS_ENTRANCES], &mOptions[RSK_MIX_OVERWORLD_ENTRANCES],
           &mOptions[RSK_MIX_INTERIOR_ENTRANCES], &mOptions[RSK_MIX_THIEVES_HIDEOUT_ENTRANCES],
           &mOptions[RSK_MIX_GROTTO_ENTRANCES] },
-        WidgetContainerType::COLUMN);
+        WidgetContainerType::SECTION);
+    mOptionGroups[RSG_MENU_COLUMN_ENTRANCES] =
+        OptionGroup::SubGroup("", { &mOptionGroups[RSG_MENU_SECTION_ENTRANCES] }, WidgetContainerType::COLUMN);
+    mOptionGroups[RSG_MENU_SIDEBAR_LOGIC_ACCESS] =
+        OptionGroup::SubGroup("Logic/Access",
+                              std::initializer_list<OptionGroup*>{ &mOptionGroups[RSG_MENU_COLUMN_LOGIC_WINCON],
+                                                                   &mOptionGroups[RSG_MENU_COLUMN_AREA_ACCESS],
+                                                                   &mOptionGroups[RSG_MENU_COLUMN_ENTRANCES] },
+                              WidgetContainerType::TABLE);
+    mOptionGroups[RSG_MENU_SECTION_DUNGEON_ITEMS] = OptionGroup::SubGroup("Dungeon Items",
+                                                                          {
+                                                                              &mOptions[RSK_SHUFFLE_MAPANDCOMPASS],
+                                                                              &mOptions[RSK_KEYSANITY],
+                                                                              &mOptions[RSK_BOSS_KEYSANITY],
+                                                                              &mOptions[RSK_SHUFFLE_DUNGEON_REWARDS],
+                                                                              &mOptions[RSK_GERUDO_KEYS],
+                                                                              &mOptions[RSK_SHUFFLE_BOSS_SOULS],
+                                                                          },
+                                                                          WidgetContainerType::SECTION);
+    mOptionGroups[RSG_MENU_COLUMN_DUNGEON_ITEMS] =
+        OptionGroup::SubGroup("", { &mOptionGroups[RSG_MENU_SECTION_DUNGEON_ITEMS] }, WidgetContainerType::COLUMN);
+    mOptionGroups[RSG_MENU_SECTION_MQ] = OptionGroup::SubGroup("Master Quest",
+                                                               {
+                                                                   &mOptions[RSK_MQ_DUNGEON_RANDOM],
+                                                                   &mOptions[RSK_MQ_DUNGEON_COUNT],
+                                                                   &mOptions[RSK_MQ_DUNGEON_SET],
+                                                                   &mOptions[RSK_MQ_DEKU_TREE],
+                                                                   &mOptions[RSK_MQ_DODONGOS_CAVERN],
+                                                                   &mOptions[RSK_MQ_JABU_JABU],
+                                                                   &mOptions[RSK_MQ_FOREST_TEMPLE],
+                                                                   &mOptions[RSK_MQ_FIRE_TEMPLE],
+                                                                   &mOptions[RSK_MQ_WATER_TEMPLE],
+                                                                   &mOptions[RSK_MQ_SPIRIT_TEMPLE],
+                                                                   &mOptions[RSK_MQ_SHADOW_TEMPLE],
+                                                                   &mOptions[RSK_MQ_BOTTOM_OF_THE_WELL],
+                                                                   &mOptions[RSK_MQ_ICE_CAVERN],
+                                                                   &mOptions[RSK_MQ_GTG],
+                                                                   &mOptions[RSK_MQ_GANONS_CASTLE],
+                                                               },
+                                                               WidgetContainerType::SECTION);
+    mOptionGroups[RSG_MENU_COLUMN_MQ] =
+        OptionGroup::SubGroup("", { &mOptionGroups[RSG_MENU_SECTION_MQ] }, WidgetContainerType::COLUMN);
+    mOptionGroups[RSG_MENU_SECTION_KEYRINGS] = OptionGroup::SubGroup(
+        "Keyrings",
+        { &mOptions[RSK_KEYRINGS], &mOptions[RSK_KEYRINGS_RANDOM_COUNT], &mOptions[RSK_KEYRINGS_FOREST_TEMPLE],
+          &mOptions[RSK_KEYRINGS_FIRE_TEMPLE], &mOptions[RSK_KEYRINGS_WATER_TEMPLE],
+          &mOptions[RSK_KEYRINGS_SPIRIT_TEMPLE], &mOptions[RSK_KEYRINGS_SHADOW_TEMPLE],
+          &mOptions[RSK_KEYRINGS_BOTTOM_OF_THE_WELL], &mOptions[RSK_KEYRINGS_GTG],
+          &mOptions[RSK_KEYRINGS_GANONS_CASTLE], &mOptions[RSK_KEYRINGS_GERUDO_FORTRESS] },
+        WidgetContainerType::SECTION);
+    mOptionGroups[RSG_MENU_COLUMN_KEYRINGS] =
+        OptionGroup::SubGroup("", { &mOptionGroups[RSG_MENU_SECTION_KEYRINGS] }, WidgetContainerType::COLUMN);
+    mOptionGroups[RSG_MENU_SIDEBAR_DUNGEONS] = OptionGroup::SubGroup("Dungeons",
+                                                                     std::initializer_list<OptionGroup*>{
+                                                                         &mOptionGroups[RSG_MENU_COLUMN_DUNGEON_ITEMS],
+                                                                         &mOptionGroups[RSG_MENU_COLUMN_KEYRINGS],
+                                                                         &mOptionGroups[RSG_MENU_COLUMN_MQ],
+                                                                     },
+                                                                     WidgetContainerType::TABLE);
+    mOptionGroups[RSG_MENU_SECTION_BASIC_SHUFFLES] =
+        OptionGroup::SubGroup("Shuffle Items",
+                              {
+                                  &mOptions[RSK_SHUFFLE_SONGS],
+                                  &mOptions[RSK_SHUFFLE_TOKENS],
+                                  &mOptions[RSK_SHUFFLE_KOKIRI_SWORD],
+                                  &mOptions[RSK_SHUFFLE_MASTER_SWORD],
+                                  &mOptions[RSK_SHUFFLE_OCARINA],
+                                  &mOptions[RSK_SHUFFLE_WEIRD_EGG],
+                                  &mOptions[RSK_SHUFFLE_GERUDO_MEMBERSHIP_CARD],
+                                  &mOptions[RSK_FISHSANITY],
+                                  &mOptions[RSK_FISHSANITY_POND_COUNT],
+                                  &mOptions[RSK_FISHSANITY_AGE_SPLIT],
+                                  &mOptions[RSK_SHUFFLE_FREESTANDING],
+                                  &mOptions[RSK_SHUFFLE_BEEHIVES],
+                                  &mOptions[RSK_SHUFFLE_COWS],
+                                  &mOptions[RSK_SHUFFLE_POTS],
+                                  &mOptions[RSK_SHUFFLE_CRATES],
+                                  &mOptions[RSK_SHUFFLE_TREES],
+                                  &mOptions[RSK_SHUFFLE_BUSHES],
+                                  &mOptions[RSK_SHUFFLE_FROG_SONG_RUPEES],
+                                  &mOptions[RSK_SHUFFLE_ADULT_TRADE],
+                                  &mOptions[RSK_SHUFFLE_100_GS_REWARD],
+                                  &mOptions[RSK_SHUFFLE_FOUNTAIN_FAIRIES],
+                                  &mOptions[RSK_SHUFFLE_STONE_FAIRIES],
+                                  &mOptions[RSK_SHUFFLE_BEAN_FAIRIES],
+                                  &mOptions[RSK_SHUFFLE_SONG_FAIRIES],
+                              },
+                              WidgetContainerType::SECTION);
+    mOptionGroups[RSG_MENU_COLUMN_BASIC_SHUFFLES] =
+        OptionGroup::SubGroup("", { &mOptionGroups[RSG_MENU_SECTION_BASIC_SHUFFLES] }, WidgetContainerType::COLUMN);
+    mOptionGroups[RSG_MENU_SECTION_SHOP_SHUFFLES] =
+        OptionGroup::SubGroup("Shuffle Shops & Merchants",
+                              {
+                                  &mOptions[RSK_SHOPSANITY],
+                                  &mOptions[RSK_SHOPSANITY_COUNT],
+                                  &mOptions[RSK_SHOPSANITY_PRICES],
+                                  &mOptions[RSK_SHOPSANITY_PRICES_FIXED_PRICE],
+                                  &mOptions[RSK_SHOPSANITY_PRICES_RANGE_1],
+                                  &mOptions[RSK_SHOPSANITY_PRICES_RANGE_2],
+                                  &mOptions[RSK_SHOPSANITY_PRICES_NO_WALLET_WEIGHT],
+                                  &mOptions[RSK_SHOPSANITY_PRICES_CHILD_WALLET_WEIGHT],
+                                  &mOptions[RSK_SHOPSANITY_PRICES_ADULT_WALLET_WEIGHT],
+                                  &mOptions[RSK_SHOPSANITY_PRICES_GIANT_WALLET_WEIGHT],
+                                  &mOptions[RSK_SHOPSANITY_PRICES_TYCOON_WALLET_WEIGHT],
+                                  &mOptions[RSK_SHOPSANITY_PRICES_AFFORDABLE],
+                                  &mOptions[RSK_SHUFFLE_SCRUBS],
+                                  &mOptions[RSK_SCRUBS_PRICES],
+                                  &mOptions[RSK_SCRUBS_PRICES_FIXED_PRICE],
+                                  &mOptions[RSK_SCRUBS_PRICES_RANGE_1],
+                                  &mOptions[RSK_SCRUBS_PRICES_RANGE_2],
+                                  &mOptions[RSK_SCRUBS_PRICES_NO_WALLET_WEIGHT],
+                                  &mOptions[RSK_SCRUBS_PRICES_CHILD_WALLET_WEIGHT],
+                                  &mOptions[RSK_SCRUBS_PRICES_ADULT_WALLET_WEIGHT],
+                                  &mOptions[RSK_SCRUBS_PRICES_GIANT_WALLET_WEIGHT],
+                                  &mOptions[RSK_SCRUBS_PRICES_TYCOON_WALLET_WEIGHT],
+                                  &mOptions[RSK_SCRUBS_PRICES_AFFORDABLE],
+                                  &mOptions[RSK_SHUFFLE_MERCHANTS],
+                                  &mOptions[RSK_MERCHANT_PRICES],
+                                  &mOptions[RSK_MERCHANT_PRICES_FIXED_PRICE],
+                                  &mOptions[RSK_MERCHANT_PRICES_RANGE_1],
+                                  &mOptions[RSK_MERCHANT_PRICES_RANGE_2],
+                                  &mOptions[RSK_MERCHANT_PRICES_NO_WALLET_WEIGHT],
+                                  &mOptions[RSK_MERCHANT_PRICES_CHILD_WALLET_WEIGHT],
+                                  &mOptions[RSK_MERCHANT_PRICES_ADULT_WALLET_WEIGHT],
+                                  &mOptions[RSK_MERCHANT_PRICES_GIANT_WALLET_WEIGHT],
+                                  &mOptions[RSK_MERCHANT_PRICES_TYCOON_WALLET_WEIGHT],
+                                  &mOptions[RSK_MERCHANT_PRICES_AFFORDABLE],
+                              },
+                              WidgetContainerType::SECTION);
     mOptionGroups[RSG_MENU_COLUMN_SHOP_SHUFFLES] =
         OptionGroup::SubGroup("", { &mOptionGroups[RSG_MENU_SECTION_SHOP_SHUFFLES] }, WidgetContainerType::COLUMN);
     mOptionGroups[RSG_MENU_SECTION_ADDITIONAL_ITEMS] = OptionGroup::SubGroup("Additional Items",
