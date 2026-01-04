@@ -189,7 +189,7 @@ void RegionTable_Init_GerudoTrainingGround() {
         EventAccess(LOGIC_GTG_SILVER_WATER, []{return logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_IRON_BOOTS) && logic->HasItem(RG_BRONZE_SCALE) && logic->WaterTimer() >= 24;}),
     }, {
         //Locations
-        LOCATION(RC_GERUDO_TRAINING_GROUND_UNDERWATER_SILVER_RUPEE_CHEST, logic->Get(LOGIC_GTG_SILVER_WATER) && logic->HasItem(RG_OPEN_CHEST)),
+        LOCATION(RC_GERUDO_TRAINING_GROUND_UNDERWATER_SILVER_RUPEE_CHEST, logic->HasItem(RG_GTG_SILVER_WATER) && logic->HasItem(RG_OPEN_CHEST)),
         // 3 & 5 can be retrieved with only iron boots by attempting to backflip underwater
         LOCATION(RC_GTG_SILVER_WATER_1, logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 16),
         LOCATION(RC_GTG_SILVER_WATER_2, logic->CanUse(RG_SONG_OF_TIME) && (logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 16) || logic->HasItem(RG_GOLDEN_SCALE)),

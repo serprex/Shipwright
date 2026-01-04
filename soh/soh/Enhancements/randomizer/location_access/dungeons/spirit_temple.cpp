@@ -1073,11 +1073,6 @@ void RegionTable_Init_SpiritTemple() {
         //Locations
         LOCATION(RC_SPIRIT_TEMPLE_MQ_LONG_CLIMB_POT_1, logic->CanBreakPots()),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_LONG_CLIMB_POT_2, logic->CanBreakPots()),
-        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_1, true),
-        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_2, true),
-        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_3, true),
-        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_4, true),
-        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_5, true),
     }, {
         //Exits
         ENTRANCE(RR_SPIRIT_TEMPLE_MQ_BEAMOS_PITS,    true),
@@ -1089,10 +1084,16 @@ void RegionTable_Init_SpiritTemple() {
         //Events
         //Getting some of these with just climbing downwards is theoretically possible but definitely a trick
         EVENT_ACCESS(LOGIC_SPIRIT_MQ_BIG_WALL_SILVERS, (logic->CanKillEnemy(RE_KEESE) || logic->CanUse(RG_SKULL_MASK)) && (logic->HasItem(RG_CLIMB) || logic->CanUse(RG_LONGSHOT))),
-    }, {}, {
+    }, {
+        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_1, logic->Get(LOGIC_SPIRIT_MQ_SILVER_BIG_WALL) || logic->TakeDamage()),
+        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_2, logic->Get(LOGIC_SPIRIT_MQ_SILVER_BIG_WALL) || logic->TakeDamage()),
+        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_3, logic->Get(LOGIC_SPIRIT_MQ_SILVER_BIG_WALL) || logic->TakeDamage()),
+        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_4, logic->Get(LOGIC_SPIRIT_MQ_SILVER_BIG_WALL) || logic->TakeDamage()),
+        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_5, logic->Get(LOGIC_SPIRIT_MQ_SILVER_BIG_WALL) || logic->TakeDamage()),
+    }, {
         //Exits
         ENTRANCE(RR_SPIRIT_TEMPLE_MQ_BIG_WALL_BASE, true),
-        ENTRANCE(RR_SPIRIT_TEMPLE_MQ_4F_CENTRAL,    logic->Get(LOGIC_SPIRIT_MQ_BIG_WALL_SILVERS)),
+        ENTRANCE(RR_SPIRIT_TEMPLE_MQ_4F_CENTRAL,    logic->HasItem(RG_SPIRIT_MQ_SILVER_BIG_WALL)),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_MQ_4F_CENTRAL] = Region("Spirit Temple MQ 4F Central", SCENE_SPIRIT_TEMPLE, {}, {
