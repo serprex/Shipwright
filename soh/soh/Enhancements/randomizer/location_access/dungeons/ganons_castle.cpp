@@ -175,19 +175,61 @@ void RegionTable_Init_GanonsCastle() {
         Entrance(RR_GANONS_CASTLE_WATER_TRIAL_BLOCK_ROOM_END, []{return true;}),
     });
 
-    areaTable[RR_GANONS_CASTLE_SHADOW_TRIAL_START] = Region("Ganon's Castle Shadow Trial Main Room", SCENE_INSIDE_GANONS_CASTLE, {}, {
+    areaTable[RR_GANONS_CASTLE_SHADOW_TRIAL_START] = Region("Ganon's Castle Shadow Trial Start", SCENE_INSIDE_GANONS_CASTLE, {}, {
         //Locations
-        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_FRONT_CHEST,            logic->CanUse(RG_FIRE_ARROWS) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_SONG_OF_TIME) || logic->IsChild),
-        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_GOLDEN_GAUNTLETS_CHEST, logic->CanUse(RG_FIRE_ARROWS) || (logic->CanUse(RG_LONGSHOT) && (logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_DINS_FIRE)))),
-        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_POT_1,                  logic->CanUse(RG_FIRE_ARROWS) || logic->CanUse(RG_LONGSHOT)),
-        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_POT_2,                  logic->CanUse(RG_FIRE_ARROWS) || logic->CanUse(RG_LONGSHOT)),
-        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_HEART_1,                (logic->CanUse(RG_FIRE_ARROWS) || (logic->CanUse(RG_LONGSHOT) && (logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_DINS_FIRE)))) && (ctx->GetTrickOption(RT_LENS_GANON) || logic->CanUse(RG_LENS_OF_TRUTH) || logic->CanUse(RG_BOOMERANG))),
-        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_HEART_2,                (logic->CanUse(RG_FIRE_ARROWS) || (logic->CanUse(RG_LONGSHOT) && (logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_DINS_FIRE)))) && (ctx->GetTrickOption(RT_LENS_GANON) || logic->CanUse(RG_LENS_OF_TRUTH) || logic->CanUse(RG_BOOMERANG))),
-        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_HEART_3,                (logic->CanUse(RG_FIRE_ARROWS) || (logic->CanUse(RG_LONGSHOT) && (logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_DINS_FIRE)))) && (ctx->GetTrickOption(RT_LENS_GANON) || logic->CanUse(RG_LENS_OF_TRUTH) || logic->CanUse(RG_BOOMERANG))),
+        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_FRONT_CHEST, logic->CanUse(RG_FIRE_ARROWS) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_SONG_OF_TIME) || logic->IsChild),
     }, {
         //Exits
-        Entrance(RR_GANONS_CASTLE_MAIN,                    []{return true;}),
-        Entrance(RR_GANONS_CASTLE_SHADOW_TRIAL_FINAL_ROOM, []{return logic->CanUse(RG_MEGATON_HAMMER) && ((logic->CanUse(RG_FIRE_ARROWS) && (ctx->GetTrickOption(RT_LENS_GANON) || logic->CanUse(RG_LENS_OF_TRUTH))) || (logic->CanUse(RG_LONGSHOT) && (logic->CanUse(RG_HOVER_BOOTS) || (logic->CanUse(RG_DINS_FIRE) && (ctx->GetTrickOption(RT_LENS_GANON) || logic->CanUse(RG_LENS_OF_TRUTH))))));}),
+        Entrance(RR_GANONS_CASTLE_MAIN,                       []{return true;}),
+        Entrance(RR_GANONS_CASTLE_SHADOW_TRIAL_POTS_PLATFORM,  []{return logic->CanUse(RG_FIRE_ARROWS) || logic->CanUse(RG_LONGSHOT);}),
+        // shortcut for longshot to torch, dins, longshot to like like, run to chest platform
+        Entrance(RR_GANONS_CASTLE_SHADOW_TRIAL_CHEST_PLATFORM, []{return logic->CanUse(RG_DINS_FIRE) && logic->CanUse(RG_LONGSHOT);}),
+    });
+
+    areaTable[RR_GANONS_CASTLE_SHADOW_TRIAL_POTS_PLATFORM] = Region("Ganon's Castle Shadow Pots Platform", SCENE_INSIDE_GANONS_CASTLE, {}, {
+        //Locations
+        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_POT_1, logic->CanBreakPots()),
+        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_POT_2, logic->CanBreakPots()),
+    }, {
+        //Exits
+        Entrance(RR_GANONS_CASTLE_SHADOW_TRIAL_START,          []{return logic->CanUse(RG_FIRE_ARROWS) || logic->CanUse(RG_LONGSHOT);}),
+        Entrance(RR_GANONS_CASTLE_SHADOW_TRIAL_CHEST_PLATFORM, []{return logic->CanUse(RG_FIRE_ARROWS) || logic->CanUse(RG_HOVER_BOOTS) || (logic->Get(LOGIC_SHADOW_TRIAL_LOWER_SWITCH) && logic->CanUse(RG_HOOKSHOT));}),
+    });
+
+    areaTable[RR_GANONS_CASTLE_SHADOW_TRIAL_CHEST_PLATFORM] = Region("Ganon's Castle Shadow Chest Platform", SCENE_INSIDE_GANONS_CASTLE, {
+        //Events
+        EventAccess(LOGIC_SHADOW_TRIAL_RUSTED_SWITCH, []{return (ctx->GetTrickOption(RT_LENS_GANON) || logic->CanUse(RG_LENS_OF_TRUTH) || logic->CanUse(RG_HOVER_BOOTS)) && logic->CanUse(RG_MEGATON_HAMMER);}),
+    }, {
+        //Locations
+        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_GOLDEN_GAUNTLETS_CHEST, logic->Get(LOGIC_SHADOW_TRIAL_LOWER_SWITCH)),
+        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_HEART_1,                ctx->GetTrickOption(RT_LENS_GANON) || logic->CanUse(RG_LENS_OF_TRUTH) || logic->CanUse(RG_BOOMERANG)),
+        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_HEART_2,                ctx->GetTrickOption(RT_LENS_GANON) || logic->CanUse(RG_LENS_OF_TRUTH) || logic->CanUse(RG_BOOMERANG)),
+        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_HEART_3,                ctx->GetTrickOption(RT_LENS_GANON) || logic->CanUse(RG_LENS_OF_TRUTH) || logic->CanUse(RG_BOOMERANG)),
+    }, {
+        //Exits
+        Entrance(RR_GANONS_CASTLE_SHADOW_TRIAL_POTS_PLATFORM, []{return logic->CanUse(RG_FIRE_ARROWS) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS);}),
+        Entrance(RR_GANONS_CASTLE_SHADOW_TRIAL_LOWER_SWITCH,  []{return logic->CanUse(RG_FIRE_ARROWS) || ctx->GetTrickOption(RT_LENS_GANON) || logic->CanUse(RG_LENS_OF_TRUTH) || logic->CanUse(RG_HOVER_BOOTS);}),
+        Entrance(RR_GANONS_CASTLE_SHADOW_TRIAL_END,           []{return ctx->GetTrickOption(RT_LENS_GANON) || logic->CanUse(RG_LENS_OF_TRUTH);}),
+    });
+
+    areaTable[RR_GANONS_CASTLE_SHADOW_TRIAL_LOWER_SWITCH] = Region("Ganon's Castle Shadow Trial Lower Switch", SCENE_INSIDE_GANONS_CASTLE, {
+        //Events
+        EventAccess(LOGIC_SHADOW_TRIAL_LOWER_SWITCH, []{return true;}),
+    }, {}, {
+        //Exits
+        Entrance(RR_GANONS_CASTLE_SHADOW_TRIAL_CHEST_PLATFORM, []{return logic->CanUse(RG_FIRE_ARROWS) || (logic->Get(LOGIC_SHADOW_TRIAL_LOWER_SWITCH) && logic->CanUse(RG_LONGSHOT));}),
+    });
+
+    areaTable[RR_GANONS_CASTLE_SHADOW_TRIAL_END] = Region("Ganon's Castle Shadow Trial End", SCENE_INSIDE_GANONS_CASTLE, {}, {
+        //Locations
+        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_HEART_2, logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_BOOMERANG)),
+        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_HEART_3, logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_BOOMERANG)),
+    }, {
+        //Exits
+        Entrance(RR_GANONS_CASTLE_SHADOW_TRIAL_CHEST_PLATFORM, []{return (ctx->GetTrickOption(RT_LENS_GANON) || logic->CanUse(RG_LENS_OF_TRUTH)) || (logic->CanUse(RG_HOVER_BOOTS) && logic->HasFireSource()) || (logic->Get(LOGIC_SHADOW_TRIAL_LOWER_SWITCH) && logic->CanUse(RG_LONGSHOT));}),
+        Entrance(RR_GANONS_CASTLE_SHADOW_TRIAL_POTS_PLATFORM,  []{return logic->CanUse(RG_LONGSHOT) && logic->CanUse(RG_DINS_FIRE) && (ctx->GetTrickOption(RT_LENS_GANON) || logic->CanUse(RG_LENS_OF_TRUTH));}),
+        Entrance(RR_GANONS_CASTLE_SHADOW_TRIAL_LOWER_SWITCH,   []{return logic->CanUse(RG_HOVER_BOOTS);}),
+        Entrance(RR_GANONS_CASTLE_SHADOW_TRIAL_FINAL_ROOM,     []{return logic->Get(LOGIC_SHADOW_TRIAL_RUSTED_SWITCH);}),
     });
 
     areaTable[RR_GANONS_CASTLE_SHADOW_TRIAL_FINAL_ROOM] = Region("Ganon's Castle Shadow Trial Final Room", SCENE_INSIDE_GANONS_CASTLE, {
@@ -199,7 +241,7 @@ void RegionTable_Init_GanonsCastle() {
         LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_POT_4, logic->CanBreakPots()),
     }, {
         //Exits
-        Entrance(RR_GANONS_CASTLE_SHADOW_TRIAL_START, []{return true;}),
+        Entrance(RR_GANONS_CASTLE_SHADOW_TRIAL_END, []{return true;}),
     });
 
     areaTable[RR_GANONS_CASTLE_SPIRIT_TRIAL_BEAMOS_ROOM] = Region("Ganon's Castle Spirit Trial Beamos Room", SCENE_INSIDE_GANONS_CASTLE, {}, {
