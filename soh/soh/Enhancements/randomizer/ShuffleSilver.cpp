@@ -87,31 +87,60 @@ static bool IsSilverCleared(s16 switchFlag) {
     return false;
 }
 
+extern "C" void EnGSwitch_RandomizerDraw(Actor* thisx, PlayState* play) {
+    EnGSwitch* silver = reinterpret_cast<EnGSwitch*>(thisx);
+    Matrix_Push();
+    Matrix_Scale(17.5f, 17.5f, 17.5f, MTXMODE_APPLY);
+    if (silver->type == ENGSWITCH_SILVER_RUPEE) {
+        if (CVarGetInteger(CVAR_RANDOMIZER_ENHANCEMENT("MysteriousShuffle"), 0)) {
+            GetItemEntry_Draw(play, GET_ITEM_MYSTERY);
+        } else {
+            auto silverIdentity =
+                OTRGlobals::Instance->gRandomizer->IdentifySilver(gPlayState->sceneNum, silver->actor.world.pos);
+            auto itemEntry =
+                Rando::Context::GetInstance()->GetFinalGIEntry(silverIdentity.randomizerCheck, true, GI_NONE);
+            GetItemEntry_Draw(play, itemEntry);
+        }
+        Matrix_Pop();
+    }
+}
+
 void RegisterShuffleSilver() {
     bool shouldRegister = IS_RANDO && RAND_GET_OPTION(RSK_SHUFFLE_SILVER);
+
+    COND_VB_SHOULD(VB_SILVER_COLLECT, shouldRegister, {
+        if (*should) {
+            EnGSwitch* silver = va_arg(args, EnGSwitch*);
+            auto silverIdentity =
+                OTRGlobals::Instance->gRandomizer->IdentifySilver(gPlayState->sceneNum, silver->actor.world.pos);
+            Flags_SetRandomizerInf(silverIdentity.randomizerInf);
+            Actor_Kill(&silver->actor);
+            *should = false;
+        }
+    });
+
+    COND_VB_SHOULD(VB_SILVER_COUNT_CHECK, shouldRegister, {
+        EnGSwitch* silver = va_arg(args, EnGSwitch*);
+        *should = false;
+        if (IsSilverCleared(silver->switchFlag)) {
+            Flags_SetSwitch(gPlayState, silver->switchFlag);
+            Actor_Kill(&silver->actor);
+        }
+    });
 
     COND_VB_SHOULD(VB_SILVER_DESPAWN, shouldRegister, {
         EnGSwitch* silver = va_arg(args, EnGSwitch*);
         if (silver->type == ENGSWITCH_SILVER_RUPEE) {
-            auto silverIdentity = OTRGlobals::Instance->gRandomizer->IdentifySilver(
-                gPlayState->sceneNum, (s16)silver->actor.world.pos.x, (s16)silver->actor.world.pos.z);
-            *should = true;
+            auto silverIdentity =
+                OTRGlobals::Instance->gRandomizer->IdentifySilver(gPlayState->sceneNum, silver->actor.world.pos);
             if (silverIdentity.randomizerCheck == RC_UNKNOWN_CHECK ||
                 Flags_GetRandomizerInf(silverIdentity.randomizerInf)) {
+                *should = true;
                 return;
             }
-
-            EnItem00* item00 =
-                (EnItem00*)Item_DropCollectible2(gPlayState, &silver->actor.world.pos, ITEM00_SOH_DUMMY | 0x4000);
-            item00->randoCheck = silverIdentity.randomizerCheck;
-            item00->randoInf = silverIdentity.randomizerInf;
-            item00->itemEntry =
-                Rando::Context::GetInstance()->GetFinalGIEntry(silverIdentity.randomizerCheck, false, GI_RUPEE_BLUE);
-            item00->actor.draw = (ActorFunc)EnItem00_DrawRandomizedItem;
-        } else if (silver->type == ENGSWITCH_SILVER_TRACKER) {
-            if (IsSilverCleared(silver->switchFlag)) {
-                Flags_SetSwitch(gPlayState, silver->switchFlag);
-            }
+            silver->actor.draw = EnGSwitch_RandomizerDraw;
+        } else if (silver->type == ENGSWITCH_SILVER_TRACKER && IsSilverCleared(silver->switchFlag)) {
+            Flags_SetSwitch(gPlayState, silver->switchFlag);
             *should = true;
         }
     });
@@ -214,8 +243,8 @@ void Rando::StaticData::RegisterSilverLocations() {
     locationTable[RC_SHADOW_MQ_SILVER_BLADES_4] =            Location::Collectable(RC_SHADOW_MQ_SILVER_BLADES_4,            RCQUEST_MQ,         RCTYPE_SILVER, ACTOR_EN_G_SWITCH, SCENE_SHADOW_TEMPLE,                TWO_ACTOR_PARAMS(3399, -838 ),     "RC_SHADOW_MQ_SILVER_BLADES_4",            RHT_SHADOW_TEMPLE_SILVER,                                RG_BLUE_RUPEE,        SpoilerCollectionCheck::RandomizerInf(RAND_INF_SHADOW_MQ_SILVER_BLADES_4));
     locationTable[RC_SHADOW_MQ_SILVER_BLADES_5] =            Location::Collectable(RC_SHADOW_MQ_SILVER_BLADES_5,            RCQUEST_MQ,         RCTYPE_SILVER, ACTOR_EN_G_SWITCH, SCENE_SHADOW_TEMPLE,                TWO_ACTOR_PARAMS(3558, -1490),     "RC_SHADOW_MQ_SILVER_BLADES_5",            RHT_SHADOW_TEMPLE_SILVER,                                RG_BLUE_RUPEE,        SpoilerCollectionCheck::RandomizerInf(RAND_INF_SHADOW_MQ_SILVER_BLADES_5));
     locationTable[RC_SHADOW_MQ_SILVER_PIT_1] =               Location::Collectable(RC_SHADOW_MQ_SILVER_PIT_1,               RCQUEST_MQ,         RCTYPE_SILVER, ACTOR_EN_G_SWITCH, SCENE_SHADOW_TEMPLE,                TWO_ACTOR_PARAMS(1970, 3372),      "RC_SHADOW_MQ_SILVER_PIT_1",               RHT_SHADOW_TEMPLE_SILVER,                                RG_BLUE_RUPEE,        SpoilerCollectionCheck::RandomizerInf(RAND_INF_SHADOW_MQ_SILVER_PIT_1));
-    locationTable[RC_SHADOW_MQ_SILVER_PIT_2] =               Location::Collectable(RC_SHADOW_MQ_SILVER_PIT_2,               RCQUEST_MQ,         RCTYPE_SILVER, ACTOR_EN_G_SWITCH, SCENE_SHADOW_TEMPLE,                TWO_ACTOR_PARAMS(2110, 3372),      "RC_SHADOW_MQ_SILVER_PIT_2",               RHT_SHADOW_TEMPLE_SILVER,                                RG_BLUE_RUPEE,        SpoilerCollectionCheck::RandomizerInf(RAND_INF_SHADOW_MQ_SILVER_PIT_2));
-    locationTable[RC_SHADOW_MQ_SILVER_PIT_3] =               Location::Collectable(RC_SHADOW_MQ_SILVER_PIT_3,               RCQUEST_MQ,         RCTYPE_SILVER, ACTOR_EN_G_SWITCH, SCENE_SHADOW_TEMPLE,                TWO_ACTOR_PARAMS(2110, 3372),      "RC_SHADOW_MQ_SILVER_PIT_3",               RHT_SHADOW_TEMPLE_SILVER,                                RG_BLUE_RUPEE,        SpoilerCollectionCheck::RandomizerInf(RAND_INF_SHADOW_MQ_SILVER_PIT_3));
+    locationTable[RC_SHADOW_MQ_SILVER_PIT_2] =               Location::Collectable(RC_SHADOW_MQ_SILVER_PIT_2,               RCQUEST_MQ,         RCTYPE_SILVER, ACTOR_EN_G_SWITCH, SCENE_SHADOW_TEMPLE,                TWO_ACTOR_PARAMS(2110, -970),      "RC_SHADOW_MQ_SILVER_PIT_2",               RHT_SHADOW_TEMPLE_SILVER,                                RG_BLUE_RUPEE,        SpoilerCollectionCheck::RandomizerInf(RAND_INF_SHADOW_MQ_SILVER_PIT_2));
+    locationTable[RC_SHADOW_MQ_SILVER_PIT_3] =               Location::Collectable(RC_SHADOW_MQ_SILVER_PIT_3,               RCQUEST_MQ,         RCTYPE_SILVER, ACTOR_EN_G_SWITCH, SCENE_SHADOW_TEMPLE,                TWO_ACTOR_PARAMS(2110, -1092),     "RC_SHADOW_MQ_SILVER_PIT_3",               RHT_SHADOW_TEMPLE_SILVER,                                RG_BLUE_RUPEE,        SpoilerCollectionCheck::RandomizerInf(RAND_INF_SHADOW_MQ_SILVER_PIT_3));
     locationTable[RC_SHADOW_MQ_SILVER_PIT_4] =               Location::Collectable(RC_SHADOW_MQ_SILVER_PIT_4,               RCQUEST_MQ,         RCTYPE_SILVER, ACTOR_EN_G_SWITCH, SCENE_SHADOW_TEMPLE,                TWO_ACTOR_PARAMS(2131, 3030),      "RC_SHADOW_MQ_SILVER_PIT_4",               RHT_SHADOW_TEMPLE_SILVER,                                RG_BLUE_RUPEE,        SpoilerCollectionCheck::RandomizerInf(RAND_INF_SHADOW_MQ_SILVER_PIT_4));
     locationTable[RC_SHADOW_MQ_SILVER_PIT_5] =               Location::Collectable(RC_SHADOW_MQ_SILVER_PIT_5,               RCQUEST_MQ,         RCTYPE_SILVER, ACTOR_EN_G_SWITCH, SCENE_SHADOW_TEMPLE,                TWO_ACTOR_PARAMS(2250, 3372),      "RC_SHADOW_MQ_SILVER_PIT_5",               RHT_SHADOW_TEMPLE_SILVER,                                RG_BLUE_RUPEE,        SpoilerCollectionCheck::RandomizerInf(RAND_INF_SHADOW_MQ_SILVER_PIT_5));
     locationTable[RC_SHADOW_MQ_SILVER_INVISIBLE_BLADES_1] =  Location::Collectable(RC_SHADOW_MQ_SILVER_INVISIBLE_BLADES_1,  RCQUEST_MQ,         RCTYPE_SILVER, ACTOR_EN_G_SWITCH, SCENE_SHADOW_TEMPLE,                TWO_ACTOR_PARAMS(5089, 2049),      "RC_SHADOW_MQ_SILVER_INVISIBLE_BLADES_1",  RHT_SHADOW_TEMPLE_SILVER,                                RG_BLUE_RUPEE,        SpoilerCollectionCheck::RandomizerInf(RAND_INF_SHADOW_MQ_SILVER_INVISIBLE_BLADES_1));

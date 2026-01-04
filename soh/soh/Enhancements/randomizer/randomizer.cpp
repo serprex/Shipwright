@@ -4628,13 +4628,16 @@ CheckIdentity Randomizer::IdentifyRedIce(s32 sceneNum, s32 posX, s32 posZ) {
     return redIceIdentity;
 }
 
-CheckIdentity Randomizer::IdentifySilver(s32 sceneNum, s32 posX, s32 posZ) {
+CheckIdentity Randomizer::IdentifySilver(s32 sceneNum, Vec3f pos) {
     struct CheckIdentity silverIdentity;
 
     silverIdentity.randomizerInf = RAND_INF_MAX;
     silverIdentity.randomizerCheck = RC_UNKNOWN_CHECK;
 
-    s32 actorParams = TWO_ACTOR_PARAMS(posX, posZ);
+    s32 actorParams = TWO_ACTOR_PARAMS((s16)pos.x, (s16)pos.z);
+    if (sceneNum == SCENE_SHADOW_TEMPLE && actorParams == TWO_ACTOR_PARAMS(2110, 3372)) {
+        actorParams = TWO_ACTOR_PARAMS((s16)pos.x, (s16)pos.y);
+    }
 
     Rando::Location* location = GetCheckObjectFromActor(ACTOR_EN_G_SWITCH, sceneNum, actorParams);
 

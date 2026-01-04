@@ -46,7 +46,7 @@ class Randomizer {
     CheckIdentity IdentifyBeggar(s32 sceneNum, s32 textId);
     CheckIdentity IdentifyIcicle(s32 sceneNum, s32 posX, s32 posZ);
     CheckIdentity IdentifyRedIce(s32 sceneNum, s32 posX, s32 posZ);
-    CheckIdentity IdentifySilver(s32 sceneNum, s32 posX, s32 posZ);
+    CheckIdentity IdentifySilver(s32 sceneNum, Vec3f pos);
     GetItemEntry GetItemFromKnownCheck(RandomizerCheck randomizerCheck, GetItemID ogItemId,
                                        bool checkObtainability = true);
     GetItemEntry GetItemFromActor(s16 actorId, s16 sceneNum, s16 actorParams, GetItemID ogItemId,
