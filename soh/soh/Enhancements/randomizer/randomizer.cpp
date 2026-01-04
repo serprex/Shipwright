@@ -5290,7 +5290,7 @@ void Randomizer::CreateCustomMessages() {
         GIMESSAGE(RG_BRONZE_SCALE, ITEM_SCALE_SILVER, "You got the %rBronze Scale%w!&The power of buoyancy is yours!",
                   "Du hast die %rBronzene Schuppe%w&erhalten! Die Fähigkeit zu&Schwimmen ist nun dein!",
                   "Vous obtenez l'%rÉcaille de Bronze%w!&Le pouvoir de la flottabilité est&à vous!"),
-        GIMESSAGE_NO_GERMAN(RG_CRAWL, ITEM_SCALE_SILVER,
+        GIMESSAGE_NO_GERMAN(RG_CRAWL, ITEM_SCALE_SILVER, // TODO_TRANSLATE
                             "You got the %rAbility to Crawl%w!&The power of kneecaps is yours!",
                             "Vous obtenez la %rCapacité à Ramper%w!"),
         GIMESSAGE(RG_FISHING_POLE, ITEM_FISHING_POLE, "You found a lost %rFishing Pole%w!&Time to hit the pond!",
