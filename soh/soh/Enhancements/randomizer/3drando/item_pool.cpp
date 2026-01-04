@@ -393,7 +393,7 @@ void GenerateItemPool() {
     AddItemToPool(RG_PROGRESSIVE_SCALE, 3 + bronzeScale, 2 + bronzeScale, 2 + bronzeScale, 2 + bronzeScale);
 
     if (ctx->GetOption(RSK_SHUFFLE_CLIMB)) {
-        AddFixedItemToPool(RG_CLIMB, 1);
+        AddItemToPool(RG_CLIMB, 2, 1, 1, 1);
     }
 
     if (ctx->GetOption(RSK_SHUFFLE_BEEHIVES)) {
