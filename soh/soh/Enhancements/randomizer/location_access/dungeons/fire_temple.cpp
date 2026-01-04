@@ -11,7 +11,7 @@ void RegionTable_Init_FireTemple() {
         //Exits
         Entrance(RR_FIRE_TEMPLE_FOYER,          []{return ctx->GetDungeon(FIRE_TEMPLE)->IsVanilla();}),
         Entrance(RR_FIRE_TEMPLE_MQ_FOYER_LOWER, []{return ctx->GetDungeon(FIRE_TEMPLE)->IsMQ();}),
-        Entrance(RR_DMC_CENTRAL_LOCAL,          []{return true;}),
+        Entrance(RR_DMC_OUTSIDE_FIRE_TEMPLE,    []{return true;}),
     });
 
 #pragma region Vanilla
@@ -387,7 +387,7 @@ void RegionTable_Init_FireTemple() {
     areaTable[RR_FIRE_TEMPLE_SWITCH_CLIMB] = Region("Fire Temple Switch Climb", SCENE_FIRE_TEMPLE, {}, {}, {
         //Exits
         Entrance(RR_FIRE_TEMPLE_ABOVE_3F_FLARE_DANCER, []{return true;}),
-        Entrance(RR_FIRE_TEMPLE_NARROW_STAIRS,         []{return logic->CanHitSwitch(ED_BOMB_THROW) && logic->CanUse(RG_CLIMB);}),
+        Entrance(RR_FIRE_TEMPLE_NARROW_STAIRS,         []{return logic->CanHitSwitch(ED_BOMB_THROW) && logic->HasItem(RG_CLIMB);}),
     });
 
     areaTable[RR_FIRE_TEMPLE_NARROW_STAIRS] = Region("Fire Temple Narrow Stairs", SCENE_FIRE_TEMPLE, {}, {
