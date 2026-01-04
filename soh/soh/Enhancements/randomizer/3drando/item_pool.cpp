@@ -393,7 +393,7 @@ void GenerateItemPool() {
     AddItemToPool(RG_PROGRESSIVE_SCALE, 3 + bronzeScale, 2 + bronzeScale, 2 + bronzeScale, 2 + bronzeScale);
 
     if (ctx->GetOption(RSK_SHUFFLE_CRAWL)) {
-        AddItemToMainPool(RG_CRAWL);
+        AddItemToPool(RG_CRAWL, 2, 1, 1, 1);
     }
 
     if (ctx->GetOption(RSK_SHUFFLE_BEEHIVES)) {
