@@ -1,7 +1,6 @@
 #include "logic.h"
 #include "../debugger/performanceTimer.h"
 
-#include <algorithm>
 #include <string>
 #include <vector>
 
@@ -2539,7 +2538,7 @@ bool Logic::CouldMQSpirit4KeyWestHand() {
 // If we have the longshot, we can also guarantee access to the outer west hand as you can longshot from the east hand
 // to the west Implies CanKillEnemy(RE_IRON_KNUCKLE)
 bool Logic::OuterWestHandLogic() {
-    return HasExplosives() /* && CanClimbHigh() && str0*/ &&
+    return HasExplosives() && (HasItem(RG_CLIMB) || CanUse(RG_LONGSHOT)) /*&& str0*/ &&
            SmallKeys(SCENE_SPIRIT_TEMPLE, HasItem(RG_LONGSHOT) ? 3 : 5);
 }
 
@@ -2553,8 +2552,10 @@ bool Logic::StatueRoomMQKeyLogic() {
     // the ability to hit switches and the ability to climb because only child can reach the initial child lock
     // without opening the Statue room to Broken Wall Room lock first
     // if adult can ever cross crawlspaces this becomes more complicated.
-    return SmallKeys(SCENE_SPIRIT_TEMPLE,
-                     IsChild && Get(LOGIC_REVERSE_SPIRIT_CHILD) && CanHitSwitch() /* && CanClimbHigh()*/ ? 6 : 7);
+    return SmallKeys(SCENE_SPIRIT_TEMPLE, IsChild && Get(LOGIC_REVERSE_SPIRIT_CHILD) && CanHitSwitch() &&
+                                                  (HasItem(RG_CLIMB) || CanUse(RG_LONGSHOT))
+                                              ? 6
+                                              : 7);
 }
 
 void Logic::Reset(bool resetSaveContext /*= true*/) {

@@ -20,7 +20,7 @@ void RegionTable_Init_BottomOfTheWell() {
 
     areaTable[RR_BOTW_CORRIDOR] = Region("Bottom of the Well Corridor", SCENE_BOTTOM_OF_THE_WELL, {}, {}, {
         //Exits
-        Entrance(RR_BOTW_ENTRYWAY,  []{return logic->IsChild/*CanCrawl && CanClimb*/;}),
+        Entrance(RR_BOTW_ENTRYWAY,  []{return logic->IsChild/*CanCrawl*/ && logic->HasItem(RG_CLIMB);}),
         Entrance(RR_BOTW_PERIMETER, []{return logic->CanPassEnemy(RE_BIG_SKULLTULA);}),
     });
 
@@ -166,8 +166,8 @@ void RegionTable_Init_BottomOfTheWell() {
         //Exits
         //Climb always needed in case the water is lowered out of logic
         //Adult can ground jump out of the pit without climb but needs a way through the crawlspace
-        Entrance(RR_BOTW_PERIMETER,       []{return logic->IsChild/*CanCrawl*/ && (logic->Get(LOGIC_BOTW_LOWERED_WATER) || logic->HasItem(RG_BRONZE_SCALE))/*&& CanClimb*/;}),
-        Entrance(RR_BOTW_NEAR_BOSS_UPPER, []{return true/*CanClimb or (isAdult && CanGroundJump)*/;}),
+        Entrance(RR_BOTW_PERIMETER,       []{return logic->IsChild/*CanCrawl*/ && (logic->Get(LOGIC_BOTW_LOWERED_WATER) || logic->HasItem(RG_BRONZE_SCALE)) && logic->HasItem(RG_CLIMB);}),
+        Entrance(RR_BOTW_NEAR_BOSS_UPPER, []{return logic->HasItem(RG_CLIMB) || (logic->IsAdult && logic->CanGroundJump());}),
     });
 
     areaTable[RR_BOTW_NEAR_BOSS_UPPER] = Region("Bottom of the Well Near Boss Upper", SCENE_BOTTOM_OF_THE_WELL, {}, {}, {
@@ -349,8 +349,8 @@ void RegionTable_Init_BottomOfTheWell() {
     areaTable[RR_BOTW_MQ_BEHIND_MOAT] = Region("Bottom of the Well MQ Behind Moat", SCENE_BOTTOM_OF_THE_WELL, {}, {}, {
         //Exits
         //Climb always needed in case water is lowered out of logic
-        Entrance(RR_BOTW_MQ_PERIMETER, []{return (logic->Get(LOGIC_BOTW_LOWERED_WATER)|| logic->HasItem(RG_BRONZE_SCALE) || 
-                                                  (logic->IsAdult && logic->CanUse(RG_IRON_BOOTS) && logic->CanUse(RG_HOOKSHOT))/* && CanClimb*/);}),
+        Entrance(RR_BOTW_MQ_PERIMETER, []{return ((logic->Get(LOGIC_BOTW_LOWERED_WATER) || logic->HasItem(RG_BRONZE_SCALE)) && (logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT))) || 
+                                                  (logic->IsAdult && logic->CanUse(RG_IRON_BOOTS) && logic->CanUse(RG_HOOKSHOT));}),
         Entrance(RR_BOTW_MQ_CRYPT,     []{return logic->SmallKeys(SCENE_BOTTOM_OF_THE_WELL, 2);}),
     });
 
@@ -386,8 +386,8 @@ void RegionTable_Init_BottomOfTheWell() {
         //Exits
         //Climb always needed in case the water is lowered out of logic
         //Adult can ground jump out of the pit without climb but needs a way through the crawlspace
-        Entrance(RR_BOTW_MQ_PERIMETER,       []{return logic->IsChild/*CanCrawl*/ && (logic->Get(LOGIC_BOTW_LOWERED_WATER) || logic->HasItem(RG_BRONZE_SCALE))/*&& CanClimb*/;}),
-        Entrance(RR_BOTW_MQ_NEAR_BOSS_UPPER, []{return true/*CanClimb*/;}),
+        Entrance(RR_BOTW_MQ_PERIMETER,       []{return logic->IsChild/*CanCrawl*/ && (logic->Get(LOGIC_BOTW_LOWERED_WATER) || logic->HasItem(RG_BRONZE_SCALE)) && (logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT));}),
+        Entrance(RR_BOTW_MQ_NEAR_BOSS_UPPER, []{return logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT);}),
     });
 
     areaTable[RR_BOTW_MQ_NEAR_BOSS_UPPER] = Region("Bottom of the Well MQ Near Boss Upper", SCENE_BOTTOM_OF_THE_WELL, {}, {}, {

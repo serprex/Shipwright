@@ -10,8 +10,8 @@ void RegionTable_Init_GerudoValley() {
         EventAccess(LOGIC_BUG_ACCESS, []{return logic->IsChild;}),
     }, {
         //Locations
-        LOCATION(RC_GV_GS_SMALL_BRIDGE, logic->IsChild && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
-        LOCATION(RC_GV_WATERFALL_FREESTANDING_POH, logic->IsChild), //can use cucco as child
+        LOCATION(RC_GV_GS_SMALL_BRIDGE,            logic->IsChild && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
+        LOCATION(RC_GV_WATERFALL_FREESTANDING_POH, logic->IsChild || ((logic->HasItem(RG_BRONZE_SCALE) || (logic->CanUse(RG_IRON_BOOTS) && logic->CanUse(RG_HOOKSHOT))) && logic->HasItem(RG_CLIMB))),
     }, {
         //Exits
         Entrance(RR_HYRULE_FIELD,     []{return true;}),
@@ -69,14 +69,15 @@ void RegionTable_Init_GerudoValley() {
 
     areaTable[RR_GV_FORTRESS_SIDE] = Region("GV Fortress Side", SCENE_GERUDO_VALLEY, {}, {
         //Locations
-        LOCATION(RC_GV_CHEST,          logic->IsAdult && (logic->CanUse(RG_MEGATON_HAMMER) || (ctx->GetTrickOption(RT_DISTANT_BOULDER_COLLISION) && logic->CanUse(RG_LONGSHOT)))),
-        LOCATION(RC_GV_TRADE_SAW,      logic->IsAdult && logic->CanUse(RG_POACHERS_SAW)),
-        LOCATION(RC_GV_GS_BEHIND_TENT, logic->IsAdult && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
-        LOCATION(RC_GV_GS_PILLAR,      logic->IsAdult && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
-        LOCATION(RC_GV_CRATE_BRIDGE_1, logic->IsChild && logic->CanBreakCrates()),
-        LOCATION(RC_GV_CRATE_BRIDGE_2, logic->IsChild && logic->CanBreakCrates()),
-        LOCATION(RC_GV_CRATE_BRIDGE_3, logic->IsChild && logic->CanBreakCrates()),
-        LOCATION(RC_GV_CRATE_BRIDGE_4, logic->IsChild && logic->CanBreakCrates()),
+        LOCATION(RC_GV_CHEST,                      logic->IsAdult && (logic->CanUse(RG_MEGATON_HAMMER) || (ctx->GetTrickOption(RT_DISTANT_BOULDER_COLLISION) && logic->CanUse(RG_LONGSHOT)))),
+        LOCATION(RC_GV_WATERFALL_FREESTANDING_POH, (logic->HasItem(RG_BRONZE_SCALE) || (logic->CanUse(RG_IRON_BOOTS) && logic->CanUse(RG_HOOKSHOT))) && logic->HasItem(RG_CLIMB)),
+        LOCATION(RC_GV_TRADE_SAW,                  logic->IsAdult && logic->CanUse(RG_POACHERS_SAW)),
+        LOCATION(RC_GV_GS_BEHIND_TENT,             logic->IsAdult && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
+        LOCATION(RC_GV_GS_PILLAR,                  logic->IsAdult && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
+        LOCATION(RC_GV_CRATE_BRIDGE_1,             logic->IsChild && logic->CanBreakCrates()),
+        LOCATION(RC_GV_CRATE_BRIDGE_2,             logic->IsChild && logic->CanBreakCrates()),
+        LOCATION(RC_GV_CRATE_BRIDGE_3,             logic->IsChild && logic->CanBreakCrates()),
+        LOCATION(RC_GV_CRATE_BRIDGE_4,             logic->IsChild && logic->CanBreakCrates()),
     }, {
         //Exits
         Entrance(RR_GF_OUTSKIRTS,      []{return true;}),
