@@ -78,15 +78,14 @@ void RegionTable_Init_KokiriForest() {
         LOCATION(RC_KF_ADULT_GRASS_20,          logic->IsAdult && logic->CanCutShrubs()),
     }, {
         //Exits
-        Entrance(RR_KF_LINKS_PORCH,        []{return logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT);}),
+        Entrance(RR_KF_LINKS_PORCH,        []{return logic->HasItem(RG_CLIMB) || (logic->IsAdult && logic->CanUse(RG_HOVER_BOOTS));}),
         Entrance(RR_KF_MIDOS_HOUSE,        []{return true;}),
         Entrance(RR_KF_SARIAS_HOUSE,       []{return true;}),
         Entrance(RR_KF_HOUSE_OF_TWINS,     []{return true;}),
         Entrance(RR_KF_KNOW_IT_ALL_HOUSE,  []{return true;}),
         Entrance(RR_KF_KOKIRI_SHOP,        []{return true;}),
         Entrance(RR_KF_OUTSIDE_DEKU_TREE,  []{return (logic->IsAdult && (logic->CanPassEnemy(RE_BIG_SKULLTULA) || logic->Get(LOGIC_FOREST_TEMPLE_CLEAR))) || ctx->GetOption(RSK_FOREST).Is(RO_CLOSED_FOREST_OFF) || logic->Get(LOGIC_SHOWED_MIDO_SWORD_AND_SHIELD);}),
-        // Maybe adult jumping to Mido's Roof is trick, in which case bean can also get adult up here
-        Entrance(RR_KF_OUTSIDE_LOST_WOODS, []{return logic->IsAdult || logic->HasItem(RG_CLIMB);}),
+        Entrance(RR_KF_OUTSIDE_LOST_WOODS, []{return logic->HasItem(RG_CLIMB) || (logic->IsAdult && (CanPlantBean(RR_KOKIRI_FOREST, RG_KOKIRI_FOREST_BEAN_SOUL) || ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS)));}),
         Entrance(RR_LW_BRIDGE_FROM_FOREST, []{return logic->IsAdult || ctx->GetOption(RSK_FOREST).IsNot(RO_CLOSED_FOREST_ON) || logic->Get(LOGIC_DEKU_TREE_CLEAR);}),
         Entrance(RR_KF_STORMS_GROTTO,      []{return logic->CanOpenStormsGrotto();}),
     });
