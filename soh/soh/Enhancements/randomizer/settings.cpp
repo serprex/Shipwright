@@ -1982,6 +1982,9 @@ void Settings::CreateOptions() {
     OPT_TRICK(RT_SHADOW_FREESTANDING_KEY, RCQUEST_VANILLA, RA_SHADOW_TEMPLE, { Tricks::Tag::NOVICE },
               "Shadow Temple Freestanding Key with Bombchu",
               "Release the Bombchu with good timing so that it explodes near the bottom of the pot.");
+    OPT_TRICK(RT_SHADOW_BOAT_JUMP, RCQUEST_BOTH, RA_SHADOW_TEMPLE, { Tricks::Tag::NOVICE },
+            "Shadow Temple Boat Jump",
+            "Boat can be boarded by jumping on wheel, skipping block and ladder.");
     OPT_TRICK(RT_SHADOW_STATUE, RCQUEST_BOTH, RA_SHADOW_TEMPLE, { Tricks::Tag::INTERMEDIATE },
               "Shadow Temple River Statue with Bombchu",
               "By sending a Bombchu around the edge of the gorge, you can knock down the statue without needing a Bow. "
