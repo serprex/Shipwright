@@ -1348,8 +1348,9 @@ void Settings::CreateOptions() {
               "still requires Zora Tunic. Applies to MQ also.\n- Enter Fire Temple. Volvagia still requires Goron "
               "Tunic. Applies to MQ also, and includes child access to first floor with dungeon shuffle.");
     OPT_TRICK(RT_UNINTUITIVE_JUMPS, RCQUEST_BOTH, RA_NONE, { Tricks::Tag::NOVICE }, "Unintuitive Jumps",
-              "Many ledges can be overcome with particular jumps which are simple to execute without any items.\n"
-              "This includes jumping from heights to dive deeper without scales.");
+              "Many ledges can be overcome with particular jumps which are simple to execute without items.\n"
+              "This includes jumping from heights to dive deeper without scales,\n"
+              "though this trick doesn't cover Water Temple's Dragon Room.");
     OPT_TRICK(RT_RUSTED_SWITCHES, RCQUEST_BOTH, RA_NONE, { Tricks::Tag::NOVICE }, "Hammer Through Collision",
               "Applies to:\n"
               "- Hitting Fire Temple Highest Goron Chest's Rusted Switch in the SoT Block without Song of Time.\n"
@@ -1903,13 +1904,19 @@ void Settings::CreateOptions() {
               "Standing on the exposed ground toward the end of the river, a precise Longshot use can obtain the "
               "token. The Longshot cannot normally reach far enough to kill the Skulltula, however. You'll first have "
               "to find some other way of killing it.");
+    OPT_TRICK(RT_WATER_DRAGON_JUMP_DIVE, RCQUEST_BOTH, RA_WATER_TEMPLE, { Tricks::Tag::NOVICE },
+              "Water Temple Dragon Statue Jump Dive",
+              "If you come into the dragon statue room from the serpent river, you can sidehop down from above and get "
+              "into the tunnel without needing either Iron Boots or a Scale. This trick applies to both Vanilla and "
+              "Master Quest. In Vanilla, you must shoot the switch from above with the Bow, and then quickly get "
+              "through the tunnel before the gate closes.");
     OPT_TRICK(RT_WATER_ADULT_DRAGON, RCQUEST_VANILLA, RA_WATER_TEMPLE, { Tricks::Tag::NOVICE },
               "Water Temple Dragon Statue Switch from Above the Water as Adult",
               "Normally you need both Hookshot and Iron Boots to hit the switch and swim through the tunnel to get to "
               "the chest. But by hitting the switch from dry land, using one of Bombchus, Hookshot, or Bow, it is "
               "possible to skip one or both of those requirements. After the gate has been opened, besides just using "
               "the Iron Boots, a well-timed dive with at least the Silver Scale could be used to swim through the "
-              "tunnel.");
+              "tunnel. If coming from the serpent river, a jump dive can also be used to get into the tunnel.");
     OPT_TRICK(RT_WATER_CHILD_DRAGON, RCQUEST_VANILLA, RA_WATER_TEMPLE, { Tricks::Tag::ADVANCED },
               "Water Temple Dragon Statue Switch from Above the Water as Child",
               "It is possible for child to hit the switch from dry land using one of Bombchus, Slingshot or Boomerang. "
