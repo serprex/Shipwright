@@ -7,8 +7,6 @@
 
 #include <spdlog/spdlog.h>
 
-#include <utility>
-
 #include <libultraship/bridge/consolevariablebridge.h>
 
 namespace Rando {
@@ -1567,11 +1565,14 @@ void Settings::CreateOptions() {
               "Gerudo Valley Crate PoH as Adult with Hover Boots",
               "From the far side of Gerudo Valley, a precise Hover Boots movement and jump-slash recoil can allow "
               "adult to reach the ledge with the crate PoH without needing Longshot. You will take fall damage.");
-    OPT_TRICK(RT_GV_CHILD_CUCCO_JUMP, RCQUEST_BOTH, RA_GERUDO_VALLEY, { Tricks::Tag::INTERMEDIATE },
-              "Gerudo Valley Jump Fence with Cucco", "Using cucco as child, it's possible to jumpslash over the gate.");
     OPT_TRICK(RT_GV_CHILD_TENT, RCQUEST_BOTH, RA_GERUDO_VALLEY, { Tricks::Tag::NOVICE },
               "Gerudo Valley Enter Carpenter's Tent as Child",
               "The loading zone for Carpenter's Tent is accessible to child.");
+    OPT_TRICK(RT_GV_CHILD_CUCCO_JUMP, RCQUEST_BOTH, RA_GERUDO_VALLEY, { Tricks::Tag::INTERMEDIATE },
+              "Gerudo Valley Jump Fence with Cucco", "Using cucco as child, it's possible to jumpslash over the gate.");
+    OPT_TRICK(RT_GV_LONGSHOT_CHEST, RCQUEST_BOTH, RA_GERUDO_VALLEY, { Tricks::Tag::NOVICE, Tricks::Tag::GLITCH },
+              "Gerudo Valley Longshot Chest",
+              "Longshotting the chest from far enough way ignores the boulders' collision.");
     OPT_TRICK(RT_PASS_GUARDS_WITH_NOTHING, RCQUEST_BOTH, RA_GERUDO_FORTRESS, { Tricks::Tag::NOVICE },
               "Sneak Past Moving Gerudo Guards with No Items",
               "The logic normally guarantees Bow or Hookshot to stun them from a distance,"
