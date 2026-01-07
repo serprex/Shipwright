@@ -472,7 +472,7 @@ void RegionTable_Init_GanonsCastle() {
 
     areaTable[RR_GANONS_CASTLE_MQ_WATER_TRIAL_BLOCK_ROOM] = Region("Ganon's Castle MQ Water Trial Block Room", SCENE_INSIDE_GANONS_CASTLE, {
         //Events
-        EventAccess(LOGIC_WATER_TRIAL_MQ_SILVER_RUPEES,             []{return logic->IsAdult && logic->HasItem(RG_POWER_BRACELET) && logic->BlueFire();}),
+        EventAccess(LOGIC_WATER_TRIAL_MQ_SILVER_RUPEES,             []{return logic->IsAdult && (logic->HasItem(RG_POWER_BRACELET) || (ctx->GetTrickOption(RT_GROUND_JUMP_HARD) && logic->CanGroundJump() && logic->CanUse(RG_HOVER_BOOTS))) && logic->BlueFire();}),
         EventAccess(LOGIC_WATER_TRIAL_MQ_MELTED_FINAL_DOOR_RED_ICE, []{return (ctx->GetOption(RSK_BLUE_FIRE_ARROWS) && logic->CanUse(RG_ICE_ARROWS)) || (logic->IsAdult || logic->CanUse(RG_HOVER_BOOTS)) && logic->HasItem(RG_POWER_BRACELET) && logic->CanUse(RG_BOTTLE_WITH_BLUE_FIRE);}),
     }, {}, {
         //Exits
