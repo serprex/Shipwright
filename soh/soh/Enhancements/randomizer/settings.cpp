@@ -1648,10 +1648,6 @@ void Settings::CreateOptions() {
     OPT_TRICK(RT_DC_STAIRS_WITH_BOW, RCQUEST_VANILLA, RA_DODONGOS_CAVERN, { Tricks::Tag::NOVICE },
               "Dodongo\'s Cavern Stairs with Bow",
               "The Bow can be used to knock down the stairs with two well-timed shots.");
-    OPT_TRICK(RT_DC_CLIMB_ARMOS, RCQUEST_VANILLA, RA_DODONGOS_CAVERN, { Tricks::Tag::NOVICE },
-              "Dodongo\'s Cavern Climb Armos",
-              "Reaching the switch between 4 armos as child can be done without moving armos from ladder by back "
-              "flipping atop armos and climbing ledge beside ladder.");
     OPT_TRICK(RT_DC_SLINGSHOT_SKIP, RCQUEST_VANILLA, RA_DODONGOS_CAVERN, { Tricks::Tag::EXPERT },
               "Dodongo\'s Cavern Child Slingshot Skips",
               "With precise platforming, child can cross the platforms while the flame circles are there. When "

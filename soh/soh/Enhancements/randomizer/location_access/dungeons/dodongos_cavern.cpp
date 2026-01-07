@@ -156,7 +156,7 @@ void RegionTable_Init_DodongosCavern() {
     areaTable[RR_DODONGOS_CAVERN_ARMOS_ROOM] = Region("Dodongos Cavern Armos Room", SCENE_DODONGOS_CAVERN, {}, {}, {
         //Exits
         Entrance(RR_DODONGOS_CAVERN_STAIRS_UPPER,    []{return true;}),
-        Entrance(RR_DODONGOS_CAVERN_BOMB_ROOM_LOWER, []{return logic->IsAdult || (logic->HasItem(RG_POWER_BRACELET) || ctx->GetTrickOption(RT_DC_CLIMB_ARMOS));}),
+        Entrance(RR_DODONGOS_CAVERN_BOMB_ROOM_LOWER, []{return logic->IsAdult || (logic->HasItem(RG_POWER_BRACELET) || ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS));}),
     });
 
     // TODO split into 2 areas, need adult or power bracelet to reach lower area by bomb chest
