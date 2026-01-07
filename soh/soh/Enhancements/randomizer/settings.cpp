@@ -1382,6 +1382,9 @@ void Settings::CreateOptions() {
     OPT_TRICK(RT_OPEN_UNDERWATER_CHEST, RCQUEST_BOTH, RA_NONE, { Tricks::Tag::NOVICE, Tricks::Tag::GLITCH },
               "Open Underwater Chests",
               "Underwater chests can be opened by wearing iron boots and hookshotting the chest.");
+    OPT_TRICK(RT_DISTANT_BOULDER_COLLISION, RCQUEST_BOTH, RA_NONE, { Tricks::Tag::NOVICE, Tricks::Tag::GLITCH },
+              "Distant Boulder Collision",
+              "From afar boulder collision is disabled, allowing projectiles to pass through them.");
     OPT_TRICK(RT_HOOKSHOT_EXTENSION, RCQUEST_BOTH, RA_NONE, { Tricks::Tag::INTERMEDIATE },
               "Hookshot/Projectile Extension",
               "Slightly extends range. Also allows clipping projectile past collision. Used for:\n"
@@ -1570,9 +1573,6 @@ void Settings::CreateOptions() {
               "The loading zone for Carpenter's Tent is accessible to child.");
     OPT_TRICK(RT_GV_CHILD_CUCCO_JUMP, RCQUEST_BOTH, RA_GERUDO_VALLEY, { Tricks::Tag::INTERMEDIATE },
               "Gerudo Valley Jump Fence with Cucco", "Using cucco as child, it's possible to jumpslash over the gate.");
-    OPT_TRICK(RT_GV_LONGSHOT_CHEST, RCQUEST_BOTH, RA_GERUDO_VALLEY, { Tricks::Tag::NOVICE, Tricks::Tag::GLITCH },
-              "Gerudo Valley Longshot Chest",
-              "Longshotting the chest from far enough way ignores the boulders' collision.");
     OPT_TRICK(RT_PASS_GUARDS_WITH_NOTHING, RCQUEST_BOTH, RA_GERUDO_FORTRESS, { Tricks::Tag::NOVICE },
               "Sneak Past Moving Gerudo Guards with No Items",
               "The logic normally guarantees Bow or Hookshot to stun them from a distance,"
