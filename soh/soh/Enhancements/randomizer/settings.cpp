@@ -1482,7 +1482,7 @@ void Settings::CreateOptions() {
               "the top of Death Mountain.");
     OPT_TRICK(
         RT_DMT_UPPER_GS, RCQUEST_BOTH, RA_DEATH_MOUNTAIN_TRAIL, { Tricks::Tag::NOVICE },
-        "Death Mountain Trail Upper Red Rock GS without Hammer",
+        "Death Mountain Trail Upper Red Rock GS with Backflip",
         "After killing the Skulltula, the token can be collected by backflipping into the rock at the correct angle.");
     // disabled for now, only applies when trade quest is not shuffled so there's a timer (currently not considered in
     // logic) OPT_TRICK(RT_DMT_BOLERO_BIGGORON, RCQUEST_BOTH, RA_DEATH_MOUNTAIN_TRAIL, {Tricks::Tag::INTERMEDIATE},

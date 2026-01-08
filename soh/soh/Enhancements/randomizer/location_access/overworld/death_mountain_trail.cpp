@@ -40,7 +40,7 @@ void RegionTable_Init_DeathMountainTrail() {
         LOCATION(RC_DMT_TRADE_EYEDROPS,         logic->IsAdult && logic->CanUse(RG_EYEDROPS)),
         LOCATION(RC_DMT_TRADE_CLAIM_CHECK,      logic->IsAdult && logic->CanUse(RG_CLAIM_CHECK)),
         // backflip can collect token, allowing use of explosives (or bow from afar), but it's a trick
-        LOCATION(RC_DMT_GS_FALLING_ROCKS_PATH,  logic->IsAdult && logic->CanGetNightTimeGS() && (logic->CanUse(RG_MEGATON_HAMMER) || (ctx->GetTrickOption(RT_DMT_UPPER_GS) && logic->CanJumpslash()) || (ctx->GetTrickOption(RT_DISTANT_BOULDER_COLLISION) && logic->CanUse(RG_LONGSHOT)))),
+        LOCATION(RC_DMT_GS_FALLING_ROCKS_PATH,  logic->IsAdult && logic->CanGetNightTimeGS() && (logic->CanUse(RG_MEGATON_HAMMER) || (ctx->GetTrickOption(RT_DMT_UPPER_GS) && (logic->CanJumpslash() || logic->HasExplosives() || ((ctx->GetTrickOption(RT_DISTANT_BOULDER_COLLISION) || ctx->GetTrickOption(RT_HOOKSHOT_EXTENSION)) && (logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT))))) || (ctx->GetTrickOption(RT_DISTANT_BOULDER_COLLISION) && logic->CanUse(RG_LONGSHOT)))),
         LOCATION(RC_DMT_GOSSIP_STONE_FAIRY,     logic->CallGossipFairy()),
         LOCATION(RC_DMT_GOSSIP_STONE_FAIRY_BIG, logic->CanUse(RG_SONG_OF_STORMS)),
         LOCATION(RC_DMT_GOSSIP_STONE,           true),
