@@ -87,7 +87,7 @@ void RegionTable_Init_SpiritTemple() {
         // these assume SpiritRupeeBridge, silver rupee shuffle & shuffle climb will want to adjust
         LOCATION(RC_SPIRIT_TEMPLE_CHILD_EARLY_TORCHES_CHEST, logic->HasFireSourceWithTorch()),
         // possible to collect without lowering fence, should be a trick
-        LOCATION(RC_SPIRIT_TEMPLE_GS_METAL_FENCE,            logic->Get(LOGIC_SPIRIT_SILVER_RUPEE_BRIDGE) && logic->CanKillEnemy(RE_GOLD_SKULLTULA, ED_BOMB_THROW)),
+        LOCATION(RC_SPIRIT_TEMPLE_GS_METAL_FENCE,            logic->Get(LOGIC_SPIRIT_SILVER_RUPEE_BRIDGE) && logic->CanKillEnemy(RE_GOLD_SKULLTULA, ED_BOMB_THROW) && logic->HasItem(RG_CLIMB)),
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_RUPEE_BRIDGE_SOUTH, []{return logic->Get(LOGIC_SPIRIT_SILVER_RUPEE_BRIDGE);}),
@@ -454,9 +454,8 @@ void RegionTable_Init_SpiritTemple() {
     areaTable[RR_SPIRIT_TEMPLE_BIG_WALL_BASE] = Region("Spirit Temple Big Wall Base", SCENE_SPIRIT_TEMPLE, {}, {}, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_BEAMOS_PITS,    []{return true;}),
-        Entrance(RR_SPIRIT_TEMPLE_BIG_WALL_UPPER, []{return (ctx->GetTrickOption(RT_SPIRIT_WALL) || 
-                                                             (logic->CanAvoidEnemy(RE_BEAMOS, true, 2) && logic->CanPassEnemy(RE_WALLTULA, ED_BOOMERANG)))
-                                                            /*&& CanClimbHigh()*/;}),
+        Entrance(RR_SPIRIT_TEMPLE_BIG_WALL_UPPER, []{return (ctx->GetTrickOption(RT_SPIRIT_WALL) || (logic->CanAvoidEnemy(RE_BEAMOS, true, 2) && logic->CanPassEnemy(RE_WALLTULA, ED_BOOMERANG))) &&
+                                                            (logic->HasItem(RG_CLIMB) || logic->CanUse(RG_LONGSHOT));}),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_BIG_WALL_UPPER] = Region("Spirit Temple Big Wall Upper", SCENE_SPIRIT_TEMPLE, {}, {
@@ -678,7 +677,7 @@ void RegionTable_Init_SpiritTemple() {
         //Exits
         //This covers adult and reverse access only, as child going forwards arrives here from the other side of this door
         Entrance(RR_SPIRIT_TEMPLE_MQ_1F_CHEST_SWITCH, []{return logic->SmallKeys(SCENE_SPIRIT_TEMPLE, 7);}),
-        Entrance(RR_SPIRIT_TEMPLE_MQ_SUN_ON_FLOOR,    []{return logic->CanHitSwitch()/* && CanClimbHigh()*/;}),
+        Entrance(RR_SPIRIT_TEMPLE_MQ_SUN_ON_FLOOR,    []{return logic->CanHitSwitch() && (logic->HasItem(RG_CLIMB) || logic->CanUse(RG_LONGSHOT));}),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_MQ_SUN_ON_FLOOR] = Region("Spirit Temple MQ Sun on Floor Room", SCENE_SPIRIT_TEMPLE, {}, {
@@ -904,7 +903,7 @@ void RegionTable_Init_SpiritTemple() {
     areaTable[RR_SPIRIT_TEMPLE_MQ_3_SUNS_ROOM_1F] = Region("Spirit Temple MQ 3 Suns Room 1F", SCENE_SPIRIT_TEMPLE, {}, {}, {
         //Exits
         //It is possible to clip through here with longshot by aiming high enough
-        Entrance(RR_SPIRIT_TEMPLE_MQ_3_SUNS_ROOM_2F, []{return logic->Get(LOGIC_SPIRIT_MQ_3SUNS_ENEMIES)/* && CanClimbHigh()*/;}),
+        Entrance(RR_SPIRIT_TEMPLE_MQ_3_SUNS_ROOM_2F, []{return logic->Get(LOGIC_SPIRIT_MQ_3SUNS_ENEMIES) && (logic->HasItem(RG_CLIMB) || logic->CanUse(RG_LONGSHOT));}),
         Entrance(RR_SPIRIT_TEMPLE_MQ_BEHIND_GEYSER,  []{return true;}),
     });
 
@@ -1037,13 +1036,13 @@ void RegionTable_Init_SpiritTemple() {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_MQ_BEAMOS_PITS,    []{return true;}),
         //technically we only need to avoid them, but the sheer height and the moving walls makes getting to the top after only stunning them very difficult/impossible
-        Entrance(RR_SPIRIT_TEMPLE_MQ_BIG_WALL_UPPER, []{return /*(*/logic->CanKillEnemy(RE_KEESE)/*|| CanUse(RG_SKULL_MASK)) && CanClimbHigh()*/;}),
+        Entrance(RR_SPIRIT_TEMPLE_MQ_BIG_WALL_UPPER, []{return (logic->CanKillEnemy(RE_KEESE)/*|| CanUse(RG_SKULL_MASK)*/) && (logic->HasItem(RG_CLIMB) || logic->CanUse(RG_LONGSHOT));}),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_MQ_BIG_WALL_UPPER] = Region("Spirit Temple MQ Big Wall Upper", SCENE_SPIRIT_TEMPLE, {
         //Events
         //Getting some of these with just climbing downwards is theoretically possible but definitely a trick
-        EventAccess(LOGIC_SPIRIT_MQ_BIG_WALL_SILVERS, []{return /*(*/logic->CanKillEnemy(RE_KEESE)/*|| CanUse(RG_SKULL_MASK)) && CanClimbHigh()*/;}),
+        EventAccess(LOGIC_SPIRIT_MQ_BIG_WALL_SILVERS, []{return (logic->CanKillEnemy(RE_KEESE)/*|| CanUse(RG_SKULL_MASK)*/) && (logic->HasItem(RG_CLIMB) || logic->CanUse(RG_LONGSHOT));}),
     }, {}, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_MQ_BIG_WALL_BASE, []{return true;}),

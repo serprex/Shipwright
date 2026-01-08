@@ -22,11 +22,11 @@ void RegionTable_Init_CastleGrounds() {
     }, {
         //Locations
         LOCATION(RC_HC_MALON_EGG, true),
-        LOCATION(RC_HC_GS_TREE,   logic->IsChild && logic->CanKillEnemy(RE_GOLD_SKULLTULA, ED_CLOSE)),
+        LOCATION(RC_HC_GS_TREE,   logic->CanKillEnemy(RE_GOLD_SKULLTULA, ED_CLOSE)),
     }, {
         //Exits
         Entrance(RR_CASTLE_GROUNDS,        []{return true;}),
-        Entrance(RR_HYRULE_CASTLE_GROUNDS, []{return logic->HasItem(RG_ZELDAS_LETTER) || logic->HasItem(RG_CLIMB);}),
+        Entrance(RR_HYRULE_CASTLE_GROUNDS, []{return logic->HasItem(RG_CLIMB);}), // TODO: bribing guard can be logical once permanent
     });
 
     areaTable[RR_HYRULE_CASTLE_GROUNDS] = Region("Hyrule Castle Grounds", SCENE_HYRULE_CASTLE, {

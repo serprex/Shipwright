@@ -107,19 +107,6 @@ void RegionTable_Init_ZoraRiver() {
         Entrance(RR_ZORAS_DOMAIN, []{return true;}),
     });
 
-    areaTable[RR_ZR_UPPER_GROTTOS] = Region("ZR Upper Grottos", SCENE_ZORAS_RIVER, {}, {
-        //Locations
-        LOCATION(RC_ZR_GS_NEAR_RAISED_GROTTOS,              logic->IsAdult && logic->HookshotOrBoomerang() && logic->CanGetNightTimeGS()),
-        LOCATION(RC_ZR_NEAR_GROTTOS_GOSSIP_STONE_FAIRY,     logic->CallGossipFairy()),
-        LOCATION(RC_ZR_NEAR_GROTTOS_GOSSIP_STONE_FAIRY_BIG, logic->CanUse(RG_SONG_OF_STORMS)),
-        LOCATION(RC_ZR_NEAR_GROTTOS_GOSSIP_STONE,           true),
-    }, {
-        //Exits
-        Entrance(RR_ZORAS_RIVER,     []{return true;}),
-        Entrance(RR_ZR_OPEN_GROTTO,  []{return true;}),
-        Entrance(RR_ZR_FAIRY_GROTTO, []{return AnyAgeTime([]{return logic->BlastOrSmash();});}),
-    });
-
     areaTable[RR_ZR_OPEN_GROTTO] = Region("ZR Open Grotto", SCENE_GROTTOS, grottoEvents, {
         //Locations
         LOCATION(RC_ZR_OPEN_GROTTO_CHEST,                  true),

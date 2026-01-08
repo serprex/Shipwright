@@ -49,7 +49,7 @@ void RegionTable_Init_JabuJabusBelly() {
         LOCATION(RC_JABU_JABUS_BELLY_GS_LOBBY_BASEMENT_UPPER, logic->HookshotOrBoomerang()),
     }, {
         //Exits
-        Entrance(RR_JABU_JABUS_BELLY_HOLES_ROOM,             []{return true /* logic->HasItem(RG_CLIMB) */;}),
+        Entrance(RR_JABU_JABUS_BELLY_HOLES_ROOM,             []{return logic->HasItem(RG_CLIMB);}),
         Entrance(RR_JABU_JABUS_BELLY_B1_JIGGLY,              []{return true;}),
         Entrance(RR_JABU_JABUS_BELLY_HOLES_LOWER_DOOR_LEDGE, []{return logic->IsAdult;}),
     });
@@ -84,7 +84,7 @@ void RegionTable_Init_JabuJabusBelly() {
     }, {
         //Exits
         //there's tricks for getting here with bunny-jumps or just side-hops
-        Entrance(RR_JABU_JABUS_BELLY_WATER_SWITCH_ROOM_LEDGE, []{return (logic->HasItem(RG_BRONZE_SCALE) && logic->HasItem(RG_CLIMB)) || logic->CanUse(RG_HOVER_BOOTS);}),
+        Entrance(RR_JABU_JABUS_BELLY_WATER_SWITCH_ROOM_LEDGE, []{return (logic->HasItem(RG_BRONZE_SCALE) || logic->CanUse(RG_HOVER_BOOTS)) && logic->HasItem(RG_CLIMB);}),
         Entrance(RR_JABU_JABUS_BELLY_WATER_SWITCH_ROOM_SOUTH, []{return logic->IsAdult || logic->HasItem(RG_BRONZE_SCALE);}),
         Entrance(RR_JABU_JABUS_BELLY_HOLES_BASEMENT,          []{return true;}),
     });
@@ -95,7 +95,7 @@ void RegionTable_Init_JabuJabusBelly() {
     }, {
         //Exits
         Entrance(RR_JABU_JABUS_BELLY_WATER_SWITCH_ROOM_NORTH, []{return logic->IsAdult || logic->HasItem(RG_BRONZE_SCALE);}),
-        Entrance(RR_JABU_JABUS_BELLY_WATER_SWITCH_ROOM_LEDGE, []{return logic->HasItem(RG_BRONZE_SCALE) || logic->CanUse(RG_HOVER_BOOTS);}),
+        Entrance(RR_JABU_JABUS_BELLY_WATER_SWITCH_ROOM_LEDGE, []{return (logic->HasItem(RG_BRONZE_SCALE) || logic->CanUse(RG_HOVER_BOOTS)) && logic->HasItem(RG_CLIMB);}),
         Entrance(RR_JABU_JABUS_BELLY_LIFT_ROOM,               []{return logic->CanUseProjectile();}),
     });
 
@@ -247,7 +247,7 @@ void RegionTable_Init_JabuJabusBelly() {
     }, {
         //Exits
         Entrance(RR_JABU_JABUS_BELLY_LIFT_ROOM,     []{return true;}),
-        Entrance(RR_JABU_JABUS_BELLY_BOSS_ENTRYWAY, []{return (logic->HasItem(RG_CLIMB) && logic->CanUse(RG_BOOMERANG)) || (ctx->GetTrickOption(RT_JABU_NEAR_BOSS_RANGED) && (logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT))) || (ctx->GetTrickOption(RT_JABU_NEAR_BOSS_EXPLOSIVES) && (logic->CanUse(RG_BOMBCHU_5) || (logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_BOMB_BAG))));}),
+        Entrance(RR_JABU_JABUS_BELLY_BOSS_ENTRYWAY, []{return (logic->HasItem(RG_CLIMB) && logic->CanUse(RG_BOOMERANG)) || (ctx->GetTrickOption(RT_JABU_NEAR_BOSS_RANGED) && (logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT))) || (ctx->GetTrickOption(RT_JABU_NEAR_BOSS_EXPLOSIVES) && (logic->CanUse(RG_BOMBCHU_5) || (logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_BOMB_BAG) && logic->HasItem(RG_CLIMB))));}),
     });
 
 #pragma endregion
@@ -336,7 +336,7 @@ void RegionTable_Init_JabuJabusBelly() {
         LOCATION(RC_JABU_JABUS_BELLY_MQ_BASEMENT_GRASS_3,             logic->CanCutShrubs()),
     }, {
         //Exits
-        Entrance(RR_JABU_JABUS_BELLY_MQ_HOLES_ROOM,           []{return true /* logic->HasItem(RG_CLIMB) */;}),
+        Entrance(RR_JABU_JABUS_BELLY_MQ_HOLES_ROOM,           []{return logic->HasItem(RG_CLIMB);}),
         Entrance(RR_JABU_JABUS_BELLY_MQ_TO_BIGOCTO,           []{return logic->Get(LOGIC_JABU_WEST_TENTACLE);}),
         Entrance(RR_JABU_JABUS_BELLY_MQ_WATER_SWITCH_ROOM,    []{return true;}),
         Entrance(RR_JABU_JABUS_BELLY_MQ_INVISIBLE_KEESE_ROOM, []{return logic->Get(LOGIC_JABU_NORTH_TENTACLE);}),
