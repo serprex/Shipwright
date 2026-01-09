@@ -1194,53 +1194,53 @@ void InitTrickNames() {
 
     trickNameTable[RG_KEATON_MASK] = {
         // TODO_TRANSLATE
-        Text{ "Korok Mask"},
-        Text{ "Lynel Mask"},
-        Text{ "Cucco Mask"},
-        Text{ "Remlit Mask"},
-    };  
+        Text{ "Korok Mask" },
+        Text{ "Lynel Mask" },
+        Text{ "Cucco Mask" },
+        Text{ "Remlit Mask" },
+    };
     trickNameTable[RG_SKULL_MASK] = {
         // TODO_TRANSLATE
-        Text{ "Darknut Mask"},
-        Text{ "Stalfos Mask"},
-        Text{ "Captain's Hat"},
-    };  
+        Text{ "Darknut Mask" },
+        Text{ "Stalfos Mask" },
+        Text{ "Captain's Hat" },
+    };
     trickNameTable[RG_SPOOKY_MASK] = {
         // TODO_TRANSLATE
-        Text{ "Gibdo Mask"},
-        Text{ "Garo's Mask"},
-        Text{ "Redead mask"},
-    };  
+        Text{ "Gibdo Mask" },
+        Text{ "Garo's Mask" },
+        Text{ "Redead mask" },
+    };
     trickNameTable[RG_BUNNY_HOOD] = {
         // TODO_TRANSLATE
-        Text{ "Bunny Mask"},
-        Text{ "Bremen Mask"},
-        Text{ "Rabbit Hood"},
-    };  
+        Text{ "Bunny Mask" },
+        Text{ "Bremen Mask" },
+        Text{ "Rabbit Hood" },
+    };
     trickNameTable[RG_MASK_OF_TRUTH] = {
         // TODO_TRANSLATE
-        Text{ "Feirce Diety Mask"},
-        Text{ "Majora's Mask"},
-        Text{ "Hero's Charm"},
-    };  
+        Text{ "Feirce Diety Mask" },
+        Text{ "Majora's Mask" },
+        Text{ "Hero's Charm" },
+    };
     trickNameTable[RG_GORON_MASK] = {
         // TODO_TRANSLATE
-        Text{ "Stone Mask"},
-        Text{ "Darmani's Mask"},
-        Text{ "Goron Garb"},
-    };  
+        Text{ "Stone Mask" },
+        Text{ "Darmani's Mask" },
+        Text{ "Goron Garb" },
+    };
     trickNameTable[RG_ZORA_MASK] = {
         // TODO_TRANSLATE
-        Text{ "Zora Costume"},
-        Text{ "Don Gero's Mask"},
-        Text{ "Mikau's Mask"},
-    };  
+        Text{ "Zora Costume" },
+        Text{ "Don Gero's Mask" },
+        Text{ "Mikau's Mask" },
+    };
     trickNameTable[RG_GERUDO_MASK] = {
         // TODO_TRANSLATE
-        Text{ "Great Fairy Mask"},
-        Text{ "Romani's Mask"},
-        Text{ "Gerudo Veil"},
-    };  
+        Text{ "Great Fairy Mask" },
+        Text{ "Romani's Mask" },
+        Text{ "Gerudo Veil" },
+    };
 
     trickNameTable[RG_GUARD_HOUSE_KEY] = {
         // TODO_TRANSLATE
