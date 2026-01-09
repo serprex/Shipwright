@@ -64,11 +64,6 @@ bool Logic::HasItem(RandomizerGet itemName) {
         case RG_PROGRESSIVE_NUT_UPGRADE:
         case RG_NUTS:
             return CurrentUpgrade(UPG_NUTS);
-        // RANDOTODO handle cases where the scarecrow is persistent between age better when OI is added
-        case RG_SCARECROW:
-            return ScarecrowsSong() && CanUse(RG_HOOKSHOT);
-        case RG_DISTANT_SCARECROW:
-            return ScarecrowsSong() && CanUse(RG_LONGSHOT);
         case RG_MAGIC_BEAN:
             return GetAmmo(ITEM_BEAN) > 0 || CheckInventory(ITEM_BEAN, true);
         case RG_KOKIRI_SWORD:
@@ -126,26 +121,26 @@ bool Logic::HasItem(RandomizerGet itemName) {
         case RG_DOUBLE_DEFENSE:
             return GetSaveContext()->isDoubleDefenseAcquired;
             // Masks
-        case RG_MASK_SKULL:
+        case RG_SKULL_MASK:
             switch (ctx->GetOption(RSK_MASK_QUEST).Get()) {
                 case RO_MASK_QUEST_VANILLA:
                     return Get(LOGIC_BORROW_SKULL_MASK);
                 case RO_MASK_QUEST_COMPLETED:
-                    return HasItem(RG_ZELDAS_LETTER);
+                    return HasItem(RG_ZELDAS_LETTER) && Get(LOGIC_KAKARIKO_GATE_OPEN);
                 case RO_MASK_QUEST_SHUFFLE:
-                    return HasItem(RG_ZELDAS_LETTER) && CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_SKULL);
+                    return CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_SKULL);
                 default:
                     assert(false);
                     return false;
             }
-        case RG_MASK_TRUTH:
+        case RG_MASK_OF_TRUTH:
             switch (ctx->GetOption(RSK_MASK_QUEST).Get()) {
                 case RO_MASK_QUEST_VANILLA:
                     return Get(LOGIC_BORROW_RIGHT_MASKS);
                 case RO_MASK_QUEST_COMPLETED:
-                    return HasItem(RG_ZELDAS_LETTER);
+                    return HasItem(RG_ZELDAS_LETTER) && Get(LOGIC_KAKARIKO_GATE_OPEN);
                 case RO_MASK_QUEST_SHUFFLE:
-                    return HasItem(RG_ZELDAS_LETTER) && CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_TRUTH);
+                    return CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_TRUTH);
                 default:
                     assert(false);
                     return false;
@@ -210,8 +205,6 @@ bool Logic::HasItem(RandomizerGet itemName) {
         case RG_RUTOS_LETTER:
             return CheckRandoInf(RandoGetToRandInf.at(itemName));
             // Boss Keys
-        case RG_EPONA:
-            return Get(LOGIC_FREED_EPONA);
         case RG_FOREST_TEMPLE_BOSS_KEY:
         case RG_FIRE_TEMPLE_BOSS_KEY:
         case RG_WATER_TEMPLE_BOSS_KEY:
@@ -324,8 +317,6 @@ bool Logic::CanUse(RandomizerGet itemName) {
             return IsAdult; // || HoverBootsAsChild;
         case RG_HOOKSHOT:
         case RG_LONGSHOT:
-        case RG_SCARECROW:
-        case RG_DISTANT_SCARECROW:
             return IsAdult; // || HookshotAsChild;
         case RG_GORON_TUNIC:
             return IsAdult; // || GoronTunicAsChild;
@@ -379,8 +370,8 @@ bool Logic::CanUse(RandomizerGet itemName) {
             return IsChild;
         case RG_MAGIC_BEAN:
             return IsChild;
-        case RG_MASK_SKULL:
-        case RG_MASK_TRUTH:
+        case RG_SKULL_MASK:
+        case RG_MASK_OF_TRUTH:
             return IsChild;
 
         // Songs
@@ -414,8 +405,6 @@ bool Logic::CanUse(RandomizerGet itemName) {
         // Misc. Items
         case RG_FISHING_POLE:
             return HasItem(RG_CHILD_WALLET); // as long as you have enough rubies
-        case RG_EPONA:
-            return IsAdult && CanUse(RG_EPONAS_SONG);
 
         // Bottle Items
         case RG_BOTTLE_WITH_BUGS:
@@ -532,7 +521,7 @@ bool Logic::CanDoGlitch(GlitchType glitch) {
 }
 
 // RANDOTODO quantity is a placeholder for proper ammo use calculation logic. in time will want updating to account for
-// ammo capacity Can we kill this enemy
+// ammo capacity
 bool Logic::CanKillEnemy(RandomizerEnemy enemy, EnemyDistance distance, bool wallOrFloor, uint8_t quantity, bool timer,
                          bool inWater) {
     bool killed = false;
@@ -790,7 +779,8 @@ bool Logic::CanKillEnemy(RandomizerEnemy enemy, EnemyDistance distance, bool wal
                    (CanUse(RG_BOMB_BAG) || HasItem(RG_GORONS_BRACELET) ||
                     (ctx->GetTrickOption(RT_DC_DODONGO_CHU) && IsAdult && CanUse(RG_BOMBCHU_5)));
         case RE_BARINADE:
-            return HasBossSoul(RG_BARINADE_SOUL) && CanUse(RG_BOOMERANG) && CanJumpslashExceptHammer();
+            return HasBossSoul(RG_BARINADE_SOUL) && CanUse(RG_BOOMERANG) &&
+                   (CanJumpslashExceptHammer() || ctx->GetTrickOption(RT_JABU_BARINADE_POTS));
         case RE_PHANTOM_GANON:
             return HasBossSoul(RG_PHANTOM_GANON_SOUL) && CanUseSword() &&
                    (CanUse(RG_HOOKSHOT) || CanUse(RG_FAIRY_BOW) || CanUse(RG_FAIRY_SLINGSHOT));
@@ -999,7 +989,7 @@ bool Logic::CanAvoidEnemy(RandomizerEnemy enemy, bool grounded, uint8_t quantity
         case RE_KEESE:
         case RE_FIRE_KEESE:
         case RE_GUAY:
-            return CanUse(RG_NUTS);
+            return CanUse(RG_NUTS) || CanUse(RG_SKULL_MASK);
         case RE_BLUE_BUBBLE:
             // RANDOTODO Trick to use shield hylian shield as child to stun these guys
             return !grounded || CanUse(RG_NUTS) || HookshotOrBoomerang() || CanStandingShield();
@@ -1585,14 +1575,14 @@ std::map<RandomizerGet, uint32_t> Logic::RandoGetToRandInf = {
     { RG_OCARINA_C_DOWN_BUTTON, RAND_INF_HAS_OCARINA_C_DOWN },
     { RG_OCARINA_C_LEFT_BUTTON, RAND_INF_HAS_OCARINA_C_LEFT },
     { RG_OCARINA_C_RIGHT_BUTTON, RAND_INF_HAS_OCARINA_C_RIGHT },
-    { RG_MASK_KEATON, RAND_INF_CHILD_TRADES_HAS_MASK_KEATON },
-    { RG_MASK_SKULL, RAND_INF_CHILD_TRADES_HAS_MASK_SKULL },
-    { RG_MASK_SPOOKY, RAND_INF_CHILD_TRADES_HAS_MASK_SPOOKY },
-    { RG_MASK_BUNNY, RAND_INF_CHILD_TRADES_HAS_MASK_BUNNY },
-    { RG_MASK_GORON, RAND_INF_CHILD_TRADES_HAS_MASK_GORON },
-    { RG_MASK_ZORA, RAND_INF_CHILD_TRADES_HAS_MASK_ZORA },
-    { RG_MASK_GERUDO, RAND_INF_CHILD_TRADES_HAS_MASK_GERUDO },
-    { RG_MASK_TRUTH, RAND_INF_CHILD_TRADES_HAS_MASK_TRUTH },
+    { RG_KEATON_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_KEATON },
+    { RG_SKULL_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_SKULL },
+    { RG_SPOOKY_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_SPOOKY },
+    { RG_BUNNY_HOOD, RAND_INF_CHILD_TRADES_HAS_MASK_BUNNY },
+    { RG_GORON_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_GORON },
+    { RG_ZORA_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_ZORA },
+    { RG_GERUDO_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_GERUDO },
+    { RG_MASK_OF_TRUTH, RAND_INF_CHILD_TRADES_HAS_MASK_TRUTH },
     { RG_SKELETON_KEY, RAND_INF_HAS_SKELETON_KEY },
     { RG_GREG_RUPEE, RAND_INF_GREG_FOUND },
     { RG_FISHING_POLE, RAND_INF_FISHING_POLE_FOUND },
@@ -1969,14 +1959,14 @@ void Logic::ApplyItemEffect(Item& item, bool state) {
                 case RG_OCARINA_C_DOWN_BUTTON:
                 case RG_OCARINA_C_LEFT_BUTTON:
                 case RG_OCARINA_C_RIGHT_BUTTON:
-                case RG_MASK_KEATON:
-                case RG_MASK_SKULL:
-                case RG_MASK_SPOOKY:
-                case RG_MASK_BUNNY:
-                case RG_MASK_GORON:
-                case RG_MASK_ZORA:
-                case RG_MASK_GERUDO:
-                case RG_MASK_TRUTH:
+                case RG_KEATON_MASK:
+                case RG_SKULL_MASK:
+                case RG_SPOOKY_MASK:
+                case RG_BUNNY_HOOD:
+                case RG_GORON_MASK:
+                case RG_ZORA_MASK:
+                case RG_GERUDO_MASK:
+                case RG_MASK_OF_TRUTH:
                 case RG_GREG_RUPEE:
                 case RG_FISHING_POLE:
                 case RG_GUARD_HOUSE_KEY:
@@ -2479,6 +2469,18 @@ bool Logic::IsFireLoopLocked() {
            ctx->GetOption(RSK_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_ANY_DUNGEON);
 }
 
+bool Logic::ReachScarecrow() {
+    return ScarecrowsSong() && CanUse(RG_HOOKSHOT);
+}
+
+bool Logic::ReachDistantScarecrow() {
+    return ScarecrowsSong() && CanUse(RG_LONGSHOT);
+}
+
+bool Logic::SummonEpona() {
+    return IsAdult && Get(LOGIC_FREED_EPONA) && CanUse(RG_EPONAS_SONG);
+}
+
 bool Logic::IsReverseAccessPossible() {
     // If we ever allow dungeon entrances to connect to boss rooms directly in dungeon chains, or for 1 boss door to
     // lead to another dungeons boss door, add RSK_MIX_DUNGEON_ENTRANCES to the final condition
@@ -2499,7 +2501,7 @@ bool Logic::SpiritExplosiveKeyLogic() {
 }
 
 bool Logic::SpiritWestToSkull() {
-    return (IsAdult && ctx->GetTrickOption(RT_SPIRIT_STATUE_JUMP)) || CanUse(RG_HOVER_BOOTS) || CanUse(RG_SCARECROW);
+    return (IsAdult && ctx->GetTrickOption(RT_SPIRIT_STATUE_JUMP)) || CanUse(RG_HOVER_BOOTS) || ReachScarecrow();
 }
 
 bool Logic::SpiritSunBlockSouthLedge() {

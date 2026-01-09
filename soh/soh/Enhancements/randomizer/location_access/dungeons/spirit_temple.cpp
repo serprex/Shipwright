@@ -130,6 +130,7 @@ void RegionTable_Init_SpiritTemple() {
         LOCATION(RC_SPIRIT_TEMPLE_CHILD_CLIMB_EAST_CHEST,  SpiritShared(RR_SPIRIT_TEMPLE_SUN_ON_FLOOR_2F, []{return logic->CanHitSwitch(ED_BOMB_THROW);})),
         LOCATION(RC_SPIRIT_TEMPLE_GS_SUN_ON_FLOOR_ROOM,    SpiritShared(RR_SPIRIT_TEMPLE_SUN_ON_FLOOR_2F, []{return logic->CanKillEnemy(RE_GOLD_SKULLTULA, logic->TakeDamage() ? ED_SHORT_JUMPSLASH : ED_BOMB_THROW);}, false,
                                                                         RR_SPIRIT_TEMPLE_SUN_ON_FLOOR_1F, []{return logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG);})),
+        LOCATION(RC_SPIRIT_TEMPLE_BOULDER_ROOM_SUN_FAIRY,   logic->CanUse(RG_SUNS_SONG) && (logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_BOOMERANG) || logic->CanUse(RG_BOMBCHU_5) || (logic->CanUse(RG_BOMB_BAG) && logic->IsAdult && ctx->GetTrickOption(RT_SPIRIT_LOWER_ADULT_SWITCH))) && (logic->CanUse(RG_HOVER_BOOTS) || logic->CanJumpslash())),
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_SUN_ON_FLOOR_1F, []{return true;}),
@@ -147,7 +148,7 @@ void RegionTable_Init_SpiritTemple() {
 
     areaTable[RR_SPIRIT_TEMPLE_SAND_PIT] = Region("Spirit Temple Sand Pit", SCENE_SPIRIT_TEMPLE, {}, {
         //Locations
-        LOCATION(RC_SPIRIT_TEMPLE_COMPASS_CHEST, logic->CanUse(RG_HOOKSHOT) && logic->CanUse(RG_ZELDAS_LULLABY)),
+        LOCATION(RC_SPIRIT_TEMPLE_COMPASS_CHEST, logic->CanUse(RG_ZELDAS_LULLABY) && (logic->CanUse(RG_HOOKSHOT) || (ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_MEGATON_HAMMER)))),
     }, {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_ADULT_SIDE_HUB, []{return true;}),
@@ -211,7 +212,7 @@ void RegionTable_Init_SpiritTemple() {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_SUN_ON_FLOOR_2F,  []{return true;}),
         Entrance(RR_SPIRIT_TEMPLE_INNER_WEST_HAND, []{return true;}),
-        Entrance(RR_SPIRIT_TEMPLE_GS_LEDGE,         []{return logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_SCARECROW);}),
+        Entrance(RR_SPIRIT_TEMPLE_GS_LEDGE,         []{return logic->CanUse(RG_HOVER_BOOTS) || logic->ReachScarecrow();}),
         // RT_SPIRIT_PLATFORM_HOOKSHOT is currently disabled
         Entrance(RR_SPIRIT_TEMPLE_PLATFORM,         []{return logic->Get(LOGIC_SPIRIT_PLATFORM_LOWERED) && 
                                                               (logic->CanUse(RG_LONGSHOT) || (ctx->GetTrickOption(RT_SPIRIT_PLATFORM_HOOKSHOT) && logic->CanUse(RG_HOOKSHOT)));}),
@@ -564,7 +565,7 @@ void RegionTable_Init_SpiritTemple() {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_ENTRYWAY,           []{return true;}),
         Entrance(RR_SPIRIT_TEMPLE_MQ_CHILD_SIDE_HUB,  []{return logic->IsChild/*logic->CanUse(RG_CRAWL) && logic->HasSoul(RG_NABOORU_SOUL)*/;}),
-        Entrance(RR_SPIRIT_TEMPLE_MQ_BEHIND_GEYSER,   []{return false;}),
+        Entrance(RR_SPIRIT_TEMPLE_MQ_BEHIND_GEYSER,   []{return ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && logic->CanUse(RG_HOVER_BOOTS) && (logic->CanUse(RG_MEGATON_HAMMER) || (logic->CanStandingShield() && (logic->CanUseSword() || logic->CanUse(RG_STICKS))));}),
         Entrance(RR_SPIRIT_TEMPLE_MQ_BIG_BLOCKS_HOLE, []{return logic->CanUse(RG_LONGSHOT) && logic->CanUse(RG_BOMBCHU_5);}),
     });
 
@@ -775,7 +776,7 @@ void RegionTable_Init_SpiritTemple() {
         Entrance(RR_SPIRIT_TEMPLE_MQ_BIG_BLOCKS_DOOR,   []{return logic->Get(LOGIC_SPIRIT_STATUE_SOUTH_DOOR);}),
         //explicit adult check here is a precaution against possible Child logic leaking, Child with a hookshot can do this
         //It's possible to climb the legs of the statue to line up a longshot hit, but you can just go via West
-        Entrance(RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM_ADULT, []{return logic->IsAdult && logic->CanUse(RG_SCARECROW);}),
+        Entrance(RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM_ADULT, []{return logic->IsAdult && logic->ReachScarecrow();}),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_MQ_FLAMETHROWER_STAIRS] = Region("Spirit Temple MQ Flamethrower Stairs", SCENE_SPIRIT_TEMPLE, {}, {}, {
@@ -918,7 +919,7 @@ void RegionTable_Init_SpiritTemple() {
         LOCATION(RC_SPIRIT_TEMPLE_MQ_EARLY_ADULT_POT_2, logic->CanBreakPots()),
     }, {
         //Exits
-        Entrance(RR_SPIRIT_TEMPLE_MQ_FOYER,               []{return logic->CanUse(RG_MEGATON_HAMMER);}),
+        Entrance(RR_SPIRIT_TEMPLE_MQ_FOYER,               []{return logic->CanUse(RG_MEGATON_HAMMER) || (ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanStandingShield() && (logic->CanUseSword() || logic->CanUse(RG_STICKS)));}),
         Entrance(RR_SPIRIT_TEMPLE_MQ_3_SUNS_ROOM_1F,      []{return true;}),
         Entrance(RR_SPIRIT_TEMPLE_MQ_SAND_PIT,            []{return true;}),
         Entrance(RR_SPIRIT_TEMPLE_MQ_SYMPHONY_ROOM_UPPER, []{return logic->SmallKeys(SCENE_SPIRIT_TEMPLE, 7);}),
@@ -926,7 +927,7 @@ void RegionTable_Init_SpiritTemple() {
 
     areaTable[RR_SPIRIT_TEMPLE_MQ_SAND_PIT] = Region("Spirit Temple MQ Sand Pit", SCENE_SPIRIT_TEMPLE, {}, {
         //Locations
-        LOCATION(RC_SPIRIT_TEMPLE_MQ_LEEVER_ROOM_CHEST, logic->CanKillEnemy(RE_PURPLE_LEEVER) && logic->CanUse(RG_HOOKSHOT)),
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_LEEVER_ROOM_CHEST, logic->CanKillEnemy(RE_PURPLE_LEEVER) && (logic->CanUse(RG_HOOKSHOT) || (ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_MEGATON_HAMMER)))),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_GS_LEEVER_ROOM,    logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG)),
     }, {
         //Exits
@@ -962,13 +963,13 @@ void RegionTable_Init_SpiritTemple() {
 
     areaTable[RR_SPIRIT_TEMPLE_MQ_FIRE_WALL_STAIRS_LOWER] = Region("Spirit Temple MQ Fire Wall Stairs Lower", SCENE_SPIRIT_TEMPLE, {}, {}, {
         //Exits
-        Entrance(RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM_ADULT,       []{return logic->SmallKeys(SCENE_SPIRIT_TEMPLE, 5);}),
-        Entrance(RR_SPIRIT_TEMPLE_MQ_FIRE_WALL_STAIRS_UPPER, []{return logic->CanUse(RG_HOOKSHOT);}),
+        Entrance(RR_SPIRIT_TEMPLE_MQ_STATUE_ROOM_ADULT,      []{return logic->SmallKeys(SCENE_SPIRIT_TEMPLE, 5);}),
+        Entrance(RR_SPIRIT_TEMPLE_MQ_FIRE_WALL_STAIRS_UPPER, []{return logic->CanUse(RG_HOOKSHOT) || (ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_MEGATON_HAMMER));}),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_MQ_FIRE_WALL_STAIRS_UPPER] = Region("Spirit Temple MQ Fire Wall Stairs Upper", SCENE_SPIRIT_TEMPLE, {}, {}, {
         //Exits
-        Entrance(RR_SPIRIT_TEMPLE_MQ_FIRE_WALL_STAIRS_LOWER, []{return logic->CanUse(RG_HOOKSHOT);}),
+        Entrance(RR_SPIRIT_TEMPLE_MQ_FIRE_WALL_STAIRS_LOWER, []{return logic->CanUse(RG_HOOKSHOT) || (ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_MEGATON_HAMMER));}),
         Entrance(RR_SPIRIT_TEMPLE_MQ_BEAMOS_PITS,            []{return true;}),
     });
 
@@ -1037,7 +1038,7 @@ void RegionTable_Init_SpiritTemple() {
         //Exits
         Entrance(RR_SPIRIT_TEMPLE_MQ_BEAMOS_PITS,    []{return true;}),
         //technically we only need to avoid them, but the sheer height and the moving walls makes getting to the top after only stunning them very difficult/impossible
-        Entrance(RR_SPIRIT_TEMPLE_MQ_BIG_WALL_UPPER, []{return /*(*/logic->CanKillEnemy(RE_KEESE)/*|| CanUse(RG_SKULL_MASK)) && CanClimbHigh()*/;}),
+        Entrance(RR_SPIRIT_TEMPLE_MQ_BIG_WALL_UPPER, []{return /*(*/logic->CanKillEnemy(RE_KEESE) || logic->CanUse(RG_SKULL_MASK)/*) && CanClimbHigh()*/;}),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_MQ_BIG_WALL_UPPER] = Region("Spirit Temple MQ Big Wall Upper", SCENE_SPIRIT_TEMPLE, {

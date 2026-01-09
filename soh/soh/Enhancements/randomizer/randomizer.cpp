@@ -5252,21 +5252,21 @@ void Randomizer::CreateCustomMessages() {
                   "Vous obtenez la %rtouche %y\xa6%r de&l'Ocarina%w! Vous pouvez&maintenant l'utiliser lorsque&vous en "
                   "jouez!"),
 
-        GIMESSAGE(RG_MASK_KEATON, ITEM_MASK_KEATON, "You found the %rKeaton Mask%w!", "!!!",
+        GIMESSAGE(RG_KEATON_MASK, ITEM_MASK_KEATON, "You found the %rKeaton Mask%w!", "!!!",
                   "Vous obtenez le %rMasque&du Renard%w!"),
-        GIMESSAGE(RG_MASK_SKULL, ITEM_MASK_SKULL, "You found the %rSkull Mask%w!", "!!!",
+        GIMESSAGE(RG_SKULL_MASK, ITEM_MASK_SKULL, "You found the %rSkull Mask%w!", "!!!",
                   "Vous obtenez le %rMasque&de Mort%w!"),
-        GIMESSAGE(RG_MASK_SPOOKY, ITEM_MASK_SPOOKY, "You found the %rSpooky Mask%w!", "!!!",
+        GIMESSAGE(RG_SPOOKY_MASK, ITEM_MASK_SPOOKY, "You found the %rSpooky Mask%w!", "!!!",
                   "Vous obtenez le %rMasque&d'Effroi%w!"),
-        GIMESSAGE(RG_MASK_BUNNY, ITEM_MASK_BUNNY, "You found the %rBunny Mask%w!", "!!!",
+        GIMESSAGE(RG_BUNNY_HOOD, ITEM_MASK_BUNNY, "You found the %rBunny Mask%w!", "!!!",
                   "Vous obtenez le %rMasque&du Lapin%w!"),
-        GIMESSAGE(RG_MASK_GORON, ITEM_MASK_GORON, "You found the %rGoron Mask%w!", "!!!",
+        GIMESSAGE(RG_GORON_MASK, ITEM_MASK_GORON, "You found the %rGoron Mask%w!", "!!!",
                   "Vous obtenez le %rMasque&de Goron%w!"),
-        GIMESSAGE(RG_MASK_ZORA, ITEM_MASK_ZORA, "You found the %rZora Mask%w!", "!!!",
+        GIMESSAGE(RG_ZORA_MASK, ITEM_MASK_ZORA, "You found the %rZora Mask%w!", "!!!",
                   "Vous obtenez le %rMasque&de Zora%w!"),
-        GIMESSAGE(RG_MASK_GERUDO, ITEM_MASK_GERUDO, "You found the %rGerudo Mask%w!", "!!!",
+        GIMESSAGE(RG_GERUDO_MASK, ITEM_MASK_GERUDO, "You found the %rGerudo Mask%w!", "!!!",
                   "Vous obtenez le %rMasque&de Gerudo%w!"),
-        GIMESSAGE(RG_MASK_TRUTH, ITEM_MASK_TRUTH, "You found the %rMask of Truth%w!", "!!!",
+        GIMESSAGE(RG_MASK_OF_TRUTH, ITEM_MASK_TRUTH, "You found the %rMask of Truth%w!", "!!!",
                   "Vous obtenez le %rMasque&de Vérité%w!"),
 
         GIMESSAGE(RG_BRONZE_SCALE, ITEM_SCALE_SILVER, "You got the %rBronze Scale%w!&The power of buoyancy is yours!",
@@ -5634,10 +5634,10 @@ extern "C" u16 Randomizer_Item_Give(PlayState* play, GetItemEntry giEntry) {
         Flags_SetRandomizerInf(
             (RandomizerInf)((int)RAND_INF_GUARD_HOUSE_UNLOCKED + ((item - RG_GUARD_HOUSE_KEY) * 2) + 1));
         return Return_Item_Entry(giEntry, RG_NONE);
-    } else if (item >= RG_MASK_KEATON && item <= RG_MASK_TRUTH) {
-        Flags_SetRandomizerInf((RandomizerInf)((int)RAND_INF_CHILD_TRADES_HAS_MASK_KEATON + (item - RG_MASK_KEATON)));
+    } else if (item >= RG_KEATON_MASK && item <= RG_MASK_OF_TRUTH) {
+        Flags_SetRandomizerInf((RandomizerInf)((int)RAND_INF_CHILD_TRADES_HAS_MASK_KEATON + (item - RG_KEATON_MASK)));
         if (INV_CONTENT(ITEM_TRADE_CHILD) == ITEM_NONE) {
-            INV_CONTENT(ITEM_TRADE_CHILD) = (int)ITEM_MASK_KEATON + (item - RG_MASK_KEATON);
+            INV_CONTENT(ITEM_TRADE_CHILD) = (int)ITEM_MASK_KEATON + (item - RG_KEATON_MASK);
         }
         return Return_Item_Entry(giEntry, RG_NONE);
     }
