@@ -13,6 +13,7 @@
 #include "soh/SohGui/SohMenu.h"
 #include "soh/SohGui/SohGui.hpp"
 #include "AudioCollection.h"
+#include "soh/Enhancements/enhancementTypes.h"
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 
 extern "C" {
@@ -29,6 +30,7 @@ using namespace UIWidgets;
 static WidgetInfo lowHpAlarm;
 static WidgetInfo naviCall;
 static WidgetInfo enemyProx;
+static WidgetInfo leeverProx;
 static WidgetInfo leadingMusic;
 static WidgetInfo displaySeqName;
 static WidgetInfo ovlDuration;
@@ -77,7 +79,7 @@ size_t AuthenticCountBySequenceType(SeqType type) {
     }
 }
 
-static const std::unordered_map<int32_t, const char*> audioRandomizerModes = {
+static const std::map<int32_t, const char*> audioRandomizerModes = {
     { RANDOMIZE_OFF, "Manual" },
     { RANDOMIZE_ON_NEW_SCENE, "On New Scene" },
     { RANDOMIZE_ON_RANDO_GEN_ONLY, "On Rando Gen Only" },
@@ -577,6 +579,9 @@ void AudioEditor::DrawElement() {
                 SohGui::mSohMenu->MenuDrawItem(lowHpAlarm, ImGui::GetContentRegionAvail().x, THEME_COLOR);
                 SohGui::mSohMenu->MenuDrawItem(naviCall, ImGui::GetContentRegionAvail().x, THEME_COLOR);
                 SohGui::mSohMenu->MenuDrawItem(enemyProx, ImGui::GetContentRegionAvail().x, THEME_COLOR);
+                if (!CVarGetInteger(CVAR_AUDIO("EnemyBGMDisable"), 0)) {
+                    SohGui::mSohMenu->MenuDrawItem(leeverProx, ImGui::GetContentRegionAvail().x, THEME_COLOR);
+                }
                 SohGui::mSohMenu->MenuDrawItem(leadingMusic, ImGui::GetContentRegionAvail().x, THEME_COLOR);
                 SohGui::mSohMenu->MenuDrawItem(displaySeqName, ImGui::GetContentRegionAvail().x, THEME_COLOR);
                 SohGui::mSohMenu->MenuDrawItem(ovlDuration, ImGui::GetContentRegionAvail().x, THEME_COLOR);
@@ -869,6 +874,12 @@ void RegisterAudioWidgets() {
                      .Color(THEME_COLOR)
                      .Tooltip("Disables the music change when getting close to enemies. Useful for hearing "
                               "your custom music for each scene more often."));
+
+    leeverProx = { .name = "Enable Enemy Proximity Music for Leever", .type = WidgetType::WIDGET_CVAR_CHECKBOX };
+    leeverProx.CVar(CVAR_AUDIO("LeeverEnemyBGM"))
+        .Options(CheckboxOptions()
+                     .Color(THEME_COLOR)
+                     .Tooltip("Plays the battle music when getting close to a Leever, like in Majora's Mask."));
 
     leadingMusic = { .name = "Disable Leading Music in Lost Woods", .type = WidgetType::WIDGET_CVAR_CHECKBOX };
     leadingMusic.CVar(CVAR_AUDIO("LostWoodsConsistentVolume"))

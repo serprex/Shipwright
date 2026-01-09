@@ -34,7 +34,7 @@ void RegionTable_Init_FireTemple() {
         //Exits
         Entrance(RR_FIRE_TEMPLE_FOYER,           []{return (logic->IsAdult || logic->CanUse(RG_HOVER_BOOTS)) && (logic->FireTimer() >= 16 || (logic->Get(LOGIC_FIRE_HIT_PLATFORM) && logic->FireTimer() >= 8));}),
         Entrance(RR_FIRE_TEMPLE_NEAR_BOSS_UPPER, []{return logic->IsAdult && (logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS)) && logic->FireTimer() >= 16;}),
-        Entrance(RR_FIRE_TEMPLE_BOSS_ENTRYWAY,   []{return logic->FireTimer() >= 16 && (logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && (ctx->GetTrickOption(RT_FIRE_BOSS_DOOR_JUMP) || logic->Get(LOGIC_FIRE_HIT_PLATFORM))));}),
+        Entrance(RR_FIRE_TEMPLE_BOSS_ENTRYWAY,   []{return logic->FireTimer() >= 16 && (logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && (ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS) || logic->Get(LOGIC_FIRE_HIT_PLATFORM))));}),
     });
 
     //This region assumes tunic logic is handled on entry.
@@ -255,7 +255,7 @@ void RegionTable_Init_FireTemple() {
         Entrance(RR_FIRE_TEMPLE_SHORTCUT_CLIMB,     []{return logic->HasExplosives();}),
         Entrance(RR_FIRE_TEMPLE_BOULDER_MAZE_LOWER, []{return true;}),
         Entrance(RR_FIRE_TEMPLE_FIRE_WALL_CHASE,    []{return true;}),
-        Entrance(RR_FIRE_TEMPLE_GS_CLIMB_4F,        []{return logic->CanUse(RG_SCARECROW) || (ctx->GetTrickOption(RT_FIRE_SCARECROW) && logic->IsAdult && logic->CanUse(RG_LONGSHOT));}),
+        Entrance(RR_FIRE_TEMPLE_GS_CLIMB_4F,        []{return logic->ReachScarecrow() || (ctx->GetTrickOption(RT_FIRE_SCARECROW) && logic->IsAdult && logic->CanUse(RG_LONGSHOT));}),
     });
 
     areaTable[RR_FIRE_TEMPLE_GS_CLIMB_4F] = Region("Fire Temple GS Climb 4F", SCENE_FIRE_TEMPLE, {}, {}, {
@@ -538,7 +538,7 @@ void RegionTable_Init_FireTemple() {
         //Exits
         Entrance(RR_FIRE_TEMPLE_MQ_FOYER_UPPER,      []{return (logic->IsAdult || logic->CanUse(RG_HOVER_BOOTS)) && (logic->FireTimer() >= 16 || (logic->Get(LOGIC_FIRE_HIT_PLATFORM) && logic->FireTimer() >= 8));}),
         Entrance(RR_FIRE_TEMPLE_MQ_NEAR_BOSS_TARGET, []{return logic->FireTimer() >= 32 && (logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS));}),
-        Entrance(RR_FIRE_TEMPLE_BOSS_ENTRYWAY,       []{return logic->FireTimer() >= 16 && (logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && (ctx->GetTrickOption(RT_FIRE_BOSS_DOOR_JUMP) || logic->Get(LOGIC_FIRE_HIT_PLATFORM))));}),
+        Entrance(RR_FIRE_TEMPLE_BOSS_ENTRYWAY,       []{return logic->FireTimer() >= 16 && (logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && (ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS) || logic->Get(LOGIC_FIRE_HIT_PLATFORM))));}),
     });
 
     //This region assumes tunic logic is handled on entry.
@@ -1006,7 +1006,7 @@ void RegionTable_Init_FireTemple() {
         //Locations
         //This requires nothing in N64 logic, but is tight enough to need rollspam with the one-point on which is stricter than I would normally consider in logic
         //Child basically needs the scarecrow or a bunny hood though due to a worse ledge grab.
-        LOCATION(RC_FIRE_TEMPLE_MQ_CHEST_ON_FIRE, logic->IsAdult || logic->CanUse(RG_SCARECROW)),
+        LOCATION(RC_FIRE_TEMPLE_MQ_CHEST_ON_FIRE, logic->IsAdult || logic->ReachScarecrow()),
     }, {
         //Exits
         //The dropdown here is unusual in that it hits 1 of 3 locations: RR_FIRE_TEMPLE_MQ_2_FIRE_WALLS_LOWER, RR_FIRE_TEMPLE_MQ_2_FIRE_WALLS_UPPER_DOOR, and RR_FIRE_TEMPLE_MQ_2_FIRE_WALLS_SWITCH
