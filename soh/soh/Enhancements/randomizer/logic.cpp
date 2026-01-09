@@ -121,26 +121,26 @@ bool Logic::HasItem(RandomizerGet itemName) {
         case RG_DOUBLE_DEFENSE:
             return GetSaveContext()->isDoubleDefenseAcquired;
             // Masks
-        case RG_MASK_SKULL:
+        case RG_SKULL_MASK:
             switch (ctx->GetOption(RSK_MASK_QUEST).Get()) {
                 case RO_MASK_QUEST_VANILLA:
                     return Get(LOGIC_BORROW_SKULL_MASK);
                 case RO_MASK_QUEST_COMPLETED:
-                    return HasItem(RG_ZELDAS_LETTER);
+                    return HasItem(RG_ZELDAS_LETTER) && Get(LOGIC_KAKARIKO_GATE_OPEN);
                 case RO_MASK_QUEST_SHUFFLE:
-                    return HasItem(RG_ZELDAS_LETTER) && CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_SKULL);
+                    return CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_SKULL);
                 default:
                     assert(false);
                     return false;
             }
-        case RG_MASK_TRUTH:
+        case RG_MASK_OF_TRUTH:
             switch (ctx->GetOption(RSK_MASK_QUEST).Get()) {
                 case RO_MASK_QUEST_VANILLA:
                     return Get(LOGIC_BORROW_RIGHT_MASKS);
                 case RO_MASK_QUEST_COMPLETED:
-                    return HasItem(RG_ZELDAS_LETTER);
+                    return HasItem(RG_ZELDAS_LETTER) && Get(LOGIC_KAKARIKO_GATE_OPEN);
                 case RO_MASK_QUEST_SHUFFLE:
-                    return HasItem(RG_ZELDAS_LETTER) && CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_TRUTH);
+                    return CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_TRUTH);
                 default:
                     assert(false);
                     return false;
@@ -370,8 +370,8 @@ bool Logic::CanUse(RandomizerGet itemName) {
             return IsChild;
         case RG_MAGIC_BEAN:
             return IsChild;
-        case RG_MASK_SKULL:
-        case RG_MASK_TRUTH:
+        case RG_SKULL_MASK:
+        case RG_MASK_OF_TRUTH:
             return IsChild;
 
         // Songs
@@ -989,7 +989,7 @@ bool Logic::CanAvoidEnemy(RandomizerEnemy enemy, bool grounded, uint8_t quantity
         case RE_KEESE:
         case RE_FIRE_KEESE:
         case RE_GUAY:
-            return CanUse(RG_NUTS);
+            return CanUse(RG_NUTS) || CanUse(RG_SKULL_MASK);
         case RE_BLUE_BUBBLE:
             // RANDOTODO Trick to use shield hylian shield as child to stun these guys
             return !grounded || CanUse(RG_NUTS) || HookshotOrBoomerang() || CanStandingShield();
@@ -1575,14 +1575,14 @@ std::map<RandomizerGet, uint32_t> Logic::RandoGetToRandInf = {
     { RG_OCARINA_C_DOWN_BUTTON, RAND_INF_HAS_OCARINA_C_DOWN },
     { RG_OCARINA_C_LEFT_BUTTON, RAND_INF_HAS_OCARINA_C_LEFT },
     { RG_OCARINA_C_RIGHT_BUTTON, RAND_INF_HAS_OCARINA_C_RIGHT },
-    { RG_MASK_KEATON, RAND_INF_CHILD_TRADES_HAS_MASK_KEATON },
-    { RG_MASK_SKULL, RAND_INF_CHILD_TRADES_HAS_MASK_SKULL },
-    { RG_MASK_SPOOKY, RAND_INF_CHILD_TRADES_HAS_MASK_SPOOKY },
-    { RG_MASK_BUNNY, RAND_INF_CHILD_TRADES_HAS_MASK_BUNNY },
-    { RG_MASK_GORON, RAND_INF_CHILD_TRADES_HAS_MASK_GORON },
-    { RG_MASK_ZORA, RAND_INF_CHILD_TRADES_HAS_MASK_ZORA },
-    { RG_MASK_GERUDO, RAND_INF_CHILD_TRADES_HAS_MASK_GERUDO },
-    { RG_MASK_TRUTH, RAND_INF_CHILD_TRADES_HAS_MASK_TRUTH },
+    { RG_KEATON_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_KEATON },
+    { RG_SKULL_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_SKULL },
+    { RG_SPOOKY_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_SPOOKY },
+    { RG_BUNNY_HOOD, RAND_INF_CHILD_TRADES_HAS_MASK_BUNNY },
+    { RG_GORON_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_GORON },
+    { RG_ZORA_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_ZORA },
+    { RG_GERUDO_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_GERUDO },
+    { RG_MASK_OF_TRUTH, RAND_INF_CHILD_TRADES_HAS_MASK_TRUTH },
     { RG_SKELETON_KEY, RAND_INF_HAS_SKELETON_KEY },
     { RG_GREG_RUPEE, RAND_INF_GREG_FOUND },
     { RG_FISHING_POLE, RAND_INF_FISHING_POLE_FOUND },
@@ -1959,14 +1959,14 @@ void Logic::ApplyItemEffect(Item& item, bool state) {
                 case RG_OCARINA_C_DOWN_BUTTON:
                 case RG_OCARINA_C_LEFT_BUTTON:
                 case RG_OCARINA_C_RIGHT_BUTTON:
-                case RG_MASK_KEATON:
-                case RG_MASK_SKULL:
-                case RG_MASK_SPOOKY:
-                case RG_MASK_BUNNY:
-                case RG_MASK_GORON:
-                case RG_MASK_ZORA:
-                case RG_MASK_GERUDO:
-                case RG_MASK_TRUTH:
+                case RG_KEATON_MASK:
+                case RG_SKULL_MASK:
+                case RG_SPOOKY_MASK:
+                case RG_BUNNY_HOOD:
+                case RG_GORON_MASK:
+                case RG_ZORA_MASK:
+                case RG_GERUDO_MASK:
+                case RG_MASK_OF_TRUTH:
                 case RG_GREG_RUPEE:
                 case RG_FISHING_POLE:
                 case RG_GUARD_HOUSE_KEY:

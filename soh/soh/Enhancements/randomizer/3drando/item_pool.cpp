@@ -385,25 +385,14 @@ void GenerateItemPool() {
     }
 
     if (ctx->GetOption(RSK_MASK_QUEST).Is(RO_MASK_QUEST_SHUFFLE)) {
-        AddItemToMainPool(RG_MASK_KEATON);
-        AddItemToMainPool(RG_MASK_SKULL);
-        AddItemToMainPool(RG_MASK_SPOOKY);
-        AddItemToMainPool(RG_MASK_BUNNY);
-        AddItemToMainPool(RG_MASK_GORON);
-        AddItemToMainPool(RG_MASK_ZORA);
-        AddItemToMainPool(RG_MASK_GERUDO);
-        AddItemToMainPool(RG_MASK_TRUTH);
-    }
-
-    if (ctx->GetOption(RSK_MASK_QUEST).Is(RO_MASK_QUEST_SHUFFLE)) {
-        AddItemToMainPool(RG_MASK_KEATON);
-        AddItemToMainPool(RG_MASK_SKULL);
-        AddItemToMainPool(RG_MASK_SPOOKY);
-        AddItemToMainPool(RG_MASK_BUNNY);
-        AddItemToMainPool(RG_MASK_GORON);
-        AddItemToMainPool(RG_MASK_ZORA);
-        AddItemToMainPool(RG_MASK_GERUDO);
-        AddItemToMainPool(RG_MASK_TRUTH);
+        AddItemToPool(RG_KEATON_MASK, 2, 1, 1, 1);
+        AddItemToPool(RG_SKULL_MASK, 2, 1, 1, 1);
+        AddItemToPool(RG_SPOOKY_MASK, 2, 1, 1, 1);
+        AddItemToPool(RG_BUNNY_HOOD, 2, 1, 1, 1);
+        AddItemToPool(RG_GORON_MASK, 2, 1, 1, 1);
+        AddItemToPool(RG_ZORA_MASK, 2, 1, 1, 1);
+        AddItemToPool(RG_GERUDO_MASK, 2, 1, 1, 1);
+        AddItemToPool(RG_MASK_OF_TRUTH, 2, 1, 1, 1);
     }
 
     int bronzeScale = ctx->GetOption(RSK_SHUFFLE_SWIM) ? 1 : 0;
