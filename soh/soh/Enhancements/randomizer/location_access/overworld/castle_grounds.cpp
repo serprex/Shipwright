@@ -50,7 +50,7 @@ void RegionTable_Init_CastleGrounds() {
         Entrance(RR_HC_STORMS_GROTTO,        []{return logic->CanOpenStormsGrotto();}),
     });
 
-    areaTable[RR_HC_LEDGE] = Region("HC Garden", SCENE_CASTLE_COURTYARD_ZELDA, {}, {}, {
+    areaTable[RR_HC_LEDGE] = Region("HC Ledge", SCENE_HYRULE_CASTLE, {}, {}, {
         //Exits
         Entrance(RR_HYRULE_CASTLE_GROUNDS, []{return true;}),
         Entrance(RR_HC_GARDEN,             []{return logic->CanUse(RG_CRAWL);}),
@@ -62,7 +62,7 @@ void RegionTable_Init_CastleGrounds() {
         LOCATION(RC_SONG_FROM_IMPA,   true),
     }, {
         //Exits
-        Entrance(RR_HYRULE_CASTLE_GROUNDS, []{return true;}), // if this ever gets shuffled leaving garden area should come out crawlspace
+        Entrance(RR_HC_LEDGE, []{return true;}), // if this ever gets shuffled leaving garden area should come out crawlspace
     });
 
     areaTable[RR_HC_GREAT_FAIRY_FOUNTAIN] = Region("HC Great Fairy Fountain", SCENE_GREAT_FAIRYS_FOUNTAIN_SPELLS, {}, {
