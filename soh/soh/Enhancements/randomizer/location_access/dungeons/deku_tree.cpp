@@ -46,7 +46,7 @@ void RegionTable_Init_DekuTree() {
     }, {
         //Exits
         Entrance(RR_DEKU_TREE_LOBBY,             []{return true;}),
-        Entrance(RR_DEKU_TREE_LOBBY_3F,          []{return logic->HasItem(RG_CLIMB) || logic->CanUse(RG_LONGSHOT);}),
+        Entrance(RR_DEKU_TREE_LOBBY_3F,          []{return logic->HasItem(RG_CLIMB) || logic->CanUse(RG_LONGSHOT);}), // precise hookshot atop chest can make it as adult
         Entrance(RR_DEKU_TREE_2F_MIDDLE_ROOM,    []{return true;}),
     });
 
@@ -68,7 +68,7 @@ void RegionTable_Init_DekuTree() {
 
     areaTable[RR_DEKU_TREE_SLINGSHOT_ROOM] = Region("Deku Tree Slingshot Room", SCENE_DEKU_TREE, {}, {
         //Locations
-        LOCATION(RC_DEKU_TREE_SLINGSHOT_CHEST,           logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT)),
+        LOCATION(RC_DEKU_TREE_SLINGSHOT_CHEST,           true),
         LOCATION(RC_DEKU_TREE_SLINGSHOT_ROOM_SIDE_CHEST, logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT)),
         LOCATION(RC_DEKU_TREE_SLINGSHOT_GRASS_1,         logic->CanCutShrubs()),
         LOCATION(RC_DEKU_TREE_SLINGSHOT_GRASS_2,         logic->CanCutShrubs()),
@@ -76,7 +76,7 @@ void RegionTable_Init_DekuTree() {
         LOCATION(RC_DEKU_TREE_SLINGSHOT_GRASS_4,         logic->CanCutShrubs()),
     }, {
         //Exits
-        Entrance(RR_DEKU_TREE_2F_MIDDLE_ROOM, []{return logic->CanUse(RG_FAIRY_SLINGSHOT) || logic->CanUse(RG_HOVER_BOOTS);}),
+        Entrance(RR_DEKU_TREE_2F_MIDDLE_ROOM, []{return true;}),
     });
 
     areaTable[RR_DEKU_TREE_COMPASS_ROOM] = Region("Deku Tree Compass Room", SCENE_DEKU_TREE, {
@@ -249,7 +249,7 @@ void RegionTable_Init_DekuTree() {
         //Exits
         Entrance(RR_DEKU_TREE_MQ_1F,              []{return true;}),
         //Will need canAvoid logic with enemy shuffle
-        Entrance(RR_DEKU_TREE_MQ_3F,              []{return logic->HasItem(RG_CLIMB) || logic->CanUse(RG_LONGSHOT);}),
+        Entrance(RR_DEKU_TREE_MQ_3F,              []{return logic->HasItem(RG_CLIMB) || logic->CanUse(RG_LONGSHOT);}), // precise hookshot atop chest can make it as adult
         Entrance(RR_DEKU_TREE_MQ_EYE_TARGET_ROOM, []{return logic->Get(LOGIC_DEKU_TREE_MQ_2F_BURNED_WEB);}),
     });
 
@@ -305,7 +305,7 @@ void RegionTable_Init_DekuTree() {
 
     areaTable[RR_DEKU_TREE_MQ_COMPASS_ROOM] = Region("Deku Tree MQ Compass Room", SCENE_DEKU_TREE, {}, {
         //Locations
-        LOCATION(RC_DEKU_TREE_MQ_COMPASS_CHEST,   logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS)),
+        LOCATION(RC_DEKU_TREE_MQ_COMPASS_CHEST,   true),
         LOCATION(RC_DEKU_TREE_MQ_COMPASS_GRASS_1, logic->CanCutShrubs()),
         LOCATION(RC_DEKU_TREE_MQ_COMPASS_GRASS_2, logic->CanCutShrubs()),
         LOCATION(RC_DEKU_TREE_MQ_COMPASS_GRASS_3, logic->CanCutShrubs()),
@@ -313,7 +313,7 @@ void RegionTable_Init_DekuTree() {
     }, {
         //Exits
         Entrance(RR_DEKU_TREE_MQ_EYE_TARGET_ROOM,    []{return true;}),
-        Entrance(RR_DEKU_TREE_MQ_PAST_BOULDER_VINES, []{return (logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && logic->CanUse(RG_SONG_OF_TIME))) && AnyAgeTime([]{return logic->CanUse(RG_BOMBCHU_5) || (logic->CanUse(RG_BOMB_BAG) && (logic->CanUse(RG_SONG_OF_TIME) || logic->IsAdult || logic->CanUse(RG_HOVER_BOOTS))) || (logic->CanUse(RG_MEGATON_HAMMER) && (logic->CanUse(RG_SONG_OF_TIME) || (ctx->GetTrickOption(RT_DEKU_MQ_COMPASS_GS) && logic->HasItem(RG_CLIMB))));});}),
+        Entrance(RR_DEKU_TREE_MQ_PAST_BOULDER_VINES, []{return (logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT) || (logic->IsAdult && logic->CanUse(RG_SONG_OF_TIME))) && AnyAgeTime([]{return logic->CanUse(RG_BOMBCHU_5) || (logic->CanUse(RG_BOMB_BAG) && (logic->CanUse(RG_SONG_OF_TIME) || logic->IsAdult || logic->CanUse(RG_HOVER_BOOTS))) || (logic->CanUse(RG_MEGATON_HAMMER) && ((logic->IsAdult && logic->CanUse(RG_SONG_OF_TIME)) || (ctx->GetTrickOption(RT_DEKU_MQ_COMPASS_GS) && logic->HasItem(RG_CLIMB))));});}),
     });
 
     areaTable[RR_DEKU_TREE_MQ_PAST_BOULDER_VINES] = Region("Deku Tree MQ Past Boulder Vines", SCENE_DEKU_TREE, {}, {
