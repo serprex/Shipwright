@@ -2462,11 +2462,6 @@ bool Logic::IsReverseAccessPossible() {
              (ctx->GetOption(RSK_MIX_OVERWORLD_ENTRANCES) || ctx->GetOption(RSK_MIX_INTERIOR_ENTRANCES))));
 }
 
-bool Logic::SpiritSunOnFloorToStatue() {
-    return (HasItem(RG_CLIMB) || CanUse(RG_LONGSHOT)) &&
-           (HasExplosives() || (ctx->GetOption(RSK_SUNLIGHT_ARROWS) && CanUse(RG_LIGHT_ARROWS)));
-}
-
 bool Logic::SpiritExplosiveKeyLogic() {
     return SmallKeys(SCENE_SPIRIT_TEMPLE, HasExplosives() ? 1 : 2);
 }

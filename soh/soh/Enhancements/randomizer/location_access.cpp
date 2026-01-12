@@ -633,7 +633,7 @@ std::map<RandomizerRegion, SpiritLogicData> Region::spiritLogicData = {
                                                  []{return logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS);},
                                              }},
     {RR_SPIRIT_TEMPLE_2F_MIRROR_ROOM,        {5, 0, 3, 0,
-                                                 []{return logic->CanUse(RG_HOOKSHOT) && logic->SpiritSunOnFloorToStatue();},
+                                                 []{return false;},
                                                  []{return logic->HasItem(RG_CLIMB) || logic->CanUse(RG_LONGSHOT);},
                                                  []{return logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS);},
                                              }},
