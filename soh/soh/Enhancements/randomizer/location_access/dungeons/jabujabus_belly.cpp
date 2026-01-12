@@ -247,7 +247,9 @@ void RegionTable_Init_JabuJabusBelly() {
     }, {
         //Exits
         Entrance(RR_JABU_JABUS_BELLY_LIFT_ROOM,     []{return true;}),
-        Entrance(RR_JABU_JABUS_BELLY_BOSS_ENTRYWAY, []{return (logic->HasItem(RG_CLIMB) && logic->CanUse(RG_BOOMERANG)) || (ctx->GetTrickOption(RT_JABU_NEAR_BOSS_RANGED) && (logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT))) || (ctx->GetTrickOption(RT_JABU_NEAR_BOSS_EXPLOSIVES) && (logic->CanUse(RG_BOMBCHU_5) || (logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_BOMB_BAG) && logic->HasItem(RG_CLIMB))));}),
+        Entrance(RR_JABU_JABUS_BELLY_BOSS_ENTRYWAY, []{return (logic->HasItem(RG_CLIMB) && logic->CanUse(RG_BOOMERANG)) ||
+                                                              (ctx->GetTrickOption(RT_JABU_NEAR_BOSS_RANGED) && (logic->CanUse(logic->HasItem(RG_CLIMB) ? RG_HOOKSHOT : RG_LONGSHOT) || logic->CanUse(RG_FAIRY_BOW) || logic->CanUse(RG_FAIRY_SLINGSHOT))) ||
+                                                              (ctx->GetTrickOption(RT_JABU_NEAR_BOSS_EXPLOSIVES) && (logic->CanUse(RG_BOMBCHU_5) || (logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_BOMB_BAG) && logic->HasItem(RG_CLIMB))));}),
     });
 
 #pragma endregion
@@ -460,7 +462,7 @@ void RegionTable_Init_JabuJabusBelly() {
                                                                         && ((logic->IsChild && logic->HasItem(RG_BRONZE_SCALE)) || (logic->IsAdult && logic->CanUse(RG_IRON_BOOTS)))))),
     }, {
         //Exits
-        Entrance(RR_JABU_JABUS_BELLY_MQ_HOLES_ROOM, []{return (logic->Get(LOGIC_JABU_NORTH_TENTACLE) || logic->TakeDamage()) && logic->HasItem(RG_BRONZE_SCALE);}),
+        Entrance(RR_JABU_JABUS_BELLY_MQ_HOLES_BASEMENT, []{return (logic->Get(LOGIC_JABU_NORTH_TENTACLE) || logic->TakeDamage()) && logic->HasItem(RG_BRONZE_SCALE);}),
     });
 
     // unlike other entrances behind tentacles, Link spawns behind the tentacle. Running into it throws him into main room still
@@ -531,7 +533,7 @@ void RegionTable_Init_JabuJabusBelly() {
     }, {
         //Locations
         LOCATION(RC_JABU_JABUS_BELLY_MQ_NEAR_BOSS_CHEST,     logic->CanUse(RG_FAIRY_SLINGSHOT)),
-        LOCATION(RC_JABU_JABUS_BELLY_MQ_GS_NEAR_BOSS,        logic->HasItem(RG_CLIMB) && (logic->CanUse(RG_BOOMERANG) || (ctx->GetTrickOption(RT_JABU_NEAR_BOSS_RANGED) && logic->CanUse(RG_HOOKSHOT)))),
+        LOCATION(RC_JABU_JABUS_BELLY_MQ_GS_NEAR_BOSS,        (logic->HasItem(RG_CLIMB) && (logic->CanUse(RG_BOOMERANG) || (ctx->GetTrickOption(RT_JABU_NEAR_BOSS_RANGED) && logic->CanUse(RG_HOOKSHOT)))) || (ctx->GetTrickOption(RT_JABU_NEAR_BOSS_RANGED) && logic->CanUse(RG_LONGSHOT))),
         LOCATION(RC_JABU_JABUS_BELLY_MQ_BEFORE_BOSS_POT_1,   logic->CanBreakPots()),
         LOCATION(RC_JABU_JABUS_BELLY_MQ_BEFORE_BOSS_GRASS_1, logic->CanCutShrubs()),
         LOCATION(RC_JABU_JABUS_BELLY_MQ_BEFORE_BOSS_GRASS_2, logic->CanCutShrubs()),

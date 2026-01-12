@@ -1701,8 +1701,8 @@ void Settings::CreateOptions() {
         "room using a precisely-aimed use of the Slingshot, Bow, or Longshot. As well, if you climb to the top of the "
         "vines you can stand on the right edge of the platform and shoot around the glass. From this distance, even "
         "the Hookshot can reach the switch. This trick is only relevant if \"Shuffle Boss Entrances\" is enabled. MQ "
-        "Jabu: A Gold Skulltula Token can be collected with the Hookshot or Longshot using the same methods as hitting "
-        "the switch in Vanilla. This MQ trick is not currently relevant in logic.");
+        "Jabu: A Gold Skulltula Token can be collected with Longshot using the same methods as hitting the switch in "
+        "Vanilla.");
     OPT_TRICK(RT_JABU_NEAR_BOSS_EXPLOSIVES, RCQUEST_VANILLA, RA_JABU_JABUS_BELLY, { Tricks::Tag::INTERMEDIATE },
               "Jabu Near Boss Ceiling Switch with Explosives",
               "You can hit the switch that opens the door to the boss room using a precisely-aimed Bombchu. Also, "
