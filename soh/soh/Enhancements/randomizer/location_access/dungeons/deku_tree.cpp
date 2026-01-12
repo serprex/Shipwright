@@ -18,13 +18,13 @@ void RegionTable_Init_DekuTree() {
 
     areaTable[RR_DEKU_TREE_LOBBY] = Region("Deku Tree Lobby", SCENE_DEKU_TREE, {
         //Events
-        EventAccess(LOGIC_STICK_ACCESS, []{return logic->CanGetDekuBabaSticks();}),
-        EventAccess(LOGIC_NUT_ACCESS,   []{return logic->CanGetDekuBabaNuts();}),
+        EventAccess(LOGIC_STICK_ACCESS,           []{return logic->CanGetDekuBabaSticks();}),
+        EventAccess(LOGIC_NUT_ACCESS,             []{return logic->CanGetDekuBabaNuts();}),
+        EventAccess(LOGIC_DEKU_TREE_1F_BROKE_WEB, []{return logic->HasFireSource();}),
     }, {
         //Locations
         LOCATION(RC_DEKU_TREE_MAP_CHEST,         true),
         LOCATION(RC_DEKU_TREE_LOBBY_LOWER_HEART, logic->CanUse(RG_BOOMERANG)),
-        LOCATION(RC_DEKU_TREE_LOBBY_UPPER_HEART, logic->CanPassEnemy(RE_BIG_SKULLTULA)),
         LOCATION(RC_DEKU_TREE_LOBBY_GRASS_1,     logic->CanCutShrubs()),
         LOCATION(RC_DEKU_TREE_LOBBY_GRASS_2,     logic->CanCutShrubs()),
         LOCATION(RC_DEKU_TREE_LOBBY_GRASS_3,     logic->CanCutShrubs()),
@@ -34,7 +34,7 @@ void RegionTable_Init_DekuTree() {
         //Exits
         Entrance(RR_DEKU_TREE_ENTRYWAY,          []{return true;}),
         Entrance(RR_DEKU_TREE_LOBBY_2F,          []{return logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT);}),
-        Entrance(RR_DEKU_TREE_BASEMENT_LOWER,    []{return AnyAgeTime([]{return logic->HasFireSource();});}),
+        Entrance(RR_DEKU_TREE_BASEMENT_LOWER,    []{return logic->Get(LOGIC_DEKU_TREE_1F_BROKE_WEB);}),
         Entrance(RR_DEKU_TREE_OUTSIDE_BOSS_ROOM, []{return false;}),
         Entrance(RR_DEKU_TREE_BOSS_ENTRYWAY,     []{return false;}),
     });
@@ -45,19 +45,21 @@ void RegionTable_Init_DekuTree() {
         LOCATION(RC_DEKU_TREE_LOBBY_LOWER_HEART, true),
     }, {
         //Exits
-        Entrance(RR_DEKU_TREE_LOBBY,             []{return true;}),
-        Entrance(RR_DEKU_TREE_LOBBY_3F,          []{return logic->HasItem(RG_CLIMB) || logic->CanUse(RG_LONGSHOT);}), // precise hookshot atop chest can make it as adult
-        Entrance(RR_DEKU_TREE_2F_MIDDLE_ROOM,    []{return true;}),
+        Entrance(RR_DEKU_TREE_LOBBY,          []{return true;}),
+        Entrance(RR_DEKU_TREE_LOBBY_3F,       []{return logic->HasItem(RG_CLIMB) || logic->CanUse(RG_LONGSHOT);}), // precise hookshot atop chest can make it as adult
+        Entrance(RR_DEKU_TREE_2F_MIDDLE_ROOM, []{return true;}),
     });
 
-    areaTable[RR_DEKU_TREE_LOBBY_3F] = Region("Deku Tree Lobby 3F", SCENE_DEKU_TREE, {}, {
+    areaTable[RR_DEKU_TREE_LOBBY_3F] = Region("Deku Tree Lobby 3F", SCENE_DEKU_TREE, {
+        //Events
+        EventAccess(LOGIC_DEKU_TREE_1F_BROKE_WEB, []{return logic->CanPassEnemy(RE_BIG_SKULLTULA);}),
+    }, {
         //Locations
         LOCATION(RC_DEKU_TREE_LOBBY_UPPER_HEART, logic->CanPassEnemy(RE_BIG_SKULLTULA)),
     }, {
         //Exits
-        Entrance(RR_DEKU_TREE_LOBBY_2F,          []{return true;}),
-        Entrance(RR_DEKU_TREE_BASEMENT_LOWER,    []{return AnyAgeTime([]{return logic->CanPassEnemy(RE_BIG_SKULLTULA);});}),
-        Entrance(RR_DEKU_TREE_COMPASS_ROOM,      []{return true;}),
+        Entrance(RR_DEKU_TREE_LOBBY_2F,     []{return true;}),
+        Entrance(RR_DEKU_TREE_COMPASS_ROOM, []{return true;}),
     });
 
     areaTable[RR_DEKU_TREE_2F_MIDDLE_ROOM] = Region("Deku Tree 2F Middle Room", SCENE_DEKU_TREE, {}, {}, {
@@ -227,9 +229,7 @@ void RegionTable_Init_DekuTree() {
         Entrance(RR_DEKU_TREE_ENTRYWAY,    []{return true;}),
         //may need canAvoid logic with enemy shuffle
         Entrance(RR_DEKU_TREE_MQ_2F,       []{return logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT);}),
-        //Swim is not required because you can jump with enough momentum to hit land.
-        //You even avoid fall damage if you hit the shallow water, though it's obscure knowledge so may be a trick
-        //if it is, then we need a landing room with (IsAdult || HasItem(RG_BRONZE_SCALE) || TakeDamage() || that trick) to reach basement
+        //Swim is not required because you can jump with enough momentum to hit land. You even avoid fall damage if you hit the shallow water.
         Entrance(RR_DEKU_TREE_MQ_BASEMENT, []{return logic->Get(LOGIC_DEKU_TREE_1F_BROKE_WEB);}),
         //is it possible to recoil from here to the ledge with a trick?
     });
