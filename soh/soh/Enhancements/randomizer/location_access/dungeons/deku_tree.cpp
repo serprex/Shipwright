@@ -78,8 +78,10 @@ void RegionTable_Init_DekuTree() {
 
     areaTable[RR_DEKU_TREE_BASEMENT_LOWER] = Region("Deku Tree Basement Lower", SCENE_DEKU_TREE, {
         //Events
-        EventAccess(LOGIC_STICK_ACCESS, []{return logic->CanGetDekuBabaSticks();}),
-        EventAccess(LOGIC_NUT_ACCESS,   []{return logic->CanGetDekuBabaNuts();}),
+        EventAccess(LOGIC_STICK_ACCESS,           []{return logic->CanGetDekuBabaSticks();}),
+        EventAccess(LOGIC_NUT_ACCESS,             []{return logic->CanGetDekuBabaNuts();}),
+        EventAccess(LOGIC_DEKU_TREE_B1_BROKE_WEB, []{return (logic->CanUse(RG_STICKS) && (logic->Get(LOGIC_DEKU_TREE_PUSHED_BASEMENT_BLOCK) || logic->IsAdult || logic->CanUse(RG_HOVER_BOOTS))) ||
+                                                            (ctx->GetTrickOption(RT_DEKU_B1_BOW_WEBS) && logic->IsAdult && logic->CanUse(RG_FAIRY_BOW));}),
     }, {
         //Locations
         LOCATION(RC_DEKU_TREE_BASEMENT_CHEST,    true),
@@ -120,7 +122,7 @@ void RegionTable_Init_DekuTree() {
     }, {
         //Exits
         Entrance(RR_DEKU_TREE_BASEMENT_WATER_ROOM_FRONT, []{return logic->HasItem(RG_BRONZE_SCALE) || ctx->GetTrickOption(RT_DEKU_B1_BACKFLIP_OVER_SPIKED_LOG);}),
-        Entrance(RR_DEKU_TREE_BASEMENT_TORCH_ROOM,       []{return logic->IsAdult || logic->HasItem(RG_POWER_BRACELET);}),
+        Entrance(RR_DEKU_TREE_BASEMENT_TORCH_ROOM,       []{return true;}),
     });
 
     areaTable[RR_DEKU_TREE_BASEMENT_TORCH_ROOM] = Region("Deku Tree Basement Torch Room", SCENE_DEKU_TREE, {
@@ -165,11 +167,14 @@ void RegionTable_Init_DekuTree() {
         EventAccess(LOGIC_STICK_ACCESS,                    []{return logic->CanGetDekuBabaSticks();}),
         EventAccess(LOGIC_NUT_ACCESS,                      []{return logic->CanGetDekuBabaNuts();}),
         EventAccess(LOGIC_DEKU_TREE_PUSHED_BASEMENT_BLOCK, []{return logic->HasItem(RG_POWER_BRACELET);}),
+        EventAccess(LOGIC_DEKU_TREE_B1_BROKE_WEB,          []{return logic->HasFireSource();}),
     }, {}, {
         //Exits
         Entrance(RR_DEKU_TREE_BASEMENT_LOWER,      []{return true;}),
         Entrance(RR_DEKU_TREE_BASEMENT_BACK_LOBBY, []{return logic->IsChild;}),
-        Entrance(RR_DEKU_TREE_OUTSIDE_BOSS_ROOM,   []{return AnyAgeTime([]{return logic->HasFireSourceWithTorch() || (ctx->GetTrickOption(RT_DEKU_B1_BOW_WEBS) && logic->IsAdult && logic->CanUse(RG_FAIRY_BOW));}) && (logic->HasItem(RG_BRONZE_SCALE) || logic->CanUse(RG_IRON_BOOTS));}),
+        //It's possible to light a stick on the upper torch with a backflip into a jumpslash, but a trick as it seems to involve landing on the torch platform
+        //Adult can simply backflip against a nearby wall to the same effect, which is much simpler but still unintuitive enough top be a trick
+        Entrance(RR_DEKU_TREE_OUTSIDE_BOSS_ROOM,   []{return logic->Get(LOGIC_DEKU_TREE_B1_BROKE_WEB) && (logic->HasItem(RG_BRONZE_SCALE) || logic->CanUse(RG_IRON_BOOTS));}),
     });
 
     areaTable[RR_DEKU_TREE_OUTSIDE_BOSS_ROOM] = Region("Deku Tree Outside Boss Room", SCENE_DEKU_TREE, {}, {
@@ -306,8 +311,9 @@ void RegionTable_Init_DekuTree() {
 
     areaTable[RR_DEKU_TREE_MQ_BASEMENT] = Region("Deku Tree MQ Basement", SCENE_DEKU_TREE, {
         //Events
-        EventAccess(LOGIC_STICK_ACCESS, []{return logic->CanGetDekuBabaSticks();}),
-        EventAccess(LOGIC_NUT_ACCESS,   []{return logic->CanGetDekuBabaNuts();}),
+        EventAccess(LOGIC_STICK_ACCESS,           []{return logic->CanGetDekuBabaSticks();}),
+        EventAccess(LOGIC_NUT_ACCESS,             []{return logic->CanGetDekuBabaNuts();}),
+        EventAccess(LOGIC_DEKU_TREE_B1_BROKE_WEB, []{return logic->CanUse(RG_STICKS) && (logic->Get(LOGIC_DEKU_TREE_PUSHED_BASEMENT_BLOCK) || logic->IsAdult || logic->CanUse(RG_HOVER_BOOTS));}),
     }, {
         //Locations
         LOCATION(RC_DEKU_TREE_MQ_BASEMENT_CHEST,         logic->HasFireSourceWithTorch() || logic->CanUse(RG_FAIRY_BOW)),
@@ -417,6 +423,8 @@ void RegionTable_Init_DekuTree() {
     areaTable[RR_DEKU_TREE_MQ_BASEMENT_LEDGE] = Region("Deku Tree MQ Basement Ledge", SCENE_DEKU_TREE, {
         //Events
         EventAccess(LOGIC_DEKU_TREE_PUSHED_BASEMENT_BLOCK, []{return logic->HasItem(RG_POWER_BRACELET);}),
+        //You can also recoil from RR_DEKU_TREE_MQ_1F with a lit stick to burn the web, but such recoils would be tricks
+        EventAccess(LOGIC_DEKU_TREE_B1_BROKE_WEB,          []{return logic->HasFireSource();}),
     }, {
         //Locations
         LOCATION(RC_DEKU_TREE_MQ_DEKU_SCRUB,             logic->CanStunDeku() && GetCheckPrice() <= GetWalletCapacity()),
@@ -428,7 +436,7 @@ void RegionTable_Init_DekuTree() {
         Entrance(RR_DEKU_TREE_MQ_BASEMENT_GRAVE_ROOM, []{return logic->IsChild;}),
         Entrance(RR_DEKU_TREE_MQ_BASEMENT,            []{return true;}),
         //recoiling to skip swim is possible, but would be a trick
-        Entrance(RR_DEKU_TREE_MQ_OUTSIDE_BOSS_ROOM,   []{return AnyAgeTime([]{return logic->HasFireSource() || ((logic->Get(LOGIC_DEKU_TREE_PUSHED_BASEMENT_BLOCK) || logic->IsAdult || logic->CanUse(RG_HOVER_BOOTS)) && logic->CanUse(RG_STICKS));}) && (logic->HasItem(RG_BRONZE_SCALE) || logic->CanUse(RG_IRON_BOOTS));}),
+        Entrance(RR_DEKU_TREE_MQ_OUTSIDE_BOSS_ROOM,   []{return logic->Get(LOGIC_DEKU_TREE_B1_BROKE_WEB) && (logic->HasItem(RG_BRONZE_SCALE) || logic->CanUse(RG_IRON_BOOTS));}),
     });
 
     areaTable[RR_DEKU_TREE_MQ_OUTSIDE_BOSS_ROOM] = Region("Deku Tree MQ Outside Boss Room", SCENE_DEKU_TREE, {}, {

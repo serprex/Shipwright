@@ -304,7 +304,7 @@ void RegionTable_Init_BottomOfTheWell() {
         Entrance(RR_BOTW_MQ_PIT_CAGE,       []{return (bool)ctx->GetTrickOption(RT_BOTW_PITS);}),
         Entrance(RR_BOTW_MQ_B3_PLATFORM,    []{return logic->Get(LOGIC_BOTW_MQ_OPENED_MIDDLE_HOLE);}),
         Entrance(RR_BOTW_MQ_B3,             []{return true;}),
-        Entrance(RR_BOTW_MQ_INVISIBLE_PATH, []{return logic->HasItem(RG_POWER_BRACELET) || logic->CanHitSwitch(ED_BOMB_THROW);}),
+        Entrance(RR_BOTW_MQ_INVISIBLE_PATH, []{return AnyAgeTime([]{return logic->HasItem(RG_POWER_BRACELET) || logic->CanHitSwitch(ED_BOMB_THROW);});}),
         Entrance(RR_BOTW_MQ_GRAVE_ROOM,     []{return logic->Get(LOGIC_BOTW_MQ_OPENED_WEST_ROOM);}),
     });
 
@@ -330,7 +330,12 @@ void RegionTable_Init_BottomOfTheWell() {
         //Also you get cheap shotted on entry sometimes.
         //An MQ lens trick is recommended here, and a review of this room for OHKO logic when that is added is advised.
         //In the meantime I assume damage taken or the easy answer (nuts)
-        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_GS_WEST_INNER_ROOM, (logic->TakeDamage() || logic->CanUse(RG_NUTS)) && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA)),
+
+        //Without power bracelet, the skull can be killed through the chest with any valid weapon.
+        //Bow, Sling and Hammer should aim for the left side (from the door's perspective) ot eh grave, hookshot should get close to the grave and aim inside it (no extension needed).
+        LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_GS_WEST_INNER_ROOM, (logic->TakeDamage() || logic->CanUse(RG_NUTS)) && 
+                                                              (logic->HasItem(RG_POWER_BRACELET) || ctx->GetTrickOption(RT_VISIBLE_COLLISION)) &&
+                                                              logic->CanKillEnemy(RE_GOLD_SKULLTULA)),
     }, {
         //Exits
         Entrance(RR_BOTW_MQ_MIDDLE, []{return true;}),
