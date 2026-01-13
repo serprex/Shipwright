@@ -310,7 +310,7 @@ void RegionTable_Init_JabuJabusBelly() {
 
     areaTable[RR_JABU_JABUS_BELLY_MQ_HOLES_ROOM] = Region("Jabu Jabus Belly MQ Holes Room", SCENE_JABU_JABU, {
         //Events
-        EventAccess(LOGIC_JABU_MQ_FORKED_ROOM_DOOR, []{return logic->HasExplosives() && logic->CanUse(RG_FAIRY_SLINGSHOT);}),
+        EventAccess(LOGIC_JABU_MQ_FORKED_ROOM_DOOR, []{return (logic->HasExplosives() || ctx->GetTrickOption(RT_DISTANT_BOULDER_COLLISION)) && logic->CanUse(RG_FAIRY_SLINGSHOT);}),
     }, {
         //Locations
         LOCATION(RC_JABU_JABUS_BELLY_MQ_PIT_GRASS_1, logic->CanCutShrubs() && logic->HasExplosives()),
@@ -336,7 +336,7 @@ void RegionTable_Init_JabuJabusBelly() {
         LOCATION(RC_JABU_JABUS_BELLY_MQ_BASEMENT_GRASS_3,             logic->CanCutShrubs()),
     }, {
         //Exits
-        Entrance(RR_JABU_JABUS_BELLY_HOLES_ROOM,              []{return true /* logic->HasItem(RG_CLIMB) */;}),
+        Entrance(RR_JABU_JABUS_BELLY_MQ_HOLES_ROOM,           []{return true /* logic->HasItem(RG_CLIMB) */;}),
         Entrance(RR_JABU_JABUS_BELLY_MQ_TO_BIGOCTO,           []{return logic->Get(LOGIC_JABU_WEST_TENTACLE);}),
         Entrance(RR_JABU_JABUS_BELLY_MQ_WATER_SWITCH_ROOM,    []{return logic->CanUse(RG_POWER_BRACELET);}),
         Entrance(RR_JABU_JABUS_BELLY_MQ_INVISIBLE_KEESE_ROOM, []{return logic->Get(LOGIC_JABU_NORTH_TENTACLE);}),

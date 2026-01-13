@@ -545,6 +545,11 @@ void SohMenu::AddMenuEnhancements() {
         .Options(CheckboxOptions().Tooltip(
             "Disables Grottos rotating with the Camera. To be used in conjuction with mods that want to "
             "replace grottos with 3D objects."));
+    AddWidget(path, "Disable Link's Sword Trail", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("DisableLinkSwordTrail"))
+        .RaceDisable(false)
+        .Options(CheckboxOptions().Tooltip("Disables the sword trail effect when swinging Link's sword. Useful when "
+                                           "using mods that replace Link's sword model."));
     AddWidget(path, "Disable 2D Pre-Rendered Scenes", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_ENHANCEMENT("3DSceneRender"))
         .RaceDisable(false)
@@ -1001,6 +1006,11 @@ void SohMenu::AddMenuEnhancements() {
         .CVar(CVAR_ENHANCEMENT("AnubisFix"))
         .Options(CheckboxOptions().Tooltip(
             "Make Anubis Fireballs do Fire damage when reflected back at them with the Mirror Shield."));
+    AddWidget(path, "Fix Goron City Doors After Fire Temple", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("GCDoorsAfterFireFix"))
+        .Options(CheckboxOptions().Tooltip(
+            "Forces Goron City doors open if you somehow complete Fire Temple without talking to Goron Link "
+            " and receiving the Goron Tunic."));
 
     AddWidget(path, "Item-related Fixes", WIDGET_SEPARATOR_TEXT);
     AddWidget(path, "Fix Deku Nut Upgrade", WIDGET_CVAR_CHECKBOX)
@@ -1747,6 +1757,9 @@ void SohMenu::AddMenuEnhancements() {
     AddWidget(path, "Disable Haunted Wasteland Sandstorm", WIDGET_CVAR_CHECKBOX)
         .CVar(CVAR_CHEAT("DisableSandstorm"))
         .Options(CheckboxOptions().Tooltip("Disables sandstorm effect in Haunted Wasteland."));
+    AddWidget(path, "Targetable Gold Skulltula", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_CHEAT("GSTargetable"))
+        .Options(CheckboxOptions().Tooltip("Allows Z-Targeting Gold Skulltulas."));
 
     AddWidget(path, "Glitch Aids", WIDGET_SEPARATOR_TEXT);
     AddWidget(path, "Easy Frame Advancing with Pause", WIDGET_CVAR_CHECKBOX)

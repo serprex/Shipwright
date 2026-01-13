@@ -267,6 +267,14 @@ typedef enum {
     // true
     // ```
     // #### `args`
+    // - `*EnHeishi2`
+    VB_CAN_BRIBE_HEISHI2,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
     // - `int32_t` (item)
     VB_CHANGE_HELD_ITEM_AND_USE_ITEM,
 
@@ -2484,6 +2492,14 @@ typedef enum {
     // - `*Player`
     // - `*Color_RGB8`
     VB_APPLY_TUNIC_COLOR,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*int16_t` // pauseCtx->namedItem
+    VB_DRAW_CUSTOM_ITEM_NAME,
 
     // #### `result`
     // ```c
