@@ -391,6 +391,10 @@ void GenerateItemPool() {
     int bronzeScale = ctx->GetOption(RSK_SHUFFLE_SWIM) ? 1 : 0;
     AddItemToPool(RG_PROGRESSIVE_SCALE, 3 + bronzeScale, 2 + bronzeScale, 2 + bronzeScale, 2 + bronzeScale);
 
+    if (ctx->GetOption(RSK_SHUFFLE_CRAWL)) {
+        AddItemToPool(RG_CRAWL, 2, 1, 1, 1);
+    }
+
     int powerBracelet = ctx->GetOption(RSK_SHUFFLE_GRAB) ? 1 : 0;
     AddItemToPool(RG_PROGRESSIVE_STRENGTH, 4 + powerBracelet, 3 + powerBracelet, 3 + powerBracelet, 3 + powerBracelet);
 
