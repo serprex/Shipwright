@@ -553,7 +553,13 @@ void RegionTable_Init_DodongosCavern() {
 
     areaTable[RR_DODONGOS_CAVERN_MQ_BEHIND_MOUTH] = Region("Dodongos Cavern MQ Behind Mouth", SCENE_DODONGOS_CAVERN, {}, {
         //Locations
-        LOCATION(RC_DODONGOS_CAVERN_MQ_GS_BACK_AREA,       logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG) || (logic->IsAdult && logic->CanUse(RG_HOVER_BOOTS) /* || bunny jumps*/)),
+        //This can be gotten with only str0 as adult by using 1 pot to kill the skull from the top of a nearby grave,
+        //then another to hit the switch to turn of the fire then running up the ledge to grab it. This assumes RR_DODONGOS_CAVERN_MQ_BACK_BEHIND_FIRE access
+        //Alternatively, the grave can be pulled and roll jumped off of.
+        //This may be trickworthy, but it can only come up with doorsanity or decoupled boss door rando, making it too niche to be it's own trick
+        LOCATION(RC_DODONGOS_CAVERN_MQ_GS_BACK_AREA,       logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG) || 
+                                                           (logic->IsAdult && logic->CanUse(RG_POWER_BRACELET) && 
+                                                            (logic->CanPassEnemy(RE_ARMOS) || logic->CanUse(RG_HOVER_BOOTS) || (ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS)/* && Roll*/)/* || bunny jumps*/))),
         LOCATION(RC_DODONGOS_CAVERN_MQ_BEFORE_BOSS_SW_POT, logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_BEFORE_BOSS_NE_POT, logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_ARMOS_ROOM_SE_POT,  logic->CanBreakPots()),
@@ -561,7 +567,8 @@ void RegionTable_Init_DodongosCavern() {
     }, {
         //Exits
         Entrance(RR_DODONGOS_CAVERN_MQ_LOBBY,             []{return true;}),
-        Entrance(RR_DODONGOS_CAVERN_MQ_BACK_BEHIND_FIRE,  []{return logic->HasItem(RG_POWER_BRACELET) || logic->HasExplosives();}),
+        Entrance(RR_DODONGOS_CAVERN_MQ_BACK_BEHIND_FIRE,  []{return logic->HasItem(RG_POWER_BRACELET) || logic->HasExplosives() || 
+                                                                    (logic->IsAdult && (logic->CanUse(RG_HOVER_BOOTS) || (ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS)/* && Roll*/)/* || bunny jumps*/));}),
         Entrance(RR_DODONGOS_CAVERN_MQ_BACK_SWITCH_GRAVE, []{return logic->IsAdult;}),
     });
 
@@ -570,23 +577,23 @@ void RegionTable_Init_DodongosCavern() {
         EventAccess(LOGIC_DC_MQ_BEHIND_FIRE_SWITCH, []{return logic->CanDetonateBombFlowers();}),
     }, {
         //Locations
-        LOCATION(RC_DODONGOS_CAVERN_MQ_GS_BACK_AREA,      logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG)),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_GS_BACK_AREA, logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG)),
     }, {
         //Exits
-        Entrance(RR_DODONGOS_CAVERN_MQ_BEHIND_MOUTH,      []{return logic->CanAttack();}),
+        Entrance(RR_DODONGOS_CAVERN_MQ_BEHIND_MOUTH,      []{return logic->CanHitSwitch();}),
         Entrance(RR_DODONGOS_CAVERN_MQ_BACK_POE_ROOM,     []{return true;}),
         //There's a trick N64 rolls into the child eyes trick for using armos blow up the bomb flowers when dieing, which would be killing an armos
-        //RANDOTODO investigate using hovers to go from the door ledge to the block directly
-        Entrance(RR_DODONGOS_CAVERN_MQ_BACK_SWITCH_GRAVE, []{return logic->Get(LOGIC_DC_MQ_BEHIND_FIRE_SWITCH);}),
+        Entrance(RR_DODONGOS_CAVERN_MQ_BACK_SWITCH_GRAVE, []{return (logic->CanPassEnemy(RE_ARMOS) && (logic->IsAdult || logic->Get(LOGIC_DC_MQ_BEHIND_FIRE_SWITCH))) || logic->CanUse(RG_HOVER_BOOTS);}),
     });
 
     areaTable[RR_DODONGOS_CAVERN_MQ_BACK_POE_ROOM] = Region("Dodongos Cavern MQ Back Poe Room", SCENE_DODONGOS_CAVERN, {}, {
-        LOCATION(RC_DODONGOS_CAVERN_MQ_UNDER_GRAVE_CHEST, true), //pulling the grave isn't required, as you can open the chest through it
+        //the chest is in a grave, but you can open it through it
+        LOCATION(RC_DODONGOS_CAVERN_MQ_UNDER_GRAVE_CHEST, ctx->GetTrickOption(RT_VISIBLE_COLLISION) || logic->HasItem(RG_POWER_BRACELET)),
         LOCATION(RC_DODONGOS_CAVERN_MQ_BACKROOM_POT_1,    logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_BACKROOM_POT_2,    logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_BACK_POE_GRASS,    logic->CanCutShrubs()),
     }, {
-        Entrance(RR_DODONGOS_CAVERN_MQ_BACK_BEHIND_FIRE, []{return logic->CanKillEnemy(RE_POE);}),
+        Entrance(RR_DODONGOS_CAVERN_MQ_BACK_BEHIND_FIRE, []{return AnyAgeTime([]{return logic->CanKillEnemy(RE_POE);});}),
     });
 
     areaTable[RR_DODONGOS_CAVERN_MQ_BACK_SWITCH_GRAVE] = Region("Dodongos Cavern MQ Back Switch Grave", SCENE_DODONGOS_CAVERN, {
@@ -595,12 +602,13 @@ void RegionTable_Init_DodongosCavern() {
         EventAccess(LOGIC_FAIRY_ACCESS,             []{return logic->CanBreakPots();}),
     }, {
         //Locations
-        LOCATION(RC_DODONGOS_CAVERN_MQ_GS_BACK_AREA,      logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA) || logic->HasItem(RG_GORONS_BRACELET)),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_GS_BACK_AREA,      logic->CanKillEnemy(RE_GOLD_SKULLTULA) || logic->HasItem(RG_GORONS_BRACELET)),
         LOCATION(RC_DODONGOS_CAVERN_MQ_ARMOS_ROOM_NW_POT, logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_ARMOS_ROOM_NE_POT, logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_ARMOS_GRASS,       logic->CanCutShrubs()),
     }, {
         //Exits
+        Entrance(RR_DODONGOS_CAVERN_MQ_BEHIND_MOUTH,     []{return true;}),
         Entrance(RR_DODONGOS_CAVERN_MQ_BACK_BEHIND_FIRE, []{return true;}),
         Entrance(RR_DODONGOS_CAVERN_BOSS_ENTRYWAY,       []{return logic->HasItem(RG_POWER_BRACELET);}),
     });

@@ -808,7 +808,8 @@ void RegionTable_Init_FireTemple() {
     areaTable[RR_FIRE_TEMPLE_MQ_BURNING_BLOCK] = Region("Fire Temple MQ Burning Block", SCENE_FIRE_TEMPLE, {}, {
         //Locations
         //There's definitely ways to do this hammerless, but with one points on it's a trick
-        LOCATION(RC_FIRE_TEMPLE_MQ_GS_SKULL_ON_FIRE, logic->CanUse(RG_MEGATON_HAMMER) && logic->CanUse(RG_HOOKSHOT) && (logic->HasItem(RG_POWER_BRACELET) || ctx->GetTrickOption(RT_HOOKSHOT_EXTENSION))),
+        //you can just hook through the block while next to it to kill the skull and get the token
+        LOCATION(RC_FIRE_TEMPLE_MQ_GS_SKULL_ON_FIRE, logic->CanUse(RG_MEGATON_HAMMER) && logic->CanUse(RG_HOOKSHOT) && (logic->HasItem(RG_POWER_BRACELET) || ctx->GetTrickOption(RT_VISIBLE_COLLISION))),
     }, {
         //Exits
         Entrance(RR_FIRE_TEMPLE_MQ_TORCH_SLUG_CLIMB, []{return true;}),
