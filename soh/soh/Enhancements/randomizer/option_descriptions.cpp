@@ -256,8 +256,10 @@ void Settings::CreateOptionDescriptions() {
         "\n"
         "If you enter a water entrance without swim you will be respawned on land to prevent infinite death loops.\n"
         "If you void out in Water Temple you will immediately be kicked out to prevent a softlock.";
+    mOptionDescriptions[RSK_SHUFFLE_CRAWL] = "Shuffles the ability to use crawlspaces into the item pool.";
     mOptionDescriptions[RSK_SHUFFLE_GRAB] =
         "Shuffle the ability to grab as a progressive upgrade before Goron Bracelet.";
+    mOptionDescriptions[RSK_SHUFFLE_OPEN_CHEST] = "Shuffles the ability to open chests into the item pool.";
     mOptionDescriptions[RSK_SHUFFLE_WEIRD_EGG] = "Shuffles the Weird Egg from Malon in to the item pool. Enabling "
                                                  "\"Skip Child Zelda\" disables this feature.\n"
                                                  "\n"
@@ -626,8 +628,13 @@ void Settings::CreateOptionDescriptions() {
         "Start with Zelda's Letter and the item Impa would normally give you and skip the sequence up "
         "until after meeting Zelda. Disables the ability to shuffle Weird Egg.";
     mOptionDescriptions[RSK_SKIP_EPONA_RACE] = "Epona can be summoned with Epona's Song without needing to race Ingo.";
-    mOptionDescriptions[RSK_COMPLETE_MASK_QUEST] =
-        "Once the Happy Mask Shop is opened, all masks will be available to be borrowed.";
+    mOptionDescriptions[RSK_MASK_QUEST] =
+        "How masks are acquired.\n"
+        "Vanilla - Mask trade quest.\n"
+        "\n"
+        "Completed - Once the Happy Mask Shop is opened, all masks will be available to be borrowed.\n"
+        "\n"
+        "Shuffle - Happy Mask Shop never opens, masks are shuffled with rest of items.";
     mOptionDescriptions[RSK_SKIP_SCARECROWS_SONG] =
         "Start with the ability to summon Pierre the Scarecrow. Pulling out an Ocarina in the usual locations will "
         "automatically summon him.\n"
@@ -772,6 +779,9 @@ void Settings::CreateOptionDescriptions() {
     mOptionDescriptions[RSK_SUNLIGHT_ARROWS] =
         "Light Arrows can be used to light up the sun switches instead of using the Mirror Shield. "
         "Item placement logic will respect this option, so it might be required to use this to progress.";
+    mOptionDescriptions[RSK_ROCS_FEATHER] =
+        "Adds Roc's Feather to the item pool. Roc's Feather is a custom item granting the player a jump on demand. "
+        "The jump can also be used when already in mid-air. Roc's Feather is not considered by logic.";
     mOptionDescriptions[RSK_SLINGBOW_BREAK_BEEHIVES] =
         "Allows Slingshot and Bow to break beehives when Beehive Shuffle is turned on.";
     mOptionDescriptions[RSK_LOGIC_RULES] =
