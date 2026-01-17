@@ -1407,6 +1407,8 @@ void Settings::CreateOptions() {
               "Enables ground jumps which require some precision outside of setting up jump:\n- While using Hover "
               "Boots in Forest Temple Courtyard to reach upper ledge\n- While using Hover Boots in Shadow Temple "
               "invisible spike room to reach door\n- Jumping past second step in Ice Cavern");
+    OPT_TRICK(RT_SLIDE_JUMP, RCQUEST_BOTH, RA_NONE, { Tricks::Tag::NOVICE }, "Sliding Jumps",
+              "Running forward while sliding sideways on ice can be used to jump on platforms.");
     OPT_TRICK(RT_KF_ADULT_GS, RCQUEST_BOTH, RA_KOKIRI_FOREST, { Tricks::Tag::NOVICE },
               "Adult Kokiri Forest GS with Hover Boots",
               "Can be obtained without Hookshot by using the Hover Boots off of one of the roots.");
@@ -2094,8 +2096,7 @@ void Settings::CreateOptions() {
     OPT_TRICK(RT_ICE_STALAGMITE_HOOKSHOT, RCQUEST_BOTH, RA_ICE_CAVERN, { Tricks::Tag::NOVICE },
               "Ice Cavern Stalagmites with Hookshot",
               "Shooting stalagmites with hookshot in the right way also breaks them. Also applies to Water Trial.");
-    OPT_TRICK(RT_ICE_SLIDING_JUMP, RCQUEST_BOTH, RA_ICE_CAVERN, { Tricks::Tag::NOVICE }, "Ice Cavern Sliding Jumps",
-              "Running forward while sliding sideways on ice can be used to jump on platforms.");
+    // RANDOTO sweep trick descriptions and make sure they match a post-refactor, post shuffles reality
     OPT_TRICK(RT_ICE_BLOCK_GS, RCQUEST_VANILLA, RA_ICE_CAVERN, { Tricks::Tag::INTERMEDIATE },
               "Ice Cavern Block Room GS with Hover Boots",
               "The Hover Boots can be used to get in front of the Skulltula to kill it with a jump slash. Then, the "

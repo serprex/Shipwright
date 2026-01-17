@@ -394,10 +394,8 @@ bool Logic::CanUse(RandomizerGet itemName) {
             return Get(LOGIC_FAIRY_ACCESS);
 
         default:
-            SPDLOG_ERROR("CanUse reached `default` for {}. Assuming intention is no extra requirements for use so "
-                         "returning true, but HasItem should be used instead.",
-                         static_cast<uint32_t>(itemName));
-            assert(false);
+            SPDLOG_INFO("CanUse reached `default` for {}. using HasItem is a minor Optimisation.",
+                        static_cast<uint32_t>(itemName));
             return true;
     }
 }
@@ -989,6 +987,7 @@ bool Logic::CanGetEnemyDrop(RandomizerEnemy enemy, EnemyDistance distance, bool 
     if (!CanKillEnemy(enemy, distance)) {
         return false;
     }
+    // RANDOTODO assumption broke with RC_WATER_TEMPLE_GS_BEHIND_GATE, redesign GS helpers
     if (distance <= ED_MASTER_SWORD_JUMPSLASH) {
         return true;
     }
@@ -1289,7 +1288,7 @@ bool Logic::CanBreakCrates() {
 }
 
 bool Logic::CanBreakSmallCrates() {
-    return CanUseSword() || BlastOrSmash() || HasItem(RG_POWER_BRACELET);
+    return CanJumpslash() || HasExplosives() || HasItem(RG_POWER_BRACELET);
 }
 
 bool Logic::CanBonkTrees() {

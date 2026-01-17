@@ -75,8 +75,8 @@ void RegionTable_Init_SpiritTemple() {
         LOCATION(RC_SPIRIT_TEMPLE_ANUBIS_POT_4, true),
     }, {
         //Exits
-        Entrance(RR_SPIRIT_TEMPLE_SWITCH_BRIDGE_NORTH, []{return AnyAgeTime([]{return logic->CanHitSwitch() || logic->CanKillEnemy(RE_ANUBIS);});}),
-        Entrance(RR_SPIRIT_TEMPLE_RUPEE_BRIDGE_NORTH,  []{return AnyAgeTime([]{return logic->CanHitSwitch() || logic->CanKillEnemy(RE_ANUBIS);});}),
+        Entrance(RR_SPIRIT_TEMPLE_SWITCH_BRIDGE_NORTH, []{return AnyAgeTime([]{return logic->CanHitSwitch() || logic->HasItem(RG_POWER_BRACELET) || logic->CanKillEnemy(RE_ANUBIS);});}),
+        Entrance(RR_SPIRIT_TEMPLE_RUPEE_BRIDGE_NORTH,  []{return AnyAgeTime([]{return logic->CanHitSwitch() || logic->HasItem(RG_POWER_BRACELET) || logic->CanKillEnemy(RE_ANUBIS);});}),
     });
 
     areaTable[RR_SPIRIT_TEMPLE_RUPEE_BRIDGE_NORTH] = Region("Spirit Temple Rupee Bridge North", SCENE_SPIRIT_TEMPLE, {
@@ -315,7 +315,7 @@ void RegionTable_Init_SpiritTemple() {
         LOCATION(RC_SPIRIT_TEMPLE_AFTER_SUN_BLOCK_POT_2,        SpiritShared(RR_SPIRIT_TEMPLE_SKULLTULA_STAIRS, []{return logic->CanBreakPots();})),
     }, {
         //Exits
-        Entrance(RR_SPIRIT_TEMPLE_SUN_BLOCK_ROOM, []{return true;}),
+        Entrance(RR_SPIRIT_TEMPLE_SUN_BLOCK_ROOM,  []{return true;}),
         Entrance(RR_SPIRIT_TEMPLE_CHILD_THRONE,    []{return logic->SmallKeys(SCENE_SPIRIT_TEMPLE, 3);}),
     });
 

@@ -157,7 +157,7 @@ void RegionTable_Init_GanonsCastle() {
     }, {
         //Exits
         Entrance(RR_GANONS_CASTLE_WATER_TRIAL_BLUE_FIRE_ROOM, []{return true;}),
-        Entrance(RR_GANONS_CASTLE_WATER_TRIAL_BLOCK_ROOM_END, []{return logic->IsAdult || (logic->HasItem(RG_POWER_BRACELET) && logic->CanUse(RG_HOVER_BOOTS)) || logic->CanGroundJump();}),
+        Entrance(RR_GANONS_CASTLE_WATER_TRIAL_BLOCK_ROOM_END, []{return logic->IsAdult || (logic->HasItem(RG_POWER_BRACELET) && logic->CanUse(RG_HOVER_BOOTS)) || logic->CanGroundJump() || ctx->GetTrickOption(RT_SLIDE_JUMP);}),
     });
 
     areaTable[RR_GANONS_CASTLE_WATER_TRIAL_BLOCK_ROOM_END] = Region("Ganon's Castle Water Trial Block Room End", SCENE_INSIDE_GANONS_CASTLE, {}, {}, {
@@ -481,7 +481,7 @@ void RegionTable_Init_GanonsCastle() {
     }, {}, {
         //Exits
         Entrance(RR_GANONS_CASTLE_MQ_WATER_TRIAL_GEYSER_ROOM,    []{return logic->SmallKeys(SCENE_INSIDE_GANONS_CASTLE, 3);}),
-        Entrance(RR_GANONS_CASTLE_MQ_WATER_TRIAL_BLOCK_ROOM_END, []{return logic->Get(LOGIC_WATER_TRIAL_MQ_MELTED_FINAL_DOOR_RED_ICE) && (logic->IsAdult || (logic->CanUse(RG_HOVER_BOOTS) && logic->HasItem(RG_POWER_BRACELET)) || logic->CanGroundJump());}),
+        Entrance(RR_GANONS_CASTLE_MQ_WATER_TRIAL_BLOCK_ROOM_END, []{return logic->Get(LOGIC_WATER_TRIAL_MQ_MELTED_FINAL_DOOR_RED_ICE) && (logic->IsAdult || (logic->CanUse(RG_HOVER_BOOTS) && logic->HasItem(RG_POWER_BRACELET)) || logic->CanGroundJump() || ctx->GetTrickOption(RT_SLIDE_JUMP));}),
     });
 
     areaTable[RR_GANONS_CASTLE_MQ_WATER_TRIAL_BLOCK_ROOM_END] = Region("Ganon's Castle MQ Water Trial Block Room End", SCENE_INSIDE_GANONS_CASTLE, {
@@ -500,7 +500,7 @@ void RegionTable_Init_GanonsCastle() {
         LOCATION(RC_GANONS_CASTLE_MQ_WATER_TRIAL_POT_2, logic->CanBreakPots()),
     }, {
         //Exits
-        Entrance(RR_GANONS_CASTLE_MQ_WATER_TRIAL_BLOCK_ROOM_END, []{return AnyAgeTime([]{return logic->BlueFire();});}),
+        Entrance(RR_GANONS_CASTLE_MQ_WATER_TRIAL_BLOCK_ROOM_END, []{return true;}),
     });
 
     areaTable[RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_STARTING_LEDGE] = Region("Ganon's Castle MQ Shadow Trial Starting Ledge", SCENE_INSIDE_GANONS_CASTLE, {
