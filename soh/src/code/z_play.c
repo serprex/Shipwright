@@ -383,7 +383,6 @@ void Play_Init(GameState* thisx) {
     u8 baseSceneLayer;
     s32 pad[2];
 
-    GameInteractor_ExecuteOnLoadGame(gSaveContext.fileNum);
     enableBetaQuest();
 
     // Properly initialize the frame counter so it doesn't use garbage data
