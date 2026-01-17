@@ -20,8 +20,8 @@ extern PlayState* gPlayState;
 #define RAND_GET_ITEM(rc) OTRGlobals::Instance->gRandoContext->GetItemLocation(rc)
 #define RAND_GET_OVERRIDE(rc) OTRGlobals::Instance->gRandoContext->overrides[rc]
 #define NON_BEAN_MERCHANTS                                                           \
-    (RAND_GET_OPTION(RSK_SHUFFLE_MERCHANTS) == RO_SHUFFLE_MERCHANTS_ALL_BUT_BEANS || \
-     RAND_GET_OPTION(RSK_SHUFFLE_MERCHANTS) == RO_SHUFFLE_MERCHANTS_ALL)
+    (RAND_GET_OPTION(RSK_SHUFFLE_MERCHANTS).Is(RO_SHUFFLE_MERCHANTS_ALL_BUT_BEANS) || \
+     RAND_GET_OPTION(RSK_SHUFFLE_MERCHANTS).Is(RO_SHUFFLE_MERCHANTS_ALL))
 
 void BuildMerchantMessage(CustomMessage& msg, RandomizerCheck rc, bool mysterious = true) {
     RandomizerGet rgid = RAND_GET_ITEM(rc)->GetPlacedRandomizerGet();
@@ -183,8 +183,8 @@ void BuildShopMessage(uint16_t* textId, bool* loadFromMessageTable) {
 
 void RegisterMerchantMessages() {
     COND_ID_HOOK(OnOpenText, TEXT_BEAN_SALESMAN_BUY_FOR_10,
-                 (RAND_GET_OPTION(RSK_SHUFFLE_MERCHANTS) == RO_SHUFFLE_MERCHANTS_BEANS_ONLY ||
-                  RAND_GET_OPTION(RSK_SHUFFLE_MERCHANTS) == RO_SHUFFLE_MERCHANTS_ALL),
+                 (RAND_GET_OPTION(RSK_SHUFFLE_MERCHANTS).Is(RO_SHUFFLE_MERCHANTS_BEANS_ONLY) ||
+                  RAND_GET_OPTION(RSK_SHUFFLE_MERCHANTS).Is(RO_SHUFFLE_MERCHANTS_ALL)),
                  BuildBeanGuyMessage);
     COND_ID_HOOK(OnOpenText, TEXT_BEAN_SALESMAN_BUY_FOR_100, IS_RANDO, BuildBeanGuyMessage);
     COND_ID_HOOK(OnOpenText, TEXT_MEDIGORON, NON_BEAN_MERCHANTS, BuildMedigoronMessage);
