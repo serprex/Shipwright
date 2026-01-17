@@ -331,7 +331,7 @@ void RegionTable_Init_BottomOfTheWell() {
         //An MQ lens trick is recommended here, and a review of this room for OHKO logic when that is added is advised.
         //In the meantime I assume damage taken or the easy answer (nuts)
 
-        //Without power bracelet, the skull can be killed through the chest with any valid weapon.
+        //Without power bracelet, the skull can be killed through the Grave with any valid weapon.
         //Bow, Sling and Hammer should aim for the left side (from the door's perspective) ot eh grave, hookshot should get close to the grave and aim inside it (no extension needed).
         LOCATION(RC_BOTTOM_OF_THE_WELL_MQ_GS_WEST_INNER_ROOM, (logic->TakeDamage() || logic->CanUse(RG_NUTS)) && 
                                                               (logic->HasItem(RG_POWER_BRACELET) || ctx->GetTrickOption(RT_VISIBLE_COLLISION)) &&

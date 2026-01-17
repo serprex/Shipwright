@@ -602,7 +602,7 @@ void RegionTable_Init_DodongosCavern() {
         EventAccess(LOGIC_FAIRY_ACCESS,             []{return logic->CanBreakPots();}),
     }, {
         //Locations
-        LOCATION(RC_DODONGOS_CAVERN_MQ_GS_BACK_AREA,      logic->CanKillEnemy(RE_GOLD_SKULLTULA) || logic->HasItem(RG_GORONS_BRACELET)),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_GS_BACK_AREA,      logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA) || logic->HasItem(RG_GORONS_BRACELET)),
         LOCATION(RC_DODONGOS_CAVERN_MQ_ARMOS_ROOM_NW_POT, logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_ARMOS_ROOM_NE_POT, logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_ARMOS_GRASS,       logic->CanCutShrubs()),
