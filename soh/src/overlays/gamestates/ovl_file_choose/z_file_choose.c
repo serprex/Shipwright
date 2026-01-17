@@ -2531,9 +2531,6 @@ void FileChoose_LoadGame(GameState* thisx) {
 
     this->state.running = false;
 
-    Randomizer_LoadHintMessages();
-    Randomizer_LoadMerchantMessages();
-
     gSaveContext.respawn[0].entranceIndex = ENTR_LOAD_OPENING;
     gSaveContext.respawnFlag = 0;
     gSaveContext.seqId = (u8)NA_BGM_DISABLED;
@@ -2542,8 +2539,8 @@ void FileChoose_LoadGame(GameState* thisx) {
     if (!CVarGetInteger(CVAR_ENHANCEMENT("DogFollowsEverywhere"), 0)) {
         gSaveContext.dogParams = 0;
     }
-    gSaveContext.timerState = 0;
-    gSaveContext.subTimerState = 0;
+    gSaveContext.timerState = TIMER_STATE_OFF;
+    gSaveContext.subTimerState = SUBTIMER_STATE_OFF;
     gSaveContext.eventInf[0] = 0;
     gSaveContext.eventInf[1] = 0;
     gSaveContext.eventInf[2] = 0;
