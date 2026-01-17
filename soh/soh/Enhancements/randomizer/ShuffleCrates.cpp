@@ -228,16 +228,17 @@ void ObjKibako2_RandomizerInit(void* actorRef) {
          (s16)actor->world.pos.z == -3429) ||
         (gPlayState->sceneNum == SCENE_GERUDOS_FORTRESS && (s16)actor->world.pos.x == -4571 &&
          (s16)actor->world.pos.z == -3429) ||
-        (logicSetting.IsNot(RO_LOGIC_NO_LOGIC) && ((gPlayState->sceneNum == SCENE_GERUDOS_FORTRESS &&
-                                                (s16)actor->world.pos.x == 3443 && (s16)actor->world.pos.z == -4876) ||
-                                               (gPlayState->sceneNum == SCENE_GERUDO_VALLEY &&
-                                                (s16)actor->world.pos.x == -764 && (s16)actor->world.pos.z == 148) ||
-                                               (gPlayState->sceneNum == SCENE_GERUDO_VALLEY &&
-                                                (s16)actor->world.pos.x == -860 && (s16)actor->world.pos.z == -125) ||
-                                               (gPlayState->sceneNum == SCENE_GERUDO_VALLEY &&
-                                                (s16)actor->world.pos.x == -860 && (s16)actor->world.pos.z == -150) ||
-                                               (gPlayState->sceneNum == SCENE_GERUDO_VALLEY &&
-                                                (s16)actor->world.pos.x == -860 && (s16)actor->world.pos.z == -90))))
+        (logicSetting.IsNot(RO_LOGIC_NO_LOGIC) &&
+         ((gPlayState->sceneNum == SCENE_GERUDOS_FORTRESS && (s16)actor->world.pos.x == 3443 &&
+           (s16)actor->world.pos.z == -4876) ||
+          (gPlayState->sceneNum == SCENE_GERUDO_VALLEY && (s16)actor->world.pos.x == -764 &&
+           (s16)actor->world.pos.z == 148) ||
+          (gPlayState->sceneNum == SCENE_GERUDO_VALLEY && (s16)actor->world.pos.x == -860 &&
+           (s16)actor->world.pos.z == -125) ||
+          (gPlayState->sceneNum == SCENE_GERUDO_VALLEY && (s16)actor->world.pos.x == -860 &&
+           (s16)actor->world.pos.z == -150) ||
+          (gPlayState->sceneNum == SCENE_GERUDO_VALLEY && (s16)actor->world.pos.x == -860 &&
+           (s16)actor->world.pos.z == -90))))
         return;
 
     ObjKibako2* crateActor = static_cast<ObjKibako2*>(actorRef);

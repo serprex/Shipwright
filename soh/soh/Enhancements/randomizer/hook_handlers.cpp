@@ -174,7 +174,8 @@ bool MeetsRainbowBridgeRequirements() {
             break;
         }
         case RO_BRIDGE_STONES: {
-            if ((CheckStoneCount() + CheckBridgeRewardCount()) >= RAND_GET_OPTION(RSK_RAINBOW_BRIDGE_STONE_COUNT).Get()) {
+            if ((CheckStoneCount() + CheckBridgeRewardCount()) >=
+                RAND_GET_OPTION(RSK_RAINBOW_BRIDGE_STONE_COUNT).Get()) {
                 return true;
             }
             break;
@@ -194,7 +195,8 @@ bool MeetsRainbowBridgeRequirements() {
             break;
         }
         case RO_BRIDGE_DUNGEONS: {
-            if ((CheckDungeonCount() + CheckBridgeRewardCount()) >= RAND_GET_OPTION(RSK_RAINBOW_BRIDGE_DUNGEON_COUNT).Get()) {
+            if ((CheckDungeonCount() + CheckBridgeRewardCount()) >=
+                RAND_GET_OPTION(RSK_RAINBOW_BRIDGE_DUNGEON_COUNT).Get()) {
                 return true;
             }
             break;
@@ -274,7 +276,8 @@ void RandomizerOnSceneFlagSetHandler(int16_t sceneNum, int16_t flagType, int16_t
 
         switch (sceneNum) {
             case SCENE_GERUDOS_FORTRESS:
-                if (RAND_GET_OPTION(RSK_SHUFFLE_DUNGEON_ENTRANCES).IsNot(RO_DUNGEON_ENTRANCE_SHUFFLE_OFF) && flag == 0x3A) {
+                if (RAND_GET_OPTION(RSK_SHUFFLE_DUNGEON_ENTRANCES).IsNot(RO_DUNGEON_ENTRANCE_SHUFFLE_OFF) &&
+                    flag == 0x3A) {
                     Flags_SetRandomizerInf(RAND_INF_GF_GTG_GATE_PERMANENTLY_OPEN);
                 }
                 break;
