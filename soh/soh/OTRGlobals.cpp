@@ -71,7 +71,6 @@
 #include <coreinit/debug.h> // OSFatal
 #endif
 
-#include "Enhancements/custom-message/CustomMessageTypes.h"
 #include <functions.h>
 #include "Enhancements/item-tables/ItemTableManager.h"
 #include "soh/SohGui/SohGui.hpp"
@@ -130,10 +129,6 @@
 
 #include "soh/config/ConfigUpdaters.h"
 #include "soh/ShipInit.hpp"
-
-extern "C" {
-#include "src/overlays/actors/ovl_En_Dns/z_en_dns.h"
-}
 
 bool SoH_HandleConfigDrop(char* filePath);
 

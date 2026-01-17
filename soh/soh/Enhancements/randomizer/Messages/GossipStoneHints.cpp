@@ -11,12 +11,10 @@ extern PlayState* gPlayState;
 #include <variables.h>
 }
 
-#define RAND_GET_OPTION(rsk) OTRGlobals::Instance->gRandoContext->GetOption(rsk)
-
 void BuildHintStoneMessage(uint16_t* textId, bool* loadFromMessageTable) {
-    if ((RAND_GET_OPTION(RSK_GOSSIP_STONE_HINTS).Is(RO_GOSSIP_STONES_NEED_TRUTH) &&
+    if ((RAND_GET_OPTION(RSK_GOSSIP_STONE_HINTS) == RO_GOSSIP_STONES_NEED_TRUTH &&
          Player_GetMask(gPlayState) == PLAYER_MASK_TRUTH) ||
-        (RAND_GET_OPTION(RSK_GOSSIP_STONE_HINTS).Is(RO_GOSSIP_STONES_NEED_STONE) &&
+        (RAND_GET_OPTION(RSK_GOSSIP_STONE_HINTS) == RO_GOSSIP_STONES_NEED_STONE &&
          CHECK_QUEST_ITEM(QUEST_STONE_OF_AGONY) == 0)) {
         return;
     }
@@ -56,7 +54,7 @@ void BuildHintStoneMessage(uint16_t* textId, bool* loadFromMessageTable) {
 
 void RegisterGossipStoneHints() {
     COND_ID_HOOK(OnOpenText, TEXT_RANDOMIZER_GOSSIP_STONE_HINTS,
-                 RAND_GET_OPTION(RSK_GOSSIP_STONE_HINTS).IsNot(RO_GOSSIP_STONES_NONE), BuildHintStoneMessage);
+                 RAND_GET_OPTION(RSK_GOSSIP_STONE_HINTS) != RO_GOSSIP_STONES_NONE, BuildHintStoneMessage);
 }
 
 static RegisterShipInitFunc initFunc(RegisterGossipStoneHints, { "IS_RANDO" });

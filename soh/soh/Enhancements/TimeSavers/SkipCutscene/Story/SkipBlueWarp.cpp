@@ -10,7 +10,6 @@ extern "C" {
 #include "functions.h"
 #include "variables.h"
 }
-#define RAND_GET_OPTION(option) Rando::Context::GetInstance()->GetOption(option).Get()
 
 extern "C" PlayState* gPlayState;
 static bool sEnteredBlueWarp = false;

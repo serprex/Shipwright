@@ -4,7 +4,6 @@
 #include "soh/ObjectExtension/ObjectExtension.h"
 
 extern "C" {
-#include "variables.h"
 #include "overlays/actors/ovl_Obj_Tsubo/z_obj_tsubo.h"
 #include "overlays/actors/ovl_Door_Shutter/z_door_shutter.h"
 extern PlayState* gPlayState;
