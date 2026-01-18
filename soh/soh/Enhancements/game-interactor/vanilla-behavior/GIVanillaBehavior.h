@@ -340,6 +340,14 @@ typedef enum {
     // ```
     // #### `args`
     // - None
+    VB_CRAWL,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - None
     VB_CRAWL_SPEED_ENTER,
 
     // #### `result`
@@ -1340,6 +1348,14 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // true
+    // ```
+    // #### `args`
+    // - None
+    VB_LINK_SPIN_WITH_GORON_POT,
+
+    // #### `result`
+    // ```c
     // !Flags_GetSwitch(play, this->dyna.actor.params & 0x3F)
     // ```
     // #### `args`
@@ -1460,6 +1476,14 @@ typedef enum {
     // #### `args`
     // - `*EnOkarinaTag`
     VB_OKARINA_TAG_COMPLETED,
+
+    // #### `result`
+    // ```c
+    // this->getItemId != GI_NONE
+    // ```
+    // #### `args`
+    // - `None`
+    VB_OPEN_CHEST,
 
     // #### `result`
     // ```c
@@ -1708,6 +1732,14 @@ typedef enum {
     // true
     // ```
     // #### `args`
+    // - `int32_t` (owl type)
+    VB_PLAY_OWL_TRAVEL_CS,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
     // - None
     VB_PLAY_PRELUDE_OF_LIGHT_CS,
 
@@ -1853,6 +1885,14 @@ typedef enum {
     // #### `args`
     // - None
     VB_PREVENT_ADULT_STICK,
+
+    // #### `result`
+    // ```c
+    // varies
+    // ```
+    // #### `args`
+    // - None
+    VB_PREVENT_STRENGTH,
 
     // #### `result`
     // ```c

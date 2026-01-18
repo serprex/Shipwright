@@ -79,6 +79,8 @@ bool Logic::HasItem(RandomizerGet itemName) {
             return CheckEquipment(RandoGetToEquipFlag.at(itemName)) || Get(LOGIC_MEDIGORON);
         case RG_BIGGORON_SWORD:
             return CheckEquipment(RandoGetToEquipFlag.at(itemName)) && mSaveContext->bgsFlag;
+        case RG_POWER_BRACELET:
+            return CheckRandoInf(RAND_INF_CAN_GRAB);
         case RG_GORONS_BRACELET:
             return CurrentUpgrade(UPG_STRENGTH);
         case RG_SILVER_GAUNTLETS:
@@ -119,6 +121,31 @@ bool Logic::HasItem(RandomizerGet itemName) {
             return CheckQuestItem(RandoGetToQuestItem.at(itemName));
         case RG_DOUBLE_DEFENSE:
             return GetSaveContext()->isDoubleDefenseAcquired;
+            // Masks
+        case RG_SKULL_MASK:
+            switch (ctx->GetOption(RSK_MASK_QUEST).Get()) {
+                case RO_MASK_QUEST_VANILLA:
+                    return Get(LOGIC_BORROW_SKULL_MASK);
+                case RO_MASK_QUEST_COMPLETED:
+                    return HasItem(RG_ZELDAS_LETTER) && Get(LOGIC_KAKARIKO_GATE_OPEN);
+                case RO_MASK_QUEST_SHUFFLE:
+                    return CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_SKULL);
+                default:
+                    assert(false);
+                    return false;
+            }
+        case RG_MASK_OF_TRUTH:
+            switch (ctx->GetOption(RSK_MASK_QUEST).Get()) {
+                case RO_MASK_QUEST_VANILLA:
+                    return Get(LOGIC_BORROW_RIGHT_MASKS);
+                case RO_MASK_QUEST_COMPLETED:
+                    return HasItem(RG_ZELDAS_LETTER) && Get(LOGIC_KAKARIKO_GATE_OPEN);
+                case RO_MASK_QUEST_SHUFFLE:
+                    return CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_TRUTH);
+                default:
+                    assert(false);
+                    return false;
+            }
         case RG_FISHING_POLE:
         case RG_ZELDAS_LETTER:
         case RG_WEIRD_EGG:
@@ -228,6 +255,10 @@ bool Logic::HasItem(RandomizerGet itemName) {
             return CurrentUpgrade(UPG_SCALE) >= 2;
         case RG_CLIMB:
             return CheckRandoInf(RAND_INF_CAN_CLIMB);
+        case RG_CRAWL:
+            return CheckRandoInf(RAND_INF_CAN_CRAWL);
+        case RG_OPEN_CHEST:
+            return CheckRandoInf(RAND_INF_CAN_OPEN_CHEST);
         case RG_POCKET_EGG:
             return CheckRandoInf(RAND_INF_ADULT_TRADES_HAS_POCKET_EGG);
         case RG_COJIRO:
@@ -346,6 +377,9 @@ bool Logic::CanUse(RandomizerGet itemName) {
             return IsChild;
         case RG_MAGIC_BEAN:
             return IsChild;
+        case RG_SKULL_MASK:
+        case RG_MASK_OF_TRUTH:
+            return IsChild;
 
         // Songs
         case RG_ZELDAS_LULLABY:
@@ -378,6 +412,8 @@ bool Logic::CanUse(RandomizerGet itemName) {
         // Misc. Items
         case RG_FISHING_POLE:
             return HasItem(RG_CHILD_WALLET); // as long as you have enough rubies
+        case RG_CRAWL:
+            return IsChild;
 
         // Bottle Items
         case RG_BOTTLE_WITH_BUGS:
@@ -390,10 +426,8 @@ bool Logic::CanUse(RandomizerGet itemName) {
             return Get(LOGIC_FAIRY_ACCESS);
 
         default:
-            SPDLOG_ERROR("CanUse reached `default` for {}. Assuming intention is no extra requirements for use so "
-                         "returning true, but HasItem should be used instead.",
-                         static_cast<uint32_t>(itemName));
-            assert(false);
+            SPDLOG_INFO("CanUse reached `default` for {}. using HasItem is a minor Optimisation.",
+                        static_cast<uint32_t>(itemName));
             return true;
     }
 }
@@ -459,7 +493,8 @@ bool Logic::CanMiddairGroundJump(bool hasBombflower) {
 }
 
 bool Logic::CanOpenUnderwaterChest() {
-    return ctx->GetTrickOption(RT_OPEN_UNDERWATER_CHEST) && CanUse(RG_IRON_BOOTS) && CanUse(RG_HOOKSHOT);
+    return ctx->GetTrickOption(RT_OPEN_UNDERWATER_CHEST) && CanUse(RG_IRON_BOOTS) && CanUse(RG_HOOKSHOT) &&
+           HasItem(RG_OPEN_CHEST);
 }
 
 uint8_t GetDifficultyValueFromString(Rando::Option& glitchOption) {
@@ -758,7 +793,8 @@ bool Logic::CanKillEnemy(RandomizerEnemy enemy, EnemyDistance distance, bool wal
                     (ctx->GetTrickOption(RT_DC_DODONGO_CHU) && IsAdult && CanUse(RG_BOMBCHU_5)));
         case RE_BARINADE:
             return HasBossSoul(RG_BARINADE_SOUL) && CanUse(RG_BOOMERANG) &&
-                   (CanJumpslashExceptHammer() || ctx->GetTrickOption(RT_JABU_BARINADE_POTS));
+                   (CanJumpslashExceptHammer() ||
+                    (ctx->GetTrickOption(RT_JABU_BARINADE_POTS) && HasItem(RG_POWER_BRACELET)));
         case RE_PHANTOM_GANON:
             return HasBossSoul(RG_PHANTOM_GANON_SOUL) && CanUseSword() &&
                    (CanUse(RG_HOOKSHOT) || CanUse(RG_FAIRY_BOW) || CanUse(RG_FAIRY_SLINGSHOT));
@@ -967,7 +1003,7 @@ bool Logic::CanAvoidEnemy(RandomizerEnemy enemy, bool grounded, uint8_t quantity
         case RE_KEESE:
         case RE_FIRE_KEESE:
         case RE_GUAY:
-            return CanUse(RG_NUTS);
+            return CanUse(RG_NUTS) || CanUse(RG_SKULL_MASK);
         case RE_BLUE_BUBBLE:
             // RANDOTODO Trick to use shield hylian shield as child to stun these guys
             return !grounded || CanUse(RG_NUTS) || HookshotOrBoomerang() || CanStandingShield();
@@ -984,6 +1020,7 @@ bool Logic::CanGetEnemyDrop(RandomizerEnemy enemy, EnemyDistance distance, bool 
     if (!CanKillEnemy(enemy, distance)) {
         return false;
     }
+    // RANDOTODO assumption broke with RC_WATER_TEMPLE_GS_BEHIND_GATE, redesign GS helpers
     if (distance <= ED_MASTER_SWORD_JUMPSLASH) {
         return true;
     }
@@ -1249,10 +1286,10 @@ bool Logic::CanBreakPots(EnemyDistance distance, bool wallOrFloor, bool inWater)
     bool hit = false;
     switch (distance) {
         case ED_CLOSE:
-            hit = true; // str0
+            hit = HasItem(RG_POWER_BRACELET);
             [[fallthrough]];
         case ED_SHORT_JUMPSLASH:
-            hit = hit || CanUse(RG_KOKIRI_SWORD) || CanUse(RG_MEGATON_HAMMER);
+            hit = hit || CanUse(RG_KOKIRI_SWORD) || CanUse(RG_MEGATON_HAMMER) || CanUse(RG_GIANTS_KNIFE);
             [[fallthrough]];
         case ED_MASTER_SWORD_JUMPSLASH:
             hit = hit || CanUse(RG_MASTER_SWORD);
@@ -1284,7 +1321,7 @@ bool Logic::CanBreakCrates() {
 }
 
 bool Logic::CanBreakSmallCrates() {
-    return true;
+    return CanJumpslash() || HasExplosives() || HasItem(RG_POWER_BRACELET);
 }
 
 bool Logic::CanBonkTrees() {
@@ -1558,6 +1595,14 @@ std::map<RandomizerGet, uint32_t> Logic::RandoGetToRandInf = {
     { RG_OCARINA_C_DOWN_BUTTON, RAND_INF_HAS_OCARINA_C_DOWN },
     { RG_OCARINA_C_LEFT_BUTTON, RAND_INF_HAS_OCARINA_C_LEFT },
     { RG_OCARINA_C_RIGHT_BUTTON, RAND_INF_HAS_OCARINA_C_RIGHT },
+    { RG_KEATON_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_KEATON },
+    { RG_SKULL_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_SKULL },
+    { RG_SPOOKY_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_SPOOKY },
+    { RG_BUNNY_HOOD, RAND_INF_CHILD_TRADES_HAS_MASK_BUNNY },
+    { RG_GORON_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_GORON },
+    { RG_ZORA_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_ZORA },
+    { RG_GERUDO_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_GERUDO },
+    { RG_MASK_OF_TRUTH, RAND_INF_CHILD_TRADES_HAS_MASK_TRUTH },
     { RG_SKELETON_KEY, RAND_INF_HAS_SKELETON_KEY },
     { RG_GREG_RUPEE, RAND_INF_GREG_FOUND },
     { RG_FISHING_POLE, RAND_INF_FISHING_POLE_FOUND },
@@ -1717,6 +1762,12 @@ void Logic::ApplyItemEffect(Item& item, bool state) {
                 case RG_CLIMB:
                     SetRandoInf(RAND_INF_CAN_CLIMB, state);
                     break;
+                case RG_CRAWL:
+                    SetRandoInf(RAND_INF_CAN_CRAWL, state);
+                    break;
+                case RG_OPEN_CHEST:
+                    SetRandoInf(RAND_INF_CAN_OPEN_CHEST, state);
+                    break;
                 case RG_PROGRESSIVE_HOOKSHOT: {
                     uint8_t i;
                     for (i = 0; i < 3; i++) {
@@ -1734,8 +1785,14 @@ void Logic::ApplyItemEffect(Item& item, bool state) {
                 } break;
                 case RG_PROGRESSIVE_STRENGTH: {
                     auto currentLevel = CurrentUpgrade(UPG_STRENGTH);
-                    auto newLevel = currentLevel + (!state ? -1 : 1);
-                    SetUpgrade(UPG_STRENGTH, newLevel);
+                    if (!CheckRandoInf(RAND_INF_CAN_GRAB) && state) {
+                        SetRandoInf(RAND_INF_CAN_GRAB, true);
+                    } else if (currentLevel == 0 && !state) {
+                        SetRandoInf(RAND_INF_CAN_GRAB, false);
+                    } else {
+                        auto newLevel = currentLevel + (!state ? -1 : 1);
+                        SetUpgrade(UPG_STRENGTH, newLevel);
+                    }
                 } break;
                 case RG_PROGRESSIVE_BOMB_BAG: {
                     auto realGI = item.GetGIEntry();
@@ -1937,6 +1994,14 @@ void Logic::ApplyItemEffect(Item& item, bool state) {
                 case RG_OCARINA_C_DOWN_BUTTON:
                 case RG_OCARINA_C_LEFT_BUTTON:
                 case RG_OCARINA_C_RIGHT_BUTTON:
+                case RG_KEATON_MASK:
+                case RG_SKULL_MASK:
+                case RG_SPOOKY_MASK:
+                case RG_BUNNY_HOOD:
+                case RG_GORON_MASK:
+                case RG_ZORA_MASK:
+                case RG_GERUDO_MASK:
+                case RG_MASK_OF_TRUTH:
                 case RG_GREG_RUPEE:
                 case RG_FISHING_POLE:
                 case RG_GUARD_HOUSE_KEY:
@@ -2471,13 +2536,12 @@ bool Logic::SpiritWestToSkull() {
 }
 
 bool Logic::SpiritSunBlockSouthLedge() {
-    // It's also possible to do a backwalk hover + backflip if you equip hovers as you start the backwalk to accelerate
-    // faster
-    return true /*str0 || IsAdult || CanKillEnemy(RE_BEAMOS) || BunnyHovers() ||
-            (CanUse(RG_HOOKSHOT) && (HasFireSource() ||
-                                     (SpiritSunBlockTorch && (logic->CanUse(STICKS) ||
-            (ctx->GetTrickOption(RT_SPIRIT_SUN_CHEST) && logic->CanUse(RG_FAIRY_BOW))))))*/
-        ;
+    // also possible to do a backwalk hover + backflip if you equip hovers as you start backwalk to accelerate faster
+    return HasItem(RG_POWER_BRACELET) || IsAdult || CanKillEnemy(RE_BEAMOS) /*|| BunnyHovers()*/ ||
+           (CanUse(RG_HOOKSHOT) &&
+            (HasFireSource() ||
+             (Get(LOGIC_SPIRIT_SUN_BLOCK_TORCH) &&
+              (CanUse(RG_STICKS) || (ctx->GetTrickOption(RT_SPIRIT_SUN_CHEST) && CanUse(RG_FAIRY_BOW))))));
 }
 
 bool Logic::SpiritEastToSwitch() {
@@ -2492,7 +2556,8 @@ bool Logic::MQSpiritWestToPots() {
 
 bool Logic::MQSpiritStatueToSunBlock() {
     return (IsAdult || ctx->GetTrickOption(RT_SPIRIT_MQ_SUN_BLOCK_SOT) ||
-            CanUse(RG_SONG_OF_TIME) /* || CanBunnyJump()*/) /* && str0*/;
+            CanUse(RG_SONG_OF_TIME) /* || CanBunnyJump()*/) &&
+           HasItem(RG_POWER_BRACELET);
 }
 
 bool Logic::MQSpiritStatueSouthDoor() {
@@ -2506,8 +2571,8 @@ bool Logic::MQSpirit4KeyColossus() {
     // Colossus This is because there are only 3 keys that can be wasted without opening up either this lock to East
     // hand, or the West Hand lock through Sun Block Room and both directions allow you to drop onto colossus
     // logic->CanKillEnemy(RE_FLOORMASTER) is implied
-    return CanAvoidEnemy(RE_BEAMOS, true, 4) && CanUse(RG_SONG_OF_TIME) &&
-           CanJumpslash() && /*(str0 || SunlightArrows) &&*/
+    return CanAvoidEnemy(RE_BEAMOS, true, 4) && CanUse(RG_SONG_OF_TIME) && CanJumpslash() &&
+           (HasItem(RG_POWER_BRACELET) || SunlightArrows()) &&
            (ctx->GetTrickOption(RT_LENS_SPIRIT_MQ) || CanUse(RG_LENS_OF_TRUTH)) && CanKillEnemy(RE_IRON_KNUCKLE) &&
            CanUse(RG_HOOKSHOT);
 }
@@ -2522,7 +2587,7 @@ bool Logic::MQSpirit4KeyWestHand() {
 bool Logic::CouldMQSpirit4KeyWestHand() {
     return CanAvoidEnemy(RE_BEAMOS, true, 4) && CanUse(RG_SONG_OF_TIME) &&
            (HasItem(RG_MASTER_SWORD) || HasItem(RG_BIGGORON_SWORD) || HasItem(RG_MEGATON_HAMMER)) &&
-           /*(str0 || SunlightArrows) &&*/
+           (HasItem(RG_POWER_BRACELET) || SunlightArrows()) &&
            (ctx->GetTrickOption(RT_LENS_SPIRIT_MQ) || CanUse(RG_LENS_OF_TRUTH)) && HasItem(RG_LONGSHOT);
 }
 
@@ -2533,7 +2598,7 @@ bool Logic::CouldMQSpirit4KeyWestHand() {
 // If we have the longshot, we can also guarantee access to the outer west hand as you can longshot from the east hand
 // to the west Implies CanKillEnemy(RE_IRON_KNUCKLE)
 bool Logic::OuterWestHandLogic() {
-    return HasExplosives() && (HasItem(RG_CLIMB) || CanUse(RG_LONGSHOT)) /*&& str0*/ &&
+    return HasExplosives() && (HasItem(RG_CLIMB) || CanUse(RG_LONGSHOT)) && HasItem(RG_POWER_BRACELET) &&
            SmallKeys(SCENE_SPIRIT_TEMPLE, HasItem(RG_LONGSHOT) ? 3 : 5);
 }
 
@@ -2578,9 +2643,24 @@ void Logic::Reset(bool resetSaveContext /*= true*/) {
             SetRandoInf(RAND_INF_CAN_SWIM, true);
         }
 
+        // If we're not shuffling grab, we start with it
+        if (ctx->GetOption(RSK_SHUFFLE_GRAB).Is(false)) {
+            SetRandoInf(RAND_INF_CAN_GRAB, true);
+        }
+
         // If we're not shuffling climb, we start with it
         if (ctx->GetOption(RSK_SHUFFLE_CLIMB).Is(false)) {
             SetRandoInf(RAND_INF_CAN_CLIMB, true);
+        }
+
+        // If we're not shuffling crawl, we start with it
+        if (ctx->GetOption(RSK_SHUFFLE_CRAWL).Is(false)) {
+            SetRandoInf(RAND_INF_CAN_CRAWL, true);
+        }
+
+        // If we're not shuffling open chest, we start with it
+        if (ctx->GetOption(RSK_SHUFFLE_OPEN_CHEST).Is(false)) {
+            SetRandoInf(RAND_INF_CAN_OPEN_CHEST, true);
         }
 
         // If we're not shuffling child's wallet, we start with it

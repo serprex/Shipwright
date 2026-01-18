@@ -18,7 +18,8 @@ void RegionTable_Init_CastleGrounds() {
 
     areaTable[RR_HC_GATE] = Region("Hyrule Castle Gate", SCENE_HYRULE_CASTLE, {
         //Events
-        EventAccess(LOGIC_BUG_ACCESS, []{return true /*str0*/;}),
+        EventAccess(LOGIC_FAIRY_ACCESS, []{return logic->CallGossipFairy() || logic->CanUse(RG_STICKS);}),
+        EventAccess(LOGIC_BUG_ACCESS,   []{return logic->HasItem(RG_POWER_BRACELET);}),
     }, {
         //Locations
         LOCATION(RC_HC_MALON_EGG,      true),
@@ -63,6 +64,7 @@ void RegionTable_Init_CastleGrounds() {
         Entrance(RR_HC_GATE,                  []{return true;}),
         Entrance(RR_HC_ABOVE_VINE,            []{return logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT);}),
         Entrance(RR_HC_ABOVE_CLIMBABLE_ROCKS, []{return logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT);}),
+        Entrance(RR_HC_GREAT_FAIRY_FOUNTAIN,  []{return logic->BlastOrSmash() && logic->CanUse(RG_CRAWL);}),
     });
 
     areaTable[RR_HC_ABOVE_CLIMBABLE_ROCKS] = Region("Hyrule Castle Above Climbable Rocks", SCENE_HYRULE_CASTLE, {
@@ -88,13 +90,13 @@ void RegionTable_Init_CastleGrounds() {
         //Exits
         Entrance(RR_HC_GATE,          []{return true;}),
         Entrance(RR_HC_STORMS_GROTTO, []{return logic->CanOpenStormsGrotto();}),
-        Entrance(RR_HC_GARDEN,        []{return logic->CanUse(RG_WEIRD_EGG) || !ctx->GetOption(RSK_SHUFFLE_WEIRD_EGG) || (ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->TakeDamage() && logic->HasExplosives() && logic->CanJumpslash());}),
+        Entrance(RR_HC_GARDEN,        []{return (logic->CanUse(RG_WEIRD_EGG) && logic->HasItem(RG_POWER_BRACELET)) || (ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->TakeDamage() && logic->HasExplosives() && logic->CanJumpslash());}),
     });
 
     areaTable[RR_HC_DRAIN_LEDGE] = Region("Hyrule Castle Drain Ledge", SCENE_HYRULE_CASTLE, {}, {}, {
         //Exits
         Entrance(RR_HC_MOAT,   []{return true;}),
-        Entrance(RR_HC_GARDEN, []{return true /*CanCrawl*/;}),
+        Entrance(RR_HC_GARDEN, []{return logic->CanUse(RG_CRAWL);}),
     });
 
     areaTable[RR_HC_GARDEN] = Region("HC Garden", SCENE_CASTLE_COURTYARD_ZELDA, {}, {
@@ -103,7 +105,7 @@ void RegionTable_Init_CastleGrounds() {
         LOCATION(RC_SONG_FROM_IMPA,   true),
     }, {
         //Exits
-        Entrance(RR_HC_DRAIN_LEDGE, []{return true;}),
+        Entrance(RR_HC_DRAIN_LEDGE, []{return true;}), // if this ever gets shuffled leaving garden area should come out crawlspace
     });
 
     areaTable[RR_HC_GREAT_FAIRY_FOUNTAIN] = Region("HC Great Fairy Fountain", SCENE_GREAT_FAIRYS_FOUNTAIN_SPELLS, {}, {
