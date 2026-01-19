@@ -106,3 +106,5 @@ void RegisterGoronMessages() {
     COND_ID_HOOK(OnOpenText, TEXT_FIRE_TEMPLE_GORON_HIDDEN_DOOR_SECRET, IS_RANDO, BuildGoronMessage);
     COND_ID_HOOK(OnOpenText, TEXT_FIRE_TEMPLE_GORON_SOUNDS_DIFFERENT_SECRET, IS_RANDO, BuildGoronMessage);
 }
+
+static RegisterShipInitFunc initFunc(RegisterGoronMessages, { "IS_RANDO" });
