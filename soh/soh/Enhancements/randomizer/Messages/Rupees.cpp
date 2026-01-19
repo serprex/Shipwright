@@ -355,7 +355,7 @@ void BuildRupeeMessage(uint16_t* textId, bool* loadFromMessageTable) {
             amount = "200";
             break;
         default:
-            assert(!"This should not be reachable");
+            assert(false);
             return;
     }
     msg.Replace("[[color]]", color);
@@ -377,4 +377,5 @@ void RegisterRandomRupeeNames() {
                  IS_RANDO && CVarGetInteger(CVAR_RANDOMIZER_ENHANCEMENT("RandomizeRupeeNames"), 1), BuildRupeeMessage);
 }
 
-static RegisterShipInitFunc initFunc(RegisterRandomRupeeNames, { CVAR_RANDOMIZER_ENHANCEMENT("RandomizeRupeeNames") });
+static RegisterShipInitFunc initFunc(RegisterRandomRupeeNames,
+                                     { CVAR_RANDOMIZER_ENHANCEMENT("RandomizeRupeeNames"), "IS_RANDO" });
