@@ -540,7 +540,7 @@ void RegionTable_Init_ForestTemple() {
     areaTable[RR_FOREST_TEMPLE_MQ_UPPER_BLOCK_PUZZLE] = Region("Forest Temple MQ Upper Block Puzzle", SCENE_FOREST_TEMPLE, {
         //Events
         EventAccess(LOGIC_FOREST_MQ_BLOCK_ROOM_TARGETS, []{return logic->CanHitSwitch();}),
-        }, {}, {
+    }, {}, {
         //Exits
         Entrance(RR_FOREST_TEMPLE_MQ_MIDDLE_BLOCK_PUZZLE, []{return true;}),
         Entrance(RR_FOREST_TEMPLE_MQ_BLOCK_PUZZLE_TOP,    []{return logic->HasItem(RG_CLIMB);}),

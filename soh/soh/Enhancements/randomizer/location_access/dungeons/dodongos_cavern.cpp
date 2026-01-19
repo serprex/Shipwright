@@ -533,7 +533,7 @@ void RegionTable_Init_DodongosCavern() {
         LOCATION(RC_DODONGOS_CAVERN_MQ_POE_ROOM_CRATE_6, logic->HasItem(RG_GORONS_BRACELET) || logic->CanBreakCrates()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_POE_ROOM_CRATE_7, logic->HasItem(RG_GORONS_BRACELET) || logic->CanBreakCrates()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_POE_ROOM_CRATE_8, logic->HasItem(RG_GORONS_BRACELET) || logic->CanBreakCrates()),
-        }, {
+    }, {
         //Exits
         Entrance(RR_DODONGOS_CAVERN_MQ_OUTSIDE_POES_ROOM, []{return AnyAgeTime([]{return logic->CanDetonateBombFlowers() || logic->HasItem(RG_GORONS_BRACELET);});}),
         Entrance(RR_DODONGOS_CAVERN_MQ_LOWER_LIZALFOS,    []{return true;}),

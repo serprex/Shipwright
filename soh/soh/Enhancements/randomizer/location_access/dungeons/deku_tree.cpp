@@ -403,7 +403,7 @@ void RegionTable_Init_DekuTree() {
         //Locations
         LOCATION(RC_DEKU_TREE_MQ_BASEMENT_LARVAE_GRASS_1, logic->CanCutShrubs()),
         LOCATION(RC_DEKU_TREE_MQ_BASEMENT_LARVAE_GRASS_2, logic->CanCutShrubs()),
-        }, {
+    }, {
         //Exits
         //both imply CanKillEnemy(RE_GOHMA_LARVA)
         Entrance(RR_DEKU_TREE_MQ_BASEMENT_GRAVE_ROOM,      []{return AnyAgeTime([]{return logic->CanKillEnemy(RE_MAD_SCRUB) && logic->CanKillEnemy(RE_KEESE);});}),
