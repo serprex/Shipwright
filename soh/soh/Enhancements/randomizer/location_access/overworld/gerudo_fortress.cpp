@@ -9,7 +9,7 @@ void RegionTable_Init_GerudoFortress() {
 
     areaTable[RR_GF_OUTSKIRTS] = Region("Gerudo Fortress Outskirts", SCENE_GERUDOS_FORTRESS, {
         //Events
-        EventAccess(LOGIC_GF_GATE_OPEN,  []{return logic->IsAdult && logic->HasItem(RG_GERUDO_MEMBERSHIP_CARD) && logic->HasItem(RG_SPEAK_GERUDO);}), //needs climb
+        EventAccess(LOGIC_GF_GATE_OPEN,  []{return logic->IsAdult && logic->HasItem(RG_GERUDO_MEMBERSHIP_CARD) && logic->HasItem(RG_CLIMB) && logic->HasItem(RG_SPEAK_GERUDO);}), // longshot can get up without climb, but jank is hard
     }, {
         //Locations
         LOCATION(RC_GF_OUTSKIRTS_NE_CRATE, (logic->IsChild || logic->CanPassEnemy(RE_GERUDO_GUARD)) && logic->CanBreakCrates()),
@@ -85,14 +85,14 @@ void RegionTable_Init_GerudoFortress() {
         Entrance(RR_GF_NEAR_GROTTO,           []{return true;}),
         Entrance(RR_GF_OUTSIDE_GTG,           []{return logic->IsChild || logic->CanPassEnemy(RE_GERUDO_GUARD);}),
         // need to explicitly convert it into a bool
-        Entrance(RR_GF_BOTTOM_OF_LOWER_VINES, []{return ctx->GetTrickOption(RT_GF_JUMP).Get() != 0 ;}),
+        Entrance(RR_GF_BOTTOM_OF_LOWER_VINES, []{return ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS).Get() != 0 ;}),
     });
 
     areaTable[RR_GF_BOTTOM_OF_LOWER_VINES] = Region("GF Bottom of Lower Vines", SCENE_GERUDOS_FORTRESS, {}, {}, {
         //Exits
         Entrance(RR_TH_STEEP_SLOPE_CELL,   []{return true;}),
         Entrance(RR_GF_NEAR_GROTTO,        []{return true;}),
-        Entrance(RR_GF_TOP_OF_LOWER_VINES, []{return true /* logic->CanClimb() */;}),
+        Entrance(RR_GF_TOP_OF_LOWER_VINES, []{return logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT);}),
         Entrance(RR_GF_ABOVE_GTG,          []{return true;}),
         Entrance(RR_GF_BELOW_GS,           []{return logic->IsAdult && logic->CanGroundJump();}),
     });
@@ -104,7 +104,7 @@ void RegionTable_Init_GerudoFortress() {
         Entrance(RR_GF_ABOVE_GTG,             []{return true;}),
         Entrance(RR_GF_BOTTOM_OF_LOWER_VINES, []{return true;}),
         // need to explicitly convert it into a bool
-        Entrance(RR_GF_BOTTOM_OF_UPPER_VINES, []{return logic->IsAdult && ctx->GetTrickOption(RT_GF_JUMP).Get();}),
+        Entrance(RR_GF_BOTTOM_OF_UPPER_VINES, []{return logic->IsAdult && ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS).Get();}),
     });
 
     areaTable[RR_GF_NEAR_GS] = Region("GF Near GS", SCENE_GERUDOS_FORTRESS, {}, {
@@ -126,22 +126,22 @@ void RegionTable_Init_GerudoFortress() {
         Entrance(RR_GF_TOP_OF_LOWER_VINES,    []{return true;}),
         Entrance(RR_GF_NEAR_GS,               []{return true;}),
         Entrance(RR_GF_BOTTOM_OF_UPPER_VINES, []{return true;}),
-        Entrance(RR_GF_TOP_OF_UPPER_VINES,    []{return logic->IsAdult && ctx->GetTrickOption(RT_GF_JUMP).Get();}),
+        Entrance(RR_GF_TOP_OF_UPPER_VINES,    []{return logic->IsAdult && ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS).Get();}),
     });
 
     areaTable[RR_GF_BOTTOM_OF_UPPER_VINES] = Region("GF Bottom of Upper Vines", SCENE_GERUDOS_FORTRESS, {}, {}, {
         //Exits
         Entrance(RR_GF_OUTSIDE_GTG,        []{return true;}),
         Entrance(RR_GF_TOP_OF_LOWER_VINES, []{return true;}),
-        Entrance(RR_GF_SLOPED_ROOF,        []{return logic->IsAdult && (logic->CanUse(RG_HOVER_BOOTS) || ctx->GetTrickOption(RT_GF_JUMP));}),
-        Entrance(RR_GF_TOP_OF_UPPER_VINES, []{return true /* logic->CanClimb() */;}),
+        Entrance(RR_GF_SLOPED_ROOF,        []{return logic->IsAdult && (logic->CanUse(RG_HOVER_BOOTS) || ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS));}),
+        Entrance(RR_GF_TOP_OF_UPPER_VINES, []{return logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT);}),
         Entrance(RR_GF_TO_GTG,             []{return logic->IsAdult && ctx->GetTrickOption(RT_GF_LEDGE_CLIP_INTO_GTG).Get();}),
     });
 
     areaTable[RR_GF_TOP_OF_UPPER_VINES] = Region("GF Top of Upper Vines", SCENE_GERUDOS_FORTRESS, {}, {
         //Locations
-        //if RR_GF_SLOPED_ROOF > RR_GF_TOP_OF_UPPER_VINES is ever made part of RT_GF_JUMP, climb is needed to get back up
-        LOCATION(RC_GF_GS_TOP_FLOOR, logic->IsAdult && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_SHORT_JUMPSLASH) && logic->CanGetNightTimeGS()),
+        //if RR_GF_SLOPED_ROOF > RR_GF_TOP_OF_UPPER_VINES is ever made part of RT_UNINTUITIVE_JUMPS, climb is needed to get back up
+        LOCATION(RC_GF_GS_TOP_FLOOR, logic->IsAdult && logic->CanGetNightTimeGS() && logic->CanKillEnemy(RE_GOLD_SKULLTULA, ED_SHORT_JUMPSLASH) && (logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_BOOMERANG) || ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS))),
     }, {
         //Exits
         Entrance(RR_GF_TOP_OF_LOWER_VINES,    []{return true;}),
@@ -152,7 +152,7 @@ void RegionTable_Init_GerudoFortress() {
 
     areaTable[RR_GF_NEAR_CHEST] = Region("GF Near Chest", SCENE_GERUDOS_FORTRESS, {}, {
         //Locations
-        LOCATION(RC_GF_CHEST,        true),
+        LOCATION(RC_GF_CHEST,        logic->HasItem(RG_OPEN_CHEST)),
         LOCATION(RC_GF_GS_TOP_FLOOR, logic->IsAdult && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG) && logic->CanGetNightTimeGS()),
     }, {
         //Exits
@@ -163,7 +163,7 @@ void RegionTable_Init_GerudoFortress() {
     areaTable[RR_GF_LONG_ROOF] = Region("GF Long Roof", SCENE_GERUDOS_FORTRESS, {}, {}, {
         //Exits
         Entrance(RR_GF_BOTTOM_OF_LOWER_VINES, []{return true;}),
-        Entrance(RR_GF_NEAR_GS,               []{return (logic->IsAdult && ctx->GetTrickOption(RT_GF_JUMP)) || logic->CanUse(RG_HOVER_BOOTS);}),
+        Entrance(RR_GF_NEAR_GS,               []{return (logic->IsAdult && ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS)) || logic->CanUse(RG_HOVER_BOOTS);}),
         Entrance(RR_GF_BELOW_GS,              []{return true;}),
         Entrance(RR_GF_NEAR_CHEST,            []{return logic->CanUse(RG_LONGSHOT);}),
         Entrance(RR_GF_BELOW_CHEST,           []{return true;}),
@@ -193,8 +193,8 @@ void RegionTable_Init_GerudoFortress() {
     }, {
         //Exits
         //you don't take fall damage if you land on the rock with the flag on for some reason
-        //there's a trick to reach RR_GF_LONG_ROOF but that's too intricate for GF_JUMP
-        Entrance(RR_GF_OUTSKIRTS,           []{return ctx->GetTrickOption(RT_GF_JUMP).Get() != 0;}),
+        //there's a trick to reach RR_GF_LONG_ROOF
+        Entrance(RR_GF_OUTSKIRTS,           []{return ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS).Get() != 0;}),
         Entrance(RR_GF_NEAR_CHEST,          []{return logic->CanUse(RG_LONGSHOT);}),
         Entrance(RR_GF_BELOW_CHEST,         []{return logic->TakeDamage();}),
         Entrance(RR_GF_JAIL_WINDOW,         []{return logic->CanUse(RG_HOOKSHOT);}),
@@ -204,7 +204,7 @@ void RegionTable_Init_GerudoFortress() {
 
     areaTable[RR_GF_JAIL_WINDOW] = Region("GF Jail Window", SCENE_GERUDOS_FORTRESS, {}, {}, {
         //Exits
-        //There's a trick where hovers backwalk into backflip gives access to RR_GF_LONG_ROOF from here
+        Entrance(RR_GF_LONG_ROOF,   []{return ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_MEGATON_HAMMER);}), // can also get it with hovers backwalk into backflip
         Entrance(RR_GF_OUTSKIRTS,   []{return true;}),
         Entrance(RR_GF_BELOW_CHEST, []{return true;}),
         Entrance(RR_GF_ABOVE_JAIL,  []{return ctx->GetTrickOption(RT_HOOKSHOT_CLIP) && logic->CanUse(RG_HOOKSHOT);}),
