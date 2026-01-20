@@ -571,8 +571,7 @@ void CustomMessage::AutoFormatString(std::string& str) const {
                     lineCount = 0;
                     // some lines need to be split but don't have spaces, look for periods instead
                 } else {
-                    const size_t lastBreak =
-                        str.find_last_of(".,!?- ", lastNewline + lineLength);
+                    const size_t lastBreak = str.find_last_of(".,!?- ", lastNewline + lineLength);
                     // if none exist or we go backwards, we look forward for a something and allow the overflow
                     if (lastBreak == std::string::npos || lastBreak < lastNewline) {
                         const size_t nextBreak = str.find_first_of(".,!?- &^", lastNewline);
@@ -607,8 +606,7 @@ void CustomMessage::AutoFormatString(std::string& str) const {
                     lastNewline = carrot + 1;
                     // some lines need to be split but don't have spaces, look for punctuation instead
                 } else {
-                    const size_t lastBreak =
-                        str.find_last_of(".,!?- &", lastNewline + lineLength);
+                    const size_t lastBreak = str.find_last_of(".,!?- &", lastNewline + lineLength);
                     // if none exist or we go backwards, we look forward for a something and allow the overflow
                     if (lastBreak == std::string::npos || lastBreak < lastNewline) {
                         const size_t nextBreak = str.find_first_of(".,!?- &^", lastNewline);

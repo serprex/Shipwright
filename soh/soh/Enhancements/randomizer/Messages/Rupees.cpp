@@ -7,8 +7,6 @@ extern "C" {
 #include "variables.h"
 }
 
-using namespace std::literals::string_literals;
-
 static const char* englishRupeeNames[] = {
     "[P]",
     "Bad RNG Rolls",
@@ -331,8 +329,9 @@ static const char* frenchRupeeNames[] = {
 };
 
 void BuildRupeeMessage(uint16_t* textId, bool* loadFromMessageTable) {
-    CustomMessage msg = CustomMessage("You found [[color]][[amount]] [[rupee]]%w!", "Du hast [[color]][[amount]] [[rupee]]%w gefunden!",
-        "Vous obtenez [[color]][[amount]] [[rupee]]%w!");
+    CustomMessage msg =
+        CustomMessage("You found [[color]][[amount]] [[rupee]]%w!", "Du hast [[color]][[amount]] [[rupee]]%w gefunden!",
+                      "Vous obtenez [[color]][[amount]] [[rupee]]%w!");
     std::string color;
     std::string amount;
     CustomMessage rupee =
