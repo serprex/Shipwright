@@ -7,6 +7,8 @@ extern "C" {
 #include "variables.h"
 }
 
+using namespace std::literals::string_literals;
+
 static const char* englishRupeeNames[] = {
     "[P]",
     "Bad RNG Rolls",
@@ -329,9 +331,8 @@ static const char* frenchRupeeNames[] = {
 };
 
 void BuildRupeeMessage(uint16_t* textId, bool* loadFromMessageTable) {
-    CustomMessage msg = CustomMessage(
-        "You found [[color]][[amount]] [[rupee]]\x05\x00!", "Du hast [[color]][[amount]] [[rupee]]\x05\x00 gefunden!",
-        "Vous obtenez [[color]][[amount]] [[rupee]]\x05\x00!", TEXTBOX_TYPE_BLACK, TEXTBOX_POS_BOTTOM);
+    CustomMessage msg = CustomMessage("You found [[color]][[amount]] [[rupee]]%w!", "Du hast [[color]][[amount]] [[rupee]]%w gefunden!",
+        "Vous obtenez [[color]][[amount]] [[rupee]]%w!");
     std::string color;
     std::string amount;
     CustomMessage rupee =
@@ -339,19 +340,19 @@ void BuildRupeeMessage(uint16_t* textId, bool* loadFromMessageTable) {
                       ShipUtils::RandomElement(frenchRupeeNames));
     switch (*textId) {
         case TEXT_BLUE_RUPEE:
-            color = "\x05\x03";
+            color = "%b";
             amount = "5";
             break;
         case TEXT_RED_RUPEE:
-            color = "\x05\x01";
+            color = "%r";
             amount = "20";
             break;
         case TEXT_PURPLE_RUPEE:
-            color = "\x05\x05";
+            color = "%p";
             amount = "50";
             break;
         case TEXT_HUGE_RUPEE:
-            color = "\x05\x06";
+            color = "%y";
             amount = "200";
             break;
         default:

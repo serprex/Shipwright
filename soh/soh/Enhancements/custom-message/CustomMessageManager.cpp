@@ -572,10 +572,10 @@ void CustomMessage::AutoFormatString(std::string& str) const {
                     // some lines need to be split but don't have spaces, look for periods instead
                 } else {
                     const size_t lastBreak =
-                        str.find_last_of(static_cast<std::string>(".,!?- "), lastNewline + lineLength);
+                        str.find_last_of(".,!?- ", lastNewline + lineLength);
                     // if none exist or we go backwards, we look forward for a something and allow the overflow
                     if (lastBreak == std::string::npos || lastBreak < lastNewline) {
-                        const size_t nextBreak = str.find_first_of(static_cast<std::string>(".,!?- &^"), lastNewline);
+                        const size_t nextBreak = str.find_first_of(".,!?- &^", lastNewline);
                         if (str[nextBreak] == '^') {
                             lastNewline = nextBreak + 1;
                             lineCount = 0; // increments to 1 at the end
@@ -608,10 +608,10 @@ void CustomMessage::AutoFormatString(std::string& str) const {
                     // some lines need to be split but don't have spaces, look for punctuation instead
                 } else {
                     const size_t lastBreak =
-                        str.find_last_of(static_cast<std::string>(".,!?- &"), lastNewline + lineLength);
+                        str.find_last_of(".,!?- &", lastNewline + lineLength);
                     // if none exist or we go backwards, we look forward for a something and allow the overflow
                     if (lastBreak == std::string::npos || lastBreak < lastNewline) {
-                        const size_t nextBreak = str.find_first_of(static_cast<std::string>(".,!?- &^"), lastNewline);
+                        const size_t nextBreak = str.find_first_of(".,!?- &^", lastNewline);
                         if (str[nextBreak] == '^') {
                             lastNewline = nextBreak + 1;
                         } else {
