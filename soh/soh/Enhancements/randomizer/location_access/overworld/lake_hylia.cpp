@@ -83,7 +83,7 @@ void RegionTable_Init_LakeHylia() {
         //Exits
         Entrance(RR_HF_TO_LAKE_HYLIA,      []{return true;}),
         Entrance(RR_LH_FROM_SHORTCUT,      []{return true;}),
-        Entrance(RR_LH_OWL_FLIGHT,         []{return logic->IsChild && logic->HasItem(RG_SPEAK_HYLIAN);}),
+        Entrance(RR_LH_OWL_FLIGHT,         []{return logic->IsChild && (logic->HasItem(RG_SPEAK_DEKU) || logic->HasItem(RG_SPEAK_GERUDO) || logic->HasItem(RG_SPEAK_GORON) || logic->HasItem(RG_SPEAK_HYLIAN) || logic->HasItem(RG_SPEAK_ZORA));}),
         Entrance(RR_LH_FISHING_ISLAND,     []{return ((logic->IsChild || logic->Get(LOGIC_WATER_TEMPLE_CLEAR)) && logic->HasItem(RG_BRONZE_SCALE)) || (logic->IsAdult && (logic->ReachScarecrow() || CanPlantBean(RR_LAKE_HYLIA, RG_LAKE_HYLIA_BEAN_SOUL)));}),
         Entrance(RR_LH_LAB,                []{return logic->CanOpenOverworldDoor(RG_HYLIA_LAB_KEY);}),
         Entrance(RR_LH_FROM_WATER_TEMPLE,  []{return true;}),

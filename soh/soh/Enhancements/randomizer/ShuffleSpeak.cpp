@@ -62,7 +62,6 @@ void RegisterShuffleSpeak() {
                 case ACTOR_EN_MU:
                 case ACTOR_EN_NIW_GIRL:
                 case ACTOR_EN_NIW_LADY:
-                case ACTOR_EN_OWL:
                 case ACTOR_EN_SSH:
                 case ACTOR_EN_STH:
                 case ACTOR_EN_TA:
@@ -113,6 +112,16 @@ void RegisterShuffleSpeak() {
                             break;
                     }
                     break;
+                case ACTOR_EN_OWL:
+                    if (!Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_DEKU) &&
+                        !Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_GERUDO) &&
+                        !Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_GORON) &&
+                        !Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_HYLIAN) &&
+                        !Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_KOKIRI) &&
+                        !Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_ZORA)) {
+                        *should = false;
+                    }
+                    return;
             }
             if (inf != RAND_INF_MAX && !Flags_GetRandomizerInf(inf)) {
                 *should = false;
