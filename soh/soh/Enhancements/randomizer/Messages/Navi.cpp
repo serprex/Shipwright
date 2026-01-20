@@ -8,7 +8,7 @@ extern "C" {
 #include <variables.h>
 }
 
-CustomMessage NaviMessages[] = {
+static CustomMessage NaviMessages[] = {
 
     { "%cMissing a small key in a dungeon?&Maybe the %rboss %chas it!",
       "%cFehlt Dir ein kleiner Schlüssel in &einem Labyrinth? Vielleicht hat ihn&ja der %rEndgegner%c!",

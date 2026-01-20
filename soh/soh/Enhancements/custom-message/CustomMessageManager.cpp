@@ -271,7 +271,7 @@ void CustomMessage::LoadIntoFont() {
     MessageContext* msgCtx = &gPlayState->msgCtx;
     Font* font = &msgCtx->font;
     char* buffer = font->msgBuf;
-    const int maxBufferSize = sizeof(font->msgBuf);
+    const size_t maxBufferSize = sizeof(font->msgBuf);
     font->charTexBuf[0] = (type << 4) | position;
     switch (gSaveContext.language) {
         case LANGUAGE_FRA:
