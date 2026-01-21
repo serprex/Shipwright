@@ -1119,7 +1119,9 @@ void TimeSaverOnSceneInitHandler(int16_t sceneNum) {
             }
             break;
         case SCENE_LON_LON_RANCH:
-            if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipMiscInteractions"), IS_RANDO) &&
+            if (CVarGetInteger(CVAR_ENHANCEMENT("TimeSavers.SkipMiscInteractions"),
+                               IS_RANDO && (!RAND_GET_OPTION(RSK_SHUFFLE_SPEAK) ||
+                                            Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_HYLIAN))) &&
                 GameInteractor_Should(VB_MALON_RETURN_FROM_CASTLE,
                                       Flags_GetEventChkInf(EVENTCHKINF_TALON_RETURNED_FROM_CASTLE))) {
                 Flags_SetEventChkInf(EVENTCHKINF_SPOKE_TO_CHILD_MALON_AT_RANCH);

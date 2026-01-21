@@ -52,6 +52,7 @@ void RegionTable_Init_DeathMountainTrail() {
         LOCATION(RC_DMT_GOSSIP_STONE_FAIRY,     logic->CallGossipFairy()),
         LOCATION(RC_DMT_GOSSIP_STONE_FAIRY_BIG, logic->CanUse(RG_SONG_OF_STORMS)),
         LOCATION(RC_DMT_GOSSIP_STONE,           true),
+        LOCATION(RC_BIGGORON_HINT,              logic->IsAdult && logic->HasItem(RG_SPEAK_GORON)),
     }, {
         //Exits
         Entrance(RR_DEATH_MOUNTAIN_ROCKFALL,  []{return true;}),
