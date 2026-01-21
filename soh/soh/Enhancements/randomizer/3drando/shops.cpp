@@ -1253,6 +1253,12 @@ void InitTrickNames() {
         Text{ "Don Gero's Mask" },
         Text{ "Mikau's Mask" },
     };
+    trickNameTable[RG_GERUDO_MASK] = {
+        // TODO_TRANSLATE
+        Text{ "Great Fairy Mask" },
+        Text{ "Romani's Mask" },
+        Text{ "Gerudo Veil" },
+    };
 
     trickNameTable[RG_SPEAK_DEKU] = {
         // TODO_TRANSLATE
