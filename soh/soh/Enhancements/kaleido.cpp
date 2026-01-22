@@ -206,7 +206,7 @@ Kaleido::Kaleido() {
         int rg = RG_SPEAK_DEKU;
         for (int i = RAND_INF_CAN_SPEAK_DEKU; i <= RAND_INF_CAN_SPEAK_ZORA; i++, rg++) {
             std::string speakName = Rando::StaticData::RetrieveItem(static_cast<RandomizerGet>(rg)).GetName().english;
-            StringHelper::ReplaceOriginal(speakName, " Jabbernut", "");
+            StringHelper::ReplaceOriginal(speakName, " Jabber Nut", "");
             mEntries.push_back(std::make_shared<KaleidoEntryIconFlag>(gItemIconDekuNutTex, G_IM_FMT_RGBA, G_IM_SIZ_32b,
                                                                       32, 32, Color_RGBA8{ 255, 255, 255, 255 },
                                                                       FlagType::FLAG_RANDOMIZER_INF, i, speakName));
