@@ -14,7 +14,7 @@ void RegionTable_Init_LostWoods() {
         //Events
         EventAccess(LOGIC_FAIRY_ACCESS,       []{return logic->CallGossipFairyExceptSuns() || (logic->IsChild && logic->CanUse(RG_MAGIC_BEAN) && logic->HasItem(RG_LOST_WOODS_BRIDGE_BEAN_SOUL) && logic->CanUse(RG_SONG_OF_STORMS));}),
         EventAccess(LOGIC_BUG_ACCESS,         []{return logic->IsChild && logic->CanCutShrubs();}),
-        EventAccess(LOGIC_BORROW_SPOOKY_MASK, []{return logic->IsChild && logic->Get(LOGIC_BORROW_SKULL_MASK) && logic->CanUse(RG_SARIAS_SONG) && logic->HasItem(RG_CHILD_WALLET) && logic->HasItem(RG_SPEAK_KOKIRI);}),
+        EventAccess(LOGIC_BORROW_SPOOKY_MASK, []{return logic->IsChild && logic->Get(LOGIC_BORROW_SKULL_MASK) && logic->CanUse(RG_SARIAS_SONG) && logic->HasItem(RG_CHILD_WALLET) && logic->HasItem(RG_SPEAK_KOKIRI) && logic->HasItem(RG_SPEAK_HYLIAN);}),
     }, {
         //Locations
         LOCATION(RC_LW_SKULL_KID,                       logic->IsChild && logic->CanUse(RG_SARIAS_SONG)),

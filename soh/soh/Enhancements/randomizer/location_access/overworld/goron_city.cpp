@@ -48,7 +48,7 @@ void RegionTable_Init_GoronCity() {
 
     areaTable[RR_GC_MEDIGORON] = Region("GC Medigoron", SCENE_GORON_CITY, {
         //Events
-        EventAccess(LOGIC_MEDIGORON, []{return logic->HasItem(RG_ADULT_WALLET) && GetCheckPrice(RC_GC_MEDIGORON) <= GetWalletCapacity();}),
+        EventAccess(LOGIC_MEDIGORON, []{return logic->IsAdult && logic->HasItem(RG_ADULT_WALLET) && GetCheckPrice(RC_GC_MEDIGORON) <= GetWalletCapacity() && logic->HasItem(RG_SPEAK_GORON);}),
     }, {
         //Locations
         LOCATION(RC_GC_MEDIGORON,                        logic->IsAdult && logic->HasItem(RG_SPEAK_GORON) && GetCheckPrice() <= GetWalletCapacity()),

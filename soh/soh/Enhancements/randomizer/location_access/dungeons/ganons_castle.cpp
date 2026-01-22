@@ -23,7 +23,7 @@ void RegionTable_Init_GanonsCastle() {
 
     areaTable[RR_GANONS_CASTLE_MAIN] = Region("Ganon's Castle Main", SCENE_INSIDE_GANONS_CASTLE, {}, {
         //Locations
-        LOCATION(RC_SHEIK_HINT_GC, true),
+        LOCATION(RC_SHEIK_HINT_GC, logic->HasItem(RG_SPEAK_HYLIAN)),
     }, {
         //Exits
         Entrance(RR_GANONS_CASTLE_LOBBY,                       []{return true;}),
@@ -346,7 +346,7 @@ void RegionTable_Init_GanonsCastle() {
 
     areaTable[RR_GANONS_CASTLE_MQ_MAIN] = Region("Ganon's Castle MQ Main", SCENE_INSIDE_GANONS_CASTLE, {}, {
         //Locations
-        LOCATION(RC_SHEIK_HINT_MQ_GC,  true),
+        LOCATION(RC_SHEIK_HINT_MQ_GC, logic->HasItem(RG_SPEAK_HYLIAN)),
     }, {
         //Exits
         Entrance(RR_GANONS_CASTLE_MQ_LOBBY,                       []{return true;}),
