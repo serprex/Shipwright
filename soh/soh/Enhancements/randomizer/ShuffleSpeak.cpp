@@ -93,7 +93,7 @@ void RegisterShuffleSpeak() {
                 case ACTOR_EN_OSSAN:
                     switch (talkActor->params) {
                         case OSSAN_TYPE_KOKIRI:
-                            inf = RAND_INF_CAN_SPEAK_ZORA;
+                            inf = RAND_INF_CAN_SPEAK_KOKIRI;
                             break;
                         case OSSAN_TYPE_KAKARIKO_POTION:
                         case OSSAN_TYPE_BOMBCHUS:
