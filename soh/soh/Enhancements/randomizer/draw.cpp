@@ -1189,7 +1189,7 @@ extern "C" void Randomizer_DrawKneePads(PlayState* play, GetItemEntry* getItemEn
     CLOSE_DISPS(play->state.gfxCtx);
 }
 
-extern "C" void Randomizer_DrawJabbernut(PlayState* play, GetItemEntry* getItemEntry) {
+extern "C" void Randomizer_DrawJabberNut(PlayState* play, GetItemEntry* getItemEntry) {
     OPEN_DISPS(play->state.gfxCtx);
 
     Gfx_SetupDL_26Opa(play->state.gfxCtx);
@@ -1197,40 +1197,40 @@ extern "C" void Randomizer_DrawJabbernut(PlayState* play, GetItemEntry* getItemE
               G_MTX_MODELVIEW | G_MTX_LOAD);
 
     Color_RGB8 bodyColor;
-    if (CVarGetInteger(CVAR_RANDOMIZER_ENHANCEMENT("GenericJabbernutModel"), 0)) {
-        bodyColor = CVarGetColor24(CVAR_COSMETIC("Equipment.Jabbernut.Value"), Color_RGB8{ 255, 0, 216 });
+    if (CVarGetInteger(CVAR_RANDOMIZER_ENHANCEMENT("GenericJabberNutModel"), 0)) {
+        bodyColor = CVarGetColor24(CVAR_COSMETIC("Equipment.JabberNut.Value"), Color_RGB8{ 255, 0, 216 });
         gDPSetEnvColor(POLY_OPA_DISP++, bodyColor.r, bodyColor.g, bodyColor.b, 255);
         gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gGiJabbernutDL);
     } else {
         switch (getItemEntry->drawItemId) {
             case RG_SPEAK_DEKU:
-                bodyColor = CVarGetColor24(CVAR_COSMETIC("Equipment.DekuJabbernut.Value"), Color_RGB8{ 255, 160, 32 });
+                bodyColor = CVarGetColor24(CVAR_COSMETIC("Equipment.DekuJabberNut.Value"), Color_RGB8{ 255, 160, 32 });
                 gDPSetEnvColor(POLY_OPA_DISP++, bodyColor.r, bodyColor.g, bodyColor.b, 255);
                 gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gGiDekuJabbernutDL);
                 break;
             case RG_SPEAK_GERUDO:
-                bodyColor = CVarGetColor24(CVAR_COSMETIC("Equipment.GerudoJabbernut.Value"), Color_RGB8{ 128, 64, 0 });
+                bodyColor = CVarGetColor24(CVAR_COSMETIC("Equipment.GerudoJabberNut.Value"), Color_RGB8{ 128, 64, 0 });
                 gDPSetEnvColor(POLY_OPA_DISP++, bodyColor.r, bodyColor.g, bodyColor.b, 255);
                 gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gGiGerudoJabbernutDL);
                 break;
             case RG_SPEAK_GORON:
-                bodyColor = CVarGetColor24(CVAR_COSMETIC("Equipment.GoronJabbernut.Value"), Color_RGB8{ 255, 32, 0 });
+                bodyColor = CVarGetColor24(CVAR_COSMETIC("Equipment.GoronJabberNut.Value"), Color_RGB8{ 255, 32, 0 });
                 gDPSetEnvColor(POLY_OPA_DISP++, bodyColor.r, bodyColor.g, bodyColor.b, 255);
                 gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gGiGoronJabbernutDL);
                 break;
             case RG_SPEAK_HYLIAN:
-                bodyColor = CVarGetColor24(CVAR_COSMETIC("Equipment.HylianJabbernut.Value"), Color_RGB8{ 255, 255, 0 });
+                bodyColor = CVarGetColor24(CVAR_COSMETIC("Equipment.HylianJabberNut.Value"), Color_RGB8{ 255, 255, 0 });
                 gDPSetEnvColor(POLY_OPA_DISP++, bodyColor.r, bodyColor.g, bodyColor.b, 255);
                 gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gGiHylianJabbernutDL);
                 break;
             case RG_SPEAK_KOKIRI:
                 bodyColor =
-                    CVarGetColor24(CVAR_COSMETIC("Equipment.KokiriJabbernut.Value"), Color_RGB8{ 128, 216, 48 });
+                    CVarGetColor24(CVAR_COSMETIC("Equipment.KokiriJabberNut.Value"), Color_RGB8{ 128, 216, 48 });
                 gDPSetEnvColor(POLY_OPA_DISP++, bodyColor.r, bodyColor.g, bodyColor.b, 255);
                 gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gGiKokiriJabbernutDL);
                 break;
             case RG_SPEAK_ZORA:
-                bodyColor = CVarGetColor24(CVAR_COSMETIC("Equipment.ZoraJabbernut.Value"), Color_RGB8{ 96, 240, 255 });
+                bodyColor = CVarGetColor24(CVAR_COSMETIC("Equipment.ZoraJabberNut.Value"), Color_RGB8{ 96, 240, 255 });
                 gDPSetEnvColor(POLY_OPA_DISP++, bodyColor.r, bodyColor.g, bodyColor.b, 255);
                 gSPDisplayList(POLY_OPA_DISP++, (Gfx*)gGiZoraJabbernutDL);
                 break;

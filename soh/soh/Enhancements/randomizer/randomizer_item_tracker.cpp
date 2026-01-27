@@ -310,7 +310,7 @@ std::map<uint16_t, std::string> itemTrackerBossShortNames = {
     { RG_BONGO_BONGO_SOUL, "BONGO" }, { RG_TWINROVA_SOUL, "TWIN" },   { RG_GANON_SOUL, "GANON" },
 };
 
-std::map<uint16_t, std::string> itemTrackerJabbernutShortNames = {
+std::map<uint16_t, std::string> itemTrackerJabberNutShortNames = {
     { RG_SPEAK_DEKU, "DEKU" },     { RG_SPEAK_GERUDO, "GERUDO" }, { RG_SPEAK_GORON, "GORON" },
     { RG_SPEAK_HYLIAN, "HYLIAN" }, { RG_SPEAK_KOKIRI, "KOKIRI" }, { RG_SPEAK_ZORA, "ZORA" },
 };
@@ -991,37 +991,32 @@ void DrawItem(ItemTrackerItem item) {
         case RG_SPEAK_DEKU:
             actualItemId = item.id;
             hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_DEKU);
-            itemName = "Deku Jabbernut";
+            itemName = "Deku Jabber Nut";
             break;
-
         case RG_SPEAK_GERUDO:
             actualItemId = item.id;
             hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_GERUDO);
-            itemName = "Gerudo Jabbernut";
+            itemName = "Gerudo Jabber Nut";
             break;
-
         case RG_SPEAK_GORON:
             actualItemId = item.id;
             hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_GORON);
-            itemName = "Goron Jabbernut";
+            itemName = "Goron Jabber Nut";
             break;
-
         case RG_SPEAK_HYLIAN:
             actualItemId = item.id;
             hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_HYLIAN);
-            itemName = "Hylian Jabbernut";
+            itemName = "Hylian Jabber Nut";
             break;
-
         case RG_SPEAK_KOKIRI:
             actualItemId = item.id;
             hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_KOKIRI);
-            itemName = "Kokiri Jabbernut";
+            itemName = "Kokiri Jabber Nut";
             break;
-
         case RG_SPEAK_ZORA:
             actualItemId = item.id;
             hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_ZORA);
-            itemName = "Zora Jabbernut";
+            itemName = "Zora Jabber Nut";
             break;
 
         case RG_OCARINA_A_BUTTON:
@@ -1238,7 +1233,7 @@ void DrawItem(ItemTrackerItem item) {
 
     if (item.id >= RG_SPEAK_DEKU && item.id <= RG_SPEAK_ZORA) {
         ImVec2 p = ImGui::GetCursorScreenPos();
-        std::string name = itemTrackerJabbernutShortNames[item.id];
+        std::string name = itemTrackerJabberNutShortNames[item.id];
         ImGui::SetCursorScreenPos(
             ImVec2(p.x + (iconSize / 2) - (ImGui::CalcTextSize(name.c_str()).x / 2), p.y - (iconSize + 13)));
         ImGui::PushStyleColor(ImGuiCol_Text, IM_COL_WHITE);
@@ -1743,7 +1738,7 @@ void UpdateVectors() {
     }
 
     // If we're adding jabbernuts to the main window...
-    if (CVarGetInteger(CVAR_TRACKER_ITEM("DisplayType.Jabbernuts"), SECTION_DISPLAY_HIDDEN) ==
+    if (CVarGetInteger(CVAR_TRACKER_ITEM("DisplayType.JabberNuts"), SECTION_DISPLAY_HIDDEN) ==
         SECTION_DISPLAY_MAIN_WINDOW) {
         // there are 6 jabbernuts, perfect for a row
         while (mainWindowItems.size() % 6) {
@@ -1951,9 +1946,9 @@ void ItemTrackerWindow::DrawElement() {
             EndFloatingWindows();
         }
 
-        if (CVarGetInteger(CVAR_TRACKER_ITEM("DisplayType.Jabbernuts"), SECTION_DISPLAY_HIDDEN) ==
+        if (CVarGetInteger(CVAR_TRACKER_ITEM("DisplayType.JabberNuts"), SECTION_DISPLAY_HIDDEN) ==
             SECTION_DISPLAY_SEPARATE) {
-            BeginFloatingWindows("Jabbernut Tracker");
+            BeginFloatingWindows("Jabber Nut Tracker");
             DrawItemsInRows(jabbernutItems);
             EndFloatingWindows();
         }
