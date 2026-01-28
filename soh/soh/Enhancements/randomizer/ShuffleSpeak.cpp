@@ -65,6 +65,7 @@ void RegisterShuffleSpeak() {
                 case ACTOR_EN_NIW_LADY:
                 case ACTOR_EN_SSH:
                 case ACTOR_EN_STH:
+                case ACTOR_EN_SYATEKI_MAN:
                 case ACTOR_EN_TA:
                 case ACTOR_EN_TAKARA_MAN:
                 case ACTOR_EN_TG:
@@ -76,6 +77,7 @@ void RegisterShuffleSpeak() {
                 case ACTOR_EN_ZL2:
                 case ACTOR_EN_ZL3:
                 case ACTOR_EN_ZL4:
+                case ACTOR_FISHING:
                     inf = RAND_INF_CAN_SPEAK_HYLIAN;
                     break;
                 case ACTOR_EN_KO:
