@@ -87,7 +87,7 @@ void RegionTable_Init_Graveyard() {
 
     areaTable[RR_GRAVEYARD_DAMPES_GRAVE] = Region("Graveyard Dampes Grave", SCENE_WINDMILL_AND_DAMPES_GRAVE, {
         //Events
-        EVENT_ACCESS(LOGIC_NUT_ACCESS,             logic->CanBreakPots()),
+        EVENT_ACCESS(LOGIC_NUT_ACCESS, logic->CanBreakPots()),
     }, {
         //Locations
         LOCATION(RC_GRAVEYARD_HOOKSHOT_CHEST,              logic->HasItem(RG_SPEAK_HYLIAN) && logic->HasItem(RG_OPEN_CHEST)),

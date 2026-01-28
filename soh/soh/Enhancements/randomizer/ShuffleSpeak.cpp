@@ -16,11 +16,12 @@ void RegisterShuffleSpeak() {
             RandomizerInf inf = RAND_INF_MAX;
             switch (talkActor->id) {
                 case ACTOR_EN_DNS:
+                case ACTOR_EN_DNT_JIJI:
                 case ACTOR_EN_HINTNUTS:
-                case ACTOR_OBJ_DEKUJR:
                 case ACTOR_EN_KAKASI:
                 case ACTOR_EN_KAKASI2:
                 case ACTOR_EN_KAKASI3:
+                case ACTOR_OBJ_DEKUJR:
                     inf = RAND_INF_CAN_SPEAK_DEKU;
                     break;
                 case ACTOR_EN_GE1:
