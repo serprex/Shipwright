@@ -2187,6 +2187,7 @@ void ItemTrackerSettingsWindow::DrawElement() {
         SohGui::mSohMenu->MenuDrawItem(triforcePieceTracking, 250, THEME_COLOR);
         SohGui::mSohMenu->MenuDrawItem(beanSoulsTracking, 250, THEME_COLOR);
         SohGui::mSohMenu->MenuDrawItem(bossSoulsTracking, 250, THEME_COLOR);
+        SohGui::mSohMenu->MenuDrawItem(jabberNutsTracking, 250, THEME_COLOR);
         SohGui::mSohMenu->MenuDrawItem(ocarinaButtonTracking, 250, THEME_COLOR);
         SohGui::mSohMenu->MenuDrawItem(overworldKeysTracking, 250, THEME_COLOR);
         SohGui::mSohMenu->MenuDrawItem(fishingPoleTracking, 250, THEME_COLOR);
