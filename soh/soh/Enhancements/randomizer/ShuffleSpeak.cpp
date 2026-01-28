@@ -56,6 +56,7 @@ void RegisterShuffleSpeak() {
                 case ACTOR_EN_IN:
                 case ACTOR_EN_JS:
                 case ACTOR_EN_MA1:
+                case ACTOR_EN_MA2:
                 case ACTOR_EN_MA3:
                 case ACTOR_EN_MK:
                 case ACTOR_EN_MM:
