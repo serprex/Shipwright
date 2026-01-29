@@ -127,7 +127,7 @@ void RegionTable_Init_CastleGrounds() {
         LOCATION(RC_HC_GS_STORMS_GROTTO, logic->CanUse(RG_BOOMERANG) && ctx->GetTrickOption(RT_HC_STORMS_GS)),
     }, {
         //Exits
-        ENTRANCE(RR_HC_MOAT,                       true),
+        ENTRANCE(RR_CASTLE_GROUNDS_FROM_GROTTO,    true),
         ENTRANCE(RR_HC_STORMS_GROTTO_BEHIND_WALLS, logic->CanBreakMudWalls()),
     });
 
@@ -149,6 +149,11 @@ void RegionTable_Init_CastleGrounds() {
     }, {
         //Exits
         ENTRANCE(RR_HC_STORMS_GROTTO, true),
+    });
+
+    areaTable[RR_CASTLE_GROUNDS_FROM_GROTTO] = Region("Castle Grounds From Grotto", SCENE_OUTSIDE_GANONS_CASTLE, TIME_DOESNT_PASS, {RA_CASTLE_GROUNDS}, {}, {}, {
+        ENTRANCE(RR_HC_MOAT,               logic->IsChild),
+        ENTRANCE(RR_GANONS_CASTLE_GROUNDS, logic->IsAdult),
     });
 
     areaTable[RR_GANONS_CASTLE_GROUNDS] = Region("Ganon's Castle Grounds", SCENE_OUTSIDE_GANONS_CASTLE, {
