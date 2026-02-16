@@ -1627,49 +1627,6 @@ void SohInputEditorWindow::DrawLinkTab() {
                             "Buttons that activate Speed Modifier 2.\n\n"
                             "If \"Toggle modifier instead of holding\" is off, hold this combo to apply the modifier.\n"
                             "If it is on, tap this combo to toggle the modifier on/off."));
-                UIWidgets::Spacer(5);
-                Ship::GuiWindow::BeginGroupPanel("Speed Modifier", ImGui::GetContentRegionAvail());
-                CVarCheckbox("Toggle modifier instead of holding", CVAR_SETTING("WalkModifier.SpeedToggle"),
-                             CheckboxOptions().Color(THEME_COLOR));
-                Ship::GuiWindow::BeginGroupPanel("Walk Modifier", ImGui::GetContentRegionAvail());
-                CVarCheckbox("Don't affect jump distance/velocity", CVAR_SETTING("WalkModifier.DoesntChangeJump"),
-                             CheckboxOptions().Color(THEME_COLOR));
-                CVarSliderFloat("Walk Modifier 1: %.0f %%", CVAR_SETTING("WalkModifier.Mapping1"),
-                                FloatSliderOptions()
-                                    .Color(THEME_COLOR)
-                                    .IsPercentage()
-                                    .Min(0.0f)
-                                    .Max(5.0f)
-                                    .DefaultValue(1.0f)
-                                    .ShowButtons(true));
-                CVarSliderFloat("Walk Modifier 2: %.0f %%", CVAR_SETTING("WalkModifier.Mapping2"),
-                                FloatSliderOptions()
-                                    .Color(THEME_COLOR)
-                                    .IsPercentage()
-                                    .Min(0.0f)
-                                    .Max(5.0f)
-                                    .DefaultValue(1.0f)
-                                    .ShowButtons(true));
-                Ship::GuiWindow::EndGroupPanel(0);
-                Ship::GuiWindow::BeginGroupPanel("Swim Modifier", ImGui::GetContentRegionAvail());
-                CVarSliderFloat("Swim Modifier 1: %.0f %%", CVAR_SETTING("WalkModifier.SwimMapping1"),
-                                FloatSliderOptions()
-                                    .Color(THEME_COLOR)
-                                    .IsPercentage()
-                                    .Min(0.0f)
-                                    .Max(5.0f)
-                                    .DefaultValue(1.0f)
-                                    .ShowButtons(true));
-                CVarSliderFloat("Swim Modifier 2: %.0f %%", CVAR_SETTING("WalkModifier.SwimMapping2"),
-                                FloatSliderOptions()
-                                    .Color(THEME_COLOR)
-                                    .IsPercentage()
-                                    .Min(0.0f)
-                                    .Max(5.0f)
-                                    .DefaultValue(1.0f)
-                                    .ShowButtons(true));
-                Ship::GuiWindow::EndGroupPanel(0);
-                Ship::GuiWindow::EndGroupPanel(0);
             }
             ImGui::EndDisabled();
         }
