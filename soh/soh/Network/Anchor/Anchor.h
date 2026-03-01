@@ -35,6 +35,8 @@ typedef struct {
     s32 linkAge;
     PosRot posRot;
     Vec3s jointTable[24];
+    u8 movementFlags;
+    Vec3s prevTransl;
     Vec3s upperLimbRot;
     s8 currentBoots;
     s8 currentShield;
@@ -46,8 +48,12 @@ typedef struct {
     s8 heldItemAction;
     u8 modelGroup;
     s8 invincibilityTimer;
+    f32 unk_85C;
     s16 unk_862;
     s8 actionVar1;
+    u8 ocarinaNote;
+    f32 ocarinaModulator;
+    s8 ocarinaBend;
 
     // Ptr to the dummy player
     Player* player;
@@ -63,17 +69,22 @@ typedef struct {
 
 class Anchor : public Network {
   private:
-    bool refreshingActors = false;
+    uint32_t spawningDummyPlayerForClientId = 0;
+    bool shouldRefreshActors = false;
     bool justLoadedSave = false;
     bool isHandlingUpdateTeamState = false;
     bool isProcessingIncomingPacket = false;
     std::queue<nlohmann::json> incomingPacketQueue;
     std::mutex incomingPacketQueueMutex;
+    std::queue<nlohmann::json> outgoingPacketQueue;
+    std::mutex outgoingPacketQueueMutex;
 
     nlohmann::json PrepClientState();
     nlohmann::json PrepRoomState();
     void RegisterHooks();
     void RefreshClientActors();
+    void SetDummyPlayerClientId(const Actor* actor, uint32_t clientId);
+
     void HandlePacket_AllClientState(nlohmann::json payload);
     void HandlePacket_ConsumeAdultTradeItem(nlohmann::json payload);
     void HandlePacket_DamagePlayer(nlohmann::json payload);
@@ -81,6 +92,7 @@ class Anchor : public Network {
     void HandlePacket_EntranceDiscovered(nlohmann::json payload);
     void HandlePacket_GameComplete(nlohmann::json payload);
     void HandlePacket_GiveItem(nlohmann::json payload);
+    void HandlePacket_OcarinaSfx(nlohmann::json payload);
     void HandlePacket_PlayerSfx(nlohmann::json payload);
     void HandlePacket_PlayerUpdate(nlohmann::json payload);
     void HandlePacket_RequestTeamState(nlohmann::json payload);
@@ -98,7 +110,7 @@ class Anchor : public Network {
 
   public:
     uint32_t ownClientId;
-    inline static const std::string clientVersion = (char*)gBuildVersion;
+    inline static const std::string clientVersion = (char*)gGitCommitHash;
 
     // Packet types //
     inline static const std::string ALL_CLIENT_STATE = "ALL_CLIENT_STATE";
@@ -108,6 +120,7 @@ class Anchor : public Network {
     inline static const std::string GAME_COMPLETE = "GAME_COMPLETE";
     inline static const std::string GIVE_ITEM = "GIVE_ITEM";
     inline static const std::string HANDSHAKE = "HANDSHAKE";
+    inline static const std::string OCARINA_SFX = "OCARINA_SFX";
     inline static const std::string PLAYER_SFX = "PLAYER_SFX";
     inline static const std::string PLAYER_UPDATE = "PLAYER_UPDATE";
     inline static const std::string REQUEST_TEAM_STATE = "REQUEST_TEAM_STATE";
@@ -125,7 +138,6 @@ class Anchor : public Network {
 
     static Anchor* Instance;
     std::map<uint32_t, AnchorClient> clients;
-    std::vector<uint32_t> actorIndexToClientId;
     RoomState roomState;
 
     void Enable();
@@ -133,11 +145,13 @@ class Anchor : public Network {
     void OnIncomingJson(nlohmann::json payload);
     void OnConnected();
     void OnDisconnected();
+    void ProcessOutgoingPackets();
     void DrawMenu();
     void ProcessIncomingPacketQueue();
     void SendJsonToRemote(nlohmann::json packet);
     bool IsSaveLoaded();
     bool CanTeleportTo(uint32_t clientId);
+    uint32_t GetDummyPlayerClientId(const Actor* actor);
 
     void SendPacket_ClearTeamState(std::string teamId);
     void SendPacket_DamagePlayer(u32 clientId, u8 damageEffect, u8 damage);
@@ -145,6 +159,7 @@ class Anchor : public Network {
     void SendPacket_GameComplete();
     void SendPacket_GiveItem(u16 modId, s16 getItemId);
     void SendPacket_Handshake();
+    void SendPacket_OcarinaSfx(uint8_t note, float modulator, int8_t bend);
     void SendPacket_PlayerSfx(u16 sfxId);
     void SendPacket_PlayerUpdate();
     void SendPacket_RequestTeamState();
