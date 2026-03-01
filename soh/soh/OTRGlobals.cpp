@@ -781,7 +781,7 @@ void OTRGlobals::Initialize() {
 
     std::string sohAccessibilityPath = Ship::Context::GetPathRelativeToAppBundle("accessibility.o2r");
     if (std::filesystem::exists(sohAccessibilityPath)) {
-        OTRFiles.push_back(sohAccessibilityPath);
+        context->GetResourceManager()->GetArchiveManager()->AddArchive(sohAccessibilityPath);
     }
 
     std::unordered_set<uint32_t> ValidHashes = {

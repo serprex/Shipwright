@@ -1,12 +1,10 @@
 #include "SfxExtractor.h"
 #include "soh/Enhancements/audio/miniaudio.h"
 #include "soh/Enhancements/speechsynthesizer/SpeechSynthesizer.h"
-#include "soh/Enhancements/tts/tts.h"
 #include "soh/OTRGlobals.h"
 #include "SfxTable.h"
 #include <sstream>
 extern "C" {
-#include "z64.h"
 #include "functions.h"
 #include "variables.h"
 void AudioMgr_CreateNextAudioBuffer(s16* samples, u32 num_samples);
