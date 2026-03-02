@@ -1835,12 +1835,12 @@ void SohMenu::AddMenuEnhancements() {
             "%.0f%%"));
     AddWidget(path, "Button Combination:", WIDGET_CVAR_BTN_SELECTOR)
         .CVar(CVAR_CHEAT("SpeedModifier.Btn"))
-        .Options(BtnSelectorOptions()
-                        .DefaultValue(BTN_CUSTOM_MODIFIER1)
-                        .Tooltip(
-                            "Buttons that activate Speed Modifier 1.\n\n"
-                            "If \"Toggle modifier instead of holding\" is off, hold this combo to apply the modifier.\n"
-                            "If it is on, tap this combo to toggle the modifier on/off."));
+        .Options(
+            BtnSelectorOptions()
+                .DefaultValue(BTN_CUSTOM_MODIFIER1)
+                .Tooltip("Buttons that activate Speed Modifier 1.\n\n"
+                         "If \"Toggle modifier instead of holding\" is off, hold this combo to apply the modifier.\n"
+                         "If it is on, tap this combo to toggle the modifier on/off."));
 
     AddWidget(path, "Save States", WIDGET_SEPARATOR_TEXT);
     AddWidget(path, ICON_FA_EXCLAMATION_TRIANGLE " WARNING!!!! " ICON_FA_EXCLAMATION_TRIANGLE, WIDGET_TEXT)
