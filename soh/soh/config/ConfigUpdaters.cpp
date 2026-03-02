@@ -1,7 +1,11 @@
 #include "ConfigUpdaters.h"
-#include "ConfigMigrators.h"
 
 namespace SOH {
+struct Migration {
+    const char* from;
+    const char* to;
+};
+
 static const Migration version3Migrations[] = {
     { "gSwitchAge", "gGeneral.SwitchAge" },
     { "gFrameAdvance", "gDeveloperTools.FrameAdvanceTick" },
