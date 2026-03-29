@@ -283,6 +283,60 @@ bool Randomizer::IsTrialRequired(s32 trialFlag) {
     return Rando::Context::GetInstance()->GetTrial(trialFlagToTrialKey[trialFlag])->IsRequired();
 }
 
+RandomizerCheckQuest Randomizer::SilverQuest(RandomizerGet rg) {
+    return rg < RG_DODONGOS_CAVERN_MQ_SILVER ? RCQUEST_VANILLA : RCQUEST_MQ;
+}
+
+SceneID Randomizer::SilverScene(RandomizerGet rg) {
+    switch (rg) {
+        case RG_SHADOW_SILVER_BLADES:
+        case RG_SHADOW_SILVER_PIT:
+        case RG_SHADOW_SILVER_SPIKES:
+        case RG_SHADOW_MQ_SILVER_BLADES:
+        case RG_SHADOW_MQ_SILVER_PIT:
+        case RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES:
+        case RG_SHADOW_MQ_SILVER_SPIKES:
+            return SCENE_SHADOW_TEMPLE;
+        case RG_SPIRIT_SILVER_CHILD:
+        case RG_SPIRIT_SILVER_SUN:
+        case RG_SPIRIT_SILVER_BOULDERS:
+        case RG_SPIRIT_MQ_SILVER_LOBBY:
+        case RG_SPIRIT_MQ_SILVER_BIG_WALL:
+            return SCENE_SPIRIT_TEMPLE;
+        case RG_BOTW_SILVER:
+            return SCENE_BOTTOM_OF_THE_WELL;
+        case RG_ICE_CAVERN_SILVER_BLADES:
+        case RG_ICE_CAVERN_SILVER_BLOCK:
+            return SCENE_ICE_CAVERN;
+        case RG_GTG_SILVER_SLOPE:
+        case RG_GTG_SILVER_LAVA:
+        case RG_GTG_SILVER_WATER:
+        case RG_GTG_MQ_SILVER_SLOPE:
+        case RG_GTG_MQ_SILVER_LAVA:
+        case RG_GTG_MQ_SILVER_WATER:
+            return SCENE_GERUDO_TRAINING_GROUND;
+        case RG_GANONS_CASTLE_SILVER_LIGHT:
+        case RG_GANONS_CASTLE_SILVER_FOREST:
+        case RG_GANONS_CASTLE_SILVER_FIRE:
+        case RG_GANONS_CASTLE_SILVER_SPIRIT:
+        case RG_GANONS_CASTLE_MQ_SILVER_FIRE:
+        case RG_GANONS_CASTLE_MQ_SILVER_WATER:
+        case RG_GANONS_CASTLE_MQ_SILVER_SHADOW:
+            return SCENE_INSIDE_GANONS_CASTLE;
+        case RG_DODONGOS_CAVERN_MQ_SILVER:
+            return SCENE_DODONGOS_CAVERN;
+        default:
+            return SCENE_ID_MAX;
+    }
+}
+
+s8 Randomizer::SilverTotal(RandomizerGet rg) {
+    return rg == RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES || rg == RG_SHADOW_MQ_SILVER_SPIKES ? 10
+           : rg == RG_GTG_MQ_SILVER_LAVA                                                  ? 6
+           : rg == RG_GTG_MQ_SILVER_WATER                                                 ? 3
+                                                                                          : 5;
+}
+
 s8* Randomizer::SilverFieldFromSaveContext(SaveContext* saveContext, RandomizerGet rg) {
     switch (rg) {
         case RG_SHADOW_SILVER_BLADES:

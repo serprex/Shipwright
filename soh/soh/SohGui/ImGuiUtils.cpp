@@ -159,15 +159,6 @@ std::map<uint32_t, ItemMapEntry> actionShuffleMapping = {
     { RG_POWER_BRACELET, { RG_POWER_BRACELET, "RG_POWER_BRACELET", "RG_POWER_BRACELET_Faded", gButtonBackgroundTex } },
 };
 
-std::map<uint32_t, ItemMapEntry> jabbernutMapping = {
-    { RG_SPEAK_DEKU, { RG_SPEAK_DEKU, "RG_SPEAK_DEKU", "RG_SPEAK_DEKU_Faded", (char*)gItemIcons[ITEM_NUT] } },
-    { RG_SPEAK_GERUDO, { RG_SPEAK_GERUDO, "RG_SPEAK_GERUDO", "RG_SPEAK_GERUDO_Faded", (char*)gItemIcons[ITEM_NUT] } },
-    { RG_SPEAK_GORON, { RG_SPEAK_GORON, "RG_SPEAK_GORON", "RG_SPEAK_GORON_Faded", (char*)gItemIcons[ITEM_NUT] } },
-    { RG_SPEAK_HYLIAN, { RG_SPEAK_HYLIAN, "RG_SPEAK_HYLIAN", "RG_SPEAK_HYLIAN_Faded", (char*)gItemIcons[ITEM_NUT] } },
-    { RG_SPEAK_KOKIRI, { RG_SPEAK_KOKIRI, "RG_SPEAK_KOKIRI", "RG_SPEAK_KOKIRI_Faded", (char*)gItemIcons[ITEM_NUT] } },
-    { RG_SPEAK_ZORA, { RG_SPEAK_ZORA, "RG_SPEAK_ZORA", "RG_SPEAK_ZORA_Faded", (char*)gItemIcons[ITEM_NUT] } },
-};
-
 std::map<uint32_t, QuestMapEntry> questMapping = {
     QUEST_MAP_ENTRY(QUEST_MEDALLION_FOREST, dgQuestIconMedallionForestTex),
     QUEST_MAP_ENTRY(QUEST_MEDALLION_FIRE, dgQuestIconMedallionFireTex),
@@ -250,12 +241,13 @@ void RegisterImGuiItemIcons() {
             ->LoadGuiTexture(entry.second.nameFaded, entry.second.texturePath, ImVec4(1, 1, 1, 0.3f));
     }
 
-    for (const auto& entry : jabbernutMapping) {
-        std::dynamic_pointer_cast<Fast::Fast3dGui>(Ship::Context::GetInstance()->GetWindow()->GetGui())
-            ->LoadGuiTexture(entry.second.name, entry.second.texturePath, ImVec4(1, 1, 1, 1));
-        std::dynamic_pointer_cast<Fast::Fast3dGui>(Ship::Context::GetInstance()->GetWindow()->GetGui())
-            ->LoadGuiTexture(entry.second.nameFaded, entry.second.texturePath, ImVec4(1, 1, 1, 0.3f));
-    }
+    ImVec4 silver = ImVec4(0.7f, 0.7f, 0.7f, 1.0f);
+    ImVec4 silverFaded = silver;
+    silverFaded.w = 0.3f;
+    std::dynamic_pointer_cast<Fast::Fast3dGui>(Ship::Context::GetInstance()->GetWindow()->GetGui())
+        ->LoadGuiTexture("ITEM_RUPEE_SILVER", gRupeeCounterIconTex, silver);
+    std::dynamic_pointer_cast<Fast::Fast3dGui>(Ship::Context::GetInstance()->GetWindow()->GetGui())
+        ->LoadGuiTexture("ITEM_RUPEE_SILVER_Faded", gRupeeCounterIconTex, silverFaded);
 
     for (const auto& entry : questMapping) {
         std::dynamic_pointer_cast<Fast::Fast3dGui>(Ship::Context::GetInstance()->GetWindow()->GetGui())

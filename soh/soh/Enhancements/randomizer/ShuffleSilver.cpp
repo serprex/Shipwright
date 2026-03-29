@@ -13,7 +13,7 @@ extern SaveContext gSaveContext;
 extern void EnItem00_DrawRandomizedItem(EnItem00* enItem00, PlayState* play);
 
 static bool IsSilverCleared(s16 switchFlag) {
-    bool isMQ = Rando::Context::GetInstance()->GetDungeons()->GetDungeonFromScene(gPlayState->sceneNum)->IsMQ();
+    bool isMQ = Rando::Context::GetInstance()->GetDungeonFromScene((SceneID)gPlayState->sceneNum)->IsMQ();
     switch (gPlayState->sceneNum) {
         case SCENE_DODONGOS_CAVERN:
             return gSaveContext.ship.quest.data.randomizer.silverMqDodongosCavern >= 5;

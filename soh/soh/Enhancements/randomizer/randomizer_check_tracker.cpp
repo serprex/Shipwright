@@ -839,11 +839,10 @@ void CheckTrackerFlagSet(int16_t flagType, int32_t flag) {
     for (auto& loc : Rando::StaticData::GetLocationTable()) {
         if ((!IS_RANDO && ((loc.GetQuest() == RCQUEST_MQ && !IS_MASTER_QUEST) ||
                            (loc.GetQuest() == RCQUEST_VANILLA && IS_MASTER_QUEST))) ||
-            (IS_RANDO &&
-             !(OTRGlobals::Instance->gRandoContext->GetDungeons()->GetDungeonFromScene(loc.GetScene()) == nullptr) &&
-             ((OTRGlobals::Instance->gRandoContext->GetDungeons()->GetDungeonFromScene(loc.GetScene())->IsMQ() &&
+            (IS_RANDO && !(OTRGlobals::Instance->gRandoContext->GetDungeonFromScene(loc.GetScene()) == nullptr) &&
+             ((OTRGlobals::Instance->gRandoContext->GetDungeonFromScene(loc.GetScene())->IsMQ() &&
                loc.GetQuest() == RCQUEST_VANILLA) ||
-              OTRGlobals::Instance->gRandoContext->GetDungeons()->GetDungeonFromScene(loc.GetScene())->IsVanilla() &&
+              OTRGlobals::Instance->gRandoContext->GetDungeonFromScene(loc.GetScene())->IsVanilla() &&
                   loc.GetQuest() == RCQUEST_MQ))) {
             continue;
         }
@@ -1256,8 +1255,7 @@ void CheckTrackerWindow::DrawElement() {
                     areaTotalsTooltipSS << "Checked / Total";
 
                     if (showVOrMQ && RandomizerCheckObjects::AreaIsDungeon(rcArea)) {
-                        if (OTRGlobals::Instance->gRandoContext->GetDungeons()
-                                ->GetDungeonFromScene(DungeonSceneLookupByArea(rcArea))
+                        if (OTRGlobals::Instance->gRandoContext->GetDungeonFromScene(DungeonSceneLookupByArea(rcArea))
                                 ->IsMQ()) {
                             areaTotalsSS << " - MQ";
                         } else {

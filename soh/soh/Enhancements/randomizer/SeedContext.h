@@ -90,6 +90,7 @@ class Context {
     std::shared_ptr<Dungeons> GetDungeons();
     std::shared_ptr<Fishsanity> GetFishsanity();
     DungeonInfo* GetDungeon(size_t key) const;
+    DungeonInfo* GetDungeonFromScene(SceneID key) const;
     std::shared_ptr<Logic> GetLogic();
     std::shared_ptr<Trials> GetTrials();
     std::shared_ptr<Kaleido> GetKaleido();

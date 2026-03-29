@@ -299,11 +299,7 @@ bool Logic::HasItem(RandomizerGet itemName) {
                 return Get((LogicVal)(LOGIC_SHADOW_SILVER_BLADES + (itemName - RG_SHADOW_SILVER_BLADES)));
             }
             s8 field = *Randomizer::SilverFieldFromSaveContext(mSaveContext, itemName);
-            return field >= (itemName == RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES || itemName == RG_SHADOW_MQ_SILVER_SPIKES
-                                 ? 10
-                             : itemName == RG_GTG_MQ_SILVER_LAVA  ? 6
-                             : itemName == RG_GTG_MQ_SILVER_WATER ? 3
-                                                                  : 5);
+            return field >= Randomizer::SilverTotal(itemName);
         }
             // Trade Items
         case RG_POCKET_EGG:
@@ -2454,7 +2450,7 @@ const std::vector<uint8_t>& GetThievesHideoutSmallKeyDoors() {
 const std::vector<uint8_t>& GetDungeonSmallKeyDoors(SceneID sceneId) {
     static const std::vector<uint8_t> emptyVector;
 
-    auto dungeonInfo = Rando::Context::GetInstance()->GetDungeons()->GetDungeonFromScene(sceneId);
+    auto dungeonInfo = Rando::Context::GetInstance()->GetDungeonFromScene(sceneId);
     if (dungeonInfo == nullptr) {
         return emptyVector;
     }

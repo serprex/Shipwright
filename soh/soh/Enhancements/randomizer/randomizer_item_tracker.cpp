@@ -11,6 +11,7 @@
 #include "randomizerTypes.h"
 #include "soh/cvar_prefixes.h"
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
+#include "soh/Enhancements/randomizer/dungeon.h"
 #include "soh/OTRGlobals.h"
 #include "soh/ResourceManagerHelpers.h"
 #include "soh/SaveManager.h"
@@ -60,6 +61,7 @@ static WidgetInfo bossSoulsTracking;
 static WidgetInfo jabberNutsTracking;
 static WidgetInfo ocarinaButtonTracking;
 static WidgetInfo overworldKeysTracking;
+static WidgetInfo silverRupeeTracking;
 static WidgetInfo fishingPoleTracking;
 static WidgetInfo personalNotesWiget;
 static WidgetInfo hookshotIdentWidget;
@@ -99,35 +101,35 @@ std::vector<ItemTrackerItem> miscItems = {
     ITEM_TRACKER_ITEM(ITEM_HEART_CONTAINER, 0, DrawItem),
     ITEM_TRACKER_ITEM(ITEM_HEART_PIECE, 0, DrawItem),
     ITEM_TRACKER_ITEM(ITEM_MAGIC_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM(QUEST_GERUDO_CARD, 1 << 22, DrawQuest),
-    ITEM_TRACKER_ITEM(QUEST_SKULL_TOKEN, 1 << 23, DrawQuest),
-    ITEM_TRACKER_ITEM(QUEST_STONE_OF_AGONY, 1 << 21, DrawQuest),
+    ITEM_TRACKER_QUEST(QUEST_GERUDO_CARD, 1 << 22, DrawQuest),
+    ITEM_TRACKER_QUEST(QUEST_SKULL_TOKEN, 1 << 23, DrawQuest),
+    ITEM_TRACKER_QUEST(QUEST_STONE_OF_AGONY, 1 << 21, DrawQuest),
 };
 
 std::vector<ItemTrackerItem> dungeonRewardStones = {
-    ITEM_TRACKER_ITEM(QUEST_KOKIRI_EMERALD, 1 << 18, DrawQuest),
-    ITEM_TRACKER_ITEM(QUEST_GORON_RUBY, 1 << 19, DrawQuest),
-    ITEM_TRACKER_ITEM(QUEST_ZORA_SAPPHIRE, 1 << 20, DrawQuest),
+    ITEM_TRACKER_QUEST(QUEST_KOKIRI_EMERALD, 1 << 18, DrawQuest),
+    ITEM_TRACKER_QUEST(QUEST_GORON_RUBY, 1 << 19, DrawQuest),
+    ITEM_TRACKER_QUEST(QUEST_ZORA_SAPPHIRE, 1 << 20, DrawQuest),
 };
 
 std::vector<ItemTrackerItem> dungeonRewardMedallions = {
-    ITEM_TRACKER_ITEM(QUEST_MEDALLION_FOREST, 1 << 0, DrawQuest),
-    ITEM_TRACKER_ITEM(QUEST_MEDALLION_FIRE, 1 << 1, DrawQuest),
-    ITEM_TRACKER_ITEM(QUEST_MEDALLION_WATER, 1 << 2, DrawQuest),
-    ITEM_TRACKER_ITEM(QUEST_MEDALLION_SPIRIT, 1 << 3, DrawQuest),
-    ITEM_TRACKER_ITEM(QUEST_MEDALLION_SHADOW, 1 << 4, DrawQuest),
-    ITEM_TRACKER_ITEM(QUEST_MEDALLION_LIGHT, 1 << 5, DrawQuest),
+    ITEM_TRACKER_QUEST(QUEST_MEDALLION_FOREST, 1 << 0, DrawQuest),
+    ITEM_TRACKER_QUEST(QUEST_MEDALLION_FIRE, 1 << 1, DrawQuest),
+    ITEM_TRACKER_QUEST(QUEST_MEDALLION_WATER, 1 << 2, DrawQuest),
+    ITEM_TRACKER_QUEST(QUEST_MEDALLION_SPIRIT, 1 << 3, DrawQuest),
+    ITEM_TRACKER_QUEST(QUEST_MEDALLION_SHADOW, 1 << 4, DrawQuest),
+    ITEM_TRACKER_QUEST(QUEST_MEDALLION_LIGHT, 1 << 5, DrawQuest),
 };
 
 std::vector<ItemTrackerItem> dungeonRewards = {};
 
 std::vector<ItemTrackerItem> songItems = {
-    ITEM_TRACKER_ITEM(QUEST_SONG_LULLABY, 0, DrawSong),  ITEM_TRACKER_ITEM(QUEST_SONG_EPONA, 0, DrawSong),
-    ITEM_TRACKER_ITEM(QUEST_SONG_SARIA, 0, DrawSong),    ITEM_TRACKER_ITEM(QUEST_SONG_SUN, 0, DrawSong),
-    ITEM_TRACKER_ITEM(QUEST_SONG_TIME, 0, DrawSong),     ITEM_TRACKER_ITEM(QUEST_SONG_STORMS, 0, DrawSong),
-    ITEM_TRACKER_ITEM(QUEST_SONG_MINUET, 0, DrawSong),   ITEM_TRACKER_ITEM(QUEST_SONG_BOLERO, 0, DrawSong),
-    ITEM_TRACKER_ITEM(QUEST_SONG_SERENADE, 0, DrawSong), ITEM_TRACKER_ITEM(QUEST_SONG_REQUIEM, 0, DrawSong),
-    ITEM_TRACKER_ITEM(QUEST_SONG_NOCTURNE, 0, DrawSong), ITEM_TRACKER_ITEM(QUEST_SONG_PRELUDE, 0, DrawSong),
+    ITEM_TRACKER_QUEST(QUEST_SONG_LULLABY, 0, DrawSong),  ITEM_TRACKER_QUEST(QUEST_SONG_EPONA, 0, DrawSong),
+    ITEM_TRACKER_QUEST(QUEST_SONG_SARIA, 0, DrawSong),    ITEM_TRACKER_QUEST(QUEST_SONG_SUN, 0, DrawSong),
+    ITEM_TRACKER_QUEST(QUEST_SONG_TIME, 0, DrawSong),     ITEM_TRACKER_QUEST(QUEST_SONG_STORMS, 0, DrawSong),
+    ITEM_TRACKER_QUEST(QUEST_SONG_MINUET, 0, DrawSong),   ITEM_TRACKER_QUEST(QUEST_SONG_BOLERO, 0, DrawSong),
+    ITEM_TRACKER_QUEST(QUEST_SONG_SERENADE, 0, DrawSong), ITEM_TRACKER_QUEST(QUEST_SONG_REQUIEM, 0, DrawSong),
+    ITEM_TRACKER_QUEST(QUEST_SONG_NOCTURNE, 0, DrawSong), ITEM_TRACKER_QUEST(QUEST_SONG_PRELUDE, 0, DrawSong),
 };
 
 std::vector<ItemTrackerItem> gregItems = {
@@ -135,100 +137,135 @@ std::vector<ItemTrackerItem> gregItems = {
 };
 
 std::vector<ItemTrackerItem> triforcePieces = {
-    ITEM_TRACKER_ITEM(RG_TRIFORCE_PIECE, 0, DrawItem),
+    ITEM_TRACKER_RG(RG_TRIFORCE_PIECE, 0, DrawItem),
 };
 
 std::vector<ItemTrackerItem> rocsFeather = {
-    ITEM_TRACKER_ITEM(RG_ROCS_FEATHER, 0, DrawItem),
+    ITEM_TRACKER_RG(RG_ROCS_FEATHER, 0, DrawItem),
 };
 
 std::vector<ItemTrackerItem> swimItems = {
-    ITEM_TRACKER_ITEM_CUSTOM(RG_BRONZE_SCALE, ITEM_SCALE_SILVER, ITEM_SCALE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_BRONZE_SCALE, ITEM_SCALE_SILVER, 0, DrawItem),
 };
 
 std::vector<ItemTrackerItem> crawlItems = {
-    ITEM_TRACKER_ITEM(RG_CRAWL, 0, DrawItem),
+    ITEM_TRACKER_RG(RG_CRAWL, 0, DrawItem),
 };
 
 std::vector<ItemTrackerItem> climbItems = {
-    ITEM_TRACKER_ITEM(RG_CLIMB, 0, DrawItem),
+    ITEM_TRACKER_RG(RG_CLIMB, 0, DrawItem),
 };
 
 std::vector<ItemTrackerItem> grabItems = {
-    ITEM_TRACKER_ITEM(RG_POWER_BRACELET, 0, DrawItem),
+    ITEM_TRACKER_RG(RG_POWER_BRACELET, 0, DrawItem),
 };
 
 std::vector<ItemTrackerItem> openChestItems = {
-    ITEM_TRACKER_ITEM(RG_OPEN_CHEST, 0, DrawItem),
+    ITEM_TRACKER_RG(RG_OPEN_CHEST, 0, DrawItem),
 };
 
 std::vector<ItemTrackerItem> beanSoulItems = {
-    ITEM_TRACKER_ITEM_CUSTOM(RG_DEATH_MOUNTAIN_CRATER_BEAN_SOUL, ITEM_BEAN, ITEM_BEAN, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_DEATH_MOUNTAIN_TRAIL_BEAN_SOUL, ITEM_BEAN, ITEM_BEAN, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_DESERT_COLOSSUS_BEAN_SOUL, ITEM_BEAN, ITEM_BEAN, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_GERUDO_VALLEY_BEAN_SOUL, ITEM_BEAN, ITEM_BEAN, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_GRAVEYARD_BEAN_SOUL, ITEM_BEAN, ITEM_BEAN, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_KOKIRI_FOREST_BEAN_SOUL, ITEM_BEAN, ITEM_BEAN, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_LAKE_HYLIA_BEAN_SOUL, ITEM_BEAN, ITEM_BEAN, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_LOST_WOODS_BRIDGE_BEAN_SOUL, ITEM_BEAN, ITEM_BEAN, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_LOST_WOODS_BEAN_SOUL, ITEM_BEAN, ITEM_BEAN, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_ZORAS_RIVER_BEAN_SOUL, ITEM_BEAN, ITEM_BEAN, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_DEATH_MOUNTAIN_CRATER_BEAN_SOUL, ITEM_BEAN, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_DEATH_MOUNTAIN_TRAIL_BEAN_SOUL, ITEM_BEAN, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_DESERT_COLOSSUS_BEAN_SOUL, ITEM_BEAN, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_GERUDO_VALLEY_BEAN_SOUL, ITEM_BEAN, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_GRAVEYARD_BEAN_SOUL, ITEM_BEAN, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_KOKIRI_FOREST_BEAN_SOUL, ITEM_BEAN, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_LAKE_HYLIA_BEAN_SOUL, ITEM_BEAN, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_LOST_WOODS_BRIDGE_BEAN_SOUL, ITEM_BEAN, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_LOST_WOODS_BEAN_SOUL, ITEM_BEAN, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_ZORAS_RIVER_BEAN_SOUL, ITEM_BEAN, 0, DrawItem),
 };
 
 std::vector<ItemTrackerItem> bossSoulItems = {
-    ITEM_TRACKER_ITEM(RG_GOHMA_SOUL, 0, DrawItem),       ITEM_TRACKER_ITEM(RG_KING_DODONGO_SOUL, 0, DrawItem),
-    ITEM_TRACKER_ITEM(RG_BARINADE_SOUL, 0, DrawItem),    ITEM_TRACKER_ITEM(RG_PHANTOM_GANON_SOUL, 0, DrawItem),
-    ITEM_TRACKER_ITEM(RG_VOLVAGIA_SOUL, 0, DrawItem),    ITEM_TRACKER_ITEM(RG_MORPHA_SOUL, 0, DrawItem),
-    ITEM_TRACKER_ITEM(RG_BONGO_BONGO_SOUL, 0, DrawItem), ITEM_TRACKER_ITEM(RG_TWINROVA_SOUL, 0, DrawItem),
-    ITEM_TRACKER_ITEM(RG_GANON_SOUL, 0, DrawItem),
+    ITEM_TRACKER_RG(RG_GOHMA_SOUL, 0, DrawItem),       ITEM_TRACKER_RG(RG_KING_DODONGO_SOUL, 0, DrawItem),
+    ITEM_TRACKER_RG(RG_BARINADE_SOUL, 0, DrawItem),    ITEM_TRACKER_RG(RG_PHANTOM_GANON_SOUL, 0, DrawItem),
+    ITEM_TRACKER_RG(RG_VOLVAGIA_SOUL, 0, DrawItem),    ITEM_TRACKER_RG(RG_MORPHA_SOUL, 0, DrawItem),
+    ITEM_TRACKER_RG(RG_BONGO_BONGO_SOUL, 0, DrawItem), ITEM_TRACKER_RG(RG_TWINROVA_SOUL, 0, DrawItem),
+    ITEM_TRACKER_RG(RG_GANON_SOUL, 0, DrawItem),
 };
 
 std::vector<ItemTrackerItem> jabbernutItems = {
-    ITEM_TRACKER_ITEM(RG_SPEAK_DEKU, 0, DrawItem),   ITEM_TRACKER_ITEM(RG_SPEAK_GERUDO, 0, DrawItem),
-    ITEM_TRACKER_ITEM(RG_SPEAK_GORON, 0, DrawItem),  ITEM_TRACKER_ITEM(RG_SPEAK_HYLIAN, 0, DrawItem),
-    ITEM_TRACKER_ITEM(RG_SPEAK_KOKIRI, 0, DrawItem), ITEM_TRACKER_ITEM(RG_SPEAK_ZORA, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_SPEAK_DEKU, ITEM_NUT, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_SPEAK_GERUDO, ITEM_NUT, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_SPEAK_GORON, ITEM_NUT, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_SPEAK_HYLIAN, ITEM_NUT, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_SPEAK_KOKIRI, ITEM_NUT, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_SPEAK_ZORA, ITEM_NUT, 0, DrawItem),
 };
 
 std::vector<ItemTrackerItem> ocarinaButtonItems = {
     // Hack for right now, just gonna draw ocarina buttons as ocarinas.
     // Will replace with other macro once we have a custom texture
-    ITEM_TRACKER_ITEM_CUSTOM(RG_OCARINA_A_BUTTON, ITEM_OCARINA_TIME, ITEM_OCARINA_TIME, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_OCARINA_C_UP_BUTTON, ITEM_OCARINA_TIME, ITEM_OCARINA_TIME, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_OCARINA_C_DOWN_BUTTON, ITEM_OCARINA_TIME, ITEM_OCARINA_TIME, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_OCARINA_C_LEFT_BUTTON, ITEM_OCARINA_TIME, ITEM_OCARINA_TIME, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_OCARINA_C_RIGHT_BUTTON, ITEM_OCARINA_TIME, ITEM_OCARINA_TIME, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_OCARINA_A_BUTTON, ITEM_OCARINA_TIME, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_OCARINA_C_UP_BUTTON, ITEM_OCARINA_TIME, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_OCARINA_C_DOWN_BUTTON, ITEM_OCARINA_TIME, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_OCARINA_C_LEFT_BUTTON, ITEM_OCARINA_TIME, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_OCARINA_C_RIGHT_BUTTON, ITEM_OCARINA_TIME, 0, DrawItem),
 };
 
 std::vector<ItemTrackerItem> overworldKeyItems = {
     // Hack for right now, just gonna overworld keys as dungeon keys.
     // Will replace with other macro once we have a custom texture
-    ITEM_TRACKER_ITEM_CUSTOM(RG_GUARD_HOUSE_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_MARKET_BAZAAR_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_MARKET_POTION_SHOP_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_MASK_SHOP_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_MARKET_SHOOTING_GALLERY_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_BOMBCHU_BOWLING_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_TREASURE_CHEST_GAME_BUILDING_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_BOMBCHU_SHOP_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_RICHARDS_HOUSE_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_ALLEY_HOUSE_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_KAK_BAZAAR_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_KAK_POTION_SHOP_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_BOSS_HOUSE_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_GRANNYS_POTION_SHOP_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_SKULLTULA_HOUSE_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_IMPAS_HOUSE_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_WINDMILL_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_KAK_SHOOTING_GALLERY_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_DAMPES_HUT_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_TALONS_HOUSE_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_STABLES_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_BACK_TOWER_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_HYLIA_LAB_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
-    ITEM_TRACKER_ITEM_CUSTOM(RG_FISHING_HOLE_KEY, ITEM_KEY_SMALL, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_GUARD_HOUSE_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_MARKET_BAZAAR_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_MARKET_POTION_SHOP_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_MASK_SHOP_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_MARKET_SHOOTING_GALLERY_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_BOMBCHU_BOWLING_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_TREASURE_CHEST_GAME_BUILDING_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_BOMBCHU_SHOP_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_RICHARDS_HOUSE_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_ALLEY_HOUSE_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_KAK_BAZAAR_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_KAK_POTION_SHOP_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_BOSS_HOUSE_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_GRANNYS_POTION_SHOP_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_SKULLTULA_HOUSE_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_IMPAS_HOUSE_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_WINDMILL_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_KAK_SHOOTING_GALLERY_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_DAMPES_HUT_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_TALONS_HOUSE_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_STABLES_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_BACK_TOWER_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_HYLIA_LAB_KEY, ITEM_KEY_SMALL, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_FISHING_HOLE_KEY, ITEM_KEY_SMALL, 0, DrawItem),
 };
 
 std::vector<ItemTrackerItem> fishingPoleItems = { ITEM_TRACKER_ITEM(ITEM_FISHING_POLE, 0, DrawItem) };
+
+std::vector<ItemTrackerItem> silverRupeeItems = {
+    ITEM_TRACKER_RG_CUSTOM(RG_ICE_CAVERN_SILVER_BLADES, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_ICE_CAVERN_SILVER_BLOCK, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_BOTW_SILVER, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_GTG_SILVER_SLOPE, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_GTG_SILVER_LAVA, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_GTG_SILVER_WATER, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_SPIRIT_SILVER_CHILD, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_SPIRIT_SILVER_SUN, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_SPIRIT_SILVER_BOULDERS, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_SHADOW_SILVER_BLADES, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_SHADOW_SILVER_PIT, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_SHADOW_SILVER_SPIKES, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_GANONS_CASTLE_SILVER_LIGHT, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_GANONS_CASTLE_SILVER_FOREST, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_GANONS_CASTLE_SILVER_FIRE, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_GANONS_CASTLE_SILVER_SPIRIT, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_DODONGOS_CAVERN_MQ_SILVER, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_SHADOW_MQ_SILVER_BLADES, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_SHADOW_MQ_SILVER_PIT, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_SHADOW_MQ_SILVER_SPIKES, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_SPIRIT_MQ_SILVER_LOBBY, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_SPIRIT_MQ_SILVER_BIG_WALL, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_GTG_MQ_SILVER_SLOPE, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_GTG_MQ_SILVER_LAVA, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_GTG_MQ_SILVER_WATER, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_GANONS_CASTLE_MQ_SILVER_FIRE, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_GANONS_CASTLE_MQ_SILVER_WATER, ITEM_RUPEE_SILVER, 0, DrawItem),
+    ITEM_TRACKER_RG_CUSTOM(RG_GANONS_CASTLE_MQ_SILVER_SHADOW, ITEM_RUPEE_SILVER, 0, DrawItem),
+};
 
 std::vector<ItemTrackerDungeon> itemTrackerDungeonsWithMapsHorizontal = {
     { SCENE_DEKU_TREE, { ITEM_DUNGEON_MAP, ITEM_COMPASS } },
@@ -505,132 +542,133 @@ ItemTrackerNumbers GetItemCurrentAndMax(ItemTrackerItem item) {
     result.maxCapacity = 0;
     result.currentAmmo = 0;
 
-    switch (item.id) {
-        case ITEM_STICK:
-            result.currentCapacity = CUR_CAPACITY(UPG_STICKS);
-            result.maxCapacity = 30;
-            result.currentAmmo = AMMO(ITEM_STICK);
-            break;
-        case ITEM_NUT:
-            result.currentCapacity = CUR_CAPACITY(UPG_NUTS);
-            result.maxCapacity = 40;
-            result.currentAmmo = AMMO(ITEM_NUT);
-            break;
-        case ITEM_BOMB:
-            result.currentCapacity = CUR_CAPACITY(UPG_BOMB_BAG);
-            result.maxCapacity = 40;
-            result.currentAmmo = AMMO(ITEM_BOMB);
-            break;
-        case ITEM_BOW:
-            result.currentCapacity = CUR_CAPACITY(UPG_QUIVER);
-            result.maxCapacity = 50;
-            result.currentAmmo = AMMO(ITEM_BOW);
-            break;
-        case ITEM_SLINGSHOT:
-            result.currentCapacity = CUR_CAPACITY(UPG_BULLET_BAG);
-            result.maxCapacity = 50;
-            result.currentAmmo = AMMO(ITEM_SLINGSHOT);
-            break;
-        case ITEM_WALLET_ADULT:
-        case ITEM_WALLET_GIANT:
-            result.currentCapacity =
-                IS_RANDO && !Flags_GetRandomizerInf(RAND_INF_HAS_WALLET) ? 0 : CUR_CAPACITY(UPG_WALLET);
-            result.maxCapacity =
-                IS_RANDO && OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_INCLUDE_TYCOON_WALLET) ? 999
-                                                                                                               : 500;
-            result.currentAmmo = gSaveContext.rupees;
-            break;
-        case ITEM_BOMBCHU: {
-            auto bombchuBag = RAND_GET_OPTION(RSK_BOMBCHU_BAG);
+    if (item.kind == ITEM_KIND_ITEM) {
+        switch (item.id) {
+            case ITEM_STICK:
+                result.currentCapacity = CUR_CAPACITY(UPG_STICKS);
+                result.maxCapacity = 30;
+                result.currentAmmo = AMMO(ITEM_STICK);
+                break;
+            case ITEM_NUT:
+                result.currentCapacity = CUR_CAPACITY(UPG_NUTS);
+                result.maxCapacity = 40;
+                result.currentAmmo = AMMO(ITEM_NUT);
+                break;
+            case ITEM_BOMB:
+                result.currentCapacity = CUR_CAPACITY(UPG_BOMB_BAG);
+                result.maxCapacity = 40;
+                result.currentAmmo = AMMO(ITEM_BOMB);
+                break;
+            case ITEM_BOW:
+                result.currentCapacity = CUR_CAPACITY(UPG_QUIVER);
+                result.maxCapacity = 50;
+                result.currentAmmo = AMMO(ITEM_BOW);
+                break;
+            case ITEM_SLINGSHOT:
+                result.currentCapacity = CUR_CAPACITY(UPG_BULLET_BAG);
+                result.maxCapacity = 50;
+                result.currentAmmo = AMMO(ITEM_SLINGSHOT);
+                break;
+            case ITEM_WALLET_ADULT:
+            case ITEM_WALLET_GIANT:
+                result.currentCapacity =
+                    IS_RANDO && !Flags_GetRandomizerInf(RAND_INF_HAS_WALLET) ? 0 : CUR_CAPACITY(UPG_WALLET);
+                result.maxCapacity =
+                    IS_RANDO && OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_INCLUDE_TYCOON_WALLET)
+                        ? 999
+                        : 500;
+                result.currentAmmo = gSaveContext.rupees;
+                break;
+            case ITEM_BOMBCHU: {
+                auto bombchuBag = RAND_GET_OPTION(RSK_BOMBCHU_BAG);
 
-            uint8_t capacity = 0;
+                uint8_t capacity = 0;
 
-            if (INV_CONTENT(ITEM_BOMBCHU) == ITEM_BOMBCHU) {
-                if (bombchuBag.Is(RO_BOMBCHU_BAG_PROGRESSIVE)) {
-                    capacity = OTRGlobals::Instance->gRandoContext->GetBombchuCapacity();
-                } else {
-                    capacity = 50;
-                }
-            }
-
-            result.currentCapacity = capacity;
-            result.maxCapacity = 50;
-            result.currentAmmo = AMMO(ITEM_BOMBCHU);
-            break;
-        }
-        case ITEM_BEAN:
-            result.currentCapacity = INV_CONTENT(ITEM_BEAN) == ITEM_BEAN ? 10 : 0;
-            result.maxCapacity = 10;
-            result.currentAmmo = AMMO(ITEM_BEAN);
-            break;
-        case QUEST_SKULL_TOKEN:
-            result.maxCapacity = result.currentCapacity = 100;
-            result.currentAmmo = gSaveContext.inventory.gsTokens;
-            break;
-        case ITEM_HEART_CONTAINER:
-            result.maxCapacity = result.currentCapacity = 8;
-            result.currentAmmo = gSaveContext.ship.stats.heartContainers;
-            break;
-        case ITEM_HEART_PIECE:
-            result.maxCapacity = result.currentCapacity = 36;
-            result.currentAmmo = gSaveContext.ship.stats.heartPieces;
-            break;
-        case ITEM_KEY_SMALL:
-            // Though the ammo/capacity naming doesn't really make sense for keys, we are
-            // hijacking the same system to display key counts as there are enough similarities
-            result.currentAmmo = MAX(gSaveContext.inventory.dungeonKeys[item.data], 0);
-            result.currentCapacity = gSaveContext.ship.stats.dungeonKeys[item.data];
-            switch (item.data) {
-                case SCENE_FOREST_TEMPLE:
-                    result.maxCapacity = FOREST_TEMPLE_SMALL_KEY_MAX;
-                    break;
-                case SCENE_FIRE_TEMPLE:
-                    result.maxCapacity = FIRE_TEMPLE_SMALL_KEY_MAX;
-                    break;
-                case SCENE_WATER_TEMPLE:
-                    result.maxCapacity = WATER_TEMPLE_SMALL_KEY_MAX;
-                    break;
-                case SCENE_SPIRIT_TEMPLE:
-                    result.maxCapacity = SPIRIT_TEMPLE_SMALL_KEY_MAX;
-                    break;
-                case SCENE_SHADOW_TEMPLE:
-                    result.maxCapacity = SHADOW_TEMPLE_SMALL_KEY_MAX;
-                    break;
-                case SCENE_BOTTOM_OF_THE_WELL:
-                    result.maxCapacity = BOTTOM_OF_THE_WELL_SMALL_KEY_MAX;
-                    break;
-                case SCENE_GERUDO_TRAINING_GROUND:
-                    result.maxCapacity = GERUDO_TRAINING_GROUND_SMALL_KEY_MAX;
-                    break;
-                case SCENE_THIEVES_HIDEOUT:
-                    if (IS_RANDO) {
-                        switch (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_GERUDO_FORTRESS)) {
-                            case RO_GF_CARPENTERS_NORMAL:
-                                result.maxCapacity = GERUDO_FORTRESS_SMALL_KEY_MAX;
-                                break;
-                            case RO_GF_CARPENTERS_FAST:
-                                result.maxCapacity = 1;
-                                break;
-                            case RO_GF_CARPENTERS_FREE:
-                                result.maxCapacity = 0;
-                                break;
-                            default:
-                                result.maxCapacity = 0;
-                                SPDLOG_ERROR(
-                                    "Invalid value for RSK_GERUDO_FORTRESS: {}",
-                                    OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_GERUDO_FORTRESS));
-                                assert(false);
-                                break;
-                        }
+                if (INV_CONTENT(ITEM_BOMBCHU) == ITEM_BOMBCHU) {
+                    if (bombchuBag.Is(RO_BOMBCHU_BAG_PROGRESSIVE)) {
+                        capacity = OTRGlobals::Instance->gRandoContext->GetBombchuCapacity();
                     } else {
-                        result.maxCapacity = GERUDO_FORTRESS_SMALL_KEY_MAX;
+                        capacity = 50;
                     }
-                    break;
-                case SCENE_INSIDE_GANONS_CASTLE:
-                    result.maxCapacity = GANONS_CASTLE_SMALL_KEY_MAX;
-                    break;
-            }
-            break;
+                }
+
+                result.currentCapacity = capacity;
+                result.maxCapacity = 50;
+                result.currentAmmo = AMMO(ITEM_BOMBCHU);
+            } break;
+            case ITEM_BEAN:
+                result.currentCapacity = INV_CONTENT(ITEM_BEAN) == ITEM_BEAN ? 10 : 0;
+                result.maxCapacity = 10;
+                result.currentAmmo = AMMO(ITEM_BEAN);
+                break;
+            case ITEM_HEART_CONTAINER:
+                result.maxCapacity = result.currentCapacity = 8;
+                result.currentAmmo = gSaveContext.ship.stats.heartContainers;
+                break;
+            case ITEM_HEART_PIECE:
+                result.maxCapacity = result.currentCapacity = 36;
+                result.currentAmmo = gSaveContext.ship.stats.heartPieces;
+                break;
+            case ITEM_KEY_SMALL:
+                // Though the ammo/capacity naming doesn't really make sense for keys, we are
+                // hijacking the same system to display key counts as there are enough similarities
+                result.currentAmmo = MAX(gSaveContext.inventory.dungeonKeys[item.data], 0);
+                result.currentCapacity = gSaveContext.ship.stats.dungeonKeys[item.data];
+                switch (item.data) {
+                    case SCENE_FOREST_TEMPLE:
+                        result.maxCapacity = FOREST_TEMPLE_SMALL_KEY_MAX;
+                        break;
+                    case SCENE_FIRE_TEMPLE:
+                        result.maxCapacity = FIRE_TEMPLE_SMALL_KEY_MAX;
+                        break;
+                    case SCENE_WATER_TEMPLE:
+                        result.maxCapacity = WATER_TEMPLE_SMALL_KEY_MAX;
+                        break;
+                    case SCENE_SPIRIT_TEMPLE:
+                        result.maxCapacity = SPIRIT_TEMPLE_SMALL_KEY_MAX;
+                        break;
+                    case SCENE_SHADOW_TEMPLE:
+                        result.maxCapacity = SHADOW_TEMPLE_SMALL_KEY_MAX;
+                        break;
+                    case SCENE_BOTTOM_OF_THE_WELL:
+                        result.maxCapacity = BOTTOM_OF_THE_WELL_SMALL_KEY_MAX;
+                        break;
+                    case SCENE_GERUDO_TRAINING_GROUND:
+                        result.maxCapacity = GERUDO_TRAINING_GROUND_SMALL_KEY_MAX;
+                        break;
+                    case SCENE_THIEVES_HIDEOUT:
+                        if (IS_RANDO) {
+                            switch (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_GERUDO_FORTRESS)) {
+                                case RO_GF_CARPENTERS_NORMAL:
+                                    result.maxCapacity = GERUDO_FORTRESS_SMALL_KEY_MAX;
+                                    break;
+                                case RO_GF_CARPENTERS_FAST:
+                                    result.maxCapacity = 1;
+                                    break;
+                                case RO_GF_CARPENTERS_FREE:
+                                    result.maxCapacity = 0;
+                                    break;
+                                default:
+                                    result.maxCapacity = 0;
+                                    SPDLOG_ERROR(
+                                        "Invalid value for RSK_GERUDO_FORTRESS: {}",
+                                        OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_GERUDO_FORTRESS));
+                                    assert(false);
+                                    break;
+                            }
+                        } else {
+                            result.maxCapacity = GERUDO_FORTRESS_SMALL_KEY_MAX;
+                        }
+                        break;
+                    case SCENE_INSIDE_GANONS_CASTLE:
+                        result.maxCapacity = GANONS_CASTLE_SMALL_KEY_MAX;
+                        break;
+                }
+                break;
+        }
+    } else if (item.kind == ITEM_KIND_QUEST && item.id == QUEST_SKULL_TOKEN) {
+        result.maxCapacity = result.currentCapacity = 100;
+        result.currentAmmo = gSaveContext.inventory.gsTokens;
     }
 
     return result;
@@ -799,6 +837,27 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         ImGui::PushStyleColor(ImGuiCol_Text, maxColor);
         ImGui::Text("%s", maxString.c_str());
         ImGui::PopStyleColor();
+    } else if (item.id >= RG_SHADOW_SILVER_BLADES && item.id <= RG_GANONS_CASTLE_MQ_SILVER_SHADOW && IS_RANDO &&
+               OTRGlobals::Instance->gRandoContext->GetOption(RSK_SHUFFLE_SILVER).Get() && IsValidSaveFile()) {
+        RandomizerGet rg = static_cast<RandomizerGet>(item.id);
+        std::string current = "";
+        std::string max = "";
+        uint8_t rupees = *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg);
+        uint8_t rupeesMax = Randomizer::SilverTotal(rg);
+        ImU32 currentColor = rupees >= rupeesMax ? IM_COL_GREEN : IM_COL_WHITE;
+        ImU32 maxColor = IM_COL_GREEN;
+        current += std::to_string(rupees);
+        current += "/";
+        max += std::to_string(rupeesMax);
+        ImGui::SetCursorScreenPos(
+            ImVec2(p.x + (iconSize / 2) - (ImGui::CalcTextSize((current + max).c_str()).x / 2), p.y - 14));
+        ImGui::PushStyleColor(ImGuiCol_Text, currentColor);
+        ImGui::Text("%d/", rupees);
+        ImGui::PopStyleColor();
+        ImGui::SameLine(0, 0.0f);
+        ImGui::PushStyleColor(ImGuiCol_Text, maxColor);
+        ImGui::Text("%d", rupeesMax);
+        ImGui::PopStyleColor();
     } else {
         ImGui::SetCursorScreenPos(ImVec2(p.x, p.y - 14));
         ImGui::Text("");
@@ -841,373 +900,408 @@ bool HasBossSoul(RandomizerInf bossSoul) {
 }
 
 void DrawItem(ItemTrackerItem item) {
-
     uint32_t actualItemId = GameInteractor::IsSaveLoaded() ? INV_CONTENT(item.id) : ITEM_NONE;
     float iconSize = static_cast<float>(CVarGetInteger(CVAR_TRACKER_ITEM("IconSize"), 36));
     bool hasItem = actualItemId != ITEM_NONE;
     std::string itemName = "";
 
-    // Hack fix as RG_MARKET_SHOOTING_GALLERY_KEY is RandomizerGet #255 which collides
-    // with ITEM_NONE (ItemId #255) due to the lack of a modid to separate them
-    if (item.name != "ITEM_KEY_SMALL" && item.id == ITEM_NONE) {
-        return;
-    }
+    if (item.kind == ITEM_KIND_ITEM) {
+        switch (item.id) {
+            case ITEM_HEART_CONTAINER:
+                actualItemId = item.id;
+                hasItem = gSaveContext.ship.stats.heartContainers > 0;
+                break;
+            case ITEM_HEART_PIECE:
+                actualItemId = item.id;
+                hasItem = gSaveContext.ship.stats.heartPieces > 0;
+                break;
+            case ITEM_MAGIC_SMALL:
+            case ITEM_MAGIC_LARGE:
+                actualItemId = gSaveContext.magicLevel == 2 ? ITEM_MAGIC_LARGE : ITEM_MAGIC_SMALL;
+                hasItem = gSaveContext.magicLevel > 0;
+                break;
+            case ITEM_WALLET_ADULT:
+            case ITEM_WALLET_GIANT:
+                actualItemId = CUR_UPG_VALUE(UPG_WALLET) == 2 ? ITEM_WALLET_GIANT : ITEM_WALLET_ADULT;
+                hasItem = !IS_RANDO || Flags_GetRandomizerInf(RAND_INF_HAS_WALLET);
+                break;
+            case ITEM_BRACELET:
+            case ITEM_GAUNTLETS_SILVER:
+            case ITEM_GAUNTLETS_GOLD:
+                actualItemId = CUR_UPG_VALUE(UPG_STRENGTH) >= 3   ? ITEM_GAUNTLETS_GOLD
+                               : CUR_UPG_VALUE(UPG_STRENGTH) == 2 ? ITEM_GAUNTLETS_SILVER
+                                                                  : ITEM_BRACELET;
+                hasItem = CUR_UPG_VALUE(UPG_STRENGTH) > 0;
+                break;
+            case ITEM_SCALE_SILVER:
+            case ITEM_SCALE_GOLDEN:
+                actualItemId = CUR_UPG_VALUE(UPG_SCALE) == 2 ? ITEM_SCALE_GOLDEN : ITEM_SCALE_SILVER;
+                hasItem = CUR_UPG_VALUE(UPG_SCALE) > 0;
+                break;
+            case ITEM_RUPEE_GREEN:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_GREG_FOUND);
+                break;
+            case ITEM_NONE: // spacer, don't render
+                return;
+        }
+    } else if (item.kind == ITEM_KIND_RG) {
+        switch (item.id) {
+            case RG_TRIFORCE_PIECE:
+                actualItemId = item.id;
+                hasItem = IS_RANDO && (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT) !=
+                                       RO_TRIFORCE_HUNT_OFF);
+                itemName = "Triforce Piece";
+                break;
+            case ITEM_NAYRUS_LOVE:
+                if (IS_RANDO && OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_ROCS_FEATHER)) {
+                    hasItem = Flags_GetRandomizerInf(RAND_INF_OBTAINED_NAYRUS_LOVE);
+                }
+                break;
+            case RG_ROCS_FEATHER:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_OBTAINED_ROCS_FEATHER);
+                itemName = "Roc's Feather";
+                break;
+            case RG_DEATH_MOUNTAIN_CRATER_BEAN_SOUL:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_DEATH_MOUNTAIN_CRATER_BEAN_SOUL);
+                itemName = "Death Mountain Crater Bean Soul";
+                break;
+            case RG_DEATH_MOUNTAIN_TRAIL_BEAN_SOUL:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_DEATH_MOUNTAIN_TRAIL_BEAN_SOUL);
+                itemName = "Death Mountain Trail Bean Soul";
+                break;
+            case RG_DESERT_COLOSSUS_BEAN_SOUL:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_DESERT_COLOSSUS_BEAN_SOUL);
+                itemName = "Desert Colossus Bean Soul";
+                break;
+            case RG_GERUDO_VALLEY_BEAN_SOUL:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_GERUDO_VALLEY_BEAN_SOUL);
+                itemName = "Gerudo Valley Bean Soul";
+                break;
+            case RG_GRAVEYARD_BEAN_SOUL:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_GRAVEYARD_BEAN_SOUL);
+                itemName = "Graveyard Bean Soul";
+                break;
+            case RG_KOKIRI_FOREST_BEAN_SOUL:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_KOKIRI_FOREST_BEAN_SOUL);
+                itemName = "Kokiri Forest Bean Soul";
+                break;
+            case RG_LAKE_HYLIA_BEAN_SOUL:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_LAKE_HYLIA_BEAN_SOUL);
+                itemName = "Lake Hylia Bean Soul";
+                break;
+            case RG_LOST_WOODS_BRIDGE_BEAN_SOUL:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_LOST_WOODS_BRIDGE_BEAN_SOUL);
+                itemName = "Lost Woods Bridge Bean Soul";
+                break;
+            case RG_LOST_WOODS_BEAN_SOUL:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_LOST_WOODS_BEAN_SOUL);
+                itemName = "Lost Woods Theatre Bean Soul";
+                break;
+            case RG_ZORAS_RIVER_BEAN_SOUL:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_ZORAS_RIVER_BEAN_SOUL);
+                itemName = "Zora's River Bean Soul";
+                break;
+            case RG_GOHMA_SOUL:
+                actualItemId = item.id;
+                hasItem = HasBossSoul(RAND_INF_GOHMA_SOUL);
+                itemName = "Gohma's Soul";
+                break;
+            case RG_KING_DODONGO_SOUL:
+                actualItemId = item.id;
+                hasItem = HasBossSoul(RAND_INF_KING_DODONGO_SOUL);
+                itemName = "King Dodongo's Soul";
+                break;
+            case RG_BARINADE_SOUL:
+                actualItemId = item.id;
+                hasItem = HasBossSoul(RAND_INF_BARINADE_SOUL);
+                itemName = "Barinade's Soul";
+                break;
+            case RG_PHANTOM_GANON_SOUL:
+                actualItemId = item.id;
+                hasItem = HasBossSoul(RAND_INF_PHANTOM_GANON_SOUL);
+                itemName = "Phantom Ganon's Soul";
+                break;
+            case RG_VOLVAGIA_SOUL:
+                actualItemId = item.id;
+                hasItem = HasBossSoul(RAND_INF_VOLVAGIA_SOUL);
+                itemName = "Volvagia's Soul";
+                break;
+            case RG_MORPHA_SOUL:
+                actualItemId = item.id;
+                hasItem = HasBossSoul(RAND_INF_MORPHA_SOUL);
+                itemName = "Morpha's Soul";
+                break;
+            case RG_BONGO_BONGO_SOUL:
+                actualItemId = item.id;
+                hasItem = HasBossSoul(RAND_INF_BONGO_BONGO_SOUL);
+                itemName = "Bongo Bongo's Soul";
+                break;
+            case RG_TWINROVA_SOUL:
+                actualItemId = item.id;
+                hasItem = HasBossSoul(RAND_INF_TWINROVA_SOUL);
+                itemName = "Twinrova's Soul";
+                break;
+            case RG_GANON_SOUL:
+                actualItemId = item.id;
+                hasItem = HasBossSoul(RAND_INF_GANON_SOUL);
+                itemName = "Ganon's Soul";
+                break;
 
-    switch (item.id) {
-        case ITEM_HEART_CONTAINER:
-            actualItemId = item.id;
-            hasItem = gSaveContext.ship.stats.heartContainers > 0;
-            break;
-        case ITEM_HEART_PIECE:
-            actualItemId = item.id;
-            hasItem = gSaveContext.ship.stats.heartPieces > 0;
-            break;
-        case ITEM_MAGIC_SMALL:
-        case ITEM_MAGIC_LARGE:
-            actualItemId = gSaveContext.magicLevel == 2 ? ITEM_MAGIC_LARGE : ITEM_MAGIC_SMALL;
-            hasItem = gSaveContext.magicLevel > 0;
-            break;
-        case ITEM_WALLET_ADULT:
-        case ITEM_WALLET_GIANT:
-            actualItemId = CUR_UPG_VALUE(UPG_WALLET) == 2 ? ITEM_WALLET_GIANT : ITEM_WALLET_ADULT;
-            hasItem = !IS_RANDO || Flags_GetRandomizerInf(RAND_INF_HAS_WALLET);
-            break;
-        case ITEM_BRACELET:
-        case ITEM_GAUNTLETS_SILVER:
-        case ITEM_GAUNTLETS_GOLD:
-            actualItemId = CUR_UPG_VALUE(UPG_STRENGTH) >= 3   ? ITEM_GAUNTLETS_GOLD
-                           : CUR_UPG_VALUE(UPG_STRENGTH) == 2 ? ITEM_GAUNTLETS_SILVER
-                                                              : ITEM_BRACELET;
-            hasItem = CUR_UPG_VALUE(UPG_STRENGTH) > 0;
-            break;
-        case ITEM_SCALE_SILVER:
-        case ITEM_SCALE_GOLDEN:
-            actualItemId = CUR_UPG_VALUE(UPG_SCALE) == 2 ? ITEM_SCALE_GOLDEN : ITEM_SCALE_SILVER;
-            hasItem = CUR_UPG_VALUE(UPG_SCALE) > 0;
-            break;
-        case ITEM_RUPEE_GREEN:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_GREG_FOUND);
-            break;
-        case RG_TRIFORCE_PIECE:
-            actualItemId = item.id;
-            hasItem = IS_RANDO && (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT) !=
-                                   RO_TRIFORCE_HUNT_OFF);
-            itemName = "Triforce Piece";
-            break;
-        case ITEM_NAYRUS_LOVE:
-            if (IS_RANDO && OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_ROCS_FEATHER)) {
-                hasItem = Flags_GetRandomizerInf(RAND_INF_OBTAINED_NAYRUS_LOVE);
-            }
-            break;
-        case RG_ROCS_FEATHER:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_OBTAINED_ROCS_FEATHER);
-            itemName = "Roc's Feather";
-            break;
-        case RG_DEATH_MOUNTAIN_CRATER_BEAN_SOUL:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_DEATH_MOUNTAIN_CRATER_BEAN_SOUL);
-            itemName = "Death Mountain Crater Bean Soul";
-            break;
-        case RG_DEATH_MOUNTAIN_TRAIL_BEAN_SOUL:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_DEATH_MOUNTAIN_TRAIL_BEAN_SOUL);
-            itemName = "Death Mountain Trail Bean Soul";
-            break;
-        case RG_DESERT_COLOSSUS_BEAN_SOUL:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_DESERT_COLOSSUS_BEAN_SOUL);
-            itemName = "Desert Colossus Bean Soul";
-            break;
-        case RG_GERUDO_VALLEY_BEAN_SOUL:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_GERUDO_VALLEY_BEAN_SOUL);
-            itemName = "Gerudo Valley Bean Soul";
-            break;
-        case RG_GRAVEYARD_BEAN_SOUL:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_GRAVEYARD_BEAN_SOUL);
-            itemName = "Graveyard Bean Soul";
-            break;
-        case RG_KOKIRI_FOREST_BEAN_SOUL:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_KOKIRI_FOREST_BEAN_SOUL);
-            itemName = "Kokiri Forest Bean Soul";
-            break;
-        case RG_LAKE_HYLIA_BEAN_SOUL:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_LAKE_HYLIA_BEAN_SOUL);
-            itemName = "Lake Hylia Bean Soul";
-            break;
-        case RG_LOST_WOODS_BRIDGE_BEAN_SOUL:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_LOST_WOODS_BRIDGE_BEAN_SOUL);
-            itemName = "Lost Woods Bridge Bean Soul";
-            break;
-        case RG_LOST_WOODS_BEAN_SOUL:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_LOST_WOODS_BEAN_SOUL);
-            itemName = "Lost Woods Theatre Bean Soul";
-            break;
-        case RG_ZORAS_RIVER_BEAN_SOUL:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_ZORAS_RIVER_BEAN_SOUL);
-            itemName = "Zora's River Bean Soul";
-            break;
-        case RG_GOHMA_SOUL:
-            actualItemId = item.id;
-            hasItem = HasBossSoul(RAND_INF_GOHMA_SOUL);
-            itemName = "Gohma's Soul";
-            break;
-        case RG_KING_DODONGO_SOUL:
-            actualItemId = item.id;
-            hasItem = HasBossSoul(RAND_INF_KING_DODONGO_SOUL);
-            itemName = "King Dodongo's Soul";
-            break;
-        case RG_BARINADE_SOUL:
-            actualItemId = item.id;
-            hasItem = HasBossSoul(RAND_INF_BARINADE_SOUL);
-            itemName = "Barinade's Soul";
-            break;
-        case RG_PHANTOM_GANON_SOUL:
-            actualItemId = item.id;
-            hasItem = HasBossSoul(RAND_INF_PHANTOM_GANON_SOUL);
-            itemName = "Phantom Ganon's Soul";
-            break;
-        case RG_VOLVAGIA_SOUL:
-            actualItemId = item.id;
-            hasItem = HasBossSoul(RAND_INF_VOLVAGIA_SOUL);
-            itemName = "Volvagia's Soul";
-            break;
-        case RG_MORPHA_SOUL:
-            actualItemId = item.id;
-            hasItem = HasBossSoul(RAND_INF_MORPHA_SOUL);
-            itemName = "Morpha's Soul";
-            break;
-        case RG_BONGO_BONGO_SOUL:
-            actualItemId = item.id;
-            hasItem = HasBossSoul(RAND_INF_BONGO_BONGO_SOUL);
-            itemName = "Bongo Bongo's Soul";
-            break;
-        case RG_TWINROVA_SOUL:
-            actualItemId = item.id;
-            hasItem = HasBossSoul(RAND_INF_TWINROVA_SOUL);
-            itemName = "Twinrova's Soul";
-            break;
-        case RG_GANON_SOUL:
-            actualItemId = item.id;
-            hasItem = HasBossSoul(RAND_INF_GANON_SOUL);
-            itemName = "Ganon's Soul";
-            break;
+            case RG_SPEAK_DEKU:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_DEKU);
+                itemName = "Deku Jabber Nut";
+                break;
+            case RG_SPEAK_GERUDO:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_GERUDO);
+                itemName = "Gerudo Jabber Nut";
+                break;
+            case RG_SPEAK_GORON:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_GORON);
+                itemName = "Goron Jabber Nut";
+                break;
+            case RG_SPEAK_HYLIAN:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_HYLIAN);
+                itemName = "Hylian Jabber Nut";
+                break;
+            case RG_SPEAK_KOKIRI:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_KOKIRI);
+                itemName = "Kokiri Jabber Nut";
+                break;
+            case RG_SPEAK_ZORA:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_ZORA);
+                itemName = "Zora Jabber Nut";
+                break;
 
-        case RG_SPEAK_DEKU:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_DEKU);
-            itemName = "Deku Jabber Nut";
-            break;
-        case RG_SPEAK_GERUDO:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_GERUDO);
-            itemName = "Gerudo Jabber Nut";
-            break;
-        case RG_SPEAK_GORON:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_GORON);
-            itemName = "Goron Jabber Nut";
-            break;
-        case RG_SPEAK_HYLIAN:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_HYLIAN);
-            itemName = "Hylian Jabber Nut";
-            break;
-        case RG_SPEAK_KOKIRI:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_KOKIRI);
-            itemName = "Kokiri Jabber Nut";
-            break;
-        case RG_SPEAK_ZORA:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SPEAK_ZORA);
-            itemName = "Zora Jabber Nut";
-            break;
+            case RG_OCARINA_A_BUTTON:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_HAS_OCARINA_A);
+                itemName = "Ocarina A Button";
+                break;
+            case RG_OCARINA_C_UP_BUTTON:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_HAS_OCARINA_C_UP);
+                itemName = "Ocarina C Up Button";
+                break;
+            case RG_OCARINA_C_DOWN_BUTTON:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_HAS_OCARINA_C_DOWN);
+                itemName = "Ocarina C Down Button";
+                break;
+            case RG_OCARINA_C_LEFT_BUTTON:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_HAS_OCARINA_C_LEFT);
+                itemName = "Ocarina C Left Button";
+                break;
+            case RG_OCARINA_C_RIGHT_BUTTON:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_HAS_OCARINA_C_RIGHT);
+                itemName = "Ocarina C Right Button";
+                break;
+            case ITEM_FISHING_POLE:
+                actualItemId = item.id;
+                hasItem = IS_RANDO && Flags_GetRandomizerInf(RAND_INF_FISHING_POLE_FOUND);
+                itemName = "Fishing Pole";
+                break;
 
-        case RG_OCARINA_A_BUTTON:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_HAS_OCARINA_A);
-            itemName = "Ocarina A Button";
-            break;
-        case RG_OCARINA_C_UP_BUTTON:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_HAS_OCARINA_C_UP);
-            itemName = "Ocarina C Up Button";
-            break;
-        case RG_OCARINA_C_DOWN_BUTTON:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_HAS_OCARINA_C_DOWN);
-            itemName = "Ocarina C Down Button";
-            break;
-        case RG_OCARINA_C_LEFT_BUTTON:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_HAS_OCARINA_C_LEFT);
-            itemName = "Ocarina C Left Button";
-            break;
-        case RG_OCARINA_C_RIGHT_BUTTON:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_HAS_OCARINA_C_RIGHT);
-            itemName = "Ocarina C Right Button";
-            break;
-        case ITEM_FISHING_POLE:
-            actualItemId = item.id;
-            hasItem = IS_RANDO && Flags_GetRandomizerInf(RAND_INF_FISHING_POLE_FOUND);
-            itemName = "Fishing Pole";
-            break;
-
-        case RG_GUARD_HOUSE_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_GUARD_HOUSE_KEY_OBTAINED);
-            itemName = "Guard House Key";
-            break;
-        case RG_MARKET_BAZAAR_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_MARKET_BAZAAR_KEY_OBTAINED);
-            itemName = "Market Bazaar Key";
-            break;
-        case RG_MARKET_POTION_SHOP_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_MARKET_POTION_SHOP_KEY_OBTAINED);
-            itemName = "Market Potion Shop Key";
-            break;
-        case RG_MASK_SHOP_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_MASK_SHOP_KEY_OBTAINED);
-            itemName = "Mask Shop Key";
-            break;
-        case RG_MARKET_SHOOTING_GALLERY_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_MARKET_SHOOTING_GALLERY_KEY_OBTAINED);
-            itemName = "Market Shooting Gallery Key";
-            break;
-        case RG_BOMBCHU_BOWLING_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_BOMBCHU_BOWLING_KEY_OBTAINED);
-            itemName = "Bombchu Bowling Key";
-            break;
-        case RG_TREASURE_CHEST_GAME_BUILDING_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_TREASURE_CHEST_GAME_BUILDING_KEY_OBTAINED);
-            itemName = "Treasure Chest Game Building Key";
-            break;
-        case RG_BOMBCHU_SHOP_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_BOMBCHU_SHOP_KEY_OBTAINED);
-            itemName = "Bombchu Shop Key";
-            break;
-        case RG_RICHARDS_HOUSE_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_RICHARDS_HOUSE_KEY_OBTAINED);
-            itemName = "Richards House Key";
-            break;
-        case RG_ALLEY_HOUSE_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_ALLEY_HOUSE_KEY_OBTAINED);
-            itemName = "Alley House Key";
-            break;
-        case RG_KAK_BAZAAR_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_KAK_BAZAAR_KEY_OBTAINED);
-            itemName = "Kak Bazaar Key";
-            break;
-        case RG_KAK_POTION_SHOP_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_KAK_POTION_SHOP_KEY_OBTAINED);
-            itemName = "Kak Potion Shop Key";
-            break;
-        case RG_BOSS_HOUSE_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_BOSS_HOUSE_KEY_OBTAINED);
-            itemName = "Boss House Key";
-            break;
-        case RG_GRANNYS_POTION_SHOP_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_GRANNYS_POTION_SHOP_KEY_OBTAINED);
-            itemName = "Granny's Potion Shop Key";
-            break;
-        case RG_SKULLTULA_HOUSE_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_SKULLTULA_HOUSE_KEY_OBTAINED);
-            itemName = "Skulltula House Key";
-            break;
-        case RG_IMPAS_HOUSE_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_IMPAS_HOUSE_KEY_OBTAINED);
-            itemName = "Impa's House Key";
-            break;
-        case RG_WINDMILL_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_WINDMILL_KEY_OBTAINED);
-            itemName = "Windmill Key";
-            break;
-        case RG_KAK_SHOOTING_GALLERY_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_KAK_SHOOTING_GALLERY_KEY_OBTAINED);
-            itemName = "Kak Shooting Gallery Key";
-            break;
-        case RG_DAMPES_HUT_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_DAMPES_HUT_KEY_OBTAINED);
-            itemName = "Dampé's Hut Key";
-            break;
-        case RG_TALONS_HOUSE_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_TALONS_HOUSE_KEY_OBTAINED);
-            itemName = "Talon's House Key";
-            break;
-        case RG_STABLES_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_STABLES_KEY_OBTAINED);
-            itemName = "Stables Key";
-            break;
-        case RG_BACK_TOWER_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_BACK_TOWER_KEY_OBTAINED);
-            itemName = "Back Tower Key";
-            break;
-        case RG_HYLIA_LAB_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_HYLIA_LAB_KEY_OBTAINED);
-            itemName = "Hylia Lab Key";
-            break;
-        case RG_FISHING_HOLE_KEY:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_FISHING_HOLE_KEY_OBTAINED);
-            itemName = "Fishing Hole Key";
-            break;
-        case RG_BRONZE_SCALE:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SWIM);
-            itemName = "Swim";
-            break;
-        case RG_CRAWL:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_CRAWL);
-            itemName = "Crawl";
-            break;
-        case RG_CLIMB:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_CLIMB);
-            itemName = "Climb";
-            break;
-        case RG_POWER_BRACELET:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_GRAB);
-            itemName = "Grab";
-            break;
-        case RG_OPEN_CHEST:
-            actualItemId = item.id;
-            hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_OPEN_CHEST);
-            itemName = "Open";
-            break;
+            case RG_GUARD_HOUSE_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_GUARD_HOUSE_KEY_OBTAINED);
+                itemName = "Guard House Key";
+                break;
+            case RG_MARKET_BAZAAR_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_MARKET_BAZAAR_KEY_OBTAINED);
+                itemName = "Market Bazaar Key";
+                break;
+            case RG_MARKET_POTION_SHOP_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_MARKET_POTION_SHOP_KEY_OBTAINED);
+                itemName = "Market Potion Shop Key";
+                break;
+            case RG_MASK_SHOP_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_MASK_SHOP_KEY_OBTAINED);
+                itemName = "Mask Shop Key";
+                break;
+            case RG_MARKET_SHOOTING_GALLERY_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_MARKET_SHOOTING_GALLERY_KEY_OBTAINED);
+                itemName = "Market Shooting Gallery Key";
+                break;
+            case RG_BOMBCHU_BOWLING_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_BOMBCHU_BOWLING_KEY_OBTAINED);
+                itemName = "Bombchu Bowling Key";
+                break;
+            case RG_TREASURE_CHEST_GAME_BUILDING_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_TREASURE_CHEST_GAME_BUILDING_KEY_OBTAINED);
+                itemName = "Treasure Chest Game Building Key";
+                break;
+            case RG_BOMBCHU_SHOP_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_BOMBCHU_SHOP_KEY_OBTAINED);
+                itemName = "Bombchu Shop Key";
+                break;
+            case RG_RICHARDS_HOUSE_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_RICHARDS_HOUSE_KEY_OBTAINED);
+                itemName = "Richards House Key";
+                break;
+            case RG_ALLEY_HOUSE_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_ALLEY_HOUSE_KEY_OBTAINED);
+                itemName = "Alley House Key";
+                break;
+            case RG_KAK_BAZAAR_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_KAK_BAZAAR_KEY_OBTAINED);
+                itemName = "Kak Bazaar Key";
+                break;
+            case RG_KAK_POTION_SHOP_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_KAK_POTION_SHOP_KEY_OBTAINED);
+                itemName = "Kak Potion Shop Key";
+                break;
+            case RG_BOSS_HOUSE_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_BOSS_HOUSE_KEY_OBTAINED);
+                itemName = "Boss House Key";
+                break;
+            case RG_GRANNYS_POTION_SHOP_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_GRANNYS_POTION_SHOP_KEY_OBTAINED);
+                itemName = "Granny's Potion Shop Key";
+                break;
+            case RG_SKULLTULA_HOUSE_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_SKULLTULA_HOUSE_KEY_OBTAINED);
+                itemName = "Skulltula House Key";
+                break;
+            case RG_IMPAS_HOUSE_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_IMPAS_HOUSE_KEY_OBTAINED);
+                itemName = "Impa's House Key";
+                break;
+            case RG_WINDMILL_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_WINDMILL_KEY_OBTAINED);
+                itemName = "Windmill Key";
+                break;
+            case RG_KAK_SHOOTING_GALLERY_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_KAK_SHOOTING_GALLERY_KEY_OBTAINED);
+                itemName = "Kak Shooting Gallery Key";
+                break;
+            case RG_DAMPES_HUT_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_DAMPES_HUT_KEY_OBTAINED);
+                itemName = "Dampé's Hut Key";
+                break;
+            case RG_TALONS_HOUSE_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_TALONS_HOUSE_KEY_OBTAINED);
+                itemName = "Talon's House Key";
+                break;
+            case RG_STABLES_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_STABLES_KEY_OBTAINED);
+                itemName = "Stables Key";
+                break;
+            case RG_BACK_TOWER_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_BACK_TOWER_KEY_OBTAINED);
+                itemName = "Back Tower Key";
+                break;
+            case RG_HYLIA_LAB_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_HYLIA_LAB_KEY_OBTAINED);
+                itemName = "Hylia Lab Key";
+                break;
+            case RG_SHADOW_SILVER_BLADES:
+            case RG_SHADOW_SILVER_PIT:
+            case RG_SHADOW_SILVER_SPIKES:
+            case RG_SPIRIT_SILVER_CHILD:
+            case RG_SPIRIT_SILVER_SUN:
+            case RG_SPIRIT_SILVER_BOULDERS:
+            case RG_BOTW_SILVER:
+            case RG_ICE_CAVERN_SILVER_BLADES:
+            case RG_ICE_CAVERN_SILVER_BLOCK:
+            case RG_GTG_SILVER_SLOPE:
+            case RG_GTG_SILVER_LAVA:
+            case RG_GTG_SILVER_WATER:
+            case RG_GANONS_CASTLE_SILVER_LIGHT:
+            case RG_GANONS_CASTLE_SILVER_FOREST:
+            case RG_GANONS_CASTLE_SILVER_FIRE:
+            case RG_GANONS_CASTLE_SILVER_SPIRIT:
+            case RG_DODONGOS_CAVERN_MQ_SILVER:
+            case RG_SHADOW_MQ_SILVER_BLADES:
+            case RG_SHADOW_MQ_SILVER_PIT:
+            case RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES:
+            case RG_SHADOW_MQ_SILVER_SPIKES:
+            case RG_SPIRIT_MQ_SILVER_LOBBY:
+            case RG_SPIRIT_MQ_SILVER_BIG_WALL:
+            case RG_GTG_MQ_SILVER_SLOPE:
+            case RG_GTG_MQ_SILVER_LAVA:
+            case RG_GTG_MQ_SILVER_WATER:
+            case RG_GANONS_CASTLE_MQ_SILVER_FIRE:
+            case RG_GANONS_CASTLE_MQ_SILVER_WATER:
+            case RG_GANONS_CASTLE_MQ_SILVER_SHADOW:
+                actualItemId = item.id;
+                hasItem = OTRGlobals::Instance->gRandoContext->GetOption(RSK_SHUFFLE_SILVER).Get();
+                itemName = Rando::StaticData::RetrieveItem(static_cast<RandomizerGet>(actualItemId))
+                               .GetName()
+                               .GetForLanguage(CVarGetInteger(CVAR_SETTING("Languages"), LANGUAGE_ENG));
+                break;
+            case RG_FISHING_HOLE_KEY:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_FISHING_HOLE_KEY_OBTAINED);
+                itemName = "Fishing Hole Key";
+                break;
+            case RG_BRONZE_SCALE:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_SWIM);
+                itemName = "Swim";
+                break;
+            case RG_CRAWL:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_CRAWL);
+                itemName = "Crawl";
+                break;
+            case RG_CLIMB:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_CLIMB);
+                itemName = "Climb";
+                break;
+            case RG_POWER_BRACELET:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_GRAB);
+                itemName = "Grab";
+                break;
+            case RG_OPEN_CHEST:
+                actualItemId = item.id;
+                hasItem = Flags_GetRandomizerInf(RAND_INF_CAN_OPEN_CHEST);
+                itemName = "Open";
+                break;
+        }
     }
 
     if (GameInteractor::IsSaveLoaded() &&
@@ -1285,7 +1379,7 @@ void DrawItem(ItemTrackerItem item) {
 
     ImGui::EndGroup();
 
-    if (itemName == "") {
+    if (itemName == "" && item.kind == ITEM_KIND_ITEM) {
         itemName = SohUtils::GetItemName(item.id);
     }
 
@@ -1788,6 +1882,23 @@ void UpdateVectors() {
         mainWindowItems.insert(mainWindowItems.end(), overworldKeyItems.begin(), overworldKeyItems.end());
     }
 
+    // If we're adding silver rupees to the main window...
+    if (CVarGetInteger(CVAR_TRACKER_ITEM("DisplayType.SilverRupees"), SECTION_DISPLAY_HIDDEN) ==
+        SECTION_DISPLAY_MAIN_WINDOW) {
+        while (mainWindowItems.size() % 6) {
+            mainWindowItems.push_back(ITEM_TRACKER_ITEM(ITEM_NONE, 0, DrawItem));
+        }
+        for (auto silverRupee : silverRupeeItems) {
+            SceneID dungeonScene = Randomizer::SilverScene(static_cast<RandomizerGet>(silverRupee.id));
+            RandomizerCheckQuest dungeonQuest =
+                OTRGlobals::Instance->gRandoContext->GetDungeonFromScene(dungeonScene)->IsMQ() ? RCQUEST_MQ
+                                                                                               : RCQUEST_VANILLA;
+            if (dungeonQuest == Randomizer::SilverQuest(static_cast<RandomizerGet>(silverRupee.id))) {
+                mainWindowItems.push_back(silverRupee);
+            }
+        }
+    }
+
     shouldUpdateVectors = false;
 }
 
@@ -1977,6 +2088,23 @@ void ItemTrackerWindow::DrawElement() {
             SECTION_DISPLAY_SEPARATE) {
             BeginFloatingWindows("Overworld Key Tracker");
             DrawItemsInRows(overworldKeyItems);
+            EndFloatingWindows();
+        }
+
+        if (CVarGetInteger(CVAR_TRACKER_ITEM("DisplayType.SilverRupees"), SECTION_DISPLAY_HIDDEN) ==
+            SECTION_DISPLAY_SEPARATE) {
+            std::vector<ItemTrackerItem> questMatchingSilverRupeeItems;
+            for (auto silverRupee : silverRupeeItems) {
+                SceneID dungeonScene = Randomizer::SilverScene(static_cast<RandomizerGet>(silverRupee.id));
+                RandomizerCheckQuest dungeonQuest =
+                    OTRGlobals::Instance->gRandoContext->GetDungeonFromScene(dungeonScene)->IsMQ() ? RCQUEST_MQ
+                                                                                                   : RCQUEST_VANILLA;
+                if (dungeonQuest == Randomizer::SilverQuest(static_cast<RandomizerGet>(silverRupee.id))) {
+                    questMatchingSilverRupeeItems.push_back(silverRupee);
+                }
+            }
+            BeginFloatingWindows("Silver Rupee Tracker");
+            DrawItemsInRows(questMatchingSilverRupeeItems);
             EndFloatingWindows();
         }
 
@@ -2186,6 +2314,7 @@ void ItemTrackerSettingsWindow::DrawElement() {
         SohGui::mSohMenu->MenuDrawItem(jabberNutsTracking, 250, THEME_COLOR);
         SohGui::mSohMenu->MenuDrawItem(ocarinaButtonTracking, 250, THEME_COLOR);
         SohGui::mSohMenu->MenuDrawItem(overworldKeysTracking, 250, THEME_COLOR);
+        SohGui::mSohMenu->MenuDrawItem(silverRupeeTracking, 250, THEME_COLOR);
         SohGui::mSohMenu->MenuDrawItem(fishingPoleTracking, 250, THEME_COLOR);
 
         if (CVarCombobox("Total Checks", CVAR_TRACKER_ITEM("TotalChecks.DisplayType"), minimalDisplayTypes,
@@ -2382,6 +2511,19 @@ void RegisterItemTrackerWidgets() {
     ;
     SohGui::mSohMenu->AddSearchWidget(
         { fishingPoleTracking, "Randomizer", "Item Tracker", "General Settings", "icon" });
+
+    silverRupeeTracking = { .name = "Silver Rupees", .type = WidgetType::WIDGET_CVAR_COMBOBOX };
+    silverRupeeTracking.CVar(CVAR_TRACKER_ITEM("DisplayType.SilverRupees"))
+        .Options(ComboboxOptions()
+                     .DefaultIndex(SECTION_DISPLAY_HIDDEN)
+                     .ComponentAlignment(ComponentAlignments::Right)
+                     .LabelPosition(LabelPositions::Far)
+                     .Color(THEME_COLOR)
+                     .ComboMap(displayTypes))
+        .Callback([](WidgetInfo& info) { shouldUpdateVectors = true; });
+    ;
+    SohGui::mSohMenu->AddSearchWidget(
+        { silverRupeeTracking, "Randomizer", "Item Tracker", "General Settings", "icon" });
 
     personalNotesWiget = { .name = "Personal notes", .type = WidgetType::WIDGET_CVAR_COMBOBOX };
     static const char* notesDisabledTooltip =

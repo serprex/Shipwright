@@ -25,6 +25,9 @@ class Randomizer {
     static Sprite* GetSeedTexture(uint8_t index);
     bool SpoilerFileExists(const char* spoilerFileName);
     bool IsTrialRequired(s32 trialFlag);
+    static s8 SilverTotal(RandomizerGet rg);
+    static SceneID SilverScene(RandomizerGet rg);
+    static RandomizerCheckQuest SilverQuest(RandomizerGet rg);
     static s8* SilverFieldFromSaveContext(SaveContext* saveContext, RandomizerGet rg);
     u8 GetRandoSettingValue(RandomizerSettingKey randoSettingKey);
     RandomizerCheck GetCheckFromRandomizerInf(RandomizerInf randomizerInf);

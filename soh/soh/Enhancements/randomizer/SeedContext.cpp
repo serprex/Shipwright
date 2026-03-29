@@ -525,6 +525,10 @@ DungeonInfo* Context::GetDungeon(size_t key) const {
     return mDungeons->GetDungeon(static_cast<DungeonKey>(key));
 }
 
+DungeonInfo* Context::GetDungeonFromScene(SceneID scene) const {
+    return mDungeons->GetDungeonFromScene(scene);
+}
+
 std::shared_ptr<Logic> Context::GetLogic() {
     if (mLogic.get() == nullptr) {
         mLogic = std::make_shared<Logic>();
