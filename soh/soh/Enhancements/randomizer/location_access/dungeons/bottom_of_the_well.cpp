@@ -186,7 +186,7 @@ void RegionTable_Init_BottomOfTheWell() {
     });
 
     areaTable[RR_BOTW_B3_OOZE] = Region("Bottom of the Well B3 Ooze", SCENE_BOTTOM_OF_THE_WELL, {
-        EventAccess(LOGIC_BOTW_SILVER, []{return true;}),
+        EVENT_ACCESS(LOGIC_BOTW_SILVER, true),
     }, {
         //Locations
         LOCATION(RC_BOTTOM_OF_THE_WELL_BASEMENT_POT_1,     logic->CanBreakPots()),
