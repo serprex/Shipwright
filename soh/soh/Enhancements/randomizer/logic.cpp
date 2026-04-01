@@ -2367,7 +2367,7 @@ void Logic::InitSaveContext() {
     mSaveContext->horseData.angle = -0x6AD9;
     mSaveContext->magicLevel = 0;
     mSaveContext->infTable[29] = 1;
-    mSaveContext->sceneFlags[5].swch = 0x40000000;
+    mSaveContext->sceneFlags[SCENE_WATER_TEMPLE].swch = 0x40000000;
 
     // SoH specific
     mSaveContext->ship.backupFW = mSaveContext->fw;
