@@ -515,14 +515,17 @@ bool IsValidSaveFile() {
 }
 
 bool HasSong(ItemTrackerItem item) {
+    assert(item.kind == ITEM_KIND_QUEST);
     return GameInteractor::IsSaveLoaded() ? ((1 << item.id) & gSaveContext.inventory.questItems) : false;
 }
 
 bool HasQuestItem(ItemTrackerItem item) {
+    assert(item.kind == ITEM_KIND_QUEST);
     return GameInteractor::IsSaveLoaded() ? (item.data & gSaveContext.inventory.questItems) : false;
 }
 
 bool HasEquipment(ItemTrackerItem item) {
+    assert(item.kind == ITEM_KIND_ITEM);
     return GameInteractor::IsSaveLoaded() ? (item.data & gSaveContext.inventory.equipment) : false;
 }
 
@@ -693,30 +696,27 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         CVarGetInteger(CVAR_TRACKER_ITEM("ItemCountType"), ITEM_TRACKER_NUMBER_CURRENT_CAPACITY_ONLY);
     int32_t trackerKeyNumberDisplayMode = CVarGetInteger(CVAR_TRACKER_ITEM("KeyCounts"), KEYS_COLLECTED_MAX);
     float textScalingFactor = static_cast<float>(iconSize) / 36.0f;
-    uint32_t actualItemId = INV_CONTENT(item.id);
-    bool hasItem = actualItemId != ITEM_NONE;
+    uint32_t actualItemId = item.kind == ITEM_KIND_ITEM ? INV_CONTENT(item.id) : ITEM_NONE;
 
-    if (CVarGetInteger(CVAR_TRACKER_ITEM("HookshotIdentifier"), 0)) {
-        if ((actualItemId == ITEM_HOOKSHOT || actualItemId == ITEM_LONGSHOT) && hasItem) {
+    if (CVarGetInteger(CVAR_TRACKER_ITEM("HookshotIdentifier"), 0) &&
+        (actualItemId == ITEM_HOOKSHOT || actualItemId == ITEM_LONGSHOT)) {
+        // Calculate the scaled position for the text
+        ImVec2 textPos =
+            ImVec2(p.x + (iconSize / 2) -
+                       (ImGui::CalcTextSize(item.id == ITEM_HOOKSHOT ? "H" : "L").x * textScalingFactor / 2) +
+                       8 * textScalingFactor,
+                   p.y - 22 * textScalingFactor);
 
-            // Calculate the scaled position for the text
-            ImVec2 textPos =
-                ImVec2(p.x + (iconSize / 2) -
-                           (ImGui::CalcTextSize(item.id == ITEM_HOOKSHOT ? "H" : "L").x * textScalingFactor / 2) +
-                           8 * textScalingFactor,
-                       p.y - 22 * textScalingFactor);
+        ImGui::SetCursorScreenPos(textPos);
+        ImGui::SetWindowFontScale(textScalingFactor);
 
-            ImGui::SetCursorScreenPos(textPos);
-            ImGui::SetWindowFontScale(textScalingFactor);
-
-            ImGui::Text(item.id == ITEM_HOOKSHOT ? "H" : "L");
-            ImGui::SetWindowFontScale(1.0f); // Reset font scale to the original state
-        }
+        ImGui::Text(item.id == ITEM_HOOKSHOT ? "H" : "L");
+        ImGui::SetWindowFontScale(1.0f); // Reset font scale to the original state
     }
 
     ImGui::SetWindowFontScale(textSize / 13.0f);
 
-    if (item.id == ITEM_KEY_SMALL && IsValidSaveFile()) {
+    if (item.kind == ITEM_KIND_ITEM && item.id == ITEM_KEY_SMALL && IsValidSaveFile()) {
         std::string currentString = "";
         std::string maxString = hideMax ? "???" : std::to_string(currentAndMax.maxCapacity);
         ImU32 currentColor = IM_COL_WHITE;
@@ -747,17 +747,19 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         std::string currentString = "";
         std::string maxString = "";
         ImU32 currentColor = IM_COL_WHITE;
-        ImU32 maxColor = item.id == QUEST_SKULL_TOKEN ? IM_COL_RED : IM_COL_GREEN;
+        ImU32 maxColor = item.kind == ITEM_KIND_QUEST && item.id == QUEST_SKULL_TOKEN ? IM_COL_RED : IM_COL_GREEN;
 
         bool shouldAlignToLeft = CVarGetInteger(CVAR_TRACKER_ITEM("ItemCountAlignLeft"), 0) &&
                                  trackerNumberDisplayMode != ITEM_TRACKER_NUMBER_CAPACITY &&
                                  trackerNumberDisplayMode != ITEM_TRACKER_NUMBER_AMMO;
 
-        bool shouldDisplayAmmo = trackerNumberDisplayMode == ITEM_TRACKER_NUMBER_AMMO ||
-                                 trackerNumberDisplayMode == ITEM_TRACKER_NUMBER_CURRENT_AMMO_ONLY ||
-                                 // These items have a static capacity, so display ammo instead
-                                 item.id == ITEM_BEAN || item.id == QUEST_SKULL_TOKEN ||
-                                 item.id == ITEM_HEART_CONTAINER || item.id == ITEM_HEART_PIECE;
+        bool shouldDisplayAmmo =
+            trackerNumberDisplayMode == ITEM_TRACKER_NUMBER_AMMO ||
+            trackerNumberDisplayMode == ITEM_TRACKER_NUMBER_CURRENT_AMMO_ONLY ||
+            // These items have a static capacity, so display ammo instead
+            (item.kind == ITEM_KIND_QUEST && item.id == QUEST_SKULL_TOKEN) ||
+            (item.kind == ITEM_KIND_ITEM &&
+             (item.id == ITEM_BEAN || item.id == ITEM_HEART_CONTAINER || item.id == ITEM_HEART_PIECE));
 
         bool shouldDisplayMax = !(trackerNumberDisplayMode == ITEM_TRACKER_NUMBER_CURRENT_CAPACITY_ONLY ||
                                   trackerNumberDisplayMode == ITEM_TRACKER_NUMBER_CURRENT_AMMO_ONLY);
@@ -765,7 +767,7 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         if (shouldDisplayAmmo) {
             currentString = std::to_string(currentAndMax.currentAmmo);
             if (currentAndMax.currentAmmo >= currentAndMax.currentCapacity) {
-                if (item.id == QUEST_SKULL_TOKEN) {
+                if (item.kind == ITEM_KIND_QUEST && item.id == QUEST_SKULL_TOKEN) {
                     currentColor = IM_COL_RED;
                 } else {
                     currentColor = IM_COL_GREEN;
@@ -800,7 +802,7 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         ImGui::PushStyleColor(ImGuiCol_Text, maxColor);
         ImGui::Text("%s", maxString.c_str());
         ImGui::PopStyleColor();
-    } else if (item.id == RG_TRIFORCE_PIECE && IS_RANDO &&
+    } else if (item.kind == ITEM_KIND_RG && item.id == RG_TRIFORCE_PIECE && IS_RANDO &&
                (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT) != RO_TRIFORCE_HUNT_OFF) &&
                IsValidSaveFile()) {
         std::string currentString = "";
@@ -837,7 +839,8 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         ImGui::PushStyleColor(ImGuiCol_Text, maxColor);
         ImGui::Text("%s", maxString.c_str());
         ImGui::PopStyleColor();
-    } else if (item.id >= RG_SHADOW_SILVER_BLADES && item.id <= RG_GANONS_CASTLE_MQ_SILVER_SHADOW && IS_RANDO &&
+    } else if (item.kind == ITEM_KIND_RG && item.id >= RG_SHADOW_SILVER_BLADES &&
+               item.id <= RG_GANONS_CASTLE_MQ_SILVER_SHADOW && IS_RANDO &&
                OTRGlobals::Instance->gRandoContext->GetOption(RSK_SHUFFLE_SILVER).Get() && IsValidSaveFile()) {
         RandomizerGet rg = static_cast<RandomizerGet>(item.id);
         std::string current = "";
@@ -865,6 +868,7 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
 }
 
 void DrawEquip(ItemTrackerItem item) {
+    assert(item.kind == ITEM_KIND_ITEM);
     bool hasEquip = HasEquipment(item);
     float iconSize = static_cast<float>(CVarGetInteger(CVAR_TRACKER_ITEM("IconSize"), 36));
     ImGui::Image(std::dynamic_pointer_cast<Fast::Fast3dGui>(Ship::Context::GetInstance()->GetWindow()->GetGui())
@@ -875,6 +879,7 @@ void DrawEquip(ItemTrackerItem item) {
 }
 
 void DrawQuest(ItemTrackerItem item) {
+    assert(item.kind == ITEM_KIND_QUEST);
     bool hasQuestItem = HasQuestItem(item);
     float iconSize = static_cast<float>(CVarGetInteger(CVAR_TRACKER_ITEM("IconSize"), 36));
     ImGui::BeginGroup();
@@ -900,7 +905,8 @@ bool HasBossSoul(RandomizerInf bossSoul) {
 }
 
 void DrawItem(ItemTrackerItem item) {
-    uint32_t actualItemId = GameInteractor::IsSaveLoaded() ? INV_CONTENT(item.id) : ITEM_NONE;
+    uint32_t actualItemId =
+        GameInteractor::IsSaveLoaded() && item.kind == ITEM_KIND_ITEM ? INV_CONTENT(item.id) : ITEM_NONE;
     float iconSize = static_cast<float>(CVarGetInteger(CVAR_TRACKER_ITEM("IconSize"), 36));
     bool hasItem = actualItemId != ITEM_NONE;
     std::string itemName = "";
@@ -1305,7 +1311,7 @@ void DrawItem(ItemTrackerItem item) {
     }
 
     if (GameInteractor::IsSaveLoaded() &&
-        (hasItem && item.id != actualItemId &&
+        (hasItem && item.kind == ITEM_KIND_ITEM && item.id != actualItemId &&
          actualItemTrackerItemMap.find(actualItemId) != actualItemTrackerItemMap.end())) {
         item = actualItemTrackerItemMap[actualItemId];
     }
@@ -1318,7 +1324,8 @@ void DrawItem(ItemTrackerItem item) {
 
     DrawItemCount(item, false);
 
-    if (item.id >= RG_DEATH_MOUNTAIN_CRATER_BEAN_SOUL && item.id <= RG_ZORAS_RIVER_BEAN_SOUL) {
+    if (item.kind == ITEM_KIND_RG && item.id >= RG_DEATH_MOUNTAIN_CRATER_BEAN_SOUL &&
+        item.id <= RG_ZORAS_RIVER_BEAN_SOUL) {
         ImVec2 p = ImGui::GetCursorScreenPos();
         std::string beanName = itemTrackerBeanShortNames[item.id];
         ImGui::SetCursorScreenPos(
@@ -1326,9 +1333,7 @@ void DrawItem(ItemTrackerItem item) {
         ImGui::PushStyleColor(ImGuiCol_Text, IM_COL_WHITE);
         ImGui::Text("%s", beanName.c_str());
         ImGui::PopStyleColor();
-    }
-
-    if (item.id >= RG_GOHMA_SOUL && item.id <= RG_GANON_SOUL) {
+    } else if (item.kind == ITEM_KIND_RG && item.id >= RG_GOHMA_SOUL && item.id <= RG_GANON_SOUL) {
         ImVec2 p = ImGui::GetCursorScreenPos();
         std::string bossName = itemTrackerBossShortNames[item.id];
         ImGui::SetCursorScreenPos(
@@ -1336,9 +1341,7 @@ void DrawItem(ItemTrackerItem item) {
         ImGui::PushStyleColor(ImGuiCol_Text, IM_COL_WHITE);
         ImGui::Text("%s", bossName.c_str());
         ImGui::PopStyleColor();
-    }
-
-    if (item.id >= RG_SPEAK_DEKU && item.id <= RG_SPEAK_ZORA) {
+    } else if (item.kind == ITEM_KIND_RG && item.id >= RG_SPEAK_DEKU && item.id <= RG_SPEAK_ZORA) {
         ImVec2 p = ImGui::GetCursorScreenPos();
         std::string name = itemTrackerJabberNutShortNames[item.id];
         ImGui::SetCursorScreenPos(
@@ -1346,9 +1349,7 @@ void DrawItem(ItemTrackerItem item) {
         ImGui::PushStyleColor(ImGuiCol_Text, IM_COL_WHITE);
         ImGui::Text("%s", name.c_str());
         ImGui::PopStyleColor();
-    }
-
-    if (item.id >= RG_OCARINA_A_BUTTON && item.id <= RG_OCARINA_C_RIGHT_BUTTON) {
+    } else if (item.kind == ITEM_KIND_RG && item.id >= RG_OCARINA_A_BUTTON && item.id <= RG_OCARINA_C_RIGHT_BUTTON) {
         ImVec2 p = ImGui::GetCursorScreenPos();
         std::string ocarinaButtonName = itemTrackerOcarinaButtonShortNames[item.id];
         ImGui::SetCursorScreenPos(ImVec2(p.x + (iconSize / 2) - (ImGui::CalcTextSize(ocarinaButtonName.c_str()).x / 2),
@@ -1356,9 +1357,7 @@ void DrawItem(ItemTrackerItem item) {
         ImGui::PushStyleColor(ImGuiCol_Text, IM_COL_WHITE);
         ImGui::Text("%s", ocarinaButtonName.c_str());
         ImGui::PopStyleColor();
-    }
-
-    if (item.id >= RG_GUARD_HOUSE_KEY && item.id <= RG_FISHING_HOLE_KEY) {
+    } else if (item.kind == ITEM_KIND_RG && item.id >= RG_GUARD_HOUSE_KEY && item.id <= RG_FISHING_HOLE_KEY) {
         ImVec2 p = ImGui::GetCursorScreenPos();
         std::string overworldKeyName = itemTrackerOverworldKeyShortNames[item.id];
         ImGui::SetCursorScreenPos(ImVec2(p.x + (iconSize / 2) - (ImGui::CalcTextSize(overworldKeyName.c_str()).x / 2),
@@ -1366,9 +1365,7 @@ void DrawItem(ItemTrackerItem item) {
         ImGui::PushStyleColor(ImGuiCol_Text, IM_COL_WHITE);
         ImGui::Text("%s", overworldKeyName.c_str());
         ImGui::PopStyleColor();
-    }
-
-    if (item.id >= RG_BRONZE_SCALE && item.id <= RG_OPEN_CHEST) {
+    } else if (item.kind == ITEM_KIND_RG && item.id >= RG_BRONZE_SCALE && item.id <= RG_OPEN_CHEST) {
         ImVec2 p = ImGui::GetCursorScreenPos();
         ImGui::SetCursorScreenPos(
             ImVec2(p.x + (iconSize / 2) - (ImGui::CalcTextSize(itemName.c_str()).x / 2), p.y - (iconSize + 2)));
@@ -1387,6 +1384,7 @@ void DrawItem(ItemTrackerItem item) {
 }
 
 void DrawBottle(ItemTrackerItem item) {
+    assert(item.kind == ITEM_KIND_ITEM);
     uint32_t actualItemId =
         GameInteractor::IsSaveLoaded() ? (gSaveContext.inventory.items[SLOT(item.id) + item.data]) : false;
     bool hasItem = actualItemId != ITEM_NONE;
@@ -1406,6 +1404,7 @@ void DrawBottle(ItemTrackerItem item) {
 };
 
 void DrawDungeonItem(ItemTrackerItem item) {
+    assert(item.kind == ITEM_KIND_ITEM);
     uint32_t itemId = item.id;
     ImU32 dungeonColor = IM_COL_WHITE;
     uint32_t bitMask = 1 << (item.id - ITEM_KEY_BOSS); // Bitset starts at ITEM_KEY_BOSS == 0. the rest are sequential
@@ -1460,6 +1459,7 @@ void DrawDungeonItem(ItemTrackerItem item) {
 }
 
 void DrawSong(ItemTrackerItem item) {
+    assert(item.kind == ITEM_KIND_QUEST);
     float iconSize = static_cast<float>(CVarGetInteger(CVAR_TRACKER_ITEM("IconSize"), 36));
     ImVec2 p = ImGui::GetCursorScreenPos();
     bool hasSong = HasSong(item);
@@ -1752,8 +1752,9 @@ void UpdateVectors() {
             SECTION_DISPLAY_EXTENDED_MISC_WINDOW &&
         CVarGetInteger(CVAR_TRACKER_ITEM("DisplayType.Misc"), SECTION_DISPLAY_MAIN_WINDOW) !=
             SECTION_DISPLAY_MAIN_WINDOW) {
-        if (std::none_of(miscItems.begin(), miscItems.end(),
-                         [](ItemTrackerItem item) { return item.id == ITEM_RUPEE_GREEN; }))
+        if (std::none_of(miscItems.begin(), miscItems.end(), [](ItemTrackerItem item) {
+                return item.kind == ITEM_KIND_ITEM && item.id == ITEM_RUPEE_GREEN;
+            }))
             miscItems.insert(miscItems.end(), gregItems.begin(), gregItems.end());
     } else {
         miscItems.erase(std::remove_if(miscItems.begin(), miscItems.end(),
@@ -1797,8 +1798,9 @@ void UpdateVectors() {
             SECTION_DISPLAY_EXTENDED_MISC_WINDOW &&
         CVarGetInteger(CVAR_TRACKER_ITEM("DisplayType.Misc"), SECTION_DISPLAY_MAIN_WINDOW) !=
             SECTION_DISPLAY_MAIN_WINDOW) {
-        if (std::none_of(miscItems.begin(), miscItems.end(),
-                         [](ItemTrackerItem item) { return item.id == ITEM_FISHING_POLE; }))
+        if (std::none_of(miscItems.begin(), miscItems.end(), [](ItemTrackerItem item) {
+                return item.kind == ITEM_KIND_ITEM && item.id == ITEM_FISHING_POLE;
+            }))
             miscItems.insert(miscItems.end(), fishingPoleItems.begin(), fishingPoleItems.end());
     } else {
         miscItems.erase(std::remove_if(miscItems.begin(), miscItems.end(),
