@@ -2521,6 +2521,12 @@ void Context::FinalizeSettings(const std::set<RandomizerCheck>& excludedLocation
         mOptions[RSK_SHUFFLE_GANONS_TOWER_ENTRANCE].Set(RO_GENERIC_OFF);
     }
 
+    // Vanilla key placement is incompatible with door shuffle since door shuffle
+    // simplifies key logic to require all keys, making vanilla-placed keys unreachable
+    if (mOptions[RSK_SHUFFLE_DUNGEON_DOORS] && mOptions[RSK_KEYSANITY].Is(RO_DUNGEON_ITEM_LOC_VANILLA)) {
+        mOptions[RSK_KEYSANITY].Set(RO_DUNGEON_ITEM_LOC_OWN_DUNGEON);
+    }
+
     if (mOptions[RSK_SHUFFLE_DUNGEON_REWARDS].Is(RO_DUNGEON_REWARDS_END_OF_DUNGEON)) {
         mOptions[RSK_LINKS_POCKET].Set(RO_LINKS_POCKET_DUNGEON_REWARD);
     }
