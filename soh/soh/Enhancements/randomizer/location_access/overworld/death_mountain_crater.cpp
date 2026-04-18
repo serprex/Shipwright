@@ -295,15 +295,15 @@ void RegionTable_Init_DeathMountainCrater() {
 
     areaTable[RR_DMC_POTS] = Region("DMC Pots", SCENE_DEATH_MOUNTAIN_CRATER, {}, {
         // Locations
-        LOCATION(RC_DMC_NEAR_GC_POT_1,          logic->CanBreakPots()),
-        LOCATION(RC_DMC_NEAR_GC_POT_2,          logic->CanBreakPots()),
-        LOCATION(RC_DMC_NEAR_GC_POT_3,          logic->CanBreakPots()),
-        LOCATION(RC_DMC_NEAR_GC_POT_4,          logic->CanBreakPots()),
-        LOCATION(RC_DMC_BRONZE_BOULDER_1,       logic->CanUse(RG_MEGATON_HAMMER)),
-        LOCATION(RC_DMC_BRONZE_BOULDER_2,       logic->CanUse(RG_MEGATON_HAMMER)),
-        LOCATION(RC_DMC_BRONZE_BOULDER_3,       logic->CanUse(RG_MEGATON_HAMMER)),
-        LOCATION(RC_DMC_BRONZE_BOULDER_4,       logic->CanUse(RG_MEGATON_HAMMER)),
-        LOCATION(RC_DMC_BRIDGE_EXIT_ARROW_SIGN, logic->CanRead()),
+        LOCATION(RC_DMC_NEAR_GC_POT_1,           logic->CanBreakPots()),
+        LOCATION(RC_DMC_NEAR_GC_POT_2,           logic->CanBreakPots()),
+        LOCATION(RC_DMC_NEAR_GC_POT_3,           logic->CanBreakPots()),
+        LOCATION(RC_DMC_NEAR_GC_POT_4,           logic->CanBreakPots()),
+        LOCATION(RC_DMC_BRONZE_BOULDER_1,        logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_DMC_BRONZE_BOULDER_2,        logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_DMC_BRONZE_BOULDER_3,        logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_DMC_BRONZE_BOULDER_SHORTCUT, logic->CanUse(RG_MEGATON_HAMMER)),
+        LOCATION(RC_DMC_BRIDGE_EXIT_ARROW_SIGN,  logic->CanRead()),
     }, {
         //Exits
         ENTRANCE(RR_GC_DARUNIAS_CHAMBER, true),
