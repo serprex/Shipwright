@@ -1737,6 +1737,49 @@ extern "C" EntranceOverride* Randomizer_GetEntranceOverrides() {
     return Rando::Context::GetInstance()->GetEntranceShuffler()->entranceOverrides.data();
 }
 
+// Resolve which entrance savewarp should use after player leaves overworld.
+// In decoupled player should respawn in overworld,
+// whereas in non-decoupled player should respawn in front of exit to overworld.
+extern "C" int16_t Entrance_GetLastDungeonEntranceIndex(int16_t currentEntranceIndex) {
+    auto ctx = Rando::Context::GetInstance();
+
+    // in non-decoupled spawn at entrance, instead of outside entrance, except for boss arenas
+    if (!ctx->GetOption(RSK_DECOUPLED_ENTRANCES) && currentEntranceIndex != ENTR_DEKU_TREE_BOSS_ENTRANCE &&
+        currentEntranceIndex != ENTR_DODONGOS_CAVERN_BOSS_ENTRANCE &&
+        currentEntranceIndex != ENTR_JABU_JABU_BOSS_ENTRANCE &&
+        currentEntranceIndex != ENTR_FOREST_TEMPLE_BOSS_ENTRANCE &&
+        currentEntranceIndex != ENTR_FIRE_TEMPLE_BOSS_ENTRANCE &&
+        currentEntranceIndex != ENTR_WATER_TEMPLE_BOSS_ENTRANCE &&
+        currentEntranceIndex != ENTR_SPIRIT_TEMPLE_BOSS_ENTRANCE &&
+        currentEntranceIndex != ENTR_SHADOW_TEMPLE_BOSS_ENTRANCE &&
+        currentEntranceIndex != ENTR_SHADOW_TEMPLE_BOSS_ENTRANCE && currentEntranceIndex != ENTR_GANONDORF_BOSS_0) {
+        return currentEntranceIndex;
+    }
+
+    // Map currentEntranceIndex (which is the override after crossing) back to the logical
+    // forward entrance the player took, then return that forward's bound reverse index.
+    int16_t logicalIndex = currentEntranceIndex;
+    for (const auto& o : ctx->GetEntranceShuffler()->entranceOverrides) {
+        if (o.index == 0 && o.destination == 0 && o.override == 0 && o.overrideDestination == 0) {
+            continue;
+        }
+        if (o.override == currentEntranceIndex) {
+            logicalIndex = o.index;
+            break;
+        }
+    }
+
+    auto it = Rando::entranceMap.find(logicalIndex);
+    if (it == Rando::entranceMap.end()) {
+        return currentEntranceIndex;
+    }
+    Rando::Entrance* reverse = it->second->GetReverse();
+    if (reverse == nullptr) {
+        return currentEntranceIndex;
+    }
+    return reverse->GetIndex();
+}
+
 static SceneID backedUpScene = (SceneID)0xFF;
 static Camera backupCamera;
 

@@ -20,6 +20,8 @@
 
 extern PlayState* gPlayState;
 
+s16 lastDungeonEntranceIndex = -1;
+
 // Overwrite the dynamic exit for the OGC Fairy Fountain to be 0x3E8 instead
 // of 0x340 (0x340 will stay as the exit for the HC Fairy Fountain -> Castle Grounds)
 s16 dynamicExitList[] = {
@@ -48,8 +50,6 @@ s16 dynamicExitList[] = {
 // Owl Flights : 0x492064 and 0x492080
 
 static s16 entranceOverrideTable[ENTRANCE_TABLE_SIZE] = { 0 };
-// Boss scenes (normalize boss scene range to 0 on lookup) mapped to save/death warp entrance
-static s16 bossSceneSaveDeathWarps[SHUFFLEABLE_BOSS_COUNT] = { 0 };
 static ActorEntry modifiedLinkActorEntry = { 0 };
 
 EntranceInfo originalEntranceTable[ENTRANCE_TABLE_SIZE] = { 0 };
@@ -81,6 +81,7 @@ static s8 hasCopiedEntranceTable = 0;
 static s8 hasModifiedEntranceTable = 0;
 
 void Entrance_SetEntranceDiscovered(u16 entranceIndex, u8 isReversedEntrance);
+bool IsDungeonScene(s16 scene);
 
 u8 Entrance_EntranceIsNull(EntranceOverride* entranceOverride) {
     return entranceOverride->index == 0 && entranceOverride->destination == 0 && entranceOverride->override == 0 &&
@@ -170,11 +171,6 @@ void Entrance_Init(void) {
         entranceOverrideTable[i] = i;
     }
 
-    // Initialize all boss room save/death warps with their vanilla dungeon entryway
-    for (s16 i = 0; i < SHUFFLEABLE_BOSS_COUNT; i++) {
-        bossSceneSaveDeathWarps[i] = dungeons[i].entryway;
-    }
-
     // Initialize the grotto exit and load lists
     Grotto_InitExitAndLoadLists();
 
@@ -188,26 +184,7 @@ void Entrance_Init(void) {
         s16 originalDestination = entranceOverrides[i].destination;
         s16 overrideIndex = entranceOverrides[i].override;
 
-        int16_t bossScene = -1;
         int16_t saveWarpEntrance = originalDestination; // Default save warp to the original return entrance
-
-        // Search for boss room overrides and look for the matching save/death warp value to use
-        // If the boss room is in a dungeon, use the dungeons entryway as the save warp
-        // Otherwise use the "exit" value for the entrance that lead to the boss room
-        for (int j = 0; j < SHUFFLEABLE_BOSS_COUNT; j++) {
-            if (overrideIndex == dungeons[j].bossDoor) {
-                bossScene = dungeons[j].bossScene;
-            }
-
-            if (index == dungeons[j].bossDoor) {
-                saveWarpEntrance = dungeons[j].entryway;
-            }
-        }
-
-        // Found a boss scene and a valid save/death warp value
-        if (bossScene != -1 && saveWarpEntrance != -1) {
-            bossSceneSaveDeathWarps[bossScene - SCENE_DEKU_TREE_BOSS] = saveWarpEntrance;
-        }
 
         // Overwrite grotto related indices
         if (originalIndex >= ENTRANCE_GROTTO_EXIT_START && originalIndex < ENTRANCE_GROTTO_EXIT_START + NUM_GROTTOS) {
@@ -327,13 +304,8 @@ u32 Entrance_SceneAndSpawnAre(u8 scene, u8 spawn) {
 // Properly respawn the player after a game over, accounting for dungeon entrance randomizer
 void Entrance_SetGameOverEntrance(void) {
     s16 scene = gPlayState->sceneNum;
-
-    // When in a boss room and boss shuffle is on, use the boss scene to find the death warp entrance
-    if (Randomizer_GetSettingValue(RSK_SHUFFLE_BOSS_ENTRANCES) != RO_BOSS_ROOM_ENTRANCE_SHUFFLE_OFF &&
-        scene >= SCENE_DEKU_TREE_BOSS && scene <= SCENE_SHADOW_TEMPLE_BOSS) {
-        // Normalize boss scene range to 0 on lookup and handle for grotto entrances
-        gSaveContext.entranceIndex =
-            Grotto_OverrideSpecialEntrance(bossSceneSaveDeathWarps[scene - SCENE_DEKU_TREE_BOSS]);
+    if (lastDungeonEntranceIndex != -1 && IsDungeonScene(scene)) {
+        gSaveContext.entranceIndex = lastDungeonEntranceIndex;
         return;
     }
 
@@ -373,16 +345,9 @@ void Entrance_SetGameOverEntrance(void) {
 void Entrance_SetSavewarpEntrance(void) {
     s16 scene = gSaveContext.savedSceneNum;
 
-    // When in a boss room and boss shuffle is on, use the boss scene to find the savewarp entrance
-    if (Randomizer_GetSettingValue(RSK_SHUFFLE_BOSS_ENTRANCES) != RO_BOSS_ROOM_ENTRANCE_SHUFFLE_OFF &&
-        scene >= SCENE_DEKU_TREE_BOSS && scene <= SCENE_SHADOW_TEMPLE_BOSS) {
-        // Normalize boss scene range to 0 on lookup and handle for grotto entrances
-        gSaveContext.entranceIndex =
-            Grotto_OverrideSpecialEntrance(bossSceneSaveDeathWarps[scene - SCENE_DEKU_TREE_BOSS]);
-        return;
-    }
-
-    if (scene == SCENE_DEKU_TREE || scene == SCENE_DEKU_TREE_BOSS) {
+    if (lastDungeonEntranceIndex != -1 && IsDungeonScene(scene)) {
+        gSaveContext.entranceIndex = lastDungeonEntranceIndex;
+    } else if (scene == SCENE_DEKU_TREE || scene == SCENE_DEKU_TREE_BOSS) {
         gSaveContext.entranceIndex = ENTR_DEKU_TREE_ENTRANCE;
     } else if (scene == SCENE_DODONGOS_CAVERN || scene == SCENE_DODONGOS_CAVERN_BOSS) {
         gSaveContext.entranceIndex = ENTR_DODONGOS_CAVERN_ENTRANCE;

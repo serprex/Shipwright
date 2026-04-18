@@ -164,6 +164,7 @@ class EntranceShuffler {
 extern "C" {
 #endif
 EntranceOverride* Randomizer_GetEntranceOverrides();
+int16_t Entrance_GetLastDungeonEntranceIndex(int16_t currentEntranceIndex);
 #ifdef __cplusplus
 }
 #endif

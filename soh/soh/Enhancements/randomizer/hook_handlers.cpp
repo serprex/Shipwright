@@ -3,8 +3,9 @@
 #include "soh/ResourceManagerHelpers.h"
 #include "soh/Enhancements/enhancementTypes.h"
 #include "soh/Enhancements/custom-message/CustomMessageTypes.h"
-#include "soh/Enhancements/randomizer/randomizerTypes.h"
 #include "soh/Enhancements/randomizer/dungeon.h"
+#include "soh/Enhancements/randomizer/entrance.h"
+#include "soh/Enhancements/randomizer/randomizerTypes.h"
 #include "soh/Enhancements/randomizer/static_data.h"
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
@@ -2709,7 +2710,51 @@ void RandomizerOnCuccoOrChickenHatch() {
     }
 }
 
-static void RandomizerRegisterHooks() {
+extern "C" bool IsDungeonScene(s16 scene) {
+    switch (scene) {
+        case SCENE_DEKU_TREE:
+        case SCENE_DEKU_TREE_BOSS:
+        case SCENE_DODONGOS_CAVERN:
+        case SCENE_DODONGOS_CAVERN_BOSS:
+        case SCENE_JABU_JABU:
+        case SCENE_JABU_JABU_BOSS:
+        case SCENE_FOREST_TEMPLE:
+        case SCENE_FOREST_TEMPLE_BOSS:
+        case SCENE_FIRE_TEMPLE:
+        case SCENE_FIRE_TEMPLE_BOSS:
+        case SCENE_WATER_TEMPLE:
+        case SCENE_WATER_TEMPLE_BOSS:
+        case SCENE_SPIRIT_TEMPLE:
+        case SCENE_SPIRIT_TEMPLE_BOSS:
+        case SCENE_SHADOW_TEMPLE:
+        case SCENE_SHADOW_TEMPLE_BOSS:
+        case SCENE_BOTTOM_OF_THE_WELL:
+        case SCENE_GERUDO_TRAINING_GROUND:
+        case SCENE_ICE_CAVERN:
+        case SCENE_INSIDE_GANONS_CASTLE:
+        case SCENE_GANONS_TOWER:
+        case SCENE_GANONDORF_BOSS:
+        case SCENE_INSIDE_GANONS_CASTLE_COLLAPSE:
+        case SCENE_GANONS_TOWER_COLLAPSE_INTERIOR:
+        case SCENE_GANON_BOSS:
+        case SCENE_GANONS_TOWER_COLLAPSE_EXTERIOR:
+            return true;
+        default:
+            return false;
+    }
+}
+
+// bookkeeping for entrance rando, where savewarp needs to replace returning to start of dungeon
+// with returning to last overworld->dungeon entrance taken (or just before, for decoupled)
+static void Randomizer_OnTransitionEnd(s16 sceneNum) {
+    static s16 prevSceneNum = -1;
+    if (!IsDungeonScene(prevSceneNum) && IsDungeonScene(sceneNum)) {
+        lastDungeonEntranceIndex = Entrance_GetLastDungeonEntranceIndex(gSaveContext.entranceIndex);
+    }
+    prevSceneNum = sceneNum;
+}
+
+static void RandomizerRegisterIsRando() {
     static uint32_t onFlagSetHook = 0;
     static uint32_t onSceneFlagSetHook = 0;
     static uint32_t onPlayerUpdateForRCQueueHook = 0;
@@ -2728,6 +2773,17 @@ static void RandomizerRegisterHooks() {
     static uint32_t onExitGameHook = 0;
     static uint32_t onKaleidoUpdateHook = 0;
     static uint32_t onCuccoOrChickenHatchHook = 0;
+
+    SaveManager::Instance->AddInitFunction([](bool isDebug) { lastDungeonEntranceIndex = -1; });
+    SaveManager::Instance->AddSaveFunction(
+        "lastDungeonEntrance", 1,
+        [](SaveContext* saveContext, int sectionID, bool fullSave) {
+            SaveManager::Instance->SaveData("lastDungeonEntranceIndex", lastDungeonEntranceIndex);
+        },
+        true, SECTION_PARENT_NONE);
+    SaveManager::Instance->AddLoadFunction("lastDungeonEntrance", 1, []() {
+        SaveManager::Instance->LoadData("lastDungeonEntranceIndex", lastDungeonEntranceIndex, (int16_t)-1);
+    });
 
     // register this outside OnLoadGame as VB is invoked before OnLoadGame
     COND_VB_SHOULD(VB_REVERT_SPOILING_ITEMS, true, {
@@ -2836,4 +2892,9 @@ static void RandomizerRegisterHooks() {
     });
 }
 
-static RegisterShipInitFunc initFunc_RegisterHooks(RandomizerRegisterHooks);
+static void RandomizerRegisterHooks() {
+    COND_HOOK(OnTransitionEnd, IS_RANDO, Randomizer_OnTransitionEnd)
+}
+
+static RegisterShipInitFunc initFunc_RegisterIsRando(RandomizerRegisterIsRando);
+static RegisterShipInitFunc initFunc_RegisterHooks(RandomizerRegisterHooks, { "IS_RANDO" });
