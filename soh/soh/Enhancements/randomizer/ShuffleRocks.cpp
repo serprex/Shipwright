@@ -134,27 +134,31 @@ void Rock_RandomizerSpawnCollectible(Actor* actor, CheckIdentity rockIdentity, P
     item00->randoInf = rockIdentity.randomizerInf;
     item00->itemEntry = Rando::Context::GetInstance()->GetFinalGIEntry(rockIdentity.randomizerCheck, true, GI_NONE);
     item00->actor.draw = (ActorFunc)EnItem00_DrawRandomizedItem;
+    item00->actor.velocity.y = 9.0f;
+    item00->actor.speedXZ = 2.0f;
+    item00->actor.world.rot.y = Rand_CenteredFloat(65536.0f);
     switch (rockIdentity.randomizerCheck) {
         case RC_SPIRIT_TEMPLE_MQ_ENTRANCE_EYE_BOULDER:
-            item00->actor.velocity.y = 9.0f;
-            item00->actor.speedXZ = 2.0f;
-            item00->actor.world.rot.y = 0x4000;
+            item00->actor.world.rot.y = 0x8000;
             break;
-        default:
-            item00->actor.velocity.y = 9.0f;
-            item00->actor.speedXZ = 2.0f;
-            item00->actor.world.rot.y = Rand_CenteredFloat(65536.0f);
+        case RC_SPIRIT_TEMPLE_MQ_GIBDO_BOULDER_LOW:
+            item00->actor.velocity.y = 15.0f;
+            [[fallthrough]];
+        case RC_SPIRIT_TEMPLE_MQ_GIBDO_BOULDER_HIGH:
+            item00->actor.world.rot.y = 0x0;
+            item00->actor.speedXZ = 8.0f;
+            break;
+        case RC_SPIRIT_TEMPLE_MQ_ENTRANCE_CEILING_BOULDER:
+        case RC_SPIRIT_TEMPLE_MQ_CRAWLSPACE_BOULDER:
+            item00->actor.speedXZ = 0.0f;
+            break;
+        default:;
     }
 }
 
 void EnIshi_RandomizerInit(void* actorRef) {
     Actor* actor = static_cast<Actor*>(actorRef);
-
-    if (actor->id != ACTOR_EN_ISHI)
-        return;
-
     EnIshi* rockActor = static_cast<EnIshi*>(actorRef);
-
     auto rockIdentity = OTRGlobals::Instance->gRandomizer->IdentifyRock(gPlayState->sceneNum, (s16)actor->world.pos.x,
                                                                         (s16)actor->world.pos.z);
     if (rockIdentity.randomizerCheck == RC_MAX) {
@@ -173,12 +177,7 @@ void EnIshi_RandomizerInit(void* actorRef) {
 
 void ObjBombiwa_RandomizerInit(void* actorRef) {
     Actor* actor = static_cast<Actor*>(actorRef);
-
-    if (actor->id != ACTOR_OBJ_BOMBIWA)
-        return;
-
     ObjBombiwa* rockActor = static_cast<ObjBombiwa*>(actorRef);
-
     auto rockIdentity = OTRGlobals::Instance->gRandomizer->IdentifyRock(gPlayState->sceneNum, (s16)actor->world.pos.x,
                                                                         (s16)actor->world.pos.z);
     if (rockIdentity.randomizerCheck == RC_MAX) {
@@ -196,12 +195,7 @@ void ObjBombiwa_RandomizerInit(void* actorRef) {
 
 void ObjHamishi_RandomizerInit(void* actorRef) {
     Actor* actor = static_cast<Actor*>(actorRef);
-
-    if (actor->id != ACTOR_OBJ_HAMISHI)
-        return;
-
     ObjHamishi* rockActor = static_cast<ObjHamishi*>(actorRef);
-
     auto rockIdentity = OTRGlobals::Instance->gRandomizer->IdentifyRock(gPlayState->sceneNum, (s16)actor->world.pos.x,
                                                                         (s16)actor->world.pos.z);
     if (rockIdentity.randomizerCheck == RC_MAX) {
@@ -214,38 +208,6 @@ void ObjHamishi_RandomizerInit(void* actorRef) {
     if (Rock_RandomizerHoldsItem(rockIdentity, gPlayState, true)) {
         ObjectExtension::GetInstance().Set<CheckIdentity>(actor, std::move(rockIdentity));
         rockActor->actor.draw = ObjHamishi_RandomizerDraw;
-    }
-}
-
-void ObjBombiwa_RandomizerKill(void* actorRef) {
-    Actor* actor = static_cast<Actor*>(actorRef);
-
-    if (actor->id != ACTOR_OBJ_BOMBIWA)
-        return;
-
-    ObjBombiwa* rockActor = static_cast<ObjBombiwa*>(actorRef);
-    const auto rockIdentity = ObjectExtension::GetInstance().Get<CheckIdentity>(actorRef);
-
-    if (rockIdentity != nullptr && Rock_RandomizerHoldsItem(*rockIdentity, gPlayState, true)) {
-        Rock_RandomizerSpawnCollectible(&rockActor->actor, *rockIdentity, gPlayState);
-        rockIdentity->randomizerCheck = RC_MAX;
-        rockIdentity->randomizerInf = RAND_INF_MAX;
-    }
-}
-
-void ObjHamishi_RandomizerKill(void* actorRef) {
-    Actor* actor = static_cast<Actor*>(actorRef);
-
-    if (actor->id != ACTOR_OBJ_HAMISHI)
-        return;
-
-    ObjHamishi* rockActor = static_cast<ObjHamishi*>(actorRef);
-    const auto rockIdentity = ObjectExtension::GetInstance().Get<CheckIdentity>(actorRef);
-
-    if (rockIdentity != nullptr && Rock_RandomizerHoldsItem(*rockIdentity, gPlayState, true)) {
-        Rock_RandomizerSpawnCollectible(&rockActor->actor, *rockIdentity, gPlayState);
-        rockIdentity->randomizerCheck = RC_MAX;
-        rockIdentity->randomizerInf = RAND_INF_MAX;
     }
 }
 
@@ -269,13 +231,14 @@ void RegisterShuffleRock() {
     });
 
     COND_VB_SHOULD(VB_BOULDER_BREAK_FLAG, shouldRegisterBoulder, {
-        Actor* rockActor = va_arg(args, Actor*);
-        // hook called before OnActorInit sets up object extension
-        auto rockIdentity = OTRGlobals::Instance->gRandomizer->IdentifyRock(
-            gPlayState->sceneNum, (s16)rockActor->world.pos.x, (s16)rockActor->world.pos.z);
-        if (rockIdentity.randomizerCheck != RC_UNKNOWN_CHECK &&
-            Rock_RandomizerHoldsItem(rockIdentity, gPlayState, true)) {
-            *should = false;
+        if (*should) {
+            Actor* rockActor = va_arg(args, Actor*);
+            // hook called before OnActorInit sets up object extension
+            auto rockIdentity = OTRGlobals::Instance->gRandomizer->IdentifyRock(
+                gPlayState->sceneNum, (s16)rockActor->world.pos.x, (s16)rockActor->world.pos.z);
+            if (Rock_RandomizerHoldsItem(rockIdentity, gPlayState, true)) {
+                Rock_RandomizerSpawnCollectible(rockActor, rockIdentity, gPlayState);
+            }
         }
     });
 }

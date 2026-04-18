@@ -569,7 +569,7 @@ void RegionTable_Init_SpiritTemple() {
         LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_POT_4,             logic->CanBreakPots()),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_BOULDER_1,         logic->BlastOrSmash()),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_BOULDER_2,         logic->BlastOrSmash()),
-        LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_BOULDER_3,         logic->BlastOrSmash()),
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_EYE_BOULDER,       logic->BlastOrSmash()),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_CEILING_BOULDER,   logic->CanUse(RG_BOMBCHU_5)),
         LOCATION(RC_SPIRIT_TEMPLE_LEFT_SNAKE_STATUE,             logic->CanRead()),
         LOCATION(RC_SPIRIT_TEMPLE_RIGHT_SNAKE_STATUE,            logic->CanRead()),
