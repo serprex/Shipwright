@@ -2710,46 +2710,17 @@ void RandomizerOnCuccoOrChickenHatch() {
     }
 }
 
-extern "C" bool IsDungeonScene(s16 scene) {
-    switch (scene) {
-        case SCENE_DEKU_TREE:
-        case SCENE_DEKU_TREE_BOSS:
-        case SCENE_DODONGOS_CAVERN:
-        case SCENE_DODONGOS_CAVERN_BOSS:
-        case SCENE_JABU_JABU:
-        case SCENE_JABU_JABU_BOSS:
-        case SCENE_FOREST_TEMPLE:
-        case SCENE_FOREST_TEMPLE_BOSS:
-        case SCENE_FIRE_TEMPLE:
-        case SCENE_FIRE_TEMPLE_BOSS:
-        case SCENE_WATER_TEMPLE:
-        case SCENE_WATER_TEMPLE_BOSS:
-        case SCENE_SPIRIT_TEMPLE:
-        case SCENE_SPIRIT_TEMPLE_BOSS:
-        case SCENE_SHADOW_TEMPLE:
-        case SCENE_SHADOW_TEMPLE_BOSS:
-        case SCENE_BOTTOM_OF_THE_WELL:
-        case SCENE_GERUDO_TRAINING_GROUND:
-        case SCENE_ICE_CAVERN:
-        case SCENE_INSIDE_GANONS_CASTLE:
-        case SCENE_GANONS_TOWER:
-        case SCENE_GANONDORF_BOSS:
-        case SCENE_INSIDE_GANONS_CASTLE_COLLAPSE:
-        case SCENE_GANONS_TOWER_COLLAPSE_INTERIOR:
-        case SCENE_GANON_BOSS:
-        case SCENE_GANONS_TOWER_COLLAPSE_EXTERIOR:
-            return true;
-        default:
-            return false;
-    }
-}
-
 // bookkeeping for entrance rando, where savewarp needs to replace returning to start of dungeon
 // with returning to last overworld->dungeon entrance taken (or just before, for decoupled)
 static void Randomizer_OnTransitionEnd(s16 sceneNum) {
     static s16 prevSceneNum = -1;
-    if (!IsDungeonScene(prevSceneNum) && IsDungeonScene(sceneNum)) {
-        lastDungeonEntranceIndex = Entrance_GetLastDungeonEntranceIndex(gSaveContext.entranceIndex);
+    int8_t dungeonSceneKind = DungeonSceneKind(sceneNum);
+    if (dungeonSceneKind != 0 && DungeonSceneKind(prevSceneNum) == 0) {
+        if (RAND_GET_OPTION(RSK_DECOUPLED_ENTRANCES) || dungeonSceneKind == 2) {
+            lastDungeonEntranceIndex = Rando::GetReverseEntranceIndex(gSaveContext.entranceIndex);
+        } else {
+            lastDungeonEntranceIndex = gSaveContext.entranceIndex;
+        }
     }
     prevSceneNum = sceneNum;
 }

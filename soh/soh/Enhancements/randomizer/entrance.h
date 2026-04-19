@@ -159,12 +159,13 @@ class EntranceShuffler {
     int mCurNumRandomizedEntrances = 0;
     bool mEntranceShuffleFailure = false;
 };
+
+int16_t GetReverseEntranceIndex(int16_t currentEntranceIndex);
 } // namespace Rando
 
 extern "C" {
 #endif
 EntranceOverride* Randomizer_GetEntranceOverrides();
-int16_t Entrance_GetLastDungeonEntranceIndex(int16_t currentEntranceIndex);
 #ifdef __cplusplus
 }
 #endif

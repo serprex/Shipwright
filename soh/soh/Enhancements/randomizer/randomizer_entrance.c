@@ -81,9 +81,44 @@ static s8 hasCopiedEntranceTable = 0;
 static s8 hasModifiedEntranceTable = 0;
 
 void Entrance_SetEntranceDiscovered(u16 entranceIndex, u8 isReversedEntrance);
-bool IsDungeonScene(s16 scene);
 
-u8 Entrance_EntranceIsNull(EntranceOverride* entranceOverride) {
+int8_t DungeonSceneKind(int scene) {
+    switch (scene) {
+        case SCENE_DEKU_TREE:
+        case SCENE_DODONGOS_CAVERN:
+        case SCENE_JABU_JABU:
+        case SCENE_FOREST_TEMPLE:
+        case SCENE_FIRE_TEMPLE:
+        case SCENE_WATER_TEMPLE:
+        case SCENE_SPIRIT_TEMPLE:
+        case SCENE_SHADOW_TEMPLE:
+        case SCENE_BOTTOM_OF_THE_WELL:
+        case SCENE_GERUDO_TRAINING_GROUND:
+        case SCENE_ICE_CAVERN:
+        case SCENE_INSIDE_GANONS_CASTLE:
+        case SCENE_GANONS_TOWER:
+        case SCENE_THIEVES_HIDEOUT:
+            return 1;
+        case SCENE_DEKU_TREE_BOSS:
+        case SCENE_DODONGOS_CAVERN_BOSS:
+        case SCENE_JABU_JABU_BOSS:
+        case SCENE_FOREST_TEMPLE_BOSS:
+        case SCENE_FIRE_TEMPLE_BOSS:
+        case SCENE_WATER_TEMPLE_BOSS:
+        case SCENE_SPIRIT_TEMPLE_BOSS:
+        case SCENE_SHADOW_TEMPLE_BOSS:
+        case SCENE_GANONDORF_BOSS:
+        case SCENE_GANONS_TOWER_COLLAPSE_INTERIOR:
+        case SCENE_INSIDE_GANONS_CASTLE_COLLAPSE:
+        case SCENE_GANONS_TOWER_COLLAPSE_EXTERIOR:
+        case SCENE_GANON_BOSS:
+            return 2;
+        default:
+            return 0;
+    }
+}
+
+u8 Entrance_EntranceIsNull(const EntranceOverride* entranceOverride) {
     return entranceOverride->index == 0 && entranceOverride->destination == 0 && entranceOverride->override == 0 &&
            entranceOverride->overrideDestination == 0;
 }
@@ -304,40 +339,8 @@ u32 Entrance_SceneAndSpawnAre(u8 scene, u8 spawn) {
 // Properly respawn the player after a game over, accounting for dungeon entrance randomizer
 void Entrance_SetGameOverEntrance(void) {
     s16 scene = gPlayState->sceneNum;
-    if (lastDungeonEntranceIndex != -1 && IsDungeonScene(scene)) {
+    if (lastDungeonEntranceIndex != -1 && DungeonSceneKind(scene) != 0) {
         gSaveContext.entranceIndex = lastDungeonEntranceIndex;
-        return;
-    }
-
-    // Set the current entrance depending on which entrance the player last came through
-    switch (gSaveContext.entranceIndex) {
-        case ENTR_DEKU_TREE_BOSS_ENTRANCE: // Deku Tree Boss Room
-            gSaveContext.entranceIndex = ENTR_DEKU_TREE_ENTRANCE;
-            return;
-        case ENTR_DODONGOS_CAVERN_BOSS_ENTRANCE: // Dodongos Cavern Boss Room
-            gSaveContext.entranceIndex = ENTR_DODONGOS_CAVERN_ENTRANCE;
-            return;
-        case ENTR_JABU_JABU_BOSS_ENTRANCE: // Jabu Jabus Belly Boss Room
-            gSaveContext.entranceIndex = ENTR_JABU_JABU_ENTRANCE;
-            return;
-        case ENTR_FOREST_TEMPLE_BOSS_ENTRANCE: // Forest Temple Boss Room
-            gSaveContext.entranceIndex = ENTR_FOREST_TEMPLE_ENTRANCE;
-            return;
-        case ENTR_FIRE_TEMPLE_BOSS_ENTRANCE: // Fire Temple Boss Room
-            gSaveContext.entranceIndex = ENTR_FIRE_TEMPLE_ENTRANCE;
-            return;
-        case ENTR_WATER_TEMPLE_BOSS_ENTRANCE: // Water Temple Boss Room
-            gSaveContext.entranceIndex = ENTR_WATER_TEMPLE_ENTRANCE;
-            return;
-        case ENTR_SPIRIT_TEMPLE_BOSS_ENTRANCE: // Spirit Temple Boss Room
-            gSaveContext.entranceIndex = ENTR_SPIRIT_TEMPLE_ENTRANCE;
-            return;
-        case ENTR_SHADOW_TEMPLE_BOSS_ENTRANCE: // Shadow Temple Boss Room
-            gSaveContext.entranceIndex = ENTR_SHADOW_TEMPLE_ENTRANCE;
-            return;
-        case ENTR_GANONDORF_BOSS_0: // Ganondorf Boss Room
-            gSaveContext.entranceIndex = ENTR_INSIDE_GANONS_CASTLE_ENTRANCE;
-            return;
     }
 }
 
@@ -345,39 +348,8 @@ void Entrance_SetGameOverEntrance(void) {
 void Entrance_SetSavewarpEntrance(void) {
     s16 scene = gSaveContext.savedSceneNum;
 
-    if (lastDungeonEntranceIndex != -1 && IsDungeonScene(scene)) {
+    if (lastDungeonEntranceIndex != -1 && DungeonSceneKind(scene) != 0) {
         gSaveContext.entranceIndex = lastDungeonEntranceIndex;
-    } else if (scene == SCENE_DEKU_TREE || scene == SCENE_DEKU_TREE_BOSS) {
-        gSaveContext.entranceIndex = ENTR_DEKU_TREE_ENTRANCE;
-    } else if (scene == SCENE_DODONGOS_CAVERN || scene == SCENE_DODONGOS_CAVERN_BOSS) {
-        gSaveContext.entranceIndex = ENTR_DODONGOS_CAVERN_ENTRANCE;
-    } else if (scene == SCENE_JABU_JABU || scene == SCENE_JABU_JABU_BOSS) {
-        gSaveContext.entranceIndex = ENTR_JABU_JABU_ENTRANCE;
-    } else if (scene == SCENE_FOREST_TEMPLE || scene == SCENE_FOREST_TEMPLE_BOSS) { // Forest Temple Boss Room
-        gSaveContext.entranceIndex = ENTR_FOREST_TEMPLE_ENTRANCE;
-    } else if (scene == SCENE_FIRE_TEMPLE || scene == SCENE_FIRE_TEMPLE_BOSS) { // Fire Temple Boss Room
-        gSaveContext.entranceIndex = ENTR_FIRE_TEMPLE_ENTRANCE;
-    } else if (scene == SCENE_WATER_TEMPLE || scene == SCENE_WATER_TEMPLE_BOSS) { // Water Temple Boss Room
-        gSaveContext.entranceIndex = ENTR_WATER_TEMPLE_ENTRANCE;
-    } else if (scene == SCENE_SPIRIT_TEMPLE || scene == SCENE_SPIRIT_TEMPLE_BOSS) { // Spirit Temple Boss Room
-        gSaveContext.entranceIndex = ENTR_SPIRIT_TEMPLE_ENTRANCE;
-    } else if (scene == SCENE_SHADOW_TEMPLE || scene == SCENE_SHADOW_TEMPLE_BOSS) { // Shadow Temple Boss Room
-        gSaveContext.entranceIndex = ENTR_SHADOW_TEMPLE_ENTRANCE;
-    } else if (scene == SCENE_BOTTOM_OF_THE_WELL) { // BOTW
-        gSaveContext.entranceIndex = ENTR_BOTTOM_OF_THE_WELL_ENTRANCE;
-    } else if (scene == SCENE_GERUDO_TRAINING_GROUND) { // GTG
-        gSaveContext.entranceIndex = ENTR_GERUDO_TRAINING_GROUND_ENTRANCE;
-    } else if (scene == SCENE_ICE_CAVERN) { // Ice cavern
-        gSaveContext.entranceIndex = ENTR_ICE_CAVERN_ENTRANCE;
-    } else if (scene == SCENE_INSIDE_GANONS_CASTLE) {
-        gSaveContext.entranceIndex = ENTR_INSIDE_GANONS_CASTLE_ENTRANCE;
-    } else if (scene == SCENE_GANONS_TOWER || scene == SCENE_GANONDORF_BOSS ||
-               scene == SCENE_INSIDE_GANONS_CASTLE_COLLAPSE || scene == SCENE_GANONS_TOWER_COLLAPSE_INTERIOR ||
-               scene == SCENE_GANON_BOSS || scene == SCENE_GANONS_TOWER_COLLAPSE_EXTERIOR) {
-        gSaveContext.entranceIndex = ENTR_GANONS_TOWER_0; // Inside Ganon's Castle -> Ganon's Tower Climb
-    } else if (scene == SCENE_THIEVES_HIDEOUT &&
-               !Randomizer_GetSettingValue(RSK_SHUFFLE_THIEVES_HIDEOUT_ENTRANCES)) { // Thieves' Hideout
-        gSaveContext.entranceIndex = ENTR_THIEVES_HIDEOUT_0; // Gerudo Fortress -> Thieves' Hideout spawn 0
     } else if (scene == SCENE_LINKS_HOUSE &&
                Randomizer_GetSettingValue(RSK_SHUFFLE_INTERIOR_ENTRANCES) != RO_INTERIOR_ENTRANCE_SHUFFLE_ALL) {
         // Save warping in Link's house keeps the player there if Link's house not shuffled,
