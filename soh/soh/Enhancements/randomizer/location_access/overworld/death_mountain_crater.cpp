@@ -49,17 +49,6 @@ void RegionTable_Init_DeathMountainCrater() {
         LOCATION(RC_DMC_WALL_FREESTANDING_POH,    logic->FireTimer() >= 8 || logic->Hearts() >= 2),
         LOCATION(RC_DMC_VOLCANO_FREESTANDING_POH, ((logic->FireTimer() >= 24 || logic->Hearts() >= 5) && ctx->GetTrickOption(RT_DMC_HOVER_BEAN_POH) && logic->CanUse(RG_HOVER_BOOTS)) ||
                                                   (logic->IsAdult && (logic->FireTimer() >= 64 || logic->Hearts() >= 12) && logic->DMCPotsToPad() && logic->DMCUpperToPots() && CanPlantBean(RR_DMC_CENTRAL, RG_DEATH_MOUNTAIN_CRATER_BEAN_SOUL))),
-        LOCATION(RC_DMC_CIRCLE_ROCK_1, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
-        LOCATION(RC_DMC_CIRCLE_ROCK_2, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
-        LOCATION(RC_DMC_CIRCLE_ROCK_3, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
-        LOCATION(RC_DMC_CIRCLE_ROCK_4, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
-        LOCATION(RC_DMC_CIRCLE_ROCK_5, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
-        LOCATION(RC_DMC_CIRCLE_ROCK_6, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
-        LOCATION(RC_DMC_CIRCLE_ROCK_7, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
-        LOCATION(RC_DMC_CIRCLE_ROCK_8, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
-        LOCATION(RC_DMC_BOULDER_1,     logic->FireTimer() >= 8 && logic->BlastOrSmash()),
-        LOCATION(RC_DMC_BOULDER_2,     logic->FireTimer() >= 8 && logic->BlastOrSmash()),
-        LOCATION(RC_DMC_BOULDER_3,     logic->FireTimer() >= 8 && logic->BlastOrSmash()),
     }, {
         //Exits
         ENTRANCE(RR_DMC_CRATE,           logic->FireTimer() >= 8 || logic->Hearts() >= 2),
@@ -259,7 +248,22 @@ void RegionTable_Init_DeathMountainCrater() {
         ENTRANCE(RR_DEATH_MOUNTAIN_SUMMIT, true),
     });
 
-    areaTable[RR_DMC_ROCK_GROTTO] = Region("DMC Rock Grotto", SCENE_DEATH_MOUNTAIN_CRATER, {}, {}, {
+    areaTable[RR_DMC_ROCK_GROTTO] = Region("DMC Rock Grotto", SCENE_DEATH_MOUNTAIN_CRATER, {}, {
+        //Locations
+        LOCATION(RC_DMC_CIRCLE_ROCK_1, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
+        LOCATION(RC_DMC_CIRCLE_ROCK_2, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
+        LOCATION(RC_DMC_CIRCLE_ROCK_3, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
+        LOCATION(RC_DMC_CIRCLE_ROCK_4, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
+        LOCATION(RC_DMC_CIRCLE_ROCK_5, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
+        LOCATION(RC_DMC_CIRCLE_ROCK_6, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
+        LOCATION(RC_DMC_CIRCLE_ROCK_7, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
+        LOCATION(RC_DMC_CIRCLE_ROCK_8, logic->FireTimer() >= 8 && logic->CanBreakRocks()),
+        //Boulders 1 and 2 are a bit separate, but are in 8 seconds from upper entry and closeer or the same distance
+        //from all ways to reach upper grotto otherwise, so it works
+        LOCATION(RC_DMC_BOULDER_1,     logic->FireTimer() >= 8 && logic->BlastOrSmash()),
+        LOCATION(RC_DMC_BOULDER_2,     logic->FireTimer() >= 8 && logic->BlastOrSmash()),
+        LOCATION(RC_DMC_BOULDER_3,     logic->FireTimer() >= 8 && logic->BlastOrSmash()),
+    }, {
         //Exits
         ENTRANCE(RR_DMC_UPPER_GROTTO, AnyAgeTime([]{return logic->BlastOrSmash();})),
     });

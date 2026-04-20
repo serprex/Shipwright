@@ -198,6 +198,12 @@
 					"- Water Temple near boss key chest Gold Skulltula\n",
 					"- Shadow MQ after boat and before boss Gold Skulltulas"
 				]
+			},		
+			"bomb_detonation": {
+				"name": "Precise Bomb Detonation",
+				"description": [
+					"This trick enables methods that rely on precisly timing the detonation of bombs, such as detonating bombs on the surface of the water to destroy underwater rocks."
+				]
 			},			
 			"kf_adult_gs": {
 				"name": "Adult Kokiri Forest GS with Hover Boots",

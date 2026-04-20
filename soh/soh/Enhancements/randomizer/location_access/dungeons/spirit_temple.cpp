@@ -583,7 +583,6 @@ void RegionTable_Init_SpiritTemple() {
 
     areaTable[RR_SPIRIT_TEMPLE_MQ_CHILD_SIDE_HUB] = Region("Spirit Temple MQ Child Side Hub", SCENE_SPIRIT_TEMPLE, {
         //Events
-        //not technically a rusted switch, but a boulder through a wall, but is part of the same trick on N64
         EVENT_ACCESS(LOGIC_SPIRIT_MQ_CRAWL_BOULDER, logic->CanUse(RG_BOMBCHU_5) || (ctx->GetTrickOption(RT_VISIBLE_COLLISION) && logic->CanUse(RG_MEGATON_HAMMER))),
     }, {
         //Locations
@@ -593,10 +592,9 @@ void RegionTable_Init_SpiritTemple() {
                                                                 (ctx->GetTrickOption(RT_FIRE_RINGS) && ctx->GetTrickOption(RT_VISIBLE_COLLISION) && logic->TakeDamage() && logic->CanJumpslash())),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_CHILD_RIGHT_HEART,         logic->CanHitEyeTargets() || logic->CanUse(RG_BOOMERANG) || 
                                                                 (ctx->GetTrickOption(RT_FIRE_RINGS) && ctx->GetTrickOption(RT_VISIBLE_COLLISION) && logic->TakeDamage() && logic->CanJumpslash())),
-        LOCATION(RC_SPIRIT_TEMPLE_MQ_CHILD_HAMMER_SWITCH_CHEST, logic->Get(LOGIC_SPIRIT_MQ_TIME_TRAVEL_CHEST)),
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_CRAWLSPACE_BOULDER,        logic->Get(LOGIC_SPIRIT_MQ_CRAWL_BOULDER) && logic->CanUse(RG_CRAWL)),
     }, {
         //Exits
-        //Nabooru's legs are technically visible one way collision here, but I'm not sure if this counts
         ENTRANCE(RR_SPIRIT_TEMPLE_MQ_FOYER,               logic->CanUse(RG_CRAWL)),
         ENTRANCE(RR_SPIRIT_TEMPLE_MQ_GIBDO_GRAVES,        AnyAgeTime([]{return logic->CanKillEnemy(RE_TORCH_SLUG);})),
         ENTRANCE(RR_SPIRIT_TEMPLE_MQ_ANUBIS_BRIDGE_CHEST, AnyAgeTime([]{return logic->CanKillEnemy(RE_TORCH_SLUG);})),
@@ -608,7 +606,11 @@ void RegionTable_Init_SpiritTemple() {
         EVENT_ACCESS(LOGIC_SPIRIT_MQ_GIBDOS_CLEARED, logic->HasItem(RG_POWER_BRACELET) &&
                                                      ((logic->CanUse(RG_BOMBCHU_5) && logic->CanHitEyeTargets()) || logic->CanUse(RG_HOVER_BOOTS)/* || (IsAdult && CanBunnyJump())*/)
                                                      && logic->CanKillEnemy(RE_GIBDO, ED_CLOSE, true, 3)),
-    }, {}, {
+    }, {
+        //Location
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_GIBDO_BOULDER_HIGH, logic->BlastOrSmash()),
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_GIBDO_BOULDER_LOW,  logic->BlastOrSmash()),
+    }, {
         //Exits
         ENTRANCE(RR_SPIRIT_TEMPLE_MQ_CHILD_SIDE_HUB, true),
         ENTRANCE(RR_SPIRIT_TEMPLE_MQ_GIBDO_POTS,     logic->HasItem(RG_POWER_BRACELET) &&
@@ -620,6 +622,7 @@ void RegionTable_Init_SpiritTemple() {
         //Locations
         LOCATION(RC_SPIRIT_TEMPLE_MQ_CHILD_GIBDO_POT_1, logic->CanBreakPots()),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_CHILD_GIBDO_POT_2, logic->CanBreakPots()),
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_GIBDO_BOULDER,     logic->BlastOrSmash()),
     }, {
         //Exits
         ENTRANCE(RR_SPIRIT_TEMPLE_MQ_TURNTABLE, logic->Get(LOGIC_SPIRIT_MQ_GIBDOS_CLEARED)),
@@ -921,8 +924,8 @@ void RegionTable_Init_SpiritTemple() {
         EVENT_ACCESS(LOGIC_SPIRIT_1F_SILVER_RUPEES, logic->CanUse(RG_MEGATON_HAMMER)),
     }, {
         //Locations
-        LOCATION(RC_SPIRIT_TEMPLE_MQ_EARLY_ADULT_POT_1, logic->CanBreakPots()),
-        LOCATION(RC_SPIRIT_TEMPLE_MQ_EARLY_ADULT_POT_2, logic->CanBreakPots()),
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_EARLY_ADULT_POT_1,   logic->CanBreakPots()),
+        LOCATION(RC_SPIRIT_TEMPLE_MQ_EARLY_ADULT_POT_2,   logic->CanBreakPots()),
         LOCATION(RC_SPIRIT_TEMPLE_MQ_EARLY_ADULT_BOULDER, logic->BlastOrSmash()),
     }, {
         //Exits
