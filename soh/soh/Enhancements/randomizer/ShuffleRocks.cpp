@@ -35,10 +35,6 @@ static void Sparkles(PlayState* play, Actor* actor, bool boulder, CheckIdentity 
 
     Color_RGBA8 primColor = Randomizer_GetParticleCMCColor(getItemCategory, COLOR_PRIMARY);
 
-    /*f32 yOffset = !boulder ? 40.0f : actor->id == ACTOR_OBJ_BOMBIWA ? 88.0f : 112.0f;
-    f32 xOffset = !boulder ? -24.0f : actor->id == ACTOR_OBJ_BOMBIWA ? -20.0f : -24.0f;
-    f32 zOffset = !boulder ? 8.0f : actor->id == ACTOR_OBJ_BOMBIWA ? -16.0f : 0.0f;*/
-
     f32 yOffset = !boulder ? 40.0f : actor->id == ACTOR_OBJ_BOMBIWA ? 160.0f : 180.0f;
     f32 xOffset = !boulder ? -24.0f : actor->id == ACTOR_OBJ_BOMBIWA ? -90.0f : -90.0f;
     f32 zOffset = !boulder ? 4.0f : actor->id == ACTOR_OBJ_BOMBIWA ? 14.5f : 14.5f;
