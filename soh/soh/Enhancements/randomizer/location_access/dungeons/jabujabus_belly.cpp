@@ -324,9 +324,14 @@ void RegionTable_Init_JabuJabusBelly() {
         EVENT_ACCESS(LOGIC_JABU_MQ_FORKED_ROOM_DOOR, (logic->HasExplosives() || ctx->GetTrickOption(RT_BOULDER_COLLISION)) && logic->CanUse(RG_FAIRY_SLINGSHOT)),
     }, {
         //Locations
-        LOCATION(RC_JABU_JABUS_BELLY_MQ_PIT_GRASS_1, logic->CanCutShrubs() && logic->HasExplosives()),
-        LOCATION(RC_JABU_JABUS_BELLY_MQ_PIT_GRASS_2, logic->CanCutShrubs() && logic->HasExplosives()),
-        LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_COW,   (logic->HasExplosives() || ctx->GetTrickOption(RT_BOULDER_COLLISION)) && logic->CanUse(RG_FAIRY_SLINGSHOT)),
+        LOCATION(RC_JABU_JABUS_BELLY_MQ_PIT_GRASS_1,               logic->CanCutShrubs() && logic->HasExplosives()),
+        LOCATION(RC_JABU_JABUS_BELLY_MQ_PIT_GRASS_2,               logic->CanCutShrubs() && logic->HasExplosives()),
+        LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_COW,                 (logic->HasExplosives() || ctx->GetTrickOption(RT_BOULDER_COLLISION)) && logic->CanUse(RG_FAIRY_SLINGSHOT)),
+        LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_ROOM_BOULDER_1,      logic->BlastOrSmash()),
+        LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_ROOM_BOULDER_2,      logic->BlastOrSmash()),
+        LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_ROOM_WALL_BOULDER_1, logic->HasExplosives()),
+        LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_ROOM_WALL_BOULDER_2, logic->HasExplosives()),
+        LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_ROOM_WALL_BOULDER_3, logic->HasExplosives()),
     }, {
         //Exits
         ENTRANCE(RR_JABU_JABUS_BELLY_MQ_LIFT_ROOM,              true),
@@ -350,11 +355,6 @@ void RegionTable_Init_JabuJabusBelly() {
         LOCATION(RC_JABU_JABUS_BELLY_MQ_BASEMENT_GRASS_1,             logic->CanCutShrubs()),
         LOCATION(RC_JABU_JABUS_BELLY_MQ_BASEMENT_GRASS_2,             logic->CanCutShrubs()),
         LOCATION(RC_JABU_JABUS_BELLY_MQ_BASEMENT_GRASS_3,             logic->CanCutShrubs()),
-        LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_ROOM_BOULDER_1,         logic->BlastOrSmash()),
-        LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_ROOM_BOULDER_2,         logic->BlastOrSmash()),
-        LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_ROOM_WALL_BOULDER_1,    logic->HasExplosives()),
-        LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_ROOM_WALL_BOULDER_2,    logic->HasExplosives()),
-        LOCATION(RC_JABU_JABUS_BELLY_MQ_HOLES_ROOM_WALL_BOULDER_3,    logic->HasExplosives()),
         LOCATION(RC_JABU_JABUS_BELLY_MQ_WONDER_BASEMENT_RIGHT_COW_1,  logic->CanUse(RG_FAIRY_SLINGSHOT)),
         LOCATION(RC_JABU_JABUS_BELLY_MQ_WONDER_BASEMENT_RIGHT_COW_2,  logic->CanUse(RG_FAIRY_SLINGSHOT)),
         LOCATION(RC_JABU_JABUS_BELLY_MQ_WONDER_BASEMENT_RIGHT_COW_3,  logic->CanUse(RG_FAIRY_SLINGSHOT)),
@@ -432,9 +432,9 @@ void RegionTable_Init_JabuJabusBelly() {
 
     areaTable[RR_JABU_JABUS_BELLY_MQ_FORK_NORTH_WEST] = Region("Jabu Jabus Belly MQ Fork North West", SCENE_JABU_JABU, {}, {
         //Locations
-        LOCATION(RC_JABU_JABUS_BELLY_MQ_GS_TAILPASARAN_ROOM,      logic->HasExplosives() && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG)),
+        LOCATION(RC_JABU_JABUS_BELLY_MQ_GS_TAILPASARAN_ROOM,      logic->BlastOrSmash() && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG)),
         LOCATION(RC_JABU_JABUS_BELLY_MQ_TAILPASARAN_BOULDER,      logic->BlastOrSmash()),
-        LOCATION(RC_JABU_JABUS_BELLY_MQ_TAILPASARAN_WALL_BOULDER, logic->HasExplosives()),
+        LOCATION(RC_JABU_JABUS_BELLY_MQ_TAILPASARAN_WALL_BOULDER, logic->BlastOrSmash()),
     }, {
         //Exits
         ENTRANCE(RR_JABU_JABUS_BELLY_MQ_TO_FORK_NORTH_WEST, true),

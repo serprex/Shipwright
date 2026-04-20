@@ -461,18 +461,18 @@ void RegionTable_Init_DodongosCavern() {
         LOCATION(RC_DODONGOS_CAVERN_MQ_UPPER_LIZALFOS_POT_3, logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_UPPER_LIZALFOS_POT_4, logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_HEART,  logic->BlastOrSmash()),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_1, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC))),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_2, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC))),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_3, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC))),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_4, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC))),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_1, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC) || logic->CanUse(RG_BOOMERANG))),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_2, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC) || logic->CanUse(RG_BOOMERANG))),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_3, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC) || logic->CanUse(RG_BOOMERANG))),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_4, logic->BlastOrSmash()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_5, logic->BlastOrSmash()),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_6, logic->BlastOrSmash()),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_7, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC))),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_8, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC))),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_9, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC))),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_10, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC))),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_11, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC))),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_12, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC))),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_6, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC) || logic->CanUse(RG_BOOMERANG))),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_7, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC) || logic->CanUse(RG_BOOMERANG))),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_8, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC) || logic->CanUse(RG_BOOMERANG))),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_9, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC) || logic->CanUse(RG_BOOMERANG))),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_10, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC) || logic->CanUse(RG_BOOMERANG))),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_11, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC) || logic->CanUse(RG_BOOMERANG))),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_12, logic->BlastOrSmash() && (logic->TakeDamage() || logic->CanUse(RG_GORON_TUNIC) || logic->CanUse(RG_BOOMERANG))),
     }, {
         //Exits
         //Falling down gets you stuck with nothing there, not a useful exit for logic
@@ -486,12 +486,12 @@ void RegionTable_Init_DodongosCavern() {
         LOCATION(RC_DODONGOS_CAVERN_MQ_TWO_FLAMES_POT_2,    logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_TWO_FLAMES_CRATE_1,  logic->CanBreakCrates()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_TWO_FLAMES_CRATE_2,  logic->CanBreakCrates()),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_TWO_FLAMES_BOULDER,  logic->BlastOrSmash() || logic->HasItem(RG_GORONS_BRACELET)),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_TWO_FLAMES_BOULDER,  logic->BlastOrSmash() || (logic->HasItem(RG_GORONS_BRACELET) && (logic->CanHitSwitch() || ctx->GetTrickOption(RT_DC_SLINGSHOT_SKIP)))),
     }, {
         //Exits
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_UPPER_LIZALFOS,     true),
         //crate platforming skips the puzzle
-        ENTRANCE(RR_DODONGOS_CAVERN_MQ_TORCH_PUZZLE_UPPER, logic->IsAdult || (AnyAgeTime([]{return logic->BlastOrSmash() || (logic->CanAttack() && logic->HasItem(RG_GORONS_BRACELET));}))),
+        ENTRANCE(RR_DODONGOS_CAVERN_MQ_TORCH_PUZZLE_UPPER, logic->IsAdult || (AnyAgeTime([]{return logic->BlastOrSmash() || (logic->CanAttack() && logic->HasItem(RG_GORONS_BRACELET));})) || ctx->GetTrickOption(RT_DC_SLINGSHOT_SKIP)),
     });
 
     areaTable[RR_DODONGOS_CAVERN_MQ_TORCH_PUZZLE_UPPER] = Region("Dodongos Cavern MQ Torch Puzzle Upper", SCENE_DODONGOS_CAVERN, {
@@ -517,7 +517,7 @@ void RegionTable_Init_DodongosCavern() {
         LOCATION(RC_DODONGOS_CAVERN_MQ_RIGHT_SIDE_POT_2,     logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_RIGHT_SIDE_POT_3,     logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_RIGHT_SIDE_POT_4,     logic->CanBreakPots()),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_RIGHT_SIDE_BOULDER_1, logic->BlastOrSmash() || logic->HasItem(RG_GORONS_BRACELET) || logic->CanUse(RG_DINS_FIRE)),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_RIGHT_SIDE_BOULDER_1, logic->BlastOrSmash() || logic->HasItem(RG_GORONS_BRACELET) || logic->CanUse(RG_DINS_FIRE) || (ctx->GetTrickOption(RT_BOULDER_COLLISION) && logic->CanUse(RG_FAIRY_BOW))),
         LOCATION(RC_DODONGOS_CAVERN_MQ_RIGHT_SIDE_BOULDER_2, logic->CanDetonateBombFlowers() || logic->HasItem(RG_GORONS_BRACELET) || (ctx->GetTrickOption(RT_BLUE_FIRE_MUD_WALLS) && logic->CanUse(RG_BOTTLE_WITH_BLUE_FIRE) && (logic->EffectiveHealth() != 1 || logic->CanUse(RG_NAYRUS_LOVE)))),
     }, {
         //Exits

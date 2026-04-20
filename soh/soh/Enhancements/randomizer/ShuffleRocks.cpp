@@ -35,15 +35,30 @@ static void Sparkles(PlayState* play, Actor* actor, bool boulder, CheckIdentity 
 
     Color_RGBA8 primColor = Randomizer_GetParticleCMCColor(getItemCategory, COLOR_PRIMARY);
 
-    f32 yOffset = !boulder ? 40.0f : actor->id == ACTOR_OBJ_BOMBIWA ? 88.0f : 112.0f;
-    f32 xOffset = !boulder ? -24.0f : actor->id == ACTOR_OBJ_BOMBIWA ? -20.0f : -24.0f;
-    f32 zOffset = !boulder ? 8.0f : actor->id == ACTOR_OBJ_BOMBIWA ? -16.0f : 0.0f;
+    f32 yOffset = !boulder ? 40.0f : actor->id == ACTOR_OBJ_BOMBIWA ? 160.0f : 180.0f;
+    f32 xOffset = !boulder ? -24.0f : actor->id == ACTOR_OBJ_BOMBIWA ? -90.0f : -90.0f;
+    f32 zOffset = !boulder ? 4.0f : actor->id == ACTOR_OBJ_BOMBIWA ? 14.5f : 14.5f;
 
     // Rotate and draw halo with CMC colors
-    Matrix_Translate(actor->world.pos.x + xOffset, actor->world.pos.y + yOffset, actor->world.pos.z + zOffset,
-                     MTXMODE_NEW);
-    Matrix_RotateZ(-M_PI / 2, MTXMODE_APPLY);
-    Matrix_Scale(0.01f, 0.01f, 0.01f, MTXMODE_APPLY);
+    if (rockIdentity.randomizerCheck == RC_SPIRIT_TEMPLE_MQ_ENTRANCE_CEILING_BOULDER ||
+        rockIdentity.randomizerCheck == RC_ZF_UNDERGROUND_BOULDER) {
+        yOffset = -114.0f;
+        xOffset = -165.0f;
+        zOffset = 19.0f;
+        Matrix_Translate(actor->world.pos.x + xOffset, actor->world.pos.y + yOffset, actor->world.pos.z + zOffset,
+                         MTXMODE_NEW);
+        Matrix_Scale(0.055f, 0.055f, 0.055f, MTXMODE_APPLY);
+    } else {
+        Matrix_Translate(actor->world.pos.x + xOffset, actor->world.pos.y + yOffset, actor->world.pos.z + zOffset,
+                         MTXMODE_NEW);
+        Matrix_RotateZ(-M_PI / 2, MTXMODE_APPLY);
+        if (boulder) {
+            Matrix_Scale(0.04f, 0.04f, 0.04f, MTXMODE_APPLY);
+        } else {
+            Matrix_Scale(0.01f, 0.01f, 0.01f, MTXMODE_APPLY);
+        }
+    }
+
     OPEN_DISPS(gPlayState->state.gfxCtx);
     gSPMatrix(POLY_OPA_DISP++, MATRIX_NEWMTX(gPlayState->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
     gDPSetGrayscaleColor(POLY_OPA_DISP++, primColor.r, primColor.g, primColor.b, 175);
@@ -148,7 +163,27 @@ void Rock_RandomizerSpawnCollectible(Actor* actor, CheckIdentity rockIdentity, P
             item00->actor.world.rot.y = 0x0;
             item00->actor.speedXZ = 8.0f;
             break;
+        case RC_GC_MAZE_BOULDER_1:
+        case RC_GC_MAZE_BOULDER_2:
+        case RC_GC_MAZE_BOULDER_3:
+        case RC_GC_MAZE_BOULDER_4:
+        case RC_GC_MAZE_BOULDER_5:
+        case RC_GC_MAZE_BOULDER_6:
+        case RC_GC_MAZE_BOULDER_7:
+        case RC_GC_MAZE_BOULDER_8:
+        case RC_GC_MAZE_BOULDER_9:
+        case RC_GC_MAZE_BOULDER_10:
+        case RC_GC_MAZE_BRONZE_BOULDER_1:
+        case RC_GC_MAZE_BRONZE_BOULDER_2:
+        case RC_GC_MAZE_BRONZE_BOULDER_3:
+        case RC_GC_MAZE_BRONZE_BOULDER_4:
+        case RC_GC_MAZE_BRONZE_BOULDER_5:
         case RC_DMC_BRONZE_BOULDER_SHORTCUT:
+        case RC_ZF_UNDERGROUND_BOULDER:
+        case RC_DEKU_TREE_MQ_BOULDER_1:
+        case RC_DEKU_TREE_MQ_BOULDER_2:
+        case RC_DEKU_TREE_MQ_BOULDER_3:
+        case RC_ZR_BOULDER_4:
         case RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_1:
         case RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_2:
         case RC_DODONGOS_CAVERN_MQ_LIZALFOS_ROOM_BOULDER_3:
@@ -182,7 +217,7 @@ void EnIshi_RandomizerInit(void* actorRef) {
                     (s16)actor->world.pos.x, (s16)actor->world.pos.z);
     }
 
-    if (Rock_RandomizerHoldsItem(rockIdentity, gPlayState, actor->params & 1)) {
+    if (Rock_RandomizerHoldsItem(rockIdentity, gPlayState, actor->params & 1) && rockActor->actor.draw != nullptr) {
         ObjectExtension::GetInstance().Set<CheckIdentity>(actor, std::move(rockIdentity));
         rockActor->actor.draw = EnIshi_RandomizerDraw;
     }
@@ -200,7 +235,7 @@ void ObjBombiwa_RandomizerInit(void* actorRef) {
         LUSLOG_INFO("ROCK bombiwa%d\t:\t%d, %d", rockIdentity.randomizerCheck, (s16)actor->world.pos.x,
                     (s16)actor->world.pos.z);
     }
-    if (Rock_RandomizerHoldsItem(rockIdentity, gPlayState, true)) {
+    if (Rock_RandomizerHoldsItem(rockIdentity, gPlayState, true) && rockActor->actor.draw != nullptr) {
         ObjectExtension::GetInstance().Set<CheckIdentity>(actor, std::move(rockIdentity));
         rockActor->actor.draw = ObjBombiwa_RandomizerDraw;
     }
@@ -218,7 +253,7 @@ void ObjHamishi_RandomizerInit(void* actorRef) {
         LUSLOG_INFO("ROCK hamishi%d\t:\t%d, %d", rockIdentity.randomizerCheck, (s16)actor->world.pos.x,
                     (s16)actor->world.pos.z);
     }
-    if (Rock_RandomizerHoldsItem(rockIdentity, gPlayState, true)) {
+    if (Rock_RandomizerHoldsItem(rockIdentity, gPlayState, true) && rockActor->actor.draw != nullptr) {
         ObjectExtension::GetInstance().Set<CheckIdentity>(actor, std::move(rockIdentity));
         rockActor->actor.draw = ObjHamishi_RandomizerDraw;
     }
@@ -359,7 +394,7 @@ void Rando::StaticData::RegisterRockLocations() {
     locationTable[RC_KAK_ROCK_2]                       = Location::Rock(RC_KAK_ROCK_2,                   RCQUEST_BOTH, RCAREA_KAKARIKO_VILLAGE,      SCENE_KAKARIKO_VILLAGE,            TWO_ACTOR_PARAMS(-664, 1288),   "Kak Rock 2",                               RHT_KAK_ROCK,                 RG_RECOVERY_HEART,  SpoilerCollectionCheck::RandomizerInf(RAND_INF_KAK_ROCK_2));
     locationTable[RC_GY_ROCK]                          = Location::Rock(RC_GY_ROCK,                      RCQUEST_BOTH, RCAREA_GRAVEYARD,             SCENE_GRAVEYARD,                   TWO_ACTOR_PARAMS(-1193, 693),   "GY Rock",                                  RHT_GY_ROCK,                  RG_RECOVERY_HEART,  SpoilerCollectionCheck::RandomizerInf(RAND_INF_GY_ROCK));
 
-    locationTable[RC_LA_ROCK]                          = Location::Rock(RC_LA_ROCK,                      RCQUEST_BOTH, RCAREA_LAKE_HYLIA,            SCENE_LAKE_HYLIA,                  TWO_ACTOR_PARAMS(1222, 3953),   "LA Rock",                                  RHT_LA_ROCK,                  RG_RECOVERY_HEART,  SpoilerCollectionCheck::RandomizerInf(RAND_INF_LA_ROCK));
+    locationTable[RC_LH_ROCK]                          = Location::Rock(RC_LH_ROCK,                      RCQUEST_BOTH, RCAREA_LAKE_HYLIA,            SCENE_LAKE_HYLIA,                  TWO_ACTOR_PARAMS(1222, 3953),   "LA Rock",                                  RHT_LH_ROCK,                  RG_RECOVERY_HEART,  SpoilerCollectionCheck::RandomizerInf(RAND_INF_LH_ROCK));
 
     locationTable[RC_ZD_CIRCLE_ROCK_1]                 = Location::Rock(RC_ZD_CIRCLE_ROCK_1,             RCQUEST_BOTH, RCAREA_ZORAS_DOMAIN,          SCENE_ZORAS_DOMAIN,                TWO_ACTOR_PARAMS(462, -696),    "ZD Circle Rock 1",                         RHT_ZD_ROCK,                  RG_RECOVERY_HEART,  SpoilerCollectionCheck::RandomizerInf(RAND_INF_ZD_CIRCLE_ROCK_1));
     locationTable[RC_ZD_CIRCLE_ROCK_2]                 = Location::Rock(RC_ZD_CIRCLE_ROCK_2,             RCQUEST_BOTH, RCAREA_ZORAS_DOMAIN,          SCENE_ZORAS_DOMAIN,                TWO_ACTOR_PARAMS(518, -719),    "ZD Circle Rock 2",                         RHT_ZD_ROCK,                  RG_RECOVERY_HEART,  SpoilerCollectionCheck::RandomizerInf(RAND_INF_ZD_CIRCLE_ROCK_2));
