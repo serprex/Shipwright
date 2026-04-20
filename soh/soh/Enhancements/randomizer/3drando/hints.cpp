@@ -267,60 +267,41 @@ uint8_t TokensRequiredBySettings() {
     return tokens;
 }
 
-std::vector<std::pair<RandomizerCheck, std::function<bool()>>> conditionalAlwaysHints = {
-    std::make_pair(RC_MARKET_10_BIG_POES,
-                   []() {
-                       auto ctx = Rando::Context::GetInstance();
-                       return ctx->GetOption(RSK_BIG_POE_COUNT).Get() > 3 && !ctx->GetOption(RSK_BIG_POES_HINT);
-                   }),
-    std::make_pair(RC_DEKU_THEATER_MASK_OF_TRUTH,
-                   []() {
-                       auto ctx = Rando::Context::GetInstance();
-                       return !ctx->GetOption(RSK_MASK_SHOP_HINT) && !ctx->GetOption(RSK_MASK_QUEST);
-                   }),
-    std::make_pair(RC_SONG_FROM_OCARINA_OF_TIME,
-                   []() {
-                       auto ctx = Rando::Context::GetInstance();
-                       return StonesRequiredBySettings() < 2 && !ctx->GetOption(RSK_OOT_HINT);
-                   }),
-    std::make_pair(RC_HF_OCARINA_OF_TIME_ITEM, []() { return StonesRequiredBySettings() < 2; }),
-    std::make_pair(RC_SHEIK_IN_KAKARIKO, []() { return MedallionsRequiredBySettings() < 5; }),
-    std::make_pair(RC_DMT_TRADE_CLAIM_CHECK,
-                   []() {
-                       auto ctx = Rando::Context::GetInstance();
-                       return !ctx->GetOption(RSK_BIGGORON_HINT);
-                   }),
-    std::make_pair(RC_KAK_30_GOLD_SKULLTULA_REWARD,
-                   []() {
-                       auto ctx = Rando::Context::GetInstance();
-                       return !ctx->GetOption(RSK_KAK_30_SKULLS_HINT) && TokensRequiredBySettings() < 30;
-                   }),
-    std::make_pair(RC_KAK_40_GOLD_SKULLTULA_REWARD,
-                   []() {
-                       auto ctx = Rando::Context::GetInstance();
-                       return !ctx->GetOption(RSK_KAK_40_SKULLS_HINT) && TokensRequiredBySettings() < 40;
-                   }),
-    std::make_pair(RC_KAK_50_GOLD_SKULLTULA_REWARD,
-                   []() {
-                       auto ctx = Rando::Context::GetInstance();
-                       return !ctx->GetOption(RSK_KAK_50_SKULLS_HINT) && TokensRequiredBySettings() < 50;
-                   }),
-    std::make_pair(RC_ZR_FROGS_OCARINA_GAME,
-                   []() {
-                       auto ctx = Rando::Context::GetInstance();
-                       return !ctx->GetOption(RSK_FROGS_HINT);
-                   }),
-    std::make_pair(RC_KF_LINKS_HOUSE_COW,
-                   []() {
-                       auto ctx = Rando::Context::GetInstance();
-                       return !ctx->GetOption(RSK_MALON_HINT);
-                   }),
-    std::make_pair(RC_KAK_100_GOLD_SKULLTULA_REWARD,
-                   []() {
-                       auto ctx = Rando::Context::GetInstance();
-                       return !ctx->GetOption(RSK_KAK_100_SKULLS_HINT) && TokensRequiredBySettings() < 100;
-                   }),
+// An 'always' hint that only applies under certain settings. Suppressed when the user
+// has enabled `dedicatedHint` (since a dedicated hint renders the gossip-stone hint redundant),
+// or when `extra` is present and returns false. RSK_NONE in `dedicatedHint` means no suppression.
+struct ConditionalAlwaysHint {
+    RandomizerCheck loc;
+    RandomizerSettingKey dedicatedHint;
+    std::function<bool()> extra;
 };
+
+static bool TokensRequiredBelow(uint8_t threshold) {
+    return TokensRequiredBySettings() < threshold;
+}
+
+std::vector<ConditionalAlwaysHint> conditionalAlwaysHints = {
+    { RC_MARKET_10_BIG_POES,          RSK_BIG_POES_HINT,        []() { return Rando::Context::GetInstance()->GetOption(RSK_BIG_POE_COUNT).Get() > 3; } },
+    { RC_DEKU_THEATER_MASK_OF_TRUTH,  RSK_MASK_SHOP_HINT,       []() { return !Rando::Context::GetInstance()->GetOption(RSK_MASK_QUEST); } },
+    { RC_SONG_FROM_OCARINA_OF_TIME,   RSK_OOT_HINT,             []() { return StonesRequiredBySettings() < 2; } },
+    { RC_HF_OCARINA_OF_TIME_ITEM,     RSK_NONE,                 []() { return StonesRequiredBySettings() < 2; } },
+    { RC_SHEIK_IN_KAKARIKO,           RSK_NONE,                 []() { return MedallionsRequiredBySettings() < 5; } },
+    { RC_DMT_TRADE_CLAIM_CHECK,       RSK_BIGGORON_HINT,        nullptr },
+    { RC_KAK_30_GOLD_SKULLTULA_REWARD, RSK_KAK_30_SKULLS_HINT,  []() { return TokensRequiredBelow(30); } },
+    { RC_KAK_40_GOLD_SKULLTULA_REWARD, RSK_KAK_40_SKULLS_HINT,  []() { return TokensRequiredBelow(40); } },
+    { RC_KAK_50_GOLD_SKULLTULA_REWARD, RSK_KAK_50_SKULLS_HINT,  []() { return TokensRequiredBelow(50); } },
+    { RC_ZR_FROGS_OCARINA_GAME,       RSK_FROGS_HINT,           nullptr },
+    { RC_KF_LINKS_HOUSE_COW,          RSK_MALON_HINT,           nullptr },
+    { RC_KAK_100_GOLD_SKULLTULA_REWARD, RSK_KAK_100_SKULLS_HINT, []() { return TokensRequiredBelow(100); } },
+};
+
+static bool ConditionalAlwaysHintApplies(const ConditionalAlwaysHint& h) {
+    auto ctx = Rando::Context::GetInstance();
+    if (h.dedicatedHint != RSK_NONE && ctx->GetOption(h.dedicatedHint)) {
+        return false;
+    }
+    return !h.extra || h.extra();
+}
 
 static std::vector<RandomizerCheck> GetEmptyGossipStones() {
     auto emptyGossipStones = GetEmptyLocations(Rando::StaticData::GetGossipStoneLocations());
@@ -661,10 +642,9 @@ void CreateStoneHints() {
             }
         }
 
-        for (auto& hint : conditionalAlwaysHints) {
-            RandomizerCheck loc = hint.first;
-            if (hint.second() && ctx->GetItemLocation(loc)->IsHintable()) {
-                alwaysHintLocations.push_back(loc);
+        for (const auto& hint : conditionalAlwaysHints) {
+            if (ConditionalAlwaysHintApplies(hint) && ctx->GetItemLocation(hint.loc)->IsHintable()) {
+                alwaysHintLocations.push_back(hint.loc);
             }
         }
 
@@ -719,55 +699,40 @@ std::vector<RandomizerCheck> FindItemsAndMarkHinted(std::vector<RandomizerGet> i
     return locations;
 }
 
-void CreateChildAltarHint() {
+static void CreateAltarHint(RandomizerHint hintKey, HintType hintType, std::vector<RandomizerGet> rewards,
+                            RandomizerCheck altarCheck) {
     auto ctx = Rando::Context::GetInstance();
-    if (!ctx->GetHint(RH_ALTAR_CHILD)->IsEnabled()) {
-        std::vector<RandomizerCheck> stoneLocs = {};
-        std::vector<RandomizerArea> stoneAreas = {};
-        if (ctx->GetOption(RSK_TOT_ALTAR_HINT)) {
-            // force marking the rewards as hinted if they are at the end of dungeons as they can be inferred
-            if (ctx->GetOption(RSK_SHUFFLE_DUNGEON_REWARDS).Is(RO_DUNGEON_REWARDS_END_OF_DUNGEON) ||
-                ctx->GetOption(RSK_SHUFFLE_DUNGEON_REWARDS).Is(RO_DUNGEON_REWARDS_VANILLA)) {
-                stoneLocs = FindItemsAndMarkHinted({ RG_KOKIRI_EMERALD, RG_GORON_RUBY, RG_ZORA_SAPPHIRE }, {});
-            } else {
-                stoneLocs = FindItemsAndMarkHinted({ RG_KOKIRI_EMERALD, RG_GORON_RUBY, RG_ZORA_SAPPHIRE },
-                                                   { RC_ALTAR_HINT_CHILD });
-            }
-            for (auto loc : stoneLocs) {
-                if (loc != RC_UNKNOWN_CHECK) {
-                    stoneAreas.push_back(ctx->GetItemLocation(loc)->GetRandomArea());
-                }
+    if (ctx->GetHint(hintKey)->IsEnabled()) {
+        return;
+    }
+    std::vector<RandomizerCheck> locs = {};
+    std::vector<RandomizerArea> areas = {};
+    if (ctx->GetOption(RSK_TOT_ALTAR_HINT)) {
+        // force marking the rewards as hinted if they are at the end of dungeons as they can be inferred
+        const bool rewardsInferrable =
+            ctx->GetOption(RSK_SHUFFLE_DUNGEON_REWARDS).Is(RO_DUNGEON_REWARDS_END_OF_DUNGEON) ||
+            ctx->GetOption(RSK_SHUFFLE_DUNGEON_REWARDS).Is(RO_DUNGEON_REWARDS_VANILLA);
+        locs = FindItemsAndMarkHinted(rewards, rewardsInferrable ? std::vector<RandomizerCheck>{}
+                                                                 : std::vector<RandomizerCheck>{ altarCheck });
+        for (auto loc : locs) {
+            if (loc != RC_UNKNOWN_CHECK) {
+                areas.push_back(ctx->GetItemLocation(loc)->GetRandomArea());
             }
         }
-        ctx->AddHint(RH_ALTAR_CHILD, Hint(RH_ALTAR_CHILD, HINT_TYPE_ALTAR_CHILD, {}, stoneLocs, stoneAreas));
     }
+    ctx->AddHint(hintKey, Hint(hintKey, hintType, {}, locs, areas));
+}
+
+void CreateChildAltarHint() {
+    CreateAltarHint(RH_ALTAR_CHILD, HINT_TYPE_ALTAR_CHILD, { RG_KOKIRI_EMERALD, RG_GORON_RUBY, RG_ZORA_SAPPHIRE },
+                    RC_ALTAR_HINT_CHILD);
 }
 
 void CreateAdultAltarHint() {
-    auto ctx = Rando::Context::GetInstance();
-    if (!ctx->GetHint(RH_ALTAR_ADULT)->IsEnabled()) {
-        std::vector<RandomizerCheck> medallionLocs = {};
-        std::vector<RandomizerArea> medallionAreas = {};
-        if (ctx->GetOption(RSK_TOT_ALTAR_HINT)) {
-            // force marking the rewards as hinted if they are at the end of dungeons as they can be inferred
-            if (ctx->GetOption(RSK_SHUFFLE_DUNGEON_REWARDS).Is(RO_DUNGEON_REWARDS_END_OF_DUNGEON) ||
-                ctx->GetOption(RSK_SHUFFLE_DUNGEON_REWARDS).Is(RO_DUNGEON_REWARDS_VANILLA)) {
-                medallionLocs = FindItemsAndMarkHinted({ RG_LIGHT_MEDALLION, RG_FOREST_MEDALLION, RG_FIRE_MEDALLION,
-                                                         RG_WATER_MEDALLION, RG_SPIRIT_MEDALLION, RG_SHADOW_MEDALLION },
-                                                       {});
-            } else {
-                medallionLocs = FindItemsAndMarkHinted({ RG_LIGHT_MEDALLION, RG_FOREST_MEDALLION, RG_FIRE_MEDALLION,
-                                                         RG_WATER_MEDALLION, RG_SPIRIT_MEDALLION, RG_SHADOW_MEDALLION },
-                                                       { RC_ALTAR_HINT_ADULT });
-            }
-            for (auto loc : medallionLocs) {
-                if (loc != RC_UNKNOWN_CHECK) {
-                    medallionAreas.push_back(ctx->GetItemLocation(loc)->GetRandomArea());
-                }
-            }
-        }
-        ctx->AddHint(RH_ALTAR_ADULT, Hint(RH_ALTAR_ADULT, HINT_TYPE_ALTAR_ADULT, {}, medallionLocs, medallionAreas));
-    }
+    CreateAltarHint(RH_ALTAR_ADULT, HINT_TYPE_ALTAR_ADULT,
+                    { RG_LIGHT_MEDALLION, RG_FOREST_MEDALLION, RG_FIRE_MEDALLION, RG_WATER_MEDALLION,
+                      RG_SPIRIT_MEDALLION, RG_SHADOW_MEDALLION },
+                    RC_ALTAR_HINT_ADULT);
 }
 
 void CreateStaticHintFromData(RandomizerHint hint, StaticHintInfo staticData) {
