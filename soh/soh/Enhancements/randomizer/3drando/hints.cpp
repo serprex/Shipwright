@@ -436,13 +436,6 @@ static std::vector<RandomizerCheck> FilterHintability(std::vector<RandomizerChec
     });
 }
 
-static void CreateJunkHints(uint8_t numHints) {
-    for (uint8_t c = 0; c < numHints; c++) {
-        // duplicate junk hints are possible for now
-        AddGossipStoneHintCopies(1, HINT_TYPE_HINT_KEY, "Junk", { GetRandomJunkHint() });
-    }
-}
-
 static void CreateTrialHints(uint8_t copies) {
     if (copies > 0) {
         auto ctx = Rando::Context::GetInstance();
@@ -504,101 +497,106 @@ void CreateWarpSongTexts() {
     }
 }
 
-int32_t getRandomWeight(int32_t totalWeight) {
-    if (totalWeight <= 1) {
-        return 1;
-    }
-    return Random(1, totalWeight);
+static int32_t getRandomWeight(uint32_t totalWeight) {
+    return totalWeight <= 1 ? 1 : Random(1, totalWeight);
 }
 
-static void DistributeHints(std::vector<uint8_t>& selected, size_t stoneCount,
-                            std::vector<HintDistributionSetting> distTable, uint8_t junkWieght, bool addFixed = true) {
-    int32_t totalWeight = junkWieght; // Start with our Junk Weight, the natural chance of a junk hint
-
-    for (size_t c = 0; c < distTable.size();
-         c++) { // Gather the weights of each distribution and, if it's the first pass, apply fixed hints
-        totalWeight += distTable[c].weight; // Note that PlaceHints will set weights of distributions to zero if it
-                                            // can't place anything from them
-        if (addFixed) {
-            selected[c] += distTable[c].fixed;
-            stoneCount -= distTable[c].fixed * distTable[c].copies;
-        }
-    }
-    int32_t currentWeight = getRandomWeight(totalWeight); // Initialise with the first random weight from 1 to the
-                                                          // total.
-    while (stoneCount > 0 &&
-           totalWeight >
-               0) { // Loop until we run out of stones or have no TotalWeight. 0 totalWeight means junkWeight is 0
-                    // and that all weights have been 0'd out for another reason, and skips to placing all junk hints
-        for (size_t distribution = 0; distribution < distTable.size(); distribution++) {
-            currentWeight -=
-                distTable[distribution]
-                    .weight; // go over each distribution, subtracting the weight each time. Once we reach zero or less,
-            if (currentWeight <= 0) { // tell the system to make 1 of that hint, unless not enough stones remain
-                if (stoneCount >= distTable[distribution].copies && distTable[distribution].copies > 0) {
-                    selected[distribution] += 1; // if we have enough stones, and copies are not zero, assign 1 to this
-                                                 // hint type, remove the stones, and break
-                    stoneCount -= distTable[distribution].copies;
-                    break; // This leaves the whole for loop
-                } else { // If we don't have the stones, or copies is 0 despite there being the wieght to trigger a hit,
-                         // temporerally set wieght to zero
-                    totalWeight -=
-                        distTable[distribution]
-                            .weight; // Unlike PlaceHint, distTable is passed by value here, making this temporary
-                    distTable[distribution].weight =
-                        0; // this is so we can still roll this hint type if more stones free up later
-                    break;
-                }
-            }
-        }
-        // if there's still weight then it's junk, as the leftover weight is junkWeight
-        if (currentWeight >
-            0) { // zero TotalWeight breaks the while loop and hits the fallback, so skipping this is fine in that case
-            selected[selected.size() - 1] += 1;
-            stoneCount -= 1;
-        }
-        currentWeight = getRandomWeight(totalWeight);
-    }
-    // if stones are left, assign junk to every remaining stone as a fallback.
-    if (stoneCount > 0) {
-        selected[static_cast<uint8_t>(selected.size()) - 1] += static_cast<uint8_t>(stoneCount);
-    }
-}
-
-uint8_t PlaceHints(std::vector<uint8_t>& selectedHints, std::vector<HintDistributionSetting>& distTable) {
+static void DistributeAndPlaceHints(std::vector<HintDistributionSetting>& distTable, size_t totalStones) {
     auto ctx = Rando::Context::GetInstance();
-    uint8_t curSlot = 0;
-    for (HintDistributionSetting distribution : distTable) {
-        std::vector<RandomizerCheck> hintTypePool = FilterHintability(ctx->allLocations, distribution.filter);
-        for (uint8_t numHint = 0; numHint < selectedHints[curSlot]; numHint++) {
-            hintTypePool = FilterHintability(hintTypePool);
-            SPDLOG_DEBUG("Attempting to make hint of type: {}",
-                         StaticData::hintTypeNames[distribution.type].GetEnglish(MF_CLEAN));
-            RandomizerCheck hintedLocation = RC_UNKNOWN_CHECK;
+    const uint8_t junkIdx = distTable.size();
 
-            hintedLocation = CreateRandomHint(hintTypePool, distribution.copies, distribution.type, distribution.name);
-
-            if (hintedLocation == RC_UNKNOWN_CHECK) { // if hint failed to place, remove all wieght and copies then
-                                                      // return the number of stones to redistribute
-                uint8_t hintsToRemove = (selectedHints[curSlot] - numHint) * distribution.copies;
-                selectedHints[curSlot] = 0; // as distTable is passed by refernce here, these changes stick for the rest
-                                            // of this seed generation
-                distTable[curSlot].copies = 0; // and prevent future distribution from choosing this slot
-                distTable[curSlot].weight = 0;
-                return hintsToRemove;
+    // Apply fixed hints upfront (they don't participate in weighted selection)
+    for (size_t i = 0; i < distTable.size(); i++) {
+        if (distTable[i].fixed == 0) {
+            continue;
+        }
+        uint8_t placed = 0;
+        for (uint8_t c = 0; c < distTable[i].fixed; c++) {
+            std::vector<RandomizerCheck> hintPool = FilterHintability(ctx->allLocations, distTable[i].filter);
+            SPDLOG_DEBUG("Attempting fixed hint of type: {}",
+                         StaticData::hintTypeNames[distTable[i].type].GetEnglish(MF_CLEAN));
+            RandomizerCheck fixedLoc =
+                CreateRandomHint(hintPool, distTable[i].copies, distTable[i].type, distTable[i].name);
+            if (fixedLoc == RC_UNKNOWN_CHECK) {
+                distTable[i].weight = 0;
+                distTable[i].copies = 0;
+                break;
             }
-            if (Rando::StaticData::GetLocation(hintedLocation)->IsDungeon()) {
-                distribution.dungeonLimit -= 1;
-                if (distribution.dungeonLimit == 0) {
-                    FilterFromPool(hintTypePool, FilterOverworldLocations);
+            placed++;
+            if (Rando::StaticData::GetLocation(fixedLoc)->IsDungeon()) {
+                distTable[i].dungeonLimit -= 1;
+                if (distTable[i].dungeonLimit == 0) {
+                    hintPool = FilterFromPool(hintPool, FilterOverworldLocations);
                 }
             }
         }
-        selectedHints[curSlot] = 0;
-        curSlot += 1;
+        totalStones -= placed * distTable[i].copies;
     }
-    CreateJunkHints(selectedHints[selectedHints.size() - 1]);
-    return 0;
+
+    while (totalStones > 0) {
+        // Pick a weighted distribution type (junk included)
+        uint32_t totalWeight = 0;
+        for (size_t i = 0; i < distTable.size(); i++) {
+            totalWeight += distTable[i].weight;
+        }
+
+        // No weighted types left, fill remaining with junk
+        if (totalWeight == 0) {
+            for (size_t c = 0; c < totalStones; c++) {
+                // duplicate junk hints are possible for now
+                AddGossipStoneHintCopies(1, HINT_TYPE_HINT_KEY, "Junk", { GetRandomJunkHint() });
+            }
+            return;
+        }
+
+        uint32_t roll = getRandomWeight(totalWeight);
+        uint32_t cursor = 0;
+        uint8_t chosenType = junkIdx;
+        for (size_t i = 0; i < distTable.size(); i++) {
+            cursor += distTable[i].weight;
+            if (roll <= cursor) {
+                chosenType = static_cast<uint8_t>(i);
+                break;
+            }
+        }
+
+        if (chosenType == junkIdx) {
+            AddGossipStoneHintCopies(1, HINT_TYPE_HINT_KEY, "Junk", { GetRandomJunkHint() });
+            totalStones -= 1;
+            continue;
+        }
+
+        auto& dist = distTable[chosenType];
+
+        // Need at least `copies` stones to place one instance of this type
+        if (dist.copies == 0 || totalStones < dist.copies) {
+            dist.weight = 0;
+            dist.copies = 0;
+            continue;
+        }
+
+        // Build hint pool and attempt placement
+        std::vector<RandomizerCheck> hintPool = FilterHintability(ctx->allLocations, dist.filter);
+        SPDLOG_DEBUG("Attempting to make hint of type: {}", StaticData::hintTypeNames[dist.type].GetEnglish(MF_CLEAN));
+
+        RandomizerCheck hintedLocation = CreateRandomHint(hintPool, dist.copies, dist.type, dist.name);
+        if (hintedLocation == RC_UNKNOWN_CHECK) {
+            // Placement failed, disable this type entirely
+            dist.weight = 0;
+            dist.copies = 0;
+            continue;
+        }
+
+        // Track dungeon limit
+        if (Rando::StaticData::GetLocation(hintedLocation)->IsDungeon()) {
+            dist.dungeonLimit -= 1;
+            if (dist.dungeonLimit == 0) {
+                hintPool = FilterFromPool(hintPool, FilterOverworldLocations);
+            }
+        }
+
+        totalStones -= dist.copies;
+    }
 }
 
 void CreateStoneHints() {
@@ -648,16 +646,8 @@ void CreateStoneHints() {
     }
 
     size_t totalStones = GetEmptyGossipStones().size();
-    std::vector<uint8_t> selectedHints;
-    selectedHints.resize(distTable.size() + 1);
-    DistributeHints(selectedHints, totalStones, distTable, hintSetting.junkWeight);
-
-    while (totalStones != 0) {
-        totalStones = PlaceHints(selectedHints, distTable);
-        if (totalStones != 0) {
-            DistributeHints(selectedHints, totalStones, distTable, hintSetting.junkWeight, false);
-        }
-    }
+    distTable.push_back({ "Junk", HINT_TYPE_HINT_KEY, hintSetting.junkWeight, 0, 1, NoFilter });
+    DistributeAndPlaceHints(distTable, totalStones);
 
     // Getting gossip stone locations temporarily sets one location to not be reachable.
     // Call the function one last time to get rid of false positives on locations not
