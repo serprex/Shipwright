@@ -55,7 +55,6 @@ void Entrance_EnableFW(void);
 uint8_t Entrance_GetIsEntranceDiscovered(uint16_t entranceIndex);
 void Entrance_SetEntranceDiscovered(uint16_t entranceIndex, uint8_t isReversedEntrance);
 
-extern int16_t lastDungeonEntranceIndex;
 #ifdef __cplusplus
 }
 #endif

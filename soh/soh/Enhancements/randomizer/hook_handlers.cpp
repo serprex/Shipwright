@@ -2725,9 +2725,9 @@ static void Randomizer_OnTransitionEnd(s16 sceneNum) {
             gSaveContext.entranceIndex == ENTR_WATER_TEMPLE_BOSS_DOOR ||
             gSaveContext.entranceIndex == ENTR_SPIRIT_TEMPLE_BOSS_DOOR ||
             gSaveContext.entranceIndex == ENTR_SHADOW_TEMPLE_BOSS_DOOR) {
-            lastDungeonEntranceIndex = Rando::GetReverseEntranceIndex(gSaveContext.entranceIndex);
+            gSaveContext.ship.quest.data.randomizer.dungeonEntranceIndex = Rando::GetReverseEntranceIndex(gSaveContext.entranceIndex);
         } else {
-            lastDungeonEntranceIndex = gSaveContext.entranceIndex;
+            gSaveContext.ship.quest.data.randomizer.dungeonEntranceIndex = gSaveContext.entranceIndex;
         }
     }
     prevSceneNum = sceneNum;
@@ -2752,17 +2752,6 @@ static void RandomizerRegisterIsRando() {
     static uint32_t onExitGameHook = 0;
     static uint32_t onKaleidoUpdateHook = 0;
     static uint32_t onCuccoOrChickenHatchHook = 0;
-
-    SaveManager::Instance->AddInitFunction([](bool isDebug) { lastDungeonEntranceIndex = -1; });
-    SaveManager::Instance->AddSaveFunction(
-        "lastDungeonEntrance", 1,
-        [](SaveContext* saveContext, int sectionID, bool fullSave) {
-            SaveManager::Instance->SaveData("lastDungeonEntranceIndex", lastDungeonEntranceIndex);
-        },
-        true, SECTION_PARENT_NONE);
-    SaveManager::Instance->AddLoadFunction("lastDungeonEntrance", 1, []() {
-        SaveManager::Instance->LoadData("lastDungeonEntranceIndex", lastDungeonEntranceIndex, (int16_t)-1);
-    });
 
     // register this outside OnLoadGame as VB is invoked before OnLoadGame
     COND_VB_SHOULD(VB_REVERT_SPOILING_ITEMS, true, {

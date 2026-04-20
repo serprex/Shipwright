@@ -20,8 +20,6 @@
 
 extern PlayState* gPlayState;
 
-s16 lastDungeonEntranceIndex = -1;
-
 // Overwrite the dynamic exit for the OGC Fairy Fountain to be 0x3E8 instead
 // of 0x340 (0x340 will stay as the exit for the HC Fairy Fountain -> Castle Grounds)
 s16 dynamicExitList[] = {
@@ -339,8 +337,8 @@ u32 Entrance_SceneAndSpawnAre(u8 scene, u8 spawn) {
 // Properly respawn the player after a game over, accounting for dungeon entrance randomizer
 void Entrance_SetGameOverEntrance(void) {
     s16 scene = gPlayState->sceneNum;
-    if (lastDungeonEntranceIndex != -1 && DungeonSceneKind(scene) != 0) {
-        gSaveContext.entranceIndex = lastDungeonEntranceIndex;
+    if (gSaveContext.ship.quest.data.randomizer.dungeonEntranceIndex != -1 && DungeonSceneKind(scene) != 0) {
+        gSaveContext.entranceIndex = gSaveContext.ship.quest.data.randomizer.dungeonEntranceIndex;
     }
 }
 
@@ -348,8 +346,8 @@ void Entrance_SetGameOverEntrance(void) {
 void Entrance_SetSavewarpEntrance(void) {
     s16 scene = gSaveContext.savedSceneNum;
 
-    if (lastDungeonEntranceIndex != -1 && DungeonSceneKind(scene) != 0) {
-        gSaveContext.entranceIndex = lastDungeonEntranceIndex;
+    if (gSaveContext.ship.quest.data.randomizer.dungeonEntranceIndex != -1 && DungeonSceneKind(scene) != 0) {
+        gSaveContext.entranceIndex = gSaveContext.ship.quest.data.randomizer.dungeonEntranceIndex;
     } else if (scene == SCENE_LINKS_HOUSE &&
                Randomizer_GetSettingValue(RSK_SHUFFLE_INTERIOR_ENTRANCES) != RO_INTERIOR_ENTRANCE_SHUFFLE_ALL) {
         // Save warping in Link's house keeps the player there if Link's house not shuffled,
