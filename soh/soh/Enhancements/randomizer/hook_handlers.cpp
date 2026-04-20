@@ -2725,7 +2725,8 @@ static void Randomizer_OnTransitionEnd(s16 sceneNum) {
             gSaveContext.entranceIndex == ENTR_WATER_TEMPLE_BOSS_DOOR ||
             gSaveContext.entranceIndex == ENTR_SPIRIT_TEMPLE_BOSS_DOOR ||
             gSaveContext.entranceIndex == ENTR_SHADOW_TEMPLE_BOSS_DOOR) {
-            gSaveContext.ship.quest.data.randomizer.dungeonEntranceIndex = Rando::GetReverseEntranceIndex(gSaveContext.entranceIndex);
+            gSaveContext.ship.quest.data.randomizer.dungeonEntranceIndex =
+                Rando::GetReverseEntranceIndex(gSaveContext.entranceIndex);
         } else {
             gSaveContext.ship.quest.data.randomizer.dungeonEntranceIndex = gSaveContext.entranceIndex;
         }

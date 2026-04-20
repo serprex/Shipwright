@@ -339,6 +339,10 @@ void Entrance_SetGameOverEntrance(void) {
     s16 scene = gPlayState->sceneNum;
     if (gSaveContext.ship.quest.data.randomizer.dungeonEntranceIndex != -1 && DungeonSceneKind(scene) != 0) {
         gSaveContext.entranceIndex = gSaveContext.ship.quest.data.randomizer.dungeonEntranceIndex;
+        if (gSaveContext.entranceIndex >= ENTRANCE_GROTTO_LOAD_START &&
+            gSaveContext.entranceIndex <= ENTRANCE_GROTTO_EXIT_START + NUM_GROTTOS) {
+            gSaveContext.entranceIndex = Grotto_OverrideSpecialEntrance(gSaveContext.entranceIndex);
+        }
     }
 }
 
@@ -348,6 +352,10 @@ void Entrance_SetSavewarpEntrance(void) {
 
     if (gSaveContext.ship.quest.data.randomizer.dungeonEntranceIndex != -1 && DungeonSceneKind(scene) != 0) {
         gSaveContext.entranceIndex = gSaveContext.ship.quest.data.randomizer.dungeonEntranceIndex;
+        if (gSaveContext.entranceIndex >= ENTRANCE_GROTTO_LOAD_START &&
+            gSaveContext.entranceIndex <= ENTRANCE_GROTTO_EXIT_START + NUM_GROTTOS) {
+            gSaveContext.entranceIndex = Grotto_OverrideSpecialEntrance(gSaveContext.entranceIndex);
+        }
     } else if (scene == SCENE_LINKS_HOUSE &&
                Randomizer_GetSettingValue(RSK_SHUFFLE_INTERIOR_ENTRANCES) != RO_INTERIOR_ENTRANCE_SHUFFLE_ALL) {
         // Save warping in Link's house keeps the player there if Link's house not shuffled,
