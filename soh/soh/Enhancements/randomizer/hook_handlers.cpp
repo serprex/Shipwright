@@ -2716,7 +2716,15 @@ static void Randomizer_OnTransitionEnd(s16 sceneNum) {
     static s16 prevSceneNum = -1;
     int8_t dungeonSceneKind = DungeonSceneKind(sceneNum);
     if (dungeonSceneKind != 0 && DungeonSceneKind(prevSceneNum) == 0) {
-        if (RAND_GET_OPTION(RSK_DECOUPLED_ENTRANCES) || dungeonSceneKind == 2) {
+        if (RAND_GET_OPTION(RSK_DECOUPLED_ENTRANCES) || dungeonSceneKind == 2 ||
+            gSaveContext.entranceIndex == ENTR_DEKU_TREE_BOSS_DOOR ||
+            gSaveContext.entranceIndex == ENTR_DODONGOS_CAVERN_BOSS_DOOR ||
+            gSaveContext.entranceIndex == ENTR_JABU_JABU_BOSS_DOOR ||
+            gSaveContext.entranceIndex == ENTR_FOREST_TEMPLE_BOSS_DOOR ||
+            gSaveContext.entranceIndex == ENTR_FIRE_TEMPLE_BOSS_DOOR ||
+            gSaveContext.entranceIndex == ENTR_WATER_TEMPLE_BOSS_DOOR ||
+            gSaveContext.entranceIndex == ENTR_SPIRIT_TEMPLE_BOSS_DOOR ||
+            gSaveContext.entranceIndex == ENTR_SHADOW_TEMPLE_BOSS_DOOR) {
             lastDungeonEntranceIndex = Rando::GetReverseEntranceIndex(gSaveContext.entranceIndex);
         } else {
             lastDungeonEntranceIndex = gSaveContext.entranceIndex;
