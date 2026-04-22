@@ -15062,6 +15062,10 @@ s32 Player_UpdateNoclip(Player* this, PlayState* play) {
 
         Player_ZeroSpeedXZ(this);
 
+        // SoH: prevent softlock
+        this->stateFlags2 &= ~PLAYER_STATE2_NAVI_ALERT;
+        play->interfaceCtx.naviCalling = 0;
+
         this->actor.gravity = 0.0f;
         this->actor.velocity.x = this->actor.velocity.z = this->actor.velocity.y = 0.0f;
 
