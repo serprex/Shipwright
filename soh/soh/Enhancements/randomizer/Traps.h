@@ -8,7 +8,7 @@
 #include "soh/Enhancements/item-tables/ItemTableTypes.h"
 #include "soh/Enhancements/randomizer/randomizerTypes.h"
 
-extern class CustomMessage;
+class CustomMessage;
 
 namespace Rando {
 namespace Traps {
