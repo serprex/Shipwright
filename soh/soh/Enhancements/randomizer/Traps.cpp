@@ -2,6 +2,7 @@
 #include "soh/Enhancements/randomizer/SeedContext.h"
 #include "soh/Enhancements/randomizer/randomizerTypes.h"
 #include "soh/Enhancements/randomizer/static_data.h"
+#include "soh/Enhancements/randomizer/3drando/random.hpp"
 #include "soh/ShipUtils.h"
 
 #include <vector>
@@ -1417,21 +1418,50 @@ static void InitTrickNames() {
     */
 }
 
-// Generate a fake name for the ice trap based on the item it's displayed as
-Text Rando::Traps::GetTrapName(uint16_t id) {
-    // If the trick names table has not been initialized, do so
-    if (!initTrickNames) {
-        InitTrickNames();
-        initTrickNames = true;
-    }
+/// @brief Gets the "trick name" for an Ice Trap
+/// @param id The RandomizerGet of the item the Ice Trap is disguised as
+/// @param iceTrapNamesOption The current value of the RSK_ICE_TRAP_NAMES setting
+/// @return A Text object with the selected trick name
+Text Rando::Traps::GetTrapName(RandomizerGet id, RandoIceTrapNames iceTrapNamesOption) {
+    switch (iceTrapNamesOption) {
+        case RO_ICE_TRAP_NAMES_IDENTICAL: {
+            return Rando::StaticData::RetrieveItem(id).GetName();
+        }
+        case RO_ICE_TRAP_NAMES_SIMILAR: {
+            // If the trick names table has not been initialized, do so
+            if (!initTrickNames) {
+                InitTrickNames();
+                initTrickNames = true;
+            }
 
-    if (trickNameTable[id].empty()) {
-        assert(false);
-        return Text{ "not an Ice Trap" };
-    }
+            if (trickNameTable[id].empty()) {
+                SPDLOG_ERROR("[Rando::Traps::GetTrapName] Couldn't find entry for RG %d in trickNameTable", static_cast<u8>(id));
+                assert(false);
+                return Text{ "Error: Couldn't get Ice Trap name" };
+            }
 
-    // Randomly get the easy, medium, or hard name for the given item id
-    return ShipUtils::RandomElement(trickNameTable[id]);
+            // Randomly get the easy, medium, or hard name for the given item id
+            return ShipUtils::RandomElement(trickNameTable[id]);
+        }
+        case RO_ICE_TRAP_NAMES_MISSPELLED_CHANGED_VOWEL: {
+            Text name = Rando::StaticData::RetrieveItem(id).GetName();
+            name.ReplaceRandomVowel(&rando_state);
+            return name;
+        }
+        case RO_ICE_TRAP_NAMES_MISSPELLED_DUPLICATED_LETTER: {
+            Text name = Rando::StaticData::RetrieveItem(id).GetName();
+            name.DuplicateRandomLetter(&rando_state);
+            return name;
+        }
+        case RO_ICE_TRAP_NAMES_REVEALED: {
+            return Rando::StaticData::RetrieveItem(RG_ICE_TRAP).GetName();
+        }
+        default: {
+            SPDLOG_ERROR("[Rando::Traps::GetTrapName] Invalid value for RSK_ICE_TRAP_NAMES (%d)", static_cast<u8>(iceTrapNamesOption));
+            assert(false);
+            return Text{ "Error: Couldn't get Ice Trap name" };
+        }
+    }
 }
 
 RandomizerGet Rando::Traps::GetTrapTrickModel() {

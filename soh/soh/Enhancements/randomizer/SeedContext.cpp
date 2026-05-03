@@ -361,7 +361,7 @@ void Context::CreateItemOverrides() {
         if (itemLoc->GetPlacedRandomizerGet() == RG_ICE_TRAP) {
             ItemOverride val(locKey, Traps::GetTrapTrickModel());
             iceTrapModels[locKey] = val.LooksLike();
-            val.SetTrickName(Traps::GetTrapName(val.LooksLike()));
+            val.SetTrickName(Traps::GetTrapName(val.LooksLike(), static_cast<RandoIceTrapNames>(mOptions[RSK_ICE_TRAP_NAMES].Get())));
             // If this is ice trap is in a shop, change the name based on what the model will look like
             overrides[locKey] = val;
         }

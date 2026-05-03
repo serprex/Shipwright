@@ -4,14 +4,15 @@
 #error This header should not be used in C files
 #endif
 
-#include "soh/Enhancements/custom-message/CustomMessageManager.h"
-#include "soh/Enhancements/randomizer/randomizerTypes.h"
 #include "soh/Enhancements/custom-message/text.h"
-#include "libultraship/libultra/types.h"
+#include "soh/Enhancements/item-tables/ItemTableTypes.h"
+#include "soh/Enhancements/randomizer/randomizerTypes.h"
+
+extern class CustomMessage;
 
 namespace Rando {
 namespace Traps {
-Text GetTrapName(uint16_t id);
+Text GetTrapName(RandomizerGet id, RandoIceTrapNames iceTrapNamesOption);
 RandomizerGet GetTrapTrickModel();
 bool ShouldJunkItemBeTrap();
 void BuildIceTrapMessage(CustomMessage& msg, GetItemEntry getItemEntry);

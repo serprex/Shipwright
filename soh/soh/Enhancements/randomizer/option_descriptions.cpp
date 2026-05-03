@@ -702,6 +702,18 @@ void Settings::CreateOptionDescriptions() {
         "You do not need to have base ice traps on for this setting to work.";
     mOptionDescriptions[RSK_ICE_TRAP_PERCENT] =
         "If set above 0, each Junk item has that chance of being replaced with an extra Ice Trap.";
+    mOptionDescriptions[RSK_ICE_TRAP_NAMES] =
+        "Sets how Ice Traps disguise themselves in text.\n"
+        "\n"
+        "Identical - There's no tell for an item being an Ice Trap.\n"
+        "\n"
+        "Similar - The name will be similar to the item's real name (for example, \"Korok Sword\" instead of \"Kokiri Sword\").\n"
+        "\n"
+        "Misspelled (Vowel) - The name is misspelled by changing a random vowel with another random vowel.\n"
+        "\n"
+        "Misspelled (Duplicate) - The name is misspelled by duplicating a random letter.\n"
+        "\n"
+        "Revealed - Ice Traps will not disguide themselves in text.";
     mOptionDescriptions[RSK_GOSSIP_STONE_HINTS] =
         "Allows Gossip Stones to provide hints on item locations. Hints mentioning "
         "\"Way of the Hero\" indicate a location that holds an item required to beat "

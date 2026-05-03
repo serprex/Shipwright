@@ -1,4 +1,5 @@
 #include "text.h"
+#include "soh/ShipUtils.h"
 
 Text::Text() = default;
 
@@ -94,4 +95,58 @@ void Text::Replace(const std::string& oldStr, const Text& newText) {
     replaceAll(french, oldStr, newText.GetFrench());
     replaceAll(german, oldStr, newText.GetGerman());
     replaceAll(spanish, oldStr, newText.GetSpanish());
+}
+
+static void replaceRandomVowel(std::string& target, uint64_t* randState) {
+    std::vector<size_t> vowelPositions;
+
+    for (size_t i = 0; i < target.size(); ++i) {
+        char c = std::tolower(target[i]);
+        if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u') {
+            vowelPositions.push_back(i);
+        }
+    }
+
+    if (vowelPositions.empty()) return;
+
+    size_t pos = ShipUtils::RandomElement(vowelPositions, randState);
+
+    const std::vector<char> vowels = {'a', 'e', 'i', 'o', 'u'};
+    char newVowel = ShipUtils::RandomElement(vowels, randState);
+
+    if (std::isupper(target[pos])) {
+        newVowel = std::toupper(newVowel);
+    }
+
+    target[pos] = newVowel;
+}
+
+void Text::ReplaceRandomVowel(uint64_t* randState) {
+    for (std::string& str : { std::ref(english), std::ref(french), std::ref(german), std::ref(spanish) }) {
+        replaceRandomVowel(str, randState);
+    }
+}
+
+static void duplicateRandomLetter(std::string& target, uint64_t* randState) {
+    std::vector<size_t> letterPositions;
+
+    for (size_t i = 0; i < target.size(); ++i) {
+        if (std::isalpha(target[i])) {
+            letterPositions.push_back(i);
+        }
+    }
+
+    if (letterPositions.empty()) return;
+
+    size_t pos = ShipUtils::RandomElement(letterPositions, randState);
+
+    char c = target[pos];
+
+    target.insert(target.begin() + pos + 1, c);
+}
+
+void Text::DuplicateRandomLetter(uint64_t* randState) {
+    for (std::string& str : { std::ref(english), std::ref(french), std::ref(german), std::ref(spanish) }) {
+        duplicateRandomLetter(str, randState);
+    }
 }
