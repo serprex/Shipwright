@@ -1435,7 +1435,8 @@ Text Rando::Traps::GetTrapName(RandomizerGet id, RandoIceTrapNames iceTrapNamesO
             }
 
             if (trickNameTable[id].empty()) {
-                SPDLOG_ERROR("[Rando::Traps::GetTrapName] Couldn't find entry for RG %d in trickNameTable", static_cast<u8>(id));
+                SPDLOG_ERROR("[Rando::Traps::GetTrapName] Couldn't find entry for RG %d in trickNameTable",
+                             static_cast<u8>(id));
                 assert(false);
                 return Text{ "Error: Couldn't get Ice Trap name" };
             }
@@ -1457,7 +1458,8 @@ Text Rando::Traps::GetTrapName(RandomizerGet id, RandoIceTrapNames iceTrapNamesO
             return Rando::StaticData::RetrieveItem(RG_ICE_TRAP).GetName();
         }
         default: {
-            SPDLOG_ERROR("[Rando::Traps::GetTrapName] Invalid value for RSK_ICE_TRAP_NAMES (%d)", static_cast<u8>(iceTrapNamesOption));
+            SPDLOG_ERROR("[Rando::Traps::GetTrapName] Invalid value for RSK_ICE_TRAP_NAMES (%d)",
+                         static_cast<u8>(iceTrapNamesOption));
             assert(false);
             return Text{ "Error: Couldn't get Ice Trap name" };
         }

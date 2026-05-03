@@ -107,11 +107,13 @@ static void replaceRandomVowel(std::string& target, uint64_t* randState) {
         }
     }
 
-    if (vowelPositions.empty()) return;
+    if (vowelPositions.empty()) {
+        return;
+    }
 
     size_t pos = ShipUtils::RandomElement(vowelPositions, randState);
 
-    const std::vector<char> vowels = {'a', 'e', 'i', 'o', 'u'};
+    const std::vector<char> vowels = { 'a', 'e', 'i', 'o', 'u' };
     char newVowel = ShipUtils::RandomElement(vowels, randState);
 
     if (std::isupper(target[pos])) {
@@ -136,7 +138,9 @@ static void duplicateRandomLetter(std::string& target, uint64_t* randState) {
         }
     }
 
-    if (letterPositions.empty()) return;
+    if (letterPositions.empty()) {
+        return;
+    }
 
     size_t pos = ShipUtils::RandomElement(letterPositions, randState);
 
