@@ -116,6 +116,7 @@ void Sail::OnIncomingJson(nlohmann::json payload) {
                 } else if (result == GameInteractionEffectQueryResult::TemporarilyNotPossible) {
                     responsePayload["status"] = "try_again";
                 }
+                delete giEffect;
                 SendJsonToRemote(responsePayload);
                 return;
             }

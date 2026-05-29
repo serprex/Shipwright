@@ -176,9 +176,12 @@ CrowdControl::Effect* CrowdControl::ParseMessage(nlohmann::json dataReceived) {
 
     SPDLOG_INFO("[CrowdControl] Received payload:\n{}", dataReceived.dump());
 
-    if (!dataReceived.contains("code")) {
+    // "parameters" is intentionally not required: most effects (spawn enemies, teleports, status
+    // effects, etc.) carry no parameters. Its absence is handled safely below, and any type error
+    // is caught by the guard in Network::HandleRemoteJson.
+    if (!dataReceived.contains("code") || !dataReceived.contains("viewer")) {
         // This seems to happen when the CC session ends
-        SPDLOG_ERROR("[CrowdControl] Payload does not contain code, ignoring.");
+        SPDLOG_ERROR("[CrowdControl] Payload does not contain code or viewer, ignoring.");
         return nullptr;
     }
 
@@ -194,9 +197,16 @@ CrowdControl::Effect* CrowdControl::ParseMessage(nlohmann::json dataReceived) {
         receivedParameter = dataReceived["parameters"][0];
     }
 
+    auto it = effectStringToEnum.find(effectName);
+    if (it == effectStringToEnum.end()) {
+        SPDLOG_ERROR("[CrowdControl] Unknown effect code: {}", effectName);
+        delete effect;
+        return nullptr;
+    }
+
     // Assign GameInteractionEffect + values to CC effect.
     // Categories are mostly used for checking for conflicting timed effects.
-    switch (effectStringToEnum[effectName]) {
+    switch (it->second) {
 
         // Spawn Enemies and Objects
         case kEffectSpawnCuccoStorm:
