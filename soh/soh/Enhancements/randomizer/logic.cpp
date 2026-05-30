@@ -2153,15 +2153,16 @@ void Logic::ApplyItemEffect(Item& item, bool state) {
             auto randoGet = item.GetRandomizerGet();
             if (randoGet >= RG_SHADOW_SILVER_BLADES && randoGet <= RG_GANONS_CASTLE_MQ_SILVER_SHADOW) {
                 s8* field = Randomizer::SilverFieldFromSaveContext(mSaveContext, randoGet);
-                bool isWallet = ctx->GetOption(RSK_SHUFFLE_SILVER).Is(RO_SHUFFLE_SILVER_WALLET);
+                bool fullGroup = ctx->GetOption(RSK_SHUFFLE_SILVER).Is(RO_SHUFFLE_SILVER_WALLET) ||
+                                 ctx->GetOption(RSK_SHUFFLE_SILVER).Is(RO_SHUFFLE_SILVER_STARTWITH);
                 if (!state) {
-                    if (isWallet) {
+                    if (fullGroup) {
                         *field = 0;
                     } else {
                         *field -= 1;
                     }
                 } else {
-                    if (isWallet) {
+                    if (fullGroup) {
                         *field = 10;
                     } else {
                         *field += 1;
