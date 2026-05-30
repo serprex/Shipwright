@@ -130,11 +130,12 @@ static void PlaceItemsForType(RandomizerCheckType rctype, bool overworldActive =
                 if (currentQuest == RCQUEST_BOTH) {
                     AddFixedItemToPool(loc->GetVanillaItem(), 1, false);
                 } else {
-                    // Check if current item's dungeon is vanilla or MQ, and only add if quest corresponds to it.
+                    // Check if current item's dungeon is vanilla or MQ, and only add if quest corresponds to it
                     SceneID itemScene = loc->GetScene();
+                    auto dungeon = ctx->GetDungeonFromScene(itemScene);
 
-                    if (itemScene >= SCENE_DEKU_TREE && itemScene <= SCENE_GERUDO_TRAINING_GROUND) {
-                        bool isMQ = ctx->GetDungeon(itemScene)->IsMQ();
+                    if (dungeon != nullptr) {
+                        bool isMQ = dungeon->IsMQ();
 
                         if ((isMQ && currentQuest == RCQUEST_MQ) || (!isMQ && currentQuest == RCQUEST_VANILLA)) {
                             AddFixedItemToPool(loc->GetVanillaItem(), 1, false);
