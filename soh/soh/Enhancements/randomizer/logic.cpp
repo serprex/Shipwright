@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "soh/OTRGlobals.h"
+#include "randomizer.h"
 #include "dungeon.h"
 #include "SeedContext.h"
 #include "macros.h"

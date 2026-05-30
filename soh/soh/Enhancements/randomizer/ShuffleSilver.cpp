@@ -3,6 +3,7 @@
 #include "SeedContext.h"
 #include "draw.h"
 #include "static_data.h"
+#include "randomizer.h"
 
 extern "C" {
 #include "overlays/actors/ovl_En_G_Switch/z_en_g_switch.h"
