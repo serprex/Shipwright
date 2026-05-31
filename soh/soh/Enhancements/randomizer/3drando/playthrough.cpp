@@ -5,7 +5,6 @@
 #include "../location_access.h"
 #include "random.hpp"
 #include "spoiler_log.hpp"
-#include "soh/Enhancements/randomizer/randomizerTypes.h"
 #include "soh/Enhancements/randomizer/settings.h"
 #include "variables.h"
 #include "soh/cvar_prefixes.h"
@@ -72,14 +71,12 @@ int Playthrough_Init(uint32_t seed, std::set<RandomizerCheck> excludedLocations,
 
     GenerateHash();
 
-    if (true) {
-        // TODO: Handle different types of file output (Spoiler Log, Plando Template, Patch Files, Race Files, etc.)
-        SPDLOG_INFO("Writing Spoiler Log...");
-        StartPerformanceTimer(PT_SPOILER_LOG);
-        SpoilerLog_Write();
-        StopPerformanceTimer(PT_SPOILER_LOG);
-        SPDLOG_INFO("Writing Spoiler Log Done");
-    }
+    // TODO: Handle different types of file output (Spoiler Log, Plando Template, Patch Files, Race Files, etc.)
+    SPDLOG_INFO("Writing Spoiler Log...");
+    StartPerformanceTimer(PT_SPOILER_LOG);
+    SpoilerLog_Write();
+    StopPerformanceTimer(PT_SPOILER_LOG);
+    SPDLOG_INFO("Writing Spoiler Log Done");
 
     ctx->playthroughLocations.clear();
     ctx->playthroughBeatable = false;

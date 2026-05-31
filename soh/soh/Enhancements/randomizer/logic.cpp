@@ -298,9 +298,12 @@ bool Logic::HasItem(RandomizerGet itemName) {
         case RG_GANONS_CASTLE_MQ_SILVER_SHADOW: {
             if (!ctx->GetOption(RSK_SHUFFLE_SILVER)) {
                 return Get((LogicVal)(LOGIC_SHADOW_SILVER_BLADES + (itemName - RG_SHADOW_SILVER_BLADES)));
+            } else if (ctx->GetOption(RSK_SHUFFLE_SILVER).Is(RO_SHUFFLE_SILVER_STARTWITH)) {
+                return true;
+            } else {
+                s8 field = *Randomizer::SilverFieldFromSaveContext(mSaveContext, itemName);
+                return field >= Randomizer::SilverTotal(itemName);
             }
-            s8 field = *Randomizer::SilverFieldFromSaveContext(mSaveContext, itemName);
-            return field >= Randomizer::SilverTotal(itemName);
         }
             // Trade Items
         case RG_POCKET_EGG:
@@ -2153,16 +2156,15 @@ void Logic::ApplyItemEffect(Item& item, bool state) {
             auto randoGet = item.GetRandomizerGet();
             if (randoGet >= RG_SHADOW_SILVER_BLADES && randoGet <= RG_GANONS_CASTLE_MQ_SILVER_SHADOW) {
                 s8* field = Randomizer::SilverFieldFromSaveContext(mSaveContext, randoGet);
-                bool fullGroup = ctx->GetOption(RSK_SHUFFLE_SILVER).Is(RO_SHUFFLE_SILVER_WALLET) ||
-                                 ctx->GetOption(RSK_SHUFFLE_SILVER).Is(RO_SHUFFLE_SILVER_STARTWITH);
+                bool isWallet = ctx->GetOption(RSK_SHUFFLE_SILVER).Is(RO_SHUFFLE_SILVER_WALLET);
                 if (!state) {
-                    if (fullGroup) {
+                    if (isWallet) {
                         *field = 0;
                     } else {
                         *field -= 1;
                     }
                 } else {
-                    if (fullGroup) {
+                    if (isWallet) {
                         *field = 10;
                     } else {
                         *field += 1;
@@ -2385,7 +2387,7 @@ void Logic::InitSaveContext() {
 
 void Logic::NewSaveContext() {
     if (mSaveContext != nullptr && mSaveContext != &gSaveContext) {
-        free(mSaveContext);
+        delete mSaveContext;
     }
     mSaveContext = new SaveContext();
     InitSaveContext();
