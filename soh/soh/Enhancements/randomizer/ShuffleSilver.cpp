@@ -34,6 +34,7 @@ static bool IsSilverCleared(s16 switchFlag) {
                 case 17:
                     return gSaveContext.ship.quest.data.randomizer.silverMqShadowPit >= 5;
             }
+            break;
         case SCENE_SPIRIT_TEMPLE:
             switch (switchFlag) {
                 case 0:
@@ -47,6 +48,7 @@ static bool IsSilverCleared(s16 switchFlag) {
                 case 55:
                     return gSaveContext.ship.quest.data.randomizer.silverMqSpiritLobby >= 5;
             }
+            break;
         case SCENE_BOTTOM_OF_THE_WELL:
             return gSaveContext.ship.quest.data.randomizer.silverBotw >= 5;
         case SCENE_ICE_CAVERN:
@@ -56,6 +58,7 @@ static bool IsSilverCleared(s16 switchFlag) {
                 case 31:
                     return gSaveContext.ship.quest.data.randomizer.silverIceCavernBlades >= 5;
             }
+            break;
         case SCENE_GERUDO_TRAINING_GROUND:
             switch (switchFlag) {
                 case 12:
@@ -68,6 +71,7 @@ static bool IsSilverCleared(s16 switchFlag) {
                     return isMQ ? gSaveContext.ship.quest.data.randomizer.silverMqGtgSlope >= 5
                                 : gSaveContext.ship.quest.data.randomizer.silverGtgSlope >= 5;
             }
+            break;
         case SCENE_INSIDE_GANONS_CASTLE:
             switch (switchFlag) {
                 case 1:
@@ -84,6 +88,7 @@ static bool IsSilverCleared(s16 switchFlag) {
                 case 18:
                     return gSaveContext.ship.quest.data.randomizer.silverGanonLight >= 5;
             }
+            break;
     }
     return false;
 }
@@ -134,12 +139,12 @@ void RegisterShuffleSilver() {
         if (silver->type == ENGSWITCH_SILVER_RUPEE) {
             auto silverIdentity =
                 OTRGlobals::Instance->gRandomizer->IdentifySilver(gPlayState->sceneNum, silver->actor.world.pos);
-            if (silverIdentity.randomizerCheck == RC_UNKNOWN_CHECK ||
-                Flags_GetRandomizerInf(silverIdentity.randomizerInf)) {
-                *should = true;
-                return;
+            *should = silverIdentity.randomizerCheck == RC_UNKNOWN_CHECK ||
+                      Flags_GetRandomizerInf(silverIdentity.randomizerInf);
+            if (!*should) {
+                *should = false;
+                silver->actor.draw = EnGSwitch_RandomizerDraw;
             }
-            silver->actor.draw = EnGSwitch_RandomizerDraw;
         } else if (silver->type == ENGSWITCH_SILVER_TRACKER && IsSilverCleared(silver->switchFlag)) {
             Flags_SetSwitch(gPlayState, silver->switchFlag);
             *should = true;
