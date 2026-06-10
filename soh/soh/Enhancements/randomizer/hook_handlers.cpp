@@ -1865,10 +1865,19 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             break;
         }
         case VB_SLAY_GANON:
-            if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_WINCON_OPTIONS) != RO_WINCON_DEFEAT_GANON) {
-                // TODO blue warp
+            // When the win condition isn't to defeat Ganon, leave Ganon alive and warp out of the castle as if a
+            // blue warp had spawned, treating the arena like any other cleared boss room. Mark Ganon's Tower as
+            // cleared so it counts toward dungeon based triggers, then re-check the win/reward triggers.
+            if (RAND_GET_OPTION(RSK_WINCON).IsNot(RO_WINCON_DEFEAT_GANON)) {
                 *should = false;
+                Flags_SetRandomizerInf(RAND_INF_DUNGEONS_DONE_GANONS_TOWER);
+                CheckTriggers();
+                gPlayState->nextEntranceIndex = ENTR_OUTSIDE_GANONS_CASTLE_1_2;
+                gPlayState->transitionTrigger = TRANS_TRIGGER_START;
+                gPlayState->transitionType = TRANS_TYPE_FADE_WHITE;
+                gSaveContext.nextTransitionType = TRANS_TYPE_FADE_WHITE_SLOW;
             }
+            break;
         case VB_DRAW_AMMO_COUNT: {
             s16 item = *va_arg(args, s16*);
             // don't draw ammo count if you have the infinite upgrade
@@ -2810,7 +2819,7 @@ void RandomizerOnPlayerUpdateHandler() {
                                   *Rando::StaticData::GetItemTable().at(RG_GANONS_CASTLE_BOSS_KEY).GetGIEntry());
     }
 
-    if (!GameInteractor::IsGameplayPaused() && RAND_GET_OPTION(RSK_TRIFORCE_HUNT).IsNot(RO_TRIFORCE_HUNT_OFF)) {
+    if (!GameInteractor::IsGameplayPaused()) {
         // Warp to credits once item queue has drained to avoid losing queued items
         if (GameInteractor::State::TriforceHuntCreditsWarpActive && randomizerQueuedChecks.empty() &&
             randomizerQueuedCheck == RC_UNKNOWN_CHECK) {
@@ -2833,7 +2842,7 @@ void RandomizerOnPlayerUpdateHandler() {
         // to ensure it's done at that point in time specifically.
         if (GameInteractor::State::TriforceHuntPieceGiven) {
             triforcePieceScale = 0.0f;
-            GameInteractor::State::TriforceHuntPieceGiven = 0;
+            GameInteractor::State::TriforceHuntPieceGiven = false;
         }
     }
 }

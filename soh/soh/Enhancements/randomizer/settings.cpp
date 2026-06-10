@@ -3067,20 +3067,38 @@ void Context::FinalizeSettings(const std::set<RandomizerCheck>& excludedLocation
         mGBKCondition = RO_CHECK_TRIGGER_NONE;
     }
 
-    if (mOptions[RSK_GANONS_BOSS_KEY].Is(RO_GANON_BOSS_KEY_STONES)) {
+    if (mOptions[RSK_GANONS_SOUL].Is(RO_GANONS_SOUL_STONES)) {
         mGanonsSoulCondition = RO_CHECK_TRIGGER_STONES;
-    } else if (mOptions[RSK_GANONS_BOSS_KEY].Is(RO_GANON_BOSS_KEY_MEDALLIONS)) {
+    } else if (mOptions[RSK_GANONS_SOUL].Is(RO_GANONS_SOUL_MEDALLIONS)) {
         mGanonsSoulCondition = RO_CHECK_TRIGGER_MEDALLIONS;
-    } else if (mOptions[RSK_GANONS_BOSS_KEY].Is(RO_GANON_BOSS_KEY_REWARDS)) {
+    } else if (mOptions[RSK_GANONS_SOUL].Is(RO_GANONS_SOUL_REWARDS)) {
         mGanonsSoulCondition = RO_CHECK_TRIGGER_REWARDS;
-    } else if (mOptions[RSK_GANONS_BOSS_KEY].Is(RO_GANON_BOSS_KEY_DUNGEONS)) {
+    } else if (mOptions[RSK_GANONS_SOUL].Is(RO_GANONS_SOUL_DUNGEONS)) {
         mGanonsSoulCondition = RO_CHECK_TRIGGER_DUNGEONS;
-    } else if (mOptions[RSK_GANONS_BOSS_KEY].Is(RO_GANON_BOSS_KEY_TOKENS)) {
+    } else if (mOptions[RSK_GANONS_SOUL].Is(RO_GANONS_SOUL_TOKENS)) {
         mGanonsSoulCondition = RO_CHECK_TRIGGER_TOKENS;
-    } else if (mOptions[RSK_GANONS_BOSS_KEY].Is(RO_GANON_BOSS_KEY_TRIFORCE_PIECES)) {
+    } else if (mOptions[RSK_GANONS_SOUL].Is(RO_GANONS_SOUL_TRIFORCE_PIECES)) {
         mGanonsSoulCondition = RO_CHECK_TRIGGER_TRIFORCE_PIECES;
     } else {
         mGanonsSoulCondition = RO_CHECK_TRIGGER_NONE;
+    }
+
+    if (mOptions[RSK_WINCON].Is(RO_WINCON_STONES)) {
+        mWinCondition = RO_WINCON_STONES;
+    } else if (mOptions[RSK_WINCON].Is(RO_WINCON_MEDALLIONS)) {
+        mWinCondition = RO_WINCON_MEDALLIONS;
+    } else if (mOptions[RSK_WINCON].Is(RO_WINCON_REWARDS)) {
+        mWinCondition = RO_WINCON_REWARDS;
+    } else if (mOptions[RSK_WINCON].Is(RO_WINCON_DUNGEONS)) {
+        mWinCondition = RO_WINCON_DUNGEONS;
+    } else if (mOptions[RSK_WINCON].Is(RO_WINCON_TOKENS)) {
+        mWinCondition = RO_WINCON_TOKENS;
+    } else if (mOptions[RSK_WINCON].Is(RO_WINCON_TRIFORCE_PIECES)) {
+        mWinCondition = RO_WINCON_TRIFORCE_PIECES;
+    } else if (mOptions[RSK_WINCON].Is(RO_WINCON_ANYWHERE)) {
+        mWinCondition = RO_WINCON_ANYWHERE;
+    } else {
+        mWinCondition = RO_WINCON_DEFEAT_GANON;
     }
 
     if (!mOptions[RSK_SHUFFLE_WARP_SONGS]) {

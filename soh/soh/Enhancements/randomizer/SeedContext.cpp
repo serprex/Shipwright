@@ -541,11 +541,11 @@ void Context::GBKCondition(RandoOptionCheckTrigger condition) {
 }
 
 RandoOptionCheckTrigger Context::GanonsSoulCondition() const {
-    return mGBKCondition;
+    return mGanonsSoulCondition;
 }
 
 void Context::GanonsSoulCondition(RandoOptionCheckTrigger condition) {
-    mGBKCondition = condition;
+    mGanonsSoulCondition = condition;
 }
 
 RandoOptionWincon Context::WinCondition() const {

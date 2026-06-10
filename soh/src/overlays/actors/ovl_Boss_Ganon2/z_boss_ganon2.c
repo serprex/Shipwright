@@ -1701,6 +1701,8 @@ void func_8090120C(BossGanon2* this, PlayState* play) {
                     Animation_MorphToPlayOnce(&this->skelAnime, &gGanonFinalBlowAnim, 0.0f);
                     this->unk_194 = Animation_GetLastFrame(&gGanonFinalBlowAnim);
                     play->startPlayerCutscene(play, &this->actor, 0x61);
+                } else {
+                    break;
                 }
             } else {
                 break;
