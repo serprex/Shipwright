@@ -2014,6 +2014,11 @@ void StaticData::HintTable_Init() {
                                                                    {QM_YELLOW}, {}, TEXTBOX_TYPE_BLUE));
                                                      // /*spanish*/$sLos sabios aguardarán a que el héroe obtenga #[[d]] símbolo||s| de skulltula dorada#.^
 
+    hintTextTable[RHT_BRIDGE_TRIFORCE_PIECES_HINT] = HintText(CustomMessage("$yThe awakened ones will await for the Hero to collect #[[d]] Triforce Piece||s|#.^",
+                                                                 /*german*/ "$yDie Weisen werden darauf&warten, daß der Held&#[[d]] Triforce-Fragment||e|# sammelt.^",
+                                                                 /*french*/ "$yLes êtres de sagesse attendront le héros muni de #[[d]] Morceau||x| de Triforce#.^",
+                                                                            {QM_YELLOW}, {}, TEXTBOX_TYPE_BLUE));
+
     hintTextTable[RHT_BRIDGE_GREG_HINT] = HintText(CustomMessage("$gThe awakened ones will await for the Hero to find #Greg#.^",
 	                                                  /*german*/ "$gDie Weisen werden darauf&warten, daß der Held&#Greg# findet.^",
                                                       /*french*/ "$gLes êtres de sagesse attendront le héros muni de #Greg#.^",
@@ -2103,6 +2108,46 @@ void StaticData::HintTable_Init() {
                                                                   {QM_PINK, QM_YELLOW, QM_YELLOW}));
                                                     // /*spanish*/$bY #Zelda# entregará la llave del #señor del mal# tras obtener #[[d]] símbolo
                                                               // ||s| de skulltula dorada#.^
+
+    hintTextTable[RHT_GBK_TRIFORCE_PIECES_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s key will be provided once #[[d]] Triforce Piece|# is|s# are| retrieved.^",
+                                                              /*german*/ "$bUnd der #Schlüssel des Bösen# wird verliehen, sobald #[[d]] Triforce-Fragment|# gesammelt wurde|e# gesammelt wurden|.^",
+                                                              /*french*/ "$bAussi, la #clé du Malin# sera fournie une fois |qu' #[[d]] Morceau de Triforce# aura été récupéré|que #[[d]] Morceaux de Triforce# auront été récupérés|.^",
+                                                                         {QM_PINK, QM_YELLOW, QM_YELLOW}));
+
+    /*--------------------------
+    |  GANON'S SOUL HINT TEXT  |
+    ---------------------------*/
+
+    hintTextTable[RHT_GANONS_SOUL_MEDALLIONS_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s soul will be provided once #[[d]] Medallion|# is|s# are| retrieved.^",
+                                                                 /*german*/ "$bUnd die #Seele des Bösen# wird verliehen, sobald #[[d]] Amulett|# geborgen wurde|e# geborgen wurden|.^",
+                                                                 /*french*/ "$bAussi, l'#âme du Malin# sera fournie une fois |qu' #[[d]] Médaillon# aura été récupéré|que #[[d]] Médaillons# auront été récupérés|.^",
+                                                                            {QM_PINK, QM_YELLOW, QM_RED}));
+
+    hintTextTable[RHT_GANONS_SOUL_STONES_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s soul will be provided once #[[d]] Spiritual Stone|# is|s# are| retrieved.^",
+                                                             /*german*/ "$bUnd die #Seele des Bösen# wird verliehen, sobald #[[d]] Heilige|r Stein# geborgen wurde| Steine# geborgen wurden|.^",
+                                                             /*french*/ "$bAussi, l'#âme du Malin# sera fournie une fois |qu' #[[d]] Pierre Ancestrale# aura été&récupérée|que #[[d]] Pierres Ancestrales# auront été récupérées|.^",
+                                                                        {QM_PINK, QM_YELLOW, QM_BLUE}));
+
+    hintTextTable[RHT_GANONS_SOUL_REWARDS_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s soul will be provided once #[[d]]# #Spiritual Stone|# or #Medallion# is|s# and #Medallions# are| retrieved.^",
+                                                              /*german*/ "$bUnd die #Seele des Bösen# wird verliehen, sobald #[[d]]# #Heilige|r Stein# oder #Amulett#&geborgen wurde| Steine# oder #Amulette#&geborgen wurden|.^",
+                                                              /*french*/ "$bAussi, l'#âme du Malin# sera fournie une fois qu|' #[[d]]# #Pierre Ancestrale# ou #[[d]] Médaillon# sera récupéré|e&#[[d]]# #Pierres Ancestrales# et&#Médaillons# seront récupérés|.^",
+                                                                         {QM_PINK, QM_YELLOW, QM_YELLOW, QM_BLUE, QM_RED}));
+
+    hintTextTable[RHT_GANONS_SOUL_DUNGEONS_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s soul will be provided once #[[d]] Dungeon|# is|s# are| conquered.^",
+                                                               /*german*/ "$bUnd die #Seele des Bösen# wird verliehen, sobald #[[d]] Labyrinth|# abgeschloßen wurde|e# abgeschloßen wurden|.^",
+                                                               /*french*/ "$bAussi, l'#âme du Malin# sera fournie une fois qu|' #[[d]] donjon #sera conquis|e #[[d]] donjons# seront conquis|.^",
+                                                                          {QM_PINK, QM_YELLOW, QM_PINK}));
+
+    hintTextTable[RHT_GANONS_SOUL_TOKENS_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s soul will be provided once #[[d]] Gold Skulltula Token|# is|s# are| retrieved.^",
+                                                             /*german*/ "$bUnd die #Seele des Bösen# wird verliehen, sobald #[[d]] Skulltula-Symbol|# gesammelt wurde|e# gesammelt wurden|.^",
+                                                             /*french*/ "$bAussi, l'#âme du Malin# sera fournie une fois |qu' #[[d]] symbole de Skulltula d'or #sera récupuéré"
+                                                                        "|que &#[[d]] symboles de Skulltula d'or&#seront recupérés|.^",
+                                                                        {QM_PINK, QM_YELLOW, QM_YELLOW}));
+
+    hintTextTable[RHT_GANONS_SOUL_TRIFORCE_PIECES_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s soul will be provided once #[[d]] Triforce Piece|# is|s# are| retrieved.^",
+                                                                     /*german*/ "$bUnd die #Seele des Bösen# wird verliehen, sobald #[[d]] Triforce-Fragment|# gesammelt wurde|e# gesammelt wurden|.^",
+                                                                     /*french*/ "$bAussi, l'#âme du Malin# sera fournie une fois |qu' #[[d]] Morceau de Triforce# aura été récupéré|que #[[d]] Morceaux de Triforce# auront été récupérés|.^",
+                                                                                {QM_PINK, QM_YELLOW, QM_YELLOW}));
 
     /*--------------------------
     |     TRIAL HINT TEXT      |

@@ -229,13 +229,13 @@ static constexpr BridgeReqConfig StonesConfig{
     RO_GANONS_SOUL_STONES,          RO_WINCON_STONES,    6
 };
 static constexpr BridgeReqConfig MedallionsConfig{
-    RSK_RAINBOW_BRIDGE_MEDALLION_COUNT, RSK_GBK_MEDALLION_COUNT, RSK_GANONS_SOUL_STONE_COUNT,
+    RSK_RAINBOW_BRIDGE_MEDALLION_COUNT, RSK_GBK_MEDALLION_COUNT, RSK_GANONS_SOUL_MEDALLION_COUNT,
     RSK_WINCON_MEDALLION_COUNT,         RO_BRIDGE_MEDALLIONS,    RO_GANON_BOSS_KEY_MEDALLIONS,
     RO_GANONS_SOUL_MEDALLIONS,          RO_WINCON_MEDALLIONS,    3
 };
 static constexpr BridgeReqConfig TokensConfig{
-    RSK_RAINBOW_BRIDGE_TOKEN_COUNT, RSK_GBK_TOKEN_COUNT, RSK_GANONS_SOUL_STONE_COUNT,
-    RSK_WINCON_STONE_COUNT,         RO_BRIDGE_TOKENS,    RO_GANON_BOSS_KEY_TOKENS,
+    RSK_RAINBOW_BRIDGE_TOKEN_COUNT, RSK_GBK_TOKEN_COUNT, RSK_GANONS_SOUL_TOKEN_COUNT,
+    RSK_WINCON_TOKEN_COUNT,         RO_BRIDGE_TOKENS,    RO_GANON_BOSS_KEY_TOKENS,
     RO_GANONS_SOUL_TOKENS,          RO_WINCON_TOKENS,    0
 };
 
@@ -261,7 +261,7 @@ static uint8_t RequiredBySettings(const BridgeReqConfig& cfg) {
     }
 
     if (ctx->GetOption(RSK_GANONS_SOUL).Is(cfg.soulEnum)) {
-        count = std::max<uint8_t>(count, ctx->GetOption(RSK_GANONS_SOUL_STONE_COUNT).Get());
+        count = std::max<uint8_t>(count, ctx->GetOption(cfg.soulKey).Get());
     } else if (ctx->GetOption(RSK_GANONS_SOUL).Is(RO_GANONS_SOUL_REWARDS)) {
         count = std::max<uint8_t>(count, (uint8_t)(ctx->GetOption(RSK_GANONS_SOUL_REWARD_COUNT).Get() - cfg.offset));
     } else if (ctx->GetOption(RSK_GANONS_SOUL).Is(RO_GANONS_SOUL_DUNGEONS) &&
@@ -269,8 +269,8 @@ static uint8_t RequiredBySettings(const BridgeReqConfig& cfg) {
         count = std::max<uint8_t>(count, (uint8_t)(ctx->GetOption(RSK_GANONS_SOUL_DUNGEON_COUNT).Get() - cfg.offset));
     }
 
-    if (ctx->GetOption(RSK_WINCON).Is(cfg.soulEnum)) {
-        count = std::max<uint8_t>(count, ctx->GetOption(RSK_WINCON_STONE_COUNT).Get());
+    if (ctx->GetOption(RSK_WINCON).Is(cfg.winEnum)) {
+        count = std::max<uint8_t>(count, ctx->GetOption(cfg.winKey).Get());
     } else if (ctx->GetOption(RSK_WINCON).Is(RO_WINCON_REWARDS)) {
         count = std::max<uint8_t>(count, (uint8_t)(ctx->GetOption(RSK_WINCON_REWARD_COUNT).Get() - cfg.offset));
     } else if (ctx->GetOption(RSK_WINCON).Is(RO_WINCON_DUNGEONS) &&

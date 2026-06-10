@@ -735,9 +735,9 @@ void GenerateItemPool() {
 
     if (!(ctx->GetOption(RSK_GANONS_SOUL).Is(RO_GANONS_SOUL_STARTWITH))) {
         if (ctx->GetOption(RSK_GANONS_SOUL).Get() >= RO_GANONS_SOUL_STONES) {
-            ctx->PlaceItemInLocation(RC_GANON_SOUL, RG_GANONS_CASTLE_BOSS_KEY);
+            ctx->PlaceItemInLocation(RC_GANON_SOUL, RG_GANON_SOUL);
         } else {
-            AddItemToPool(RG_GANONS_CASTLE_BOSS_KEY, 2, 1, 1, 1);
+            AddItemToPool(RG_GANON_SOUL, 2, 1, 1, 1);
         }
     }
 
