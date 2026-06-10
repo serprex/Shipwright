@@ -25,7 +25,7 @@ extern PlayState* gPlayState;
 
 void BuildTriforcePieceMessage(CustomMessage& msg) {
     uint8_t current = gSaveContext.ship.quest.data.randomizer.triforcePiecesCollected + 1;
-    uint8_t required = OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT_PIECES_TOTAL) + 1;
+    uint8_t required = OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT_PIECES_TOTAL);
     uint8_t remaining = required - current;
     float percentageCollected = (float)current / (float)required;
 

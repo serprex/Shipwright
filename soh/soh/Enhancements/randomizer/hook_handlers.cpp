@@ -1865,12 +1865,10 @@ void RandomizerOnVanillaBehaviorHandler(GIVanillaBehavior id, bool* should, va_l
             break;
         }
         case VB_SLAY_GANON:
-            // When the win condition isn't to defeat Ganon, leave Ganon alive and warp out of the castle as if a
-            // blue warp had spawned, treating the arena like any other cleared boss room. Mark Ganon's Tower as
-            // cleared so it counts toward dungeon based triggers, then re-check the win/reward triggers.
             if (RAND_GET_OPTION(RSK_WINCON).IsNot(RO_WINCON_DEFEAT_GANON)) {
                 *should = false;
                 Flags_SetRandomizerInf(RAND_INF_DUNGEONS_DONE_GANONS_TOWER);
+                randomizerQueuedChecks.push(RC_GANON);
                 CheckTriggers();
                 gPlayState->nextEntranceIndex = ENTR_OUTSIDE_GANONS_CASTLE_1_2;
                 gPlayState->transitionTrigger = TRANS_TRIGGER_START;

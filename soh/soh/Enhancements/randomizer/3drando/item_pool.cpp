@@ -329,8 +329,8 @@ void GenerateItemPool() {
     AddFixedItemToPool(RG_SHADOW_MEDALLION, 1, rewardIceTraps);
     AddFixedItemToPool(RG_LIGHT_MEDALLION, 1, rewardIceTraps);
 
-    if (ctx->GetOption(RSK_TRIFORCE_HUNT).IsNot(RO_TRIFORCE_HUNT_OFF)) {
-        AddFixedItemToPool(RG_TRIFORCE_PIECE, ctx->GetOption(RSK_TRIFORCE_HUNT_PIECES_TOTAL).Get() + 1, false);
+    if (ctx->GetOption(RSK_TRIFORCE_HUNT_PIECES_TOTAL).Get() > 0) {
+        AddFixedItemToPool(RG_TRIFORCE_PIECE, ctx->GetOption(RSK_TRIFORCE_HUNT_PIECES_TOTAL).Get(), false);
     }
 
     // Fixed item locations
@@ -340,11 +340,15 @@ void GenerateItemPool() {
     ctx->PlaceItemInLocation(RC_WINCON, RG_BLUE_RUPEE); // placeholder, filled by setting
 
     if (ctx->GetOption(RSK_WINCON).Is(RO_WINCON_DEFEAT_GANON)) {
-        ctx->PlaceItemInLocation(RC_GANON, RG_TRIFORCE);
-    } else if (ctx->GetOption(RSK_WINCON).Is(RO_WINCON_ANYWHERE)) {
-        AddFixedItemToPool(RG_TRIFORCE, 1);
+        ctx->PlaceItemInLocation(RC_GANON, RG_TRIFORCE); // Win condition
     } else {
-        ctx->PlaceItemInLocation(RC_WINCON, RG_TRIFORCE);
+        // Ganon isn't the win condition, so slaying him is optional and just hands out a junk reward.
+        ctx->PlaceItemInLocation(RC_GANON, RG_BLUE_RUPEE, false, true);
+        if (ctx->GetOption(RSK_WINCON).Is(RO_WINCON_ANYWHERE)) {
+            AddFixedItemToPool(RG_TRIFORCE, 1);
+        } else {
+            ctx->PlaceItemInLocation(RC_WINCON, RG_TRIFORCE);
+        }
     }
 
     if (!ctx->GetOption(RSK_STARTING_KOKIRI_SWORD)) {

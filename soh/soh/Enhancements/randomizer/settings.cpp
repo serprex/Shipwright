@@ -431,29 +431,26 @@ void Settings::CreateOptions() {
     OPT_U8(RSK_BOMBCHU_BAG, "Bombchu Bag", {"None", "Single Bag", "Progressive Bags"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("BombchuBag"), mOptionDescriptions[RSK_BOMBCHU_BAG], WIDGET_CVAR_COMBOBOX, RO_BOMBCHU_BAG_NONE);
     OPT_U8(RSK_ENABLE_BOMBCHU_DROPS, "Bombchu Drops", {"No", "Yes"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("EnableBombchuDrops"), mOptionDescriptions[RSK_ENABLE_BOMBCHU_DROPS], WIDGET_CVAR_COMBOBOX, RO_AMMO_DROPS_ON);
     // TODO: AmmoDrops and/or HeartDropRefill, combine with/separate Ammo Drops from Bombchu Drops?
-    OPT_U8(RSK_TRIFORCE_HUNT, "Triforce Hunt", {"Off", "Win", "Ganon's Boss Key"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("TriforceHunt"), mOptionDescriptions[RSK_TRIFORCE_HUNT]);
-    OPT_CALLBACK(RSK_TRIFORCE_HUNT, {
-        if (CVarGetInteger(CVAR_RANDOMIZER_SETTING("TriforceHunt"), RO_TRIFORCE_HUNT_OFF) == RO_TRIFORCE_HUNT_OFF) {
-            mOptions[RSK_TRIFORCE_HUNT_PIECES_TOTAL].Hide();
+    // Triforce Hunt: the total piece count is the on/off control. Zero disables the hunt entirely; any
+    // positive value adds that many Triforce Pieces to the pool and unlocks the pieces-location option.
+    OPT_U8(RSK_TRIFORCE_HUNT_PIECES_TOTAL, "Triforce Hunt Total Pieces", {NumOpts(0, 100)}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("TriforceHuntTotalPieces"), mOptionDescriptions[RSK_TRIFORCE_HUNT_PIECES_TOTAL], WIDGET_CVAR_SLIDER_INT, 0, false, nullptr, IMFLAG_NONE);
+    OPT_CALLBACK(RSK_TRIFORCE_HUNT_PIECES_TOTAL, {
+        const uint8_t triforceTotal = CVarGetInteger(CVAR_RANDOMIZER_SETTING("TriforceHuntTotalPieces"), 0);
+        if (triforceTotal == 0) {
             mOptions[RSK_TRIFORCE_HUNT_PIECES_LOCATION].Hide();
         } else {
-            mOptions[RSK_TRIFORCE_HUNT_PIECES_TOTAL].Unhide();
             mOptions[RSK_TRIFORCE_HUNT_PIECES_LOCATION].Unhide();
         }
-    });
-    OPT_U8(RSK_TRIFORCE_HUNT_PIECES_TOTAL, "Triforce Hunt Total Pieces", {NumOpts(1, 100)}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("TriforceHuntTotalPieces"), mOptionDescriptions[RSK_TRIFORCE_HUNT_PIECES_TOTAL], WIDGET_CVAR_SLIDER_INT, 29, false, nullptr, IMFLAG_NONE);
-    OPT_CALLBACK(RSK_TRIFORCE_HUNT_PIECES_TOTAL, {
-        const uint8_t triforceTotal = CVarGetInteger(CVAR_RANDOMIZER_SETTING("TriforceHuntTotalPieces"), 29) + 1;
-        if (mOptions[RSK_RAINBOW_BRIDGE_TRIFORCE_COUNT].GetOptionCount() != triforceTotal) {
+        if (mOptions[RSK_RAINBOW_BRIDGE_TRIFORCE_COUNT].GetOptionCount() != triforceTotal + 1) {
             mOptions[RSK_RAINBOW_BRIDGE_TRIFORCE_COUNT].ChangeOptions(NumOpts(0, triforceTotal));
         }
-        if (mOptions[RSK_GBK_TRIFORCE_COUNT].GetOptionCount() != triforceTotal) {
+        if (mOptions[RSK_GBK_TRIFORCE_COUNT].GetOptionCount() != triforceTotal + 1) {
             mOptions[RSK_GBK_TRIFORCE_COUNT].ChangeOptions(NumOpts(0, triforceTotal));
         }
-        if (mOptions[RSK_GANONS_SOUL_TRIFORCE_COUNT].GetOptionCount() != triforceTotal) {
+        if (mOptions[RSK_GANONS_SOUL_TRIFORCE_COUNT].GetOptionCount() != triforceTotal + 1) {
             mOptions[RSK_GANONS_SOUL_TRIFORCE_COUNT].ChangeOptions(NumOpts(0, triforceTotal));
         }
-        if (mOptions[RSK_WINCON_TRIFORCE_COUNT].GetOptionCount() != triforceTotal) {
+        if (mOptions[RSK_WINCON_TRIFORCE_COUNT].GetOptionCount() != triforceTotal + 1) {
             mOptions[RSK_WINCON_TRIFORCE_COUNT].ChangeOptions(NumOpts(0, triforceTotal));
         }
     });
@@ -1953,8 +1950,7 @@ void Settings::CreateOptions() {
                                                                   },
                                                                   WidgetContainerType::SECTION);
     mOptionGroups[RSG_MENU_SECTION_WINCON] = OptionGroup::SubGroup("Win Condition",
-                                                                   { &mOptions[RSK_TRIFORCE_HUNT],
-                                                                     &mOptions[RSK_TRIFORCE_HUNT_PIECES_TOTAL],
+                                                                   { &mOptions[RSK_TRIFORCE_HUNT_PIECES_TOTAL],
                                                                      &mOptions[RSK_TRIFORCE_HUNT_PIECES_LOCATION],
                                                                      &mOptions[RSK_GANONS_BOSS_KEY],
                                                                      &mOptions[RSK_GBK_OPTIONS],
@@ -2285,7 +2281,6 @@ void Settings::CreateOptions() {
                                                                  &mOptions[RSK_DECOUPLED_ENTRANCES],
                                                                  &mOptions[RSK_BOMBCHU_BAG],
                                                                  &mOptions[RSK_ENABLE_BOMBCHU_DROPS],
-                                                                 &mOptions[RSK_TRIFORCE_HUNT],
                                                                  &mOptions[RSK_TRIFORCE_HUNT_PIECES_TOTAL],
                                                                  &mOptions[RSK_TRIFORCE_HUNT_PIECES_LOCATION],
                                                                  &mOptions[RSK_MQ_DUNGEON_RANDOM],

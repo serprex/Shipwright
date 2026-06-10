@@ -1357,19 +1357,8 @@ extern "C" u16 Randomizer_Item_Give(PlayState* play, GetItemEntry giEntry) {
         case RG_TRIFORCE_PIECE:
             gSaveContext.ship.quest.data.randomizer.triforcePiecesCollected++;
             GameInteractor_SetTriforceHuntPieceGiven(true);
-
-            // Give Ganon's Boss Key and teleport to credits if set to Win when goal is reached.
-            if (gSaveContext.ship.quest.data.randomizer.triforcePiecesCollected ==
-                OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_WINCON_TRIFORCE_COUNT)) {
-                Flags_SetRandomizerInf(RAND_INF_GRANT_GANONS_BOSSKEY);
-
-                if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT) ==
-                    RO_TRIFORCE_HUNT_WIN) {
-                    // Save and warp are deferred until item queue drains
-                    GameInteractor_SetTriforceHuntCreditsWarpActive(true);
-                }
-            }
-
+            // Reward/win triggers (Ganon's Boss Key, Ganon's Soul, win condition) are evaluated by
+            // CheckTriggers() on item receive, so Triforce Piece thresholds are handled there.
             break;
         case RG_PROGRESSIVE_BOMBCHU_BAG:
             OTRGlobals::Instance->gRandoContext->HandleGetBombchuBag();

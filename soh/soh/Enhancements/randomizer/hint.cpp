@@ -584,12 +584,6 @@ CustomMessage Hint::GetGanonBossKeyText() {
     auto ctx = Rando::Context::GetInstance();
     CustomMessage ganonBossKeyMessage;
 
-    // Legacy Triforce Hunt completion grants the key, unless the key is governed by its own count trigger.
-    if (ctx->GetOption(RSK_TRIFORCE_HUNT).IsNot(RO_TRIFORCE_HUNT_OFF) &&
-        ctx->GetOption(RSK_GANONS_BOSS_KEY).Get() < RO_GANON_BOSS_KEY_STONES) {
-        return StaticData::hintTextTable[RHT_GANON_BK_TRIFORCE_HINT].GetHintMessage();
-    }
-
     if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_STARTWITH)) {
         return StaticData::hintTextTable[RHT_GANON_BK_START_WITH_HINT].GetHintMessage();
     } else if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_VANILLA)) {
