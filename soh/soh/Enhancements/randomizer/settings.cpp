@@ -2618,6 +2618,11 @@ void Context::FinalizeSettings(const std::set<RandomizerCheck>& excludedLocation
         mOptions[RSK_STARTING_STRENGTH].Set(0);
     }
 
+    if (mOptions[RSK_ZORAS_FOUNTAIN].IsNot(RO_ZF_OPEN) &&
+        mOptions[RSK_STARTING_BOTTLE_1].IsNot(RO_STARTING_BOTTLE_RUTOS_LETTER)) {
+        mOptions[RSK_STARTING_BOTTLE_4].Set(RO_STARTING_BOTTLE_OFF);
+    }
+
     // RANDOTODO implement chest shuffle with keysanity
     // ShuffleChestMinigame.Set(cvarSettings[RSK_SHUFFLE_CHEST_MINIGAME]);
     mOptions[RSK_SHUFFLE_CHEST_MINIGAME].Set(RO_CHEST_GAME_OFF);

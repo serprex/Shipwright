@@ -861,11 +861,6 @@ void GenerateItemPool() {
             bottleCount--;
         }
     }
-    if ((ctx->GetOption(RSK_SHUFFLE_MERCHANTS).Is(RO_SHUFFLE_MERCHANTS_ALL_BUT_BEANS) ||
-         ctx->GetOption(RSK_SHUFFLE_MERCHANTS).Is(RO_SHUFFLE_MERCHANTS_ALL))) {
-        AddFixedItemToPool(RG_BOTTLE_WITH_BLUE_POTION);
-        bottleCount--;
-    }
     // Bottles the player starts with are removed from the pool.
     for (RandomizerSettingKey bottleKey :
          { RSK_STARTING_BOTTLE_1, RSK_STARTING_BOTTLE_2, RSK_STARTING_BOTTLE_3, RSK_STARTING_BOTTLE_4 }) {
@@ -874,6 +869,11 @@ void GenerateItemPool() {
         }
     }
 
+    if ((ctx->GetOption(RSK_SHUFFLE_MERCHANTS).Is(RO_SHUFFLE_MERCHANTS_ALL_BUT_BEANS) ||
+         ctx->GetOption(RSK_SHUFFLE_MERCHANTS).Is(RO_SHUFFLE_MERCHANTS_ALL)) && bottleCount > 0) {
+        AddFixedItemToPool(RG_BOTTLE_WITH_BLUE_POTION);
+        bottleCount--;
+    }
     ctx->possibleIceTrapModels.insert(RG_EMPTY_BOTTLE); // ice traps reroll this into a random normal bottle in Rando::Traps::GetTrapTrickModel
     for (uint8_t i = 0; i < bottleCount; i++) {
         AddFixedItemToPool(RandomElement(Rando::StaticData::normalBottles), 1, false);
