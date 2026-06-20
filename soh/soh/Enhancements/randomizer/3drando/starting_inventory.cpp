@@ -115,6 +115,7 @@ void GenerateStartingInventory() {
     if (ctx->GetOption(RSK_SHUFFLE_WEIRD_EGG)) {
         AddItemToInventory(RG_WEIRD_EGG, ctx->GetOption(RSK_STARTING_WEIRD_EGG) ? 1 : 0);
     }
+    AddItemToInventory(RG_BUNNY_HOOD, ctx->GetOption(RSK_STARTING_BUNNY_HOOD) ? 1 : 0);
     AddItemToInventory(RG_CLAIM_CHECK, ctx->GetOption(RSK_STARTING_CLAIM_CHECK) ? 1 : 0);
     AddItemToInventory(RG_PROGRESSIVE_OCARINA, ctx->GetOption(RSK_STARTING_OCARINA).Get());
     AddItemToInventory(RG_ZELDAS_LULLABY, ctx->GetOption(RSK_STARTING_ZELDAS_LULLABY) ? 1 : 0);

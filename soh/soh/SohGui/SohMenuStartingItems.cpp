@@ -292,6 +292,8 @@ void DrawStartingItemsMenu(WidgetInfo& info) {
     if (!weirdEggShuffled && ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled)) {
         ImGui::SetTooltip("Enable Shuffle Weird Egg to start with the Weird Egg.");
     }
+    ImGui::SameLine();
+    StartingItemToggle(RSK_STARTING_BUNNY_HOOD, ITEM_MASK_BUNNY);
 
     ImGui::SeparatorText("Songs");
     StartingSongToggle(RSK_STARTING_ZELDAS_LULLABY, QUEST_SONG_LULLABY);

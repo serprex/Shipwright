@@ -407,7 +407,7 @@ void GenerateItemPool() {
         AddItemToPool(RG_KEATON_MASK, 2, 1, 1, 1);
         AddItemToPool(RG_SKULL_MASK, 2, 1, 1, 1);
         AddItemToPool(RG_SPOOKY_MASK, 2, 1, 1, 1);
-        AddItemToPool(RG_BUNNY_HOOD, 2, 1, 1, 1);
+        if (!ctx->GetOption(RSK_STARTING_BUNNY_HOOD)) AddItemToPool(RG_BUNNY_HOOD, 2, 1, 1, 1);
         AddItemToPool(RG_GORON_MASK, 2, 1, 1, 1);
         AddItemToPool(RG_ZORA_MASK, 2, 1, 1, 1);
         AddItemToPool(RG_GERUDO_MASK, 2, 1, 1, 1);

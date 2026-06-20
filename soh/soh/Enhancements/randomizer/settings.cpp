@@ -1376,6 +1376,7 @@ void Settings::CreateOptions() {
     OPT_BOOL(RSK_STARTING_WEIRD_EGG, "Start with Weird Egg", CVAR_RANDOMIZER_SETTING("StartingWeirdEgg"));
     OPT_BOOL(RSK_STARTING_CLAIM_CHECK, "Start with Claim Check", CVAR_RANDOMIZER_SETTING("StartingClaimCheck"));
     OPT_BOOL(RSK_STARTING_GERUDO_CARD, "Start with Gerudo Card", CVAR_RANDOMIZER_SETTING("StartingGerudoCard"));
+    OPT_BOOL(RSK_STARTING_BUNNY_HOOD, "Start with Bunny Hood", CVAR_RANDOMIZER_SETTING("StartingBunnyHood"));
     OPT_U8(RSK_STARTING_BIGGORON_SWORD, "Start with Biggoron's Sword", {"Off", "Giant's Knife", "Biggoron's Sword"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("StartingBiggoronSword"), "", WIDGET_CVAR_COMBOBOX, 0);
     OPT_BOOL(RSK_FULL_WALLETS, "Full Wallets", {"No", "Yes"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("FullWallets"), mOptionDescriptions[RSK_FULL_WALLETS], WIDGET_CVAR_CHECKBOX, RO_GENERIC_OFF);
     OPT_BOOL(RSK_STARTING_ZELDAS_LULLABY, "Start with Zelda's Lullaby", CVAR_RANDOMIZER_SETTING("StartingZeldasLullaby"), "", IMFLAG_NONE);
@@ -2264,7 +2265,7 @@ void Settings::CreateOptions() {
                                          &mOptions[RSK_STARTING_BOTTLE_2],       &mOptions[RSK_STARTING_BOTTLE_3],
                                          &mOptions[RSK_STARTING_BOTTLE_4],       &mOptions[RSK_STARTING_WEIRD_EGG],
                                          &mOptions[RSK_STARTING_CLAIM_CHECK],    &mOptions[RSK_STARTING_GERUDO_CARD],
-                                         &mOptions[RSK_STARTING_BIGGORON_SWORD] });
+                                         &mOptions[RSK_STARTING_BIGGORON_SWORD], &mOptions[RSK_STARTING_BUNNY_HOOD] });
     mOptionGroups[RSG_STARTING_SONGS] =
         OptionGroup::SubGroup("Ocarina Songs", {
                                                    &mOptions[RSK_STARTING_ZELDAS_LULLABY],
@@ -3005,6 +3006,7 @@ void Settings::RandomizeAllSettings() {
             case RSK_STARTING_CLAIM_CHECK:
             case RSK_STARTING_GERUDO_CARD:
             case RSK_STARTING_BIGGORON_SWORD:
+            case RSK_STARTING_BUNNY_HOOD:
                 continue;
             default:
                 break;

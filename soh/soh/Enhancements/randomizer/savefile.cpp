@@ -342,7 +342,14 @@ void SetStartingItems() {
         Item_Give(NULL, ITEM_GERUDO_CARD);
     }
 
-    // Giant's Knife and Biggoron's Sword share an item slot; bgsFlag marks the unbreakable sword.
+    if (Randomizer_GetSettingValue(RSK_STARTING_BUNNY_HOOD)) {
+        Flags_SetRandomizerInf(RAND_INF_CHILD_TRADES_HAS_MASK_BUNNY);
+        if (INV_CONTENT(ITEM_TRADE_CHILD) == ITEM_NONE) {
+            INV_CONTENT(ITEM_TRADE_CHILD) = ITEM_MASK_BUNNY;
+        }
+    }
+
+    // Giant's Knife and Biggoron's Sword share an item slot, bgsFlag marks unbreakable
     switch (Randomizer_GetSettingValue(RSK_STARTING_BIGGORON_SWORD)) {
         case RO_STARTING_BGS_BIGGORON_SWORD:
             gSaveContext.bgsFlag = true;
