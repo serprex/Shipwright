@@ -199,7 +199,7 @@ bool Logic::HasItem(RandomizerGet itemName) {
         case RG_TWINROVA_SOUL:
             return !ctx->GetOption(RSK_SHUFFLE_BOSS_SOULS) || CheckRandoInf(StaticData::RandoGetToRandInf.at(itemName));
         case RG_GANON_SOUL:
-            return !ctx->GetOption(RSK_SHUFFLE_BOSS_SOULS).Is(RO_BOSS_SOULS_ON_PLUS_GANON) ||
+            return !ctx->GetOption(RSK_GANONS_SOUL).IsNot(RO_GANONS_SOUL_STARTWITH) ||
                    CheckRandoInf(StaticData::RandoGetToRandInf.at(itemName));
             // Overworld Keys
         case RG_GUARD_HOUSE_KEY:
