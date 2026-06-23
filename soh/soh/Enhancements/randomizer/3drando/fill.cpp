@@ -369,7 +369,7 @@ void AddToPlaythrough(LocationAccess& locPair, GetAccessibleLocationsStruct& gal
         if (!exclude) {
             gals.itemSphere.push_back(loc);
         }
-            // Triforce has been found, seed is beatable, nothing else in this or future spheres matters
+        // Triforce has been found, seed is beatable, nothing else in this or future spheres matters
         if (location->GetPlacedRandomizerGet() == RG_TRIFORCE) {
             gals.itemSphere.clear();
             gals.itemSphere.push_back(loc);
