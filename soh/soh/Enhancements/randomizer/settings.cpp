@@ -248,15 +248,15 @@ void Settings::CreateOptions() {
     OPT_CALLBACK(RSK_BRIDGE_OPTIONS, {
         const uint8_t bridgeOpt = CVarGetInteger(CVAR_RANDOMIZER_SETTING("BridgeRewardOptions"), RO_BRIDGE_STANDARD_REWARD);
         if (bridgeOpt == RO_BRIDGE_GREG_REWARD) {
-            mOptions[RSK_RAINBOW_BRIDGE_STONE_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_RAINBOW_BRIDGE_STONE_COUNT].GetOptionCount()));
-            mOptions[RSK_RAINBOW_BRIDGE_MEDALLION_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_RAINBOW_BRIDGE_MEDALLION_COUNT].GetOptionCount()));
-            mOptions[RSK_RAINBOW_BRIDGE_REWARD_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_RAINBOW_BRIDGE_REWARD_COUNT].GetOptionCount()));
-            mOptions[RSK_RAINBOW_BRIDGE_DUNGEON_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_RAINBOW_BRIDGE_DUNGEON_COUNT].GetOptionCount()));
+            mOptions[RSK_RAINBOW_BRIDGE_STONE_COUNT].ChangeOptions(NumOpts(0, 4));
+            mOptions[RSK_RAINBOW_BRIDGE_MEDALLION_COUNT].ChangeOptions(NumOpts(0, 7));
+            mOptions[RSK_RAINBOW_BRIDGE_REWARD_COUNT].ChangeOptions(NumOpts(0, 10));
+            mOptions[RSK_RAINBOW_BRIDGE_DUNGEON_COUNT].ChangeOptions(NumOpts(0, 9));
         } else {
-            mOptions[RSK_RAINBOW_BRIDGE_STONE_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_RAINBOW_BRIDGE_STONE_COUNT].GetOptionCount() - 2));
-            mOptions[RSK_RAINBOW_BRIDGE_MEDALLION_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_RAINBOW_BRIDGE_MEDALLION_COUNT].GetOptionCount() - 2));
-            mOptions[RSK_RAINBOW_BRIDGE_REWARD_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_RAINBOW_BRIDGE_REWARD_COUNT].GetOptionCount() - 2));
-            mOptions[RSK_RAINBOW_BRIDGE_DUNGEON_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_RAINBOW_BRIDGE_DUNGEON_COUNT].GetOptionCount() - 2));
+            mOptions[RSK_RAINBOW_BRIDGE_STONE_COUNT].ChangeOptions(NumOpts(0, 3));
+            mOptions[RSK_RAINBOW_BRIDGE_MEDALLION_COUNT].ChangeOptions(NumOpts(0, 6));
+            mOptions[RSK_RAINBOW_BRIDGE_REWARD_COUNT].ChangeOptions(NumOpts(0, 9));
+            mOptions[RSK_RAINBOW_BRIDGE_DUNGEON_COUNT].ChangeOptions(NumOpts(0, 8));
         }
     });
     OPT_U8(RSK_GANONS_TRIALS, "Ganon's Trials", {"Skip", "Set Number", "Random Number"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("GanonTrial"), mOptionDescriptions[RSK_GANONS_TRIALS], WIDGET_CVAR_COMBOBOX, RO_GANONS_TRIALS_SET_NUMBER);
