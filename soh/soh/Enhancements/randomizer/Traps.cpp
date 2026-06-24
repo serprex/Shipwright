@@ -664,9 +664,9 @@ static void InitTrickNames() {
     };
     trickNameTable[RG_TRIFORCE] = {
         // TODO_TRANSLATE
-        Text{ "Cheese Triangle"},
+        Text{ "Cheese Triangle" },
         Text{ "Triumph Fork" },
-        Text{ "Force Gem"},
+        Text{ "Force Gem" },
     };
     trickNameTable[RG_ROCS_FEATHER] = {
         Text{ "Chicken Wing", "Chicken Wing", "Chicken Wing" }, // "Chicken Wing"
