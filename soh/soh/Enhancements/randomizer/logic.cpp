@@ -1704,6 +1704,8 @@ bool Logic::CanBuildRainbowBridge() {
                 ctx->GetOption(RSK_RAINBOW_BRIDGE_DUNGEON_COUNT).Get()) ||
            (ctx->GetOption(RSK_RAINBOW_BRIDGE).Is(RO_BRIDGE_TOKENS) &&
             GetGSCount() >= ctx->GetOption(RSK_RAINBOW_BRIDGE_TOKEN_COUNT).Get()) ||
+           (ctx->GetOption(RSK_RAINBOW_BRIDGE).Is(RO_BRIDGE_TRIFORCE_PIECES) &&
+            GetTriforcePieceCount() >= ctx->GetOption(RSK_RAINBOW_BRIDGE_TRIFORCE_COUNT).Get()) ||
            (ctx->GetOption(RSK_RAINBOW_BRIDGE).Is(RO_BRIDGE_GREG) && HasItem(RG_GREG_RUPEE));
 }
 
