@@ -7,7 +7,7 @@
 
 #include <spdlog/spdlog.h>
 #include <libultraship/bridge/consolevariablebridge.h>
-#include <libultraship/libultraship.h>
+#include <libultraship/classes.h>
 
 namespace Rando {
 std::shared_ptr<Settings> Settings::mInstance;
@@ -248,15 +248,15 @@ void Settings::CreateOptions() {
     OPT_CALLBACK(RSK_BRIDGE_OPTIONS, {
         const uint8_t bridgeOpt = CVarGetInteger(CVAR_RANDOMIZER_SETTING("BridgeRewardOptions"), RO_BRIDGE_STANDARD_REWARD);
         if (bridgeOpt == RO_BRIDGE_GREG_REWARD) {
-            mOptions[RSK_RAINBOW_BRIDGE_STONE_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_RAINBOW_BRIDGE_STONE_COUNT].GetOptionCount()));
-            mOptions[RSK_RAINBOW_BRIDGE_MEDALLION_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_RAINBOW_BRIDGE_MEDALLION_COUNT].GetOptionCount()));
-            mOptions[RSK_RAINBOW_BRIDGE_REWARD_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_RAINBOW_BRIDGE_REWARD_COUNT].GetOptionCount()));
-            mOptions[RSK_RAINBOW_BRIDGE_DUNGEON_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_RAINBOW_BRIDGE_DUNGEON_COUNT].GetOptionCount()));
+            mOptions[RSK_RAINBOW_BRIDGE_STONE_COUNT].ChangeOptions(NumOpts(0, 4));
+            mOptions[RSK_RAINBOW_BRIDGE_MEDALLION_COUNT].ChangeOptions(NumOpts(0, 7));
+            mOptions[RSK_RAINBOW_BRIDGE_REWARD_COUNT].ChangeOptions(NumOpts(0, 10));
+            mOptions[RSK_RAINBOW_BRIDGE_DUNGEON_COUNT].ChangeOptions(NumOpts(0, 9));
         } else {
-            mOptions[RSK_RAINBOW_BRIDGE_STONE_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_RAINBOW_BRIDGE_STONE_COUNT].GetOptionCount() - 2));
-            mOptions[RSK_RAINBOW_BRIDGE_MEDALLION_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_RAINBOW_BRIDGE_MEDALLION_COUNT].GetOptionCount() - 2));
-            mOptions[RSK_RAINBOW_BRIDGE_REWARD_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_RAINBOW_BRIDGE_REWARD_COUNT].GetOptionCount() - 2));
-            mOptions[RSK_RAINBOW_BRIDGE_DUNGEON_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_RAINBOW_BRIDGE_DUNGEON_COUNT].GetOptionCount() - 2));
+            mOptions[RSK_RAINBOW_BRIDGE_STONE_COUNT].ChangeOptions(NumOpts(0, 3));
+            mOptions[RSK_RAINBOW_BRIDGE_MEDALLION_COUNT].ChangeOptions(NumOpts(0, 6));
+            mOptions[RSK_RAINBOW_BRIDGE_REWARD_COUNT].ChangeOptions(NumOpts(0, 9));
+            mOptions[RSK_RAINBOW_BRIDGE_DUNGEON_COUNT].ChangeOptions(NumOpts(0, 8));
         }
     });
     OPT_U8(RSK_GANONS_TRIALS, "Ganon's Trials", {"Skip", "Set Number", "Random Number"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("GanonTrial"), mOptionDescriptions[RSK_GANONS_TRIALS], WIDGET_CVAR_COMBOBOX, RO_GANONS_TRIALS_SET_NUMBER);
@@ -1158,15 +1158,15 @@ void Settings::CreateOptions() {
     OPT_CALLBACK(RSK_GBK_OPTIONS, {
         const uint8_t gbkOpts = CVarGetInteger(CVAR_RANDOMIZER_SETTING("GbkRewardOptions"), RO_CHECK_TRIGGER_STANDARD_REWARD);
         if (gbkOpts == RO_CHECK_TRIGGER_GREG_REWARD) {
-            mOptions[RSK_GBK_STONE_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_GBK_STONE_COUNT].GetOptionCount()));
-            mOptions[RSK_GBK_MEDALLION_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_GBK_MEDALLION_COUNT].GetOptionCount()));
-            mOptions[RSK_GBK_REWARD_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_GBK_REWARD_COUNT].GetOptionCount()));
-            mOptions[RSK_GBK_DUNGEON_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_GBK_DUNGEON_COUNT].GetOptionCount()));
+            mOptions[RSK_GBK_STONE_COUNT].ChangeOptions(NumOpts(0, 4));
+            mOptions[RSK_GBK_MEDALLION_COUNT].ChangeOptions(NumOpts(0, 7));
+            mOptions[RSK_GBK_REWARD_COUNT].ChangeOptions(NumOpts(0, 10));
+            mOptions[RSK_GBK_DUNGEON_COUNT].ChangeOptions(NumOpts(0, 9));
         } else {
-            mOptions[RSK_GBK_STONE_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_GBK_STONE_COUNT].GetOptionCount() - 2));
-            mOptions[RSK_GBK_MEDALLION_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_GBK_MEDALLION_COUNT].GetOptionCount() - 2));
-            mOptions[RSK_GBK_REWARD_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_GBK_REWARD_COUNT].GetOptionCount() - 2));
-            mOptions[RSK_GBK_DUNGEON_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_GBK_DUNGEON_COUNT].GetOptionCount() - 2));
+            mOptions[RSK_GBK_STONE_COUNT].ChangeOptions(NumOpts(0, 3));
+            mOptions[RSK_GBK_MEDALLION_COUNT].ChangeOptions(NumOpts(0, 6));
+            mOptions[RSK_GBK_REWARD_COUNT].ChangeOptions(NumOpts(0, 9));
+            mOptions[RSK_GBK_DUNGEON_COUNT].ChangeOptions(NumOpts(0, 8));
         }
     });
     OPT_U8(RSK_GANONS_SOUL, "Ganon's Soul", {"Start With", "Any Dungeon", "Overworld", "Anywhere", "Trigger-Stones", "Trigger-Medallions", "Trigger-Rewards", "Trigger-Dungeons", "Trigger-Tokens", "Trigger-Triforce Pieces"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleGanonsSoul"), mOptionDescriptions[RSK_GANONS_SOUL], WIDGET_CVAR_COMBOBOX, RO_GANONS_SOUL_STARTWITH);
@@ -1213,15 +1213,15 @@ void Settings::CreateOptions() {
     OPT_CALLBACK(RSK_GANONS_SOUL_OPTIONS, {
         const uint8_t soulOpts = CVarGetInteger(CVAR_RANDOMIZER_SETTING("GanonsSoulRewardOptions"), RO_CHECK_TRIGGER_STANDARD_REWARD);
         if (soulOpts == RO_CHECK_TRIGGER_GREG_REWARD) {
-            mOptions[RSK_GANONS_SOUL_STONE_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_GANONS_SOUL_STONE_COUNT].GetOptionCount()));
-            mOptions[RSK_GANONS_SOUL_MEDALLION_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_GANONS_SOUL_MEDALLION_COUNT].GetOptionCount()));
-            mOptions[RSK_GANONS_SOUL_REWARD_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_GANONS_SOUL_REWARD_COUNT].GetOptionCount()));
-            mOptions[RSK_GANONS_SOUL_DUNGEON_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_GANONS_SOUL_DUNGEON_COUNT].GetOptionCount()));
+            mOptions[RSK_GANONS_SOUL_STONE_COUNT].ChangeOptions(NumOpts(0, 4));
+            mOptions[RSK_GANONS_SOUL_MEDALLION_COUNT].ChangeOptions(NumOpts(0, 7));
+            mOptions[RSK_GANONS_SOUL_REWARD_COUNT].ChangeOptions(NumOpts(0, 10));
+            mOptions[RSK_GANONS_SOUL_DUNGEON_COUNT].ChangeOptions(NumOpts(0, 9));
         } else {
-            mOptions[RSK_GANONS_SOUL_STONE_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_GANONS_SOUL_STONE_COUNT].GetOptionCount() - 2));
-            mOptions[RSK_GANONS_SOUL_MEDALLION_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_GANONS_SOUL_MEDALLION_COUNT].GetOptionCount() - 2));
-            mOptions[RSK_GANONS_SOUL_REWARD_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_GANONS_SOUL_REWARD_COUNT].GetOptionCount() - 2));
-            mOptions[RSK_GANONS_SOUL_DUNGEON_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_GANONS_SOUL_DUNGEON_COUNT].GetOptionCount() - 2));
+            mOptions[RSK_GANONS_SOUL_STONE_COUNT].ChangeOptions(NumOpts(0, 3));
+            mOptions[RSK_GANONS_SOUL_MEDALLION_COUNT].ChangeOptions(NumOpts(0, 6));
+            mOptions[RSK_GANONS_SOUL_REWARD_COUNT].ChangeOptions(NumOpts(0, 9));
+            mOptions[RSK_GANONS_SOUL_DUNGEON_COUNT].ChangeOptions(NumOpts(0, 8));
         }
     });
     OPT_U8(RSK_WINCON, "Win Condition", {"Defeat Ganon", "Anywhere", "Trigger-Stones", "Trigger-Medallions", "Trigger-Rewards", "Trigger-Dungeons", "Trigger-Tokens", "Trigger-Triforce Pieces"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleWincon"), mOptionDescriptions[RSK_WINCON], WIDGET_CVAR_COMBOBOX, RO_WINCON_DEFEAT_GANON);
@@ -1268,15 +1268,15 @@ void Settings::CreateOptions() {
     OPT_CALLBACK(RSK_WINCON_OPTIONS, {
         const uint8_t winconOpts = CVarGetInteger(CVAR_RANDOMIZER_SETTING("WinconRewardOptions"), RO_CHECK_TRIGGER_STANDARD_REWARD);
         if (winconOpts == RO_CHECK_TRIGGER_GREG_REWARD) {
-            mOptions[RSK_WINCON_STONE_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_WINCON_STONE_COUNT].GetOptionCount()));
-            mOptions[RSK_WINCON_MEDALLION_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_WINCON_MEDALLION_COUNT].GetOptionCount()));
-            mOptions[RSK_WINCON_REWARD_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_WINCON_REWARD_COUNT].GetOptionCount()));
-            mOptions[RSK_WINCON_DUNGEON_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_WINCON_DUNGEON_COUNT].GetOptionCount()));
+            mOptions[RSK_WINCON_STONE_COUNT].ChangeOptions(NumOpts(0, 4));
+            mOptions[RSK_WINCON_MEDALLION_COUNT].ChangeOptions(NumOpts(0, 7));
+            mOptions[RSK_WINCON_REWARD_COUNT].ChangeOptions(NumOpts(0, 10));
+            mOptions[RSK_WINCON_DUNGEON_COUNT].ChangeOptions(NumOpts(0, 9));
         } else {
-            mOptions[RSK_WINCON_STONE_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_WINCON_STONE_COUNT].GetOptionCount() - 2));
-            mOptions[RSK_WINCON_MEDALLION_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_WINCON_MEDALLION_COUNT].GetOptionCount() - 2));
-            mOptions[RSK_WINCON_REWARD_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_WINCON_REWARD_COUNT].GetOptionCount() - 2));
-            mOptions[RSK_WINCON_DUNGEON_COUNT].ChangeOptions(NumOpts(0, mOptions[RSK_WINCON_DUNGEON_COUNT].GetOptionCount() - 2));
+            mOptions[RSK_WINCON_STONE_COUNT].ChangeOptions(NumOpts(0, 3));
+            mOptions[RSK_WINCON_MEDALLION_COUNT].ChangeOptions(NumOpts(0, 6));
+            mOptions[RSK_WINCON_REWARD_COUNT].ChangeOptions(NumOpts(0, 9));
+            mOptions[RSK_WINCON_DUNGEON_COUNT].ChangeOptions(NumOpts(0, 8));
         }
     });
     OPT_U8(RSK_KEYRINGS, "Key Rings", {"Off", "Random", "Count", "Selection"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRings"), mOptionDescriptions[RSK_KEYRINGS], WIDGET_CVAR_COMBOBOX, RO_KEYRINGS_OFF);

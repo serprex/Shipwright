@@ -151,6 +151,10 @@ bool Context::IsQuestOfLocationActive(RandomizerCheck rc) {
 void Context::GenerateLocationPool() {
     allLocations.clear();
     overworldLocations.clear();
+    // add wincon here so it is properly logged
+    if (ctx->GetOption(RSK_WINCON).Get() > RO_WINCON_ANYWHERE) {
+        AddLocation(RC_WINCON);
+    }
     for (auto dungeon : ctx->GetDungeons()->GetDungeonList()) {
         dungeon->locations.clear();
     }
