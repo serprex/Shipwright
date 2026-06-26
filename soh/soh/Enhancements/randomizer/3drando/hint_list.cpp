@@ -2020,7 +2020,7 @@ void StaticData::HintTable_Init() {
                                                                             {QM_YELLOW}, {}, TEXTBOX_TYPE_BLUE));
 
     hintTextTable[RHT_BRIDGE_GREG_HINT] = HintText(CustomMessage("$gThe awakened ones will await for the Hero to find #Greg#.^",
-	                                                  /*german*/ "$gDie Weisen werden darauf&warten, daß der Held&#Greg# findet.^",
+	                                                   /*german*/ "$gDie Weisen werden darauf&warten, daß der Held&#Greg# findet.^",
                                                       /*french*/ "$gLes êtres de sagesse attendront le héros muni de #Greg#.^",
                                                                  {QM_GREEN}, {}, TEXTBOX_TYPE_BLUE));
 
