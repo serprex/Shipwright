@@ -418,16 +418,16 @@ extern "C" void Randomizer_DrawTriforcePieceGI(PlayState* play, GetItemEntry get
     auto rando = OTRGlobals::Instance->gRandomizer;
     uint8_t current = gSaveContext.ship.quest.data.randomizer.triforcePiecesCollected;
     bool fullTriforce = false;
-    if (rando->GetRandoSettingValue(RSK_RAINBOW_BRIDGE) == RO_BRIDGE_TRIFORCE_PIECES){
+    if (rando->GetRandoSettingValue(RSK_RAINBOW_BRIDGE) == RO_BRIDGE_TRIFORCE_PIECES) {
         fullTriforce = rando->GetRandoSettingValue(RSK_RAINBOW_BRIDGE_TRIFORCE_COUNT) == current;
     }
-    if (rando->GetRandoSettingValue(RSK_WINCON) == RO_WINCON_TRIFORCE_PIECES){
+    if (rando->GetRandoSettingValue(RSK_WINCON) == RO_WINCON_TRIFORCE_PIECES) {
         fullTriforce = fullTriforce || (rando->GetRandoSettingValue(RSK_WINCON_TRIFORCE_COUNT) == current);
     }
-    if (rando->GetRandoSettingValue(RSK_GANONS_BOSS_KEY) == RO_GANON_BOSS_KEY_TRIFORCE_PIECES){
+    if (rando->GetRandoSettingValue(RSK_GANONS_BOSS_KEY) == RO_GANON_BOSS_KEY_TRIFORCE_PIECES) {
         fullTriforce = fullTriforce || (rando->GetRandoSettingValue(RSK_GBK_TRIFORCE_COUNT) == current);
     }
-    if (rando->GetRandoSettingValue(RSK_GANONS_SOUL) == RO_GANONS_SOUL_TRIFORCE_PIECES){
+    if (rando->GetRandoSettingValue(RSK_GANONS_SOUL) == RO_GANONS_SOUL_TRIFORCE_PIECES) {
         fullTriforce = fullTriforce || (rando->GetRandoSettingValue(RSK_GANONS_SOUL_TRIFORCE_COUNT) == current);
     }
 

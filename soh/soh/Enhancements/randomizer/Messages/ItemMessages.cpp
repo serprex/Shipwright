@@ -27,111 +27,97 @@ extern PlayState* gPlayState;
 void BuildTriforcePieceMessage(CustomMessage& msg) {
     auto rando = OTRGlobals::Instance->gRandomizer;
     uint8_t current = gSaveContext.ship.quest.data.randomizer.triforcePiecesCollected + 1;
-    //if any settings are off, 0 them out here as a precaution
-    uint8_t bridge = rando->GetRandoSettingValue(RSK_RAINBOW_BRIDGE) == RO_BRIDGE_TRIFORCE_PIECES ? 
-                     rando->GetRandoSettingValue(RSK_RAINBOW_BRIDGE_TRIFORCE_COUNT) : 0;
-    uint8_t wincon = rando->GetRandoSettingValue(RSK_WINCON) == RO_WINCON_TRIFORCE_PIECES ? 
-                     rando->GetRandoSettingValue(RSK_WINCON_TRIFORCE_COUNT) : 0;
-    uint8_t GBK = rando->GetRandoSettingValue(RSK_GANONS_BOSS_KEY) == RO_GANON_BOSS_KEY_TRIFORCE_PIECES ? 
-                  rando->GetRandoSettingValue(RSK_GBK_TRIFORCE_COUNT) : 0;
-    uint8_t soul = rando->GetRandoSettingValue(RSK_GANONS_SOUL) == RO_GANONS_SOUL_TRIFORCE_PIECES ? 
-                   rando->GetRandoSettingValue(RSK_GANONS_SOUL_TRIFORCE_COUNT) : 0;
+    // if any settings are off, 0 them out here as a precaution
+    uint8_t bridge = rando->GetRandoSettingValue(RSK_RAINBOW_BRIDGE) == RO_BRIDGE_TRIFORCE_PIECES
+                         ? rando->GetRandoSettingValue(RSK_RAINBOW_BRIDGE_TRIFORCE_COUNT)
+                         : 0;
+    uint8_t wincon = rando->GetRandoSettingValue(RSK_WINCON) == RO_WINCON_TRIFORCE_PIECES
+                         ? rando->GetRandoSettingValue(RSK_WINCON_TRIFORCE_COUNT)
+                         : 0;
+    uint8_t GBK = rando->GetRandoSettingValue(RSK_GANONS_BOSS_KEY) == RO_GANON_BOSS_KEY_TRIFORCE_PIECES
+                      ? rando->GetRandoSettingValue(RSK_GBK_TRIFORCE_COUNT)
+                      : 0;
+    uint8_t soul = rando->GetRandoSettingValue(RSK_GANONS_SOUL) == RO_GANONS_SOUL_TRIFORCE_PIECES
+                       ? rando->GetRandoSettingValue(RSK_GANONS_SOUL_TRIFORCE_COUNT)
+                       : 0;
 
-    //If we reach wincon, we win!
-    if (current == wincon){
+    // If we reach wincon, we win!
+    if (current == wincon) {
         msg = { "You completed the %yTriforce of Courage%w! %gGG%w!",
                 "Das %yTriforce des Mutes%w! Du hast alle Splitter gefunden. %gGut gemacht%w!",
                 "Vous avez complété la %yTriforce du Courage%w! %gFélicitations%w!" };
-    //otherwise prioritise the different triggers
+        // otherwise prioritise the different triggers
     } else if (current == bridge) {
         msg = { "You made your wish to the %yTriforce%w! %rTh%ye R%gai%cnb%bow %pBr%rid%yge %gha%cs r%bai%psed%w!",
-                TODO_TRANSLATE,
-                TODO_TRANSLATE };
-    }  else if (current == GBK) {
-        msg = { "You completed the %yTriforce of Power%w! %rThe Key to Evil is yours%w!",
-                TODO_TRANSLATE,
+                TODO_TRANSLATE, TODO_TRANSLATE };
+    } else if (current == GBK) {
+        msg = { "You completed the %yTriforce of Power%w! %rThe Key to Evil is yours%w!", TODO_TRANSLATE,
                 TODO_TRANSLATE };
     } else if (current == soul) {
-        msg = { "You completed the %yTriforce of Wisdom%w! %bGanon's soul is reclaimed%w!",
-                TODO_TRANSLATE,
+        msg = { "You completed the %yTriforce of Wisdom%w! %bGanon's soul is reclaimed%w!", TODO_TRANSLATE,
                 TODO_TRANSLATE };
-    //if everything is zero, then there's no goal...
+        // if everything is zero, then there's no goal...
     } else if (bridge + wincon + GBK + soul == 0) {
-        msg = { "You found a %yTriforce Piece%w! But it's %puseless%w...",
-                TODO_TRANSLATE,
-                TODO_TRANSLATE };
+        msg = { "You found a %yTriforce Piece%w! But it's %puseless%w...", TODO_TRANSLATE, TODO_TRANSLATE };
     } else {
-        //if nothing is complete, we need to check is we have more than we need
+        // if nothing is complete, we need to check is we have more than we need
         uint8_t highest = std::max({ current, bridge, wincon, GBK, soul });
-        if (highest == current){
-            //RANDOTODO TODO_TRANSLATE you could maybe make this sound cleaner because InsertNumber allows for dynamic plurals
+        if (highest == current) {
+            // RANDOTODO TODO_TRANSLATE you could maybe make this sound cleaner because InsertNumber allows for dynamic
+            // plurals
             msg = { "You found a spare %yTriforce Piece%w! You only needed %c[[d]]%w, but you have %g[[current]]%w!",
-                "Ein übriger %yTriforce-Splitter%w! Du hast nun %g[[current]]%w von %c[[d]]%w nötigen gefunden.",
-                "Vous avez trouvé un %yFragment de Triforce%w en plus! Vous n'aviez besoin que de %c[[d]]%w, "
-                "mais vous en avez %g[[current]]%w en tout!" };
+                    "Ein übriger %yTriforce-Splitter%w! Du hast nun %g[[current]]%w von %c[[d]]%w nötigen gefunden.",
+                    "Vous avez trouvé un %yFragment de Triforce%w en plus! Vous n'aviez besoin que de %c[[d]]%w, "
+                    "mais vous en avez %g[[current]]%w en tout!" };
             msg.InsertNumber(std::max({ bridge, wincon, GBK, soul }));
         } else {
             // find the next goal by setting everything below current (including failed conditions set to 0 before)
             // to a high number, then looking for the lowest.
             // if we have the exact amount, it will be caught by the first check, so no worries there
-            if (bridge < current){
+            if (bridge < current) {
                 current = 255;
             }
-            if (GBK < current){
+            if (GBK < current) {
                 GBK = 255;
             }
-            if (soul < current){
+            if (soul < current) {
                 soul = 255;
             }
-            if (wincon < current){
+            if (wincon < current) {
                 wincon = 255;
             }
             uint8_t next = std::min({ bridge, GBK, soul, wincon });
-            
+
             uint8_t remaining = next - current;
             float percentageCollected = (float)current / (float)next;
 
             if (percentageCollected <= 0.25) {
-                msg = { "You found a %yTriforce Piece%w! %g[[current]]%w down, %c[[d]]%w more and you [[condition]]! It's a start!",
-                        TODO_TRANSLATE,
-                        TODO_TRANSLATE  };
+                msg = { "You found a %yTriforce Piece%w! %g[[current]]%w down, %c[[d]]%w more and you [[condition]]! "
+                        "It's a start!",
+                        TODO_TRANSLATE, TODO_TRANSLATE };
             } else if (percentageCollected <= 0.5) {
-                msg = { "You found a %yTriforce Piece%w! that makes %g[[current]]%w, %c[[d]]%w to go until you [[condition]]! Progress!",
-                        TODO_TRANSLATE,
-                        TODO_TRANSLATE };
+                msg = { "You found a %yTriforce Piece%w! that makes %g[[current]]%w, %c[[d]]%w to go until you "
+                        "[[condition]]! Progress!",
+                        TODO_TRANSLATE, TODO_TRANSLATE };
             } else if (percentageCollected <= 0.75) {
-                msg = { "You found a %yTriforce Piece%w! You have %g[[current]]%w and need %c[[d]]%w more and you [[condition]]! Over half-way there!",
-                        TODO_TRANSLATE,
-                        TODO_TRANSLATE };
+                msg = { "You found a %yTriforce Piece%w! You have %g[[current]]%w and need %c[[d]]%w more and you "
+                        "[[condition]]! Over half-way there!",
+                        TODO_TRANSLATE, TODO_TRANSLATE };
             } else if (percentageCollected < 1.0) {
-                msg = {
-                    "You found a %yTriforce Piece%w! %g[[current]]%w down, %c[[d]]%w left until you [[condition]]! Almost done!",
-                    TODO_TRANSLATE,
-                    TODO_TRANSLATE
-                };
+                msg = { "You found a %yTriforce Piece%w! %g[[current]]%w down, %c[[d]]%w left until you [[condition]]! "
+                        "Almost done!",
+                        TODO_TRANSLATE, TODO_TRANSLATE };
             }
 
-            //default condition is soul
-            CustomMessage condition = {"%brelease Ganons Soul%w",
-                    TODO_TRANSLATE,
-                    TODO_TRANSLATE
-            };
-            if (next == wincon){
-                condition = {"%gWin the game%w",
-                    TODO_TRANSLATE,
-                    TODO_TRANSLATE
-                };
-            } else if (next == bridge){
-                condition = {"%csummon the Rainbow Bridge%w",
-                    TODO_TRANSLATE,
-                    TODO_TRANSLATE
-                };
+            // default condition is soul
+            CustomMessage condition = { "%brelease Ganons Soul%w", TODO_TRANSLATE, TODO_TRANSLATE };
+            if (next == wincon) {
+                condition = { "%gWin the game%w", TODO_TRANSLATE, TODO_TRANSLATE };
+            } else if (next == bridge) {
+                condition = { "%csummon the Rainbow Bridge%w", TODO_TRANSLATE, TODO_TRANSLATE };
             } else {
-                //final case is GBK
-                condition = {"%rfind the key to Ganondorf's Lair%w",
-                    TODO_TRANSLATE,
-                    TODO_TRANSLATE
-                };
+                // final case is GBK
+                condition = { "%rfind the key to Ganondorf's Lair%w", TODO_TRANSLATE, TODO_TRANSLATE };
             }
             msg.Replace("[[condition]]", condition);
             msg.InsertNumber(remaining);
@@ -181,7 +167,7 @@ void LoadCustomItemIcon(bool displayAsEnglish) {
         customIcon = Rando::StaticData::RetrieveItem(rgid).GetCustomIcon();
         iconSize = Rando::StaticData::RetrieveItem(rgid).GetCustomIconSize();
     } else {
-        //if we're seeing an icon and we don't have a GI, assume we're in the alter text showing a triforce piece
+        // if we're seeing an icon and we don't have a GI, assume we're in the alter text showing a triforce piece
         customIcon = Rando::StaticData::RetrieveItem(RG_TRIFORCE_PIECE).GetCustomIcon();
         iconSize = Rando::StaticData::RetrieveItem(RG_TRIFORCE_PIECE).GetCustomIconSize();
     }
