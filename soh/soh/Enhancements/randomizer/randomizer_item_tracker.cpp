@@ -661,6 +661,11 @@ ItemTrackerNumbers GetItemCurrentAndMax(ItemTrackerItem item) {
                         break;
                 }
             break;
+            }
+        }
+    } else if (item.kind == ITEM_KIND_QUEST && item.id == QUEST_SKULL_TOKEN) {
+        result.maxCapacity = result.currentCapacity = 100;
+        result.currentAmmo = gSaveContext.inventory.gsTokens;
     }
 
     return result;
