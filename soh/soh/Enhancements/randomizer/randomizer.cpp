@@ -3,36 +3,31 @@
 #include <fstream>
 #include <variables.h>
 #include <macros.h>
-#include <objects/gameplay_keep/gameplay_keep.h>
 #include <functions.h>
-#include <libultraship/libultraship.h>
-#include <textures/icon_item_static/icon_item_static.h>
-#include <textures/icon_item_24_static/icon_item_24_static.h>
 #include "3drando/menu.hpp"
 #include "soh/ResourceManagerHelpers.h"
 #include "soh/SohGui/SohGui.hpp"
 #include <imgui.h>
-#include <imgui_internal.h>
 #include "../../../src/overlays/actors/ovl_En_GirlA/z_en_girla.h"
 #include "randomizer_check_objects.h"
 #include <sstream>
 #include <tuple>
-#include "draw.h"
 #include "soh/OTRGlobals.h"
 #include <ship/window/FileDropMgr.h>
 #include "static_data.h"
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
-#include "trial.h"
 #include "settings.h"
 #include "soh/util.h"
 #include "randomizerTypes.h"
-#include "soh/Notification/Notification.h"
 #include "soh/ObjectExtension/ObjectExtension.h"
+#include "soh/Enhancements/randomizer/RCToRandInf.h"
+#include "dungeon.h"
 
 extern "C" {
 #include "src/overlays/actors/ovl_Obj_Bean/z_obj_bean.h"
 
 extern void func_80B8FE00(ObjBean*); // trigger planting
+extern PlayState* gPlayState;
 }
 
 static ObjectExtension::Register<CheckIdentity> RegisterIdentity;
@@ -68,7 +63,7 @@ bool Rando_HandleSpoilerDrop(char* filePath) {
             CVarSetInteger(CVAR_GENERAL("RandomizerNewFileDropped"), 1);
             return true;
         }
-    } catch (std::exception& e) {}
+    } catch ([[maybe_unused]] std::exception& e) {}
     return false;
 }
 
@@ -89,7 +84,7 @@ Randomizer::Randomizer() {
         SpoilerfileHintTypeNameToEnum[Rando::StaticData::hintTypeNames[(HintType)c].GetEnglish(MF_CLEAN)] = (HintType)c;
     }
 
-    Ship::Context::GetInstance()->GetFileDropMgr()->RegisterDropHandler(Rando_HandleSpoilerDrop);
+    Ship::Context::GetRawInstance()->GetFileDropMgr()->RegisterDropHandler(Rando_HandleSpoilerDrop);
 }
 
 Randomizer::~Randomizer() {
@@ -108,54 +103,6 @@ std::unordered_map<std::string, SceneID> spoilerFileDungeonToScene = {
     { "Ice Cavern", SCENE_ICE_CAVERN },
     { "Gerudo Training Ground", SCENE_GERUDO_TRAINING_GROUND },
     { "Ganon's Castle", SCENE_INSIDE_GANONS_CASTLE }
-};
-
-// used for items that only set a rand inf when obtained
-std::unordered_map<RandomizerGet, RandomizerInf> randomizerGetToRandInf = {
-    { RG_FISHING_POLE, RAND_INF_FISHING_POLE_FOUND },
-    { RG_BRONZE_SCALE, RAND_INF_CAN_SWIM },
-    { RG_POWER_BRACELET, RAND_INF_CAN_GRAB },
-    { RG_CLIMB, RAND_INF_CAN_CLIMB },
-    { RG_CRAWL, RAND_INF_CAN_CRAWL },
-    { RG_OPEN_CHEST, RAND_INF_CAN_OPEN_CHEST },
-    { RG_SPEAK_DEKU, RAND_INF_CAN_SPEAK_DEKU },
-    { RG_SPEAK_GERUDO, RAND_INF_CAN_SPEAK_GERUDO },
-    { RG_SPEAK_GORON, RAND_INF_CAN_SPEAK_GORON },
-    { RG_SPEAK_HYLIAN, RAND_INF_CAN_SPEAK_HYLIAN },
-    { RG_SPEAK_KOKIRI, RAND_INF_CAN_SPEAK_KOKIRI },
-    { RG_SPEAK_ZORA, RAND_INF_CAN_SPEAK_ZORA },
-    { RG_QUIVER_INF, RAND_INF_HAS_INFINITE_QUIVER },
-    { RG_BOMB_BAG_INF, RAND_INF_HAS_INFINITE_BOMB_BAG },
-    { RG_BULLET_BAG_INF, RAND_INF_HAS_INFINITE_BULLET_BAG },
-    { RG_STICK_UPGRADE_INF, RAND_INF_HAS_INFINITE_STICK_UPGRADE },
-    { RG_NUT_UPGRADE_INF, RAND_INF_HAS_INFINITE_NUT_UPGRADE },
-    { RG_MAGIC_INF, RAND_INF_HAS_INFINITE_MAGIC_METER },
-    { RG_BOMBCHU_INF, RAND_INF_HAS_INFINITE_BOMBCHUS },
-    { RG_WALLET_INF, RAND_INF_HAS_INFINITE_MONEY },
-    { RG_OCARINA_A_BUTTON, RAND_INF_HAS_OCARINA_A },
-    { RG_OCARINA_C_UP_BUTTON, RAND_INF_HAS_OCARINA_C_UP },
-    { RG_OCARINA_C_DOWN_BUTTON, RAND_INF_HAS_OCARINA_C_DOWN },
-    { RG_OCARINA_C_LEFT_BUTTON, RAND_INF_HAS_OCARINA_C_LEFT },
-    { RG_OCARINA_C_RIGHT_BUTTON, RAND_INF_HAS_OCARINA_C_RIGHT },
-    { RG_DEATH_MOUNTAIN_CRATER_BEAN_SOUL, RAND_INF_DEATH_MOUNTAIN_CRATER_BEAN_SOUL },
-    { RG_DEATH_MOUNTAIN_TRAIL_BEAN_SOUL, RAND_INF_DEATH_MOUNTAIN_TRAIL_BEAN_SOUL },
-    { RG_DESERT_COLOSSUS_BEAN_SOUL, RAND_INF_DESERT_COLOSSUS_BEAN_SOUL },
-    { RG_GERUDO_VALLEY_BEAN_SOUL, RAND_INF_GERUDO_VALLEY_BEAN_SOUL },
-    { RG_GRAVEYARD_BEAN_SOUL, RAND_INF_GRAVEYARD_BEAN_SOUL },
-    { RG_KOKIRI_FOREST_BEAN_SOUL, RAND_INF_KOKIRI_FOREST_BEAN_SOUL },
-    { RG_LAKE_HYLIA_BEAN_SOUL, RAND_INF_LAKE_HYLIA_BEAN_SOUL },
-    { RG_LOST_WOODS_BRIDGE_BEAN_SOUL, RAND_INF_LOST_WOODS_BRIDGE_BEAN_SOUL },
-    { RG_LOST_WOODS_BEAN_SOUL, RAND_INF_LOST_WOODS_BEAN_SOUL },
-    { RG_ZORAS_RIVER_BEAN_SOUL, RAND_INF_ZORAS_RIVER_BEAN_SOUL },
-    { RG_GOHMA_SOUL, RAND_INF_GOHMA_SOUL },
-    { RG_KING_DODONGO_SOUL, RAND_INF_KING_DODONGO_SOUL },
-    { RG_BARINADE_SOUL, RAND_INF_BARINADE_SOUL },
-    { RG_PHANTOM_GANON_SOUL, RAND_INF_PHANTOM_GANON_SOUL },
-    { RG_VOLVAGIA_SOUL, RAND_INF_VOLVAGIA_SOUL },
-    { RG_MORPHA_SOUL, RAND_INF_MORPHA_SOUL },
-    { RG_BONGO_BONGO_SOUL, RAND_INF_BONGO_BONGO_SOUL },
-    { RG_TWINROVA_SOUL, RAND_INF_TWINROVA_SOUL },
-    { RG_GANON_SOUL, RAND_INF_GANON_SOUL },
 };
 
 #ifdef _MSC_VER
@@ -213,7 +160,7 @@ bool Randomizer::SpoilerFileExists(const char* spoilerFileName) {
                         "\nwas made by a version that doesn't match the currently running version.\n" +
                         "Loading for this file has been cancelled.");
                 CVarClear(CVAR_GENERAL("SpoilerLog"));
-                Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+                Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
             }
 
             // Update cache
@@ -414,9 +361,10 @@ ItemObtainability Randomizer::GetItemObtainabilityFromRandomizerCheck(Randomizer
 }
 
 ItemObtainability Randomizer::GetItemObtainabilityFromRandomizerGet(RandomizerGet randoGet) {
-    if (randomizerGetToRandInf.find(randoGet) != randomizerGetToRandInf.end()) {
-        return Flags_GetRandomizerInf(randomizerGetToRandInf.find(randoGet)->second) ? CANT_OBTAIN_ALREADY_HAVE
-                                                                                     : CAN_OBTAIN;
+    if (Rando::StaticData::RandoGetToRandInf.find(randoGet) != Rando::StaticData::RandoGetToRandInf.end()) {
+        return Flags_GetRandomizerInf((RandomizerInf)Rando::StaticData::RandoGetToRandInf.find(randoGet)->second)
+                   ? CANT_OBTAIN_ALREADY_HAVE
+                   : CAN_OBTAIN;
     }
 
     // This is needed since Plentiful item pool also adds a third progressive wallet
@@ -429,6 +377,7 @@ ItemObtainability Randomizer::GetItemObtainabilityFromRandomizerGet(RandomizerGe
     u8 infiniteUpgrades = GetRandoSettingValue(RSK_INFINITE_UPGRADES);
 
     u8 numWallets = 2 + (u8)tycoonWallet + (infiniteUpgrades != RO_INF_UPGRADES_OFF ? 1 : 0);
+
     switch (randoGet) {
         case RG_NONE:
         case RG_TRIFORCE:
@@ -546,9 +495,7 @@ ItemObtainability Randomizer::GetItemObtainabilityFromRandomizerGet(RandomizerGe
                 case RO_BOMBCHU_BAG_NONE:
                     return CANT_OBTAIN_MISC;
                 case RO_BOMBCHU_BAG_SINGLE:
-                    return INV_CONTENT(ITEM_BOMBCHU) == ITEM_BOMBCHU
-                               ? (infiniteUpgrades != RO_INF_UPGRADES_OFF ? CAN_OBTAIN : CANT_OBTAIN_ALREADY_HAVE)
-                               : CAN_OBTAIN;
+                    return CAN_OBTAIN;
                 case RO_BOMBCHU_BAG_PROGRESSIVE:
                     if (Flags_GetRandomizerInf(RAND_INF_HAS_INFINITE_BOMBCHUS)) {
                         return CANT_OBTAIN_ALREADY_HAVE;
@@ -640,23 +587,15 @@ ItemObtainability Randomizer::GetItemObtainabilityFromRandomizerGet(RandomizerGe
             return Inventory_HasEmptyBottle() ? CAN_OBTAIN : CANT_OBTAIN_NEED_EMPTY_BOTTLE;
 
         // Trade Items
-        // TODO: Do we want to be strict about any of this?
-        // case RG_WEIRD_EGG:
-        // case RG_ZELDAS_LETTER:
-        // case RG_POCKET_EGG:
-        // case RG_COJIRO:
-        // case RG_ODD_MUSHROOM:
-        // case RG_ODD_POTION:
-        // case RG_POACHERS_SAW:
-        // case RG_BROKEN_SWORD:
-        // case RG_PRESCRIPTION:
-        // case RG_EYEBALL_FROG:
-        // case RG_EYEDROPS:
-        // case RG_CLAIM_CHECK:
         // case RG_PROGRESSIVE_GORONSWORD:
         // case RG_GIANTS_KNIFE:
 
         // Misc Items
+        case RG_POCKET_EGG:
+            return Flags_GetRandomizerInf(RAND_INF_ADULT_TRADES_HAS_POCKET_EGG) ||
+                           Flags_GetRandomizerInf(RAND_INF_ADULT_TRADES_HAS_POCKET_CUCCO)
+                       ? CANT_OBTAIN_ALREADY_HAVE
+                       : CAN_OBTAIN;
         case RG_STONE_OF_AGONY:
             return !CHECK_QUEST_ITEM(QUEST_STONE_OF_AGONY) ? CAN_OBTAIN : CANT_OBTAIN_ALREADY_HAVE;
         case RG_GERUDO_MEMBERSHIP_CARD:
@@ -762,43 +701,54 @@ ItemObtainability Randomizer::GetItemObtainabilityFromRandomizerGet(RandomizerGe
         case RG_GANONS_CASTLE_BOSS_KEY:
             return !CHECK_DUNGEON_ITEM(DUNGEON_KEY_BOSS, SCENE_GANONS_TOWER) ? CAN_OBTAIN : CANT_OBTAIN_ALREADY_HAVE;
         case RG_FOREST_TEMPLE_SMALL_KEY:
-            return gSaveContext.inventory.dungeonKeys[SCENE_FOREST_TEMPLE] < FOREST_TEMPLE_SMALL_KEY_MAX
+            return OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FOREST_TEMPLE)
+                               ->GetTotalSmallKeys(&gSaveContext) < FOREST_TEMPLE_SMALL_KEY_MAX
                        ? CAN_OBTAIN
                        : CANT_OBTAIN_ALREADY_HAVE;
         case RG_FIRE_TEMPLE_SMALL_KEY:
-            return gSaveContext.inventory.dungeonKeys[SCENE_FIRE_TEMPLE] < FIRE_TEMPLE_SMALL_KEY_MAX
+            return OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FIRE_TEMPLE)
+                               ->GetTotalSmallKeys(&gSaveContext) < FIRE_TEMPLE_SMALL_KEY_MAX
                        ? CAN_OBTAIN
                        : CANT_OBTAIN_ALREADY_HAVE;
         case RG_WATER_TEMPLE_SMALL_KEY:
-            return gSaveContext.inventory.dungeonKeys[SCENE_WATER_TEMPLE] < WATER_TEMPLE_SMALL_KEY_MAX
+            return OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::WATER_TEMPLE)
+                               ->GetTotalSmallKeys(&gSaveContext) < WATER_TEMPLE_SMALL_KEY_MAX
                        ? CAN_OBTAIN
                        : CANT_OBTAIN_ALREADY_HAVE;
         case RG_SPIRIT_TEMPLE_SMALL_KEY:
-            return gSaveContext.inventory.dungeonKeys[SCENE_SPIRIT_TEMPLE] < SPIRIT_TEMPLE_SMALL_KEY_MAX
+            return OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SPIRIT_TEMPLE)
+                               ->GetTotalSmallKeys(&gSaveContext) < SPIRIT_TEMPLE_SMALL_KEY_MAX
                        ? CAN_OBTAIN
                        : CANT_OBTAIN_ALREADY_HAVE;
         case RG_SHADOW_TEMPLE_SMALL_KEY:
-            return gSaveContext.inventory.dungeonKeys[SCENE_SHADOW_TEMPLE] < SHADOW_TEMPLE_SMALL_KEY_MAX
+            return OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SHADOW_TEMPLE)
+                               ->GetTotalSmallKeys(&gSaveContext) < SHADOW_TEMPLE_SMALL_KEY_MAX
                        ? CAN_OBTAIN
                        : CANT_OBTAIN_ALREADY_HAVE;
         case RG_BOTTOM_OF_THE_WELL_SMALL_KEY:
-            return gSaveContext.inventory.dungeonKeys[SCENE_BOTTOM_OF_THE_WELL] < BOTTOM_OF_THE_WELL_SMALL_KEY_MAX
+            return OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::BOTTOM_OF_THE_WELL)
+                               ->GetTotalSmallKeys(&gSaveContext) < BOTTOM_OF_THE_WELL_SMALL_KEY_MAX
                        ? CAN_OBTAIN
                        : CANT_OBTAIN_ALREADY_HAVE;
         case RG_GERUDO_TRAINING_GROUND_SMALL_KEY:
-            return gSaveContext.inventory.dungeonKeys[SCENE_GERUDO_TRAINING_GROUND] <
-                           GERUDO_TRAINING_GROUND_SMALL_KEY_MAX
+            return OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::GERUDO_TRAINING_GROUND)
+                               ->GetTotalSmallKeys(&gSaveContext) < GERUDO_TRAINING_GROUND_SMALL_KEY_MAX
                        ? CAN_OBTAIN
                        : CANT_OBTAIN_ALREADY_HAVE;
-        case RG_GERUDO_FORTRESS_SMALL_KEY:
-            return gSaveContext.inventory.dungeonKeys[SCENE_THIEVES_HIDEOUT] < GERUDO_FORTRESS_SMALL_KEY_MAX
+        case RG_GERUDO_FORTRESS_SMALL_KEY: {
+            std::vector<uint8_t> DoorFlags = THIEVES_HIDEOUT_DOOR_FLAGS;
+            return Rando::FindTotalSmallKeys(&gSaveContext, SCENE_THIEVES_HIDEOUT, &DoorFlags) <
+                           GERUDO_FORTRESS_SMALL_KEY_MAX
                        ? CAN_OBTAIN
                        : CANT_OBTAIN_ALREADY_HAVE;
+        }
         case RG_GANONS_CASTLE_SMALL_KEY:
-            return gSaveContext.inventory.dungeonKeys[SCENE_INSIDE_GANONS_CASTLE] < GANONS_CASTLE_SMALL_KEY_MAX
+            return OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::GANONS_CASTLE)
+                               ->GetTotalSmallKeys(&gSaveContext) < GANONS_CASTLE_SMALL_KEY_MAX
                        ? CAN_OBTAIN
                        : CANT_OBTAIN_ALREADY_HAVE;
         case RG_TREASURE_GAME_SMALL_KEY:
+            // I assume this cannot be easily manipulated?
             return gSaveContext.inventory.dungeonKeys[SCENE_TREASURE_BOX_SHOP] < TREASURE_GAME_SMALL_KEY_MAX
                        ? CAN_OBTAIN
                        : CANT_OBTAIN_ALREADY_HAVE;
@@ -4057,28 +4007,6 @@ std::map<RandomizerCheck, RandomizerInf> rcToRandomizerInf = {
     { RC_GANONS_CASTLE_MQ_SILVER_SHADOW_5, RAND_INF_GANONS_CASTLE_MQ_SILVER_SHADOW_5 },
 };
 
-CheckIdentity Randomizer::IdentifyBeehive(s32 sceneNum, s16 xPosition, s32 respawnData) {
-    CheckIdentity beehiveIdentity;
-
-    beehiveIdentity.randomizerInf = RAND_INF_MAX;
-    beehiveIdentity.randomizerCheck = RC_UNKNOWN_CHECK;
-
-    if (sceneNum == SCENE_GROTTOS) {
-        respawnData = TWO_ACTOR_PARAMS(xPosition, respawnData);
-    } else {
-        respawnData = TWO_ACTOR_PARAMS(xPosition, 0);
-    }
-
-    Rando::Location* location = GetCheckObjectFromActor(ACTOR_OBJ_COMB, sceneNum, respawnData);
-
-    if (location->GetRandomizerCheck() != RC_UNKNOWN_CHECK) {
-        beehiveIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
-        beehiveIdentity.randomizerCheck = location->GetRandomizerCheck();
-    }
-
-    return beehiveIdentity;
-}
-
 Rando::Location* Randomizer::GetCheckObjectFromActor(s16 actorId, s16 sceneNum, s32 actorParams = 0x00) {
     RandomizerCheck specialRc = RC_UNKNOWN_CHECK;
     // TODO: Migrate these special cases into table, or at least document why they are special
@@ -4225,45 +4153,7 @@ Rando::Location* Randomizer::GetCheckObjectFromActor(s16 actorId, s16 sceneNum, 
     return Rando::StaticData::GetLocation(RC_UNKNOWN_CHECK);
 }
 
-ScrubIdentity Randomizer::IdentifyScrub(s32 sceneNum, s32 actorParams, s32 respawnData) {
-    struct ScrubIdentity scrubIdentity;
-
-    scrubIdentity.identity.randomizerInf = RAND_INF_MAX;
-    scrubIdentity.identity.randomizerCheck = RC_UNKNOWN_CHECK;
-    scrubIdentity.getItemId = GI_NONE;
-    scrubIdentity.itemPrice = -1;
-
-    // Scrubs that are 0x06 are loaded as 0x03 when child, switching from selling arrows to seeds
-    if (actorParams == 0x06)
-        actorParams = 0x03;
-
-    if (sceneNum == SCENE_GROTTOS) {
-        actorParams = TWO_ACTOR_PARAMS(actorParams, respawnData);
-    }
-
-    Rando::Location* location = GetCheckObjectFromActor(ACTOR_EN_DNS, sceneNum, actorParams);
-
-    if (location->GetRandomizerCheck() != RC_UNKNOWN_CHECK) {
-        if (location->GetRandomizerCheck() == RC_HF_DEKU_SCRUB_GROTTO ||
-            location->GetRandomizerCheck() == RC_LW_DEKU_SCRUB_GROTTO_FRONT ||
-            location->GetRandomizerCheck() == RC_LW_DEKU_SCRUB_NEAR_BRIDGE) {
-            if (GetRandoSettingValue(RSK_SHUFFLE_SCRUBS) == RO_SCRUBS_OFF) {
-                return scrubIdentity;
-            }
-        } else if (GetRandoSettingValue(RSK_SHUFFLE_SCRUBS) != RO_SCRUBS_ALL) {
-            return scrubIdentity;
-        }
-
-        scrubIdentity.identity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
-        scrubIdentity.identity.randomizerCheck = location->GetRandomizerCheck();
-        scrubIdentity.getItemId = (GetItemID)Rando::StaticData::RetrieveItem(location->GetVanillaItem()).GetItemID();
-        scrubIdentity.itemPrice =
-            OTRGlobals::Instance->gRandoContext->GetItemLocation(scrubIdentity.identity.randomizerCheck)->GetPrice();
-    }
-
-    return scrubIdentity;
-}
-
+// RANDOTODO: Move all Shopsanity stuff to a ShuffleShops.cpp
 ShopItemIdentity Randomizer::IdentifyShopItem(s32 sceneNum, u8 slotIndex) {
     ShopItemIdentity shopItemIdentity;
 
@@ -4300,386 +4190,6 @@ ShopItemIdentity Randomizer::IdentifyShopItem(s32 sceneNum, u8 slotIndex) {
     }
 
     return shopItemIdentity;
-}
-
-CheckIdentity Randomizer::IdentifyCow(s32 sceneNum, s32 posX, s32 posZ) {
-    CheckIdentity cowIdentity;
-
-    cowIdentity.randomizerInf = RAND_INF_MAX;
-    cowIdentity.randomizerCheck = RC_UNKNOWN_CHECK;
-
-    s32 actorParams = 0x00;
-    // Only need to pass params if in a scene with two cows
-    if (sceneNum == SCENE_GROTTOS || sceneNum == SCENE_STABLE || sceneNum == SCENE_LON_LON_BUILDINGS) {
-        actorParams = TWO_ACTOR_PARAMS(posX, posZ);
-    }
-
-    Rando::Location* location = GetCheckObjectFromActor(ACTOR_EN_COW, sceneNum, actorParams);
-
-    if (location->GetRandomizerCheck() != RC_UNKNOWN_CHECK) {
-        cowIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
-        cowIdentity.randomizerCheck = location->GetRandomizerCheck();
-    }
-
-    return cowIdentity;
-}
-
-CheckIdentity Randomizer::IdentifyPot(s32 sceneNum, s32 posX, s32 posZ) {
-    CheckIdentity potIdentity;
-    uint32_t potSceneNum = sceneNum;
-
-    if (sceneNum == SCENE_GANONDORF_BOSS) {
-        potSceneNum = SCENE_GANONS_TOWER;
-    }
-
-    potIdentity.randomizerInf = RAND_INF_MAX;
-    potIdentity.randomizerCheck = RC_UNKNOWN_CHECK;
-
-    s32 actorParams = TWO_ACTOR_PARAMS(posX, posZ);
-
-    Rando::Location* location = GetCheckObjectFromActor(ACTOR_OBJ_TSUBO, potSceneNum, actorParams);
-
-    if (location->GetRandomizerCheck() == RC_UNKNOWN_CHECK) {
-        LUSLOG_WARN("IdentifyPot did not receive a valid RC value (%d).", location->GetRandomizerCheck());
-    } else {
-        potIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
-        potIdentity.randomizerCheck = location->GetRandomizerCheck();
-    }
-
-    return potIdentity;
-}
-
-CheckIdentity Randomizer::IdentifyFish(s32 sceneNum, s32 actorParams) {
-    CheckIdentity fishIdentity;
-
-    fishIdentity.randomizerInf = RAND_INF_MAX;
-    fishIdentity.randomizerCheck = RC_UNKNOWN_CHECK;
-
-    // Fishsanity will determine what the identity of the fish should be
-    if (sceneNum == SCENE_FISHING_POND) {
-        return OTRGlobals::Instance->gRandoContext->GetFishsanity()->IdentifyPondFish(actorParams);
-    }
-
-    Rando::Location* location = GetCheckObjectFromActor(ACTOR_EN_FISH, sceneNum, actorParams);
-
-    if (location->GetRandomizerCheck() != RC_UNKNOWN_CHECK) {
-        fishIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
-        fishIdentity.randomizerCheck = location->GetRandomizerCheck();
-    }
-
-    return fishIdentity;
-}
-
-CheckIdentity Randomizer::IdentifyGrass(s32 sceneNum, s32 posX, s32 posZ, s32 respawnData, s32 linkAge) {
-    CheckIdentity grassIdentity;
-
-    grassIdentity.randomizerInf = RAND_INF_MAX;
-    grassIdentity.randomizerCheck = RC_UNKNOWN_CHECK;
-
-    if (sceneNum == SCENE_GROTTOS) {
-        respawnData = TWO_ACTOR_PARAMS(posX, respawnData);
-    } else {
-        // We'll just pretend it's always daytime for our market bushes.
-        if (sceneNum == SCENE_MARKET_NIGHT) {
-            sceneNum = SCENE_MARKET_DAY;
-
-            /*
-                The two bushes by the tree are not in the same spot
-                between night and day. We'll assume the coordinates
-                of the daytime bushes so that we can count them as
-                the same locations.
-            */
-            if (posX == -74) {
-                posX = -106;
-                posZ = 277;
-            }
-            if (posX == -87) {
-                posX = -131;
-                posZ = 225;
-            }
-        }
-
-        /*
-            Same as with Market. ZR has a bush slightly off pos
-            between Child and Adult. This is to merge them into
-            a single location.
-        */
-        if (sceneNum == SCENE_ZORAS_RIVER) {
-            if (posX == 233) {
-                posX = 231;
-                posZ = -1478;
-            }
-        }
-
-        // The two bushes behind the sign in KF should be separate
-        // locations between Child and Adult.
-        if (sceneNum == SCENE_KOKIRI_FOREST && linkAge == 0) {
-            if (posX == -498 || posX == -523) {
-                posZ = 0xFF;
-            }
-        }
-
-        respawnData = TWO_ACTOR_PARAMS(posX, posZ);
-    }
-
-    Rando::Location* location = GetCheckObjectFromActor(ACTOR_EN_KUSA, sceneNum, respawnData);
-
-    if (location->GetRandomizerCheck() != RC_UNKNOWN_CHECK) {
-        grassIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
-        grassIdentity.randomizerCheck = location->GetRandomizerCheck();
-    }
-
-    return grassIdentity;
-}
-
-CheckIdentity Randomizer::IdentifyCrate(s32 sceneNum, s32 posX, s32 posZ) {
-    CheckIdentity crateIdentity;
-    uint32_t crateSceneNum = sceneNum;
-
-    // pretend night is day to align crates in market and align GF child/adult crates
-    if (sceneNum == SCENE_MARKET_NIGHT) {
-        crateSceneNum = SCENE_MARKET_DAY;
-    } else if (sceneNum == SCENE_GERUDOS_FORTRESS && gPlayState->linkAgeOnLoad == 1 && posX == 310) {
-        if (posZ == -1830) {
-            posZ = -1842;
-        } else if (posZ == -1770) {
-            posZ = -1782;
-        }
-    }
-
-    crateIdentity.randomizerInf = RAND_INF_MAX;
-    crateIdentity.randomizerCheck = RC_UNKNOWN_CHECK;
-
-    s32 actorParams = TWO_ACTOR_PARAMS(posX, posZ);
-
-    Rando::Location* location = GetCheckObjectFromActor(ACTOR_OBJ_KIBAKO2, crateSceneNum, actorParams);
-
-    if (location->GetRandomizerCheck() == RC_UNKNOWN_CHECK) {
-        LUSLOG_WARN("IdentifyCrate did not receive a valid RC value (%d).", location->GetRandomizerCheck());
-        assert(false);
-    } else {
-        crateIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
-        crateIdentity.randomizerCheck = location->GetRandomizerCheck();
-    }
-
-    return crateIdentity;
-}
-
-CheckIdentity Randomizer::IdentifySmallCrate(s32 sceneNum, s32 posX, s32 posZ) {
-    CheckIdentity smallCrateIdentity;
-    uint32_t smallCrateSceneNum = sceneNum;
-
-    smallCrateIdentity.randomizerInf = RAND_INF_MAX;
-    smallCrateIdentity.randomizerCheck = RC_UNKNOWN_CHECK;
-
-    s32 actorParams = TWO_ACTOR_PARAMS(posX, posZ);
-
-    Rando::Location* location = GetCheckObjectFromActor(ACTOR_OBJ_KIBAKO, smallCrateSceneNum, actorParams);
-
-    if (location->GetRandomizerCheck() == RC_UNKNOWN_CHECK) {
-        LUSLOG_WARN("IdentifyCrate did not receive a valid RC value (%d).", location->GetRandomizerCheck());
-        assert(false);
-    } else {
-        smallCrateIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
-        smallCrateIdentity.randomizerCheck = location->GetRandomizerCheck();
-    }
-
-    return smallCrateIdentity;
-}
-
-CheckIdentity Randomizer::IdentifyRock(s32 sceneNum, s32 posX, s32 posZ) {
-    CheckIdentity rockIdentity;
-
-    rockIdentity.randomizerInf = RAND_INF_MAX;
-    rockIdentity.randomizerCheck = RC_UNKNOWN_CHECK;
-
-    Rando::Location* location = GetCheckObjectFromActor(ACTOR_EN_ISHI, sceneNum, TWO_ACTOR_PARAMS(posX, posZ));
-
-    if (location->GetRandomizerCheck() != RC_UNKNOWN_CHECK) {
-        rockIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
-        rockIdentity.randomizerCheck = location->GetRandomizerCheck();
-    } else {
-        LUSLOG_WARN("IdentifyRock did not receive a valid RC value %d,%d.", posX, posZ);
-    }
-
-    return rockIdentity;
-}
-
-CheckIdentity Randomizer::IdentifyTree(s32 sceneNum, s32 posX, s32 posZ) {
-    CheckIdentity treeIdentity;
-
-    if (sceneNum == SCENE_MARKET_NIGHT) {
-        sceneNum = SCENE_MARKET_DAY;
-    }
-
-    s32 actorParams = TWO_ACTOR_PARAMS(posX, posZ);
-    Rando::Location* location = GetCheckObjectFromActor(ACTOR_EN_WOOD02, sceneNum, actorParams);
-    if (location->GetRandomizerCheck() != RC_UNKNOWN_CHECK &&
-        (location->GetRCType() != RCTYPE_NLTREE || GetRandoSettingValue(RSK_LOGIC_RULES) == RO_LOGIC_NO_LOGIC)) {
-        treeIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
-        treeIdentity.randomizerCheck = location->GetRandomizerCheck();
-        return treeIdentity;
-    }
-
-    treeIdentity.randomizerInf = RAND_INF_MAX;
-    treeIdentity.randomizerCheck = RC_UNKNOWN_CHECK;
-    return treeIdentity;
-}
-
-CheckIdentity Randomizer::IdentifySign(s32 sceneNum, s32 posX, s32 posZ, s32 id) {
-    CheckIdentity signIdentity;
-    uint32_t signSceneNum = sceneNum;
-    Rando::Location* location = nullptr;
-
-    // align child/adult signs
-    if (sceneNum == SCENE_KAKARIKO_VILLAGE && LINK_IS_ADULT && posX == 1165 && posZ == 1545) {
-        posZ = 1550;
-    } else if (sceneNum == SCENE_GRAVEYARD && LINK_IS_ADULT) {
-        if (id == ACTOR_EN_WONDER_TALK2 && posX == -807 && posZ == 266) {
-            posX = -805;
-        } else if (id == ACTOR_EN_WONDER_TALK) {
-            if (posX == 634 && posZ == 260) {
-                posX = 654;
-                posZ = 258;
-            } else if (posX == 634 && posZ == -100) {
-                posX = 654;
-                posZ = -102;
-            } else if (posX == 753 && posZ == 85) {
-                posX = 752;
-            }
-        }
-    } else if (sceneNum == SCENE_ZORAS_RIVER && LINK_IS_ADULT && posX == 4097 && posZ == -1399) {
-        posX = 4096;
-        posZ = -1401;
-    }
-
-    signIdentity.randomizerInf = RAND_INF_MAX;
-    signIdentity.randomizerCheck = RC_UNKNOWN_CHECK;
-
-    s32 actorParams = TWO_ACTOR_PARAMS(posX, posZ);
-
-    switch (id) {
-        case ACTOR_EN_KANBAN:
-            location = GetCheckObjectFromActor(ACTOR_EN_KANBAN, signSceneNum, actorParams);
-            break;
-        case ACTOR_EN_A_OBJ:
-            location = GetCheckObjectFromActor(ACTOR_EN_A_OBJ, signSceneNum, actorParams);
-            break;
-        case ACTOR_EN_WONDER_TALK2:
-            location = GetCheckObjectFromActor(ACTOR_EN_WONDER_TALK2, signSceneNum, actorParams);
-            break;
-        case ACTOR_EN_WONDER_TALK:
-            location = GetCheckObjectFromActor(ACTOR_EN_WONDER_TALK, signSceneNum, actorParams);
-            break;
-        default:
-            return signIdentity;
-    }
-
-    if (location == nullptr || location->GetRandomizerCheck() == RC_UNKNOWN_CHECK) {
-        LUSLOG_WARN("IdentifySign did not receive a valid RC value (%d).", location->GetRandomizerCheck());
-    } else {
-        signIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
-        signIdentity.randomizerCheck = location->GetRandomizerCheck();
-    }
-
-    return signIdentity;
-}
-
-CheckIdentity Randomizer::IdentifyWonderItem(s32 sceneNum, s32 par1, s32 par2) {
-    CheckIdentity wonderIdentity;
-    uint32_t wonderSceneNum = sceneNum;
-
-    // align oasis trees in colossus between child/adult
-    if (sceneNum == SCENE_DESERT_COLOSSUS && LINK_IS_ADULT) {
-        if (par1 == 1157 && par2 == 2388) {
-            par1 = 1161;
-            par2 = 2383;
-        } else if (par1 == 1114 && par2 == 2580) {
-            par1 = 1113;
-            par2 = 2581;
-        }
-    }
-
-    wonderIdentity.randomizerInf = RAND_INF_MAX;
-    wonderIdentity.randomizerCheck = RC_UNKNOWN_CHECK;
-
-    s32 actorParams = TWO_ACTOR_PARAMS(par1, par2);
-
-    Rando::Location* location = GetCheckObjectFromActor(ACTOR_EN_WONDER_ITEM, wonderSceneNum, actorParams);
-
-    if (location->GetRandomizerCheck() == RC_UNKNOWN_CHECK) {
-        LUSLOG_WARN("IdentifyWonderItem did not receive a valid RC value (%d).", location->GetRandomizerCheck());
-    } else {
-        wonderIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
-        wonderIdentity.randomizerCheck = location->GetRandomizerCheck();
-    }
-
-    return wonderIdentity;
-}
-
-CheckIdentity Randomizer::IdentifyBeggar(s32 sceneNum, s32 textId) {
-    CheckIdentity beggarIdentity;
-    beggarIdentity.randomizerInf = RAND_INF_MAX;
-    beggarIdentity.randomizerCheck = RC_UNKNOWN_CHECK;
-
-    Rando::Location* location = GetCheckObjectFromActor(ACTOR_EN_HY, sceneNum, textId);
-    if (location->GetRandomizerCheck() == RC_UNKNOWN_CHECK) {
-        LUSLOG_WARN("IdentifyBeggar did not receive a valid RC value (%d).", location->GetRandomizerCheck());
-    } else {
-        beggarIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
-        beggarIdentity.randomizerCheck = location->GetRandomizerCheck();
-    }
-
-    return beggarIdentity;
-}
-
-CheckIdentity Randomizer::IdentifyIcicle(s32 sceneNum, s32 posX, s32 posZ) {
-    struct CheckIdentity icicleIdentity;
-    uint32_t icicleSceneNum = sceneNum;
-
-    icicleIdentity.randomizerInf = RAND_INF_MAX;
-    icicleIdentity.randomizerCheck = RC_UNKNOWN_CHECK;
-
-    s32 actorParams = TWO_ACTOR_PARAMS(posX, posZ);
-
-    Rando::Location* location = GetCheckObjectFromActor(ACTOR_BG_ICE_TURARA, icicleSceneNum, actorParams);
-
-    if (location->GetRandomizerCheck() == RC_UNKNOWN_CHECK) {
-        LUSLOG_WARN("IdentifyIcicle did not receive a valid RC value (%d).", location->GetRandomizerCheck());
-        assert(false);
-    } else {
-        icicleIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
-        icicleIdentity.randomizerCheck = location->GetRandomizerCheck();
-    }
-
-    return icicleIdentity;
-}
-
-CheckIdentity Randomizer::IdentifyRedIce(s32 sceneNum, s32 posX, s32 posZ) {
-    struct CheckIdentity redIceIdentity;
-    uint32_t redIceSceneNum = sceneNum;
-
-    // Handle KZ moving
-    if (sceneNum == SCENE_ZORAS_DOMAIN && LINK_IS_ADULT && posX == 531 && posZ == -1818) {
-        posX = 628;
-    }
-
-    redIceIdentity.randomizerInf = RAND_INF_MAX;
-    redIceIdentity.randomizerCheck = RC_UNKNOWN_CHECK;
-
-    s32 actorParams = TWO_ACTOR_PARAMS(posX, posZ);
-
-    Rando::Location* location = GetCheckObjectFromActor(ACTOR_BG_ICE_SHELTER, redIceSceneNum, actorParams);
-
-    if (location->GetRandomizerCheck() == RC_UNKNOWN_CHECK) {
-        LUSLOG_WARN("IdentifyRedIce did not receive a valid RC value (%d).", location->GetRandomizerCheck());
-        assert(false);
-    } else {
-        redIceIdentity.randomizerInf = rcToRandomizerInf[location->GetRandomizerCheck()];
-        redIceIdentity.randomizerCheck = location->GetRandomizerCheck();
-    }
-
-    return redIceIdentity;
 }
 
 CheckIdentity Randomizer::IdentifySilver(s32 sceneNum, Vec3f pos) {
@@ -4737,7 +4247,7 @@ std::thread randoThread;
 
 void GenerateRandomizerImgui(std::string seed = "") {
     CVarSetInteger(CVAR_GENERAL("RandoGenerating"), 1);
-    Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+    Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
     auto ctx = Rando::Context::GetInstance();
     // RANDOTODO proper UI for selecting if a spoiler loaded should be used for settings
     Rando::Settings::GetInstance()->SetAllToContext();
@@ -4774,7 +4284,7 @@ void GenerateRandomizerImgui(std::string seed = "") {
 
     Rando::Context::GetInstance()->SetSeedGenerated(GenerateRandomizer(excludedLocations, enabledTricks, seed));
     CVarSetInteger(CVAR_GENERAL("RandoGenerating"), 0);
-    Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+    Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
 
     generated = true;
 
@@ -4866,49 +4376,28 @@ static std::unordered_map<RandomizerGet, GameplayStatTimestamp> randomizerGetToS
 // Gameplay stat tracking: Update time the item was acquired
 // (special cases for rando items)
 void Randomizer_GameplayStats_SetTimestamp(uint16_t item) {
-
     u32 time = static_cast<u32>(GAMEPLAYSTAT_TOTAL_TIME);
-
     // Have items in Link's pocket shown as being obtained at 0.1 seconds
     if (time == 0) {
         time = 1;
     }
 
-    // Use ITEM_KEY_BOSS to timestamp Ganon's boss key
-    if (item == RG_GANONS_CASTLE_BOSS_KEY) {
-        gSaveContext.ship.stats.itemTimestamp[ITEM_KEY_BOSS] = time;
-        return;
-    }
-
-    if (randomizerGetToStatsTimeStamp.contains((RandomizerGet)item)) {
-        gSaveContext.ship.stats.itemTimestamp[randomizerGetToStatsTimeStamp[(RandomizerGet)item]] = time;
-        return;
-    }
-
-    // Count any bottled item as a bottle
-    if (item >= RG_EMPTY_BOTTLE && item <= RG_BOTTLE_WITH_BIG_POE) {
-        if (gSaveContext.ship.stats.itemTimestamp[ITEM_BOTTLE] == 0) {
+    if (gSaveContext.ship.stats.itemTimestamp[item] == 0) {
+        if (item == RG_GANONS_CASTLE_BOSS_KEY) {
+            gSaveContext.ship.stats.itemTimestamp[ITEM_KEY_BOSS] = time;
+        } else if (item == RG_MASTER_SWORD) {
+            gSaveContext.ship.stats.itemTimestamp[ITEM_SWORD_MASTER] = time;
+        } else if (randomizerGetToStatsTimeStamp.contains((RandomizerGet)item)) {
+            gSaveContext.ship.stats.itemTimestamp[randomizerGetToStatsTimeStamp[(RandomizerGet)item]] = time;
+        } else if (item >= RG_EMPTY_BOTTLE && item <= RG_BOTTLE_WITH_BIG_POE) {
             gSaveContext.ship.stats.itemTimestamp[ITEM_BOTTLE] = time;
-        }
-        return;
-    }
-
-    // Count any bombchu pack as bombchus
-    if ((item >= RG_BOMBCHU_5 && item <= RG_BOMBCHU_20) || item == RG_PROGRESSIVE_BOMBCHU_BAG) {
-        if (gSaveContext.ship.stats.itemTimestamp[ITEM_BOMBCHU] = 0) {
+        } else if ((item >= RG_BOMBCHU_5 && item <= RG_BOMBCHU_20) || item == RG_PROGRESSIVE_BOMBCHU_BAG) {
             gSaveContext.ship.stats.itemTimestamp[ITEM_BOMBCHU] = time;
+        } else if (item == RG_MAGIC_SINGLE) {
+            gSaveContext.ship.stats.itemTimestamp[ITEM_SINGLE_MAGIC] = time;
+        } else if (item == RG_DOUBLE_DEFENSE) {
+            gSaveContext.ship.stats.itemTimestamp[ITEM_DOUBLE_DEFENSE] = time;
         }
-        return;
-    }
-
-    if (item == RG_MAGIC_SINGLE) {
-        gSaveContext.ship.stats.itemTimestamp[ITEM_SINGLE_MAGIC] = time;
-        return;
-    }
-
-    if (item == RG_DOUBLE_DEFENSE) {
-        gSaveContext.ship.stats.itemTimestamp[ITEM_DOUBLE_DEFENSE] = time;
-        return;
     }
 }
 
@@ -4929,8 +4418,8 @@ extern "C" u16 Randomizer_Item_Give(PlayState* play, GetItemEntry giEntry) {
     Randomizer_GameplayStats_SetTimestamp(item);
 
     // if it's an item that just sets a randomizerInf, set it
-    if (randomizerGetToRandInf.find(item) != randomizerGetToRandInf.end()) {
-        Flags_SetRandomizerInf(randomizerGetToRandInf.find(item)->second);
+    if (Rando::StaticData::RandoGetToRandInf.find(item) != Rando::StaticData::RandoGetToRandInf.end()) {
+        Flags_SetRandomizerInf((RandomizerInf)Rando::StaticData::RandoGetToRandInf.find(item)->second);
         return Return_Item_Entry(giEntry, RG_NONE);
     }
 
@@ -5179,13 +4668,7 @@ extern "C" u16 Randomizer_Item_Give(PlayState* play, GetItemEntry giEntry) {
 
                 if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT) ==
                     RO_TRIFORCE_HUNT_WIN) {
-                    gSaveContext.ship.stats.itemTimestamp[TIMESTAMP_TRIFORCE_COMPLETED] =
-                        static_cast<u32>(GAMEPLAYSTAT_TOTAL_TIME);
-                    gSaveContext.ship.stats.gameComplete = 1;
-                    Play_PerformSave(play);
-                    Notification::Emit({
-                        .message = "Game autosaved",
-                    });
+                    // Save and warp are deferred until item queue drains
                     GameInteractor_SetTriforceHuntCreditsWarpActive(true);
                 }
             }

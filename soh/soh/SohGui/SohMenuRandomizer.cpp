@@ -1,5 +1,6 @@
 #include "SohMenu.h"
 #include "soh/Enhancements/enhancementTypes.h"
+#include "soh/Enhancements/randomizer/randomizer_check_objects.h"
 #include "soh/Enhancements/randomizer/randomizer.h"
 #include "soh/Enhancements/randomizer/randomizerTypes.h"
 #include "soh/Enhancements/randomizer/settings.h"
@@ -41,7 +42,7 @@ void SaveEnabledTricks() {
     } else {
         CVarSetString(CVAR_RANDOMIZER_SETTING("EnabledTricks"), enabledTrickString.c_str());
     }
-    Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+    Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
     tricksDirty = false;
     return;
 }
@@ -111,7 +112,7 @@ void DrawLocationsMenu(WidgetInfo& info) {
                                 }
                                 CVarSetString(CVAR_RANDOMIZER_SETTING("ExcludedLocations"),
                                               excludedLocationString.c_str());
-                                Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+                                Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
                                 locationsDirty = true;
                             }
                             UIWidgets::PopStyleButton();
@@ -162,7 +163,7 @@ void DrawLocationsMenu(WidgetInfo& info) {
                                     CVarSetString(CVAR_RANDOMIZER_SETTING("ExcludedLocations"),
                                                   excludedLocationString.c_str());
                                 }
-                                Ship::Context::GetInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
+                                Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
                                 locationsDirty = true;
                             }
                             UIWidgets::PopStyleButton();
@@ -181,6 +182,11 @@ void DrawLocationsMenu(WidgetInfo& info) {
     ImGui::PopStyleVar(1);
     // ImGui::EndTabItem();
     ImGui::EndDisabled();
+}
+
+void MarkRandomizerMenusDirty() {
+    locationsDirty = true;
+    tricksDirty = true;
 }
 
 void UpdateMenuLocations() {
@@ -563,7 +569,7 @@ void SohMenu::AddMenuRandomizer() {
                 for (size_t i = 0; i < 10; i++) {
                     seedString[i] = '0' + ShipUtils::Random(0, 10);
                 }
-                seedString[11] = '\0';
+                seedString[10] = '\0';
             }
             ImGui::SameLine();
             if (UIWidgets::Button(ICON_FA_ERASER, UIWidgets::ButtonOptions()
@@ -686,7 +692,9 @@ void SohMenu::AddMenuRandomizer() {
     randoSettings->GetOptionGroup(RSG_MENU_SIDEBAR_DUNGEONS).AddWidgets(path);
     randoSettings->GetOptionGroup(RSG_MENU_SIDEBAR_SHUFFLES).AddWidgets(path);
     randoSettings->GetOptionGroup(RSG_MENU_SIDEBAR_HINTS_TRAPS).AddWidgets(path);
-    randoSettings->GetOptionGroup(RSG_MENU_SIDEBAR_STARTING_ITEMS).AddWidgets(path);
+    path.sidebarName = "Starting Items";
+    AddSidebarEntry("Randomizer", path.sidebarName, 1);
+    AddWidget(path, "Starting Items", WIDGET_CUSTOM).CustomFunction(DrawStartingItemsMenu);
     path.sidebarName = "Locations";
     AddSidebarEntry("Randomizer", path.sidebarName, 1);
     AddWidget(path, "Excluded Locations", WIDGET_CUSTOM).CustomFunction(DrawLocationsMenu);
