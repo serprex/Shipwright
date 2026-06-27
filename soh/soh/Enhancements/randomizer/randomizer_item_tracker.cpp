@@ -594,74 +594,75 @@ ItemTrackerNumbers GetItemCurrentAndMax(ItemTrackerItem item) {
                     }
                 }
 
-            result.currentCapacity = capacity;
-            result.maxCapacity = 50;
-            result.currentAmmo = AMMO(ITEM_BOMBCHU);
-            break;
-        }
-        case ITEM_BEAN:
-            result.currentCapacity = INV_CONTENT(ITEM_BEAN) == ITEM_BEAN ? 10 : 0;
-            result.maxCapacity = 10;
-            result.currentAmmo = AMMO(ITEM_BEAN);
-            break;
-        case ITEM_HEART_CONTAINER:
-            result.maxCapacity = result.currentCapacity = 8;
-            result.currentAmmo = gSaveContext.ship.stats.heartContainers;
-            break;
-        case ITEM_HEART_PIECE:
-            result.maxCapacity = result.currentCapacity = 36;
-            result.currentAmmo = gSaveContext.ship.stats.heartPieces;
-            break;
-        case ITEM_KEY_SMALL:
-            // Though the ammo/capacity naming doesn't really make sense for keys, we are
-            // hijacking the same system to display key counts as there are enough similarities
-            result.currentAmmo = MAX(gSaveContext.inventory.dungeonKeys[item.data], 0);
-            if (item.data == SCENE_THIEVES_HIDEOUT) {
-                std::vector<uint8_t> DoorFlags = THIEVES_HIDEOUT_DOOR_FLAGS;
-                result.currentCapacity = Rando::FindTotalSmallKeys(&gSaveContext, SCENE_THIEVES_HIDEOUT, &DoorFlags);
-                result.maxCapacity = GERUDO_FORTRESS_SMALL_KEY_MAX;
-            } else {
-                result.currentCapacity = OTRGlobals::Instance->gRandoContext->GetDungeons()
-                                             ->GetDungeonFromScene(item.data)
-                                             ->GetTotalSmallKeys(&gSaveContext);
-                switch (item.data) {
-                    case SCENE_FOREST_TEMPLE:
-                        result.maxCapacity = FOREST_TEMPLE_SMALL_KEY_MAX;
-                        break;
-                    case SCENE_FIRE_TEMPLE:
-                        result.maxCapacity = FIRE_TEMPLE_SMALL_KEY_MAX;
-                        if (IS_RANDO &&
-                            !(OTRGlobals::Instance->gRandoContext->GetOption(RSK_KEYSANITY)
-                                  .Is(RO_DUNGEON_ITEM_LOC_ANYWHERE) ||
-                              OTRGlobals::Instance->gRandoContext->GetOption(RSK_KEYSANITY)
-                                  .Is(RO_DUNGEON_ITEM_LOC_OVERWORLD) ||
-                              OTRGlobals::Instance->gRandoContext->GetOption(RSK_KEYSANITY)
-                                  .Is(RO_DUNGEON_ITEM_LOC_ANY_DUNGEON)) &&
-                            OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FIRE_TEMPLE)->IsVanilla()) {
-                            result.currentCapacity = result.currentCapacity - 1;
-                        }
-                        break;
-                    case SCENE_WATER_TEMPLE:
-                        result.maxCapacity = WATER_TEMPLE_SMALL_KEY_MAX;
-                        break;
-                    case SCENE_SPIRIT_TEMPLE:
-                        result.maxCapacity = SPIRIT_TEMPLE_SMALL_KEY_MAX;
-                        break;
-                    case SCENE_SHADOW_TEMPLE:
-                        result.maxCapacity = SHADOW_TEMPLE_SMALL_KEY_MAX;
-                        break;
-                    case SCENE_BOTTOM_OF_THE_WELL:
-                        result.maxCapacity = BOTTOM_OF_THE_WELL_SMALL_KEY_MAX;
-                        break;
-                    case SCENE_GERUDO_TRAINING_GROUND:
-                        result.maxCapacity = GERUDO_TRAINING_GROUND_SMALL_KEY_MAX;
-                        break;
-                    case SCENE_INSIDE_GANONS_CASTLE:
-                        result.maxCapacity = GANONS_CASTLE_SMALL_KEY_MAX;
-                        break;
-                }
-            break;
+                result.currentCapacity = capacity;
+                result.maxCapacity = 50;
+                result.currentAmmo = AMMO(ITEM_BOMBCHU);
+                break;
             }
+            case ITEM_BEAN:
+                result.currentCapacity = INV_CONTENT(ITEM_BEAN) == ITEM_BEAN ? 10 : 0;
+                result.maxCapacity = 10;
+                result.currentAmmo = AMMO(ITEM_BEAN);
+                break;
+            case ITEM_HEART_CONTAINER:
+                result.maxCapacity = result.currentCapacity = 8;
+                result.currentAmmo = gSaveContext.ship.stats.heartContainers;
+                break;
+            case ITEM_HEART_PIECE:
+                result.maxCapacity = result.currentCapacity = 36;
+                result.currentAmmo = gSaveContext.ship.stats.heartPieces;
+                break;
+            case ITEM_KEY_SMALL:
+                // Though the ammo/capacity naming doesn't really make sense for keys, we are
+                // hijacking the same system to display key counts as there are enough similarities
+                result.currentAmmo = MAX(gSaveContext.inventory.dungeonKeys[item.data], 0);
+                if (item.data == SCENE_THIEVES_HIDEOUT) {
+                    std::vector<uint8_t> DoorFlags = THIEVES_HIDEOUT_DOOR_FLAGS;
+                    result.currentCapacity =
+                        Rando::FindTotalSmallKeys(&gSaveContext, SCENE_THIEVES_HIDEOUT, &DoorFlags);
+                    result.maxCapacity = GERUDO_FORTRESS_SMALL_KEY_MAX;
+                } else {
+                    result.currentCapacity = OTRGlobals::Instance->gRandoContext->GetDungeons()
+                                                 ->GetDungeonFromScene(item.data)
+                                                 ->GetTotalSmallKeys(&gSaveContext);
+                    switch (item.data) {
+                        case SCENE_FOREST_TEMPLE:
+                            result.maxCapacity = FOREST_TEMPLE_SMALL_KEY_MAX;
+                            break;
+                        case SCENE_FIRE_TEMPLE:
+                            result.maxCapacity = FIRE_TEMPLE_SMALL_KEY_MAX;
+                            if (IS_RANDO &&
+                                !(OTRGlobals::Instance->gRandoContext->GetOption(RSK_KEYSANITY)
+                                      .Is(RO_DUNGEON_ITEM_LOC_ANYWHERE) ||
+                                  OTRGlobals::Instance->gRandoContext->GetOption(RSK_KEYSANITY)
+                                      .Is(RO_DUNGEON_ITEM_LOC_OVERWORLD) ||
+                                  OTRGlobals::Instance->gRandoContext->GetOption(RSK_KEYSANITY)
+                                      .Is(RO_DUNGEON_ITEM_LOC_ANY_DUNGEON)) &&
+                                OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FIRE_TEMPLE)->IsVanilla()) {
+                                result.currentCapacity = result.currentCapacity - 1;
+                            }
+                            break;
+                        case SCENE_WATER_TEMPLE:
+                            result.maxCapacity = WATER_TEMPLE_SMALL_KEY_MAX;
+                            break;
+                        case SCENE_SPIRIT_TEMPLE:
+                            result.maxCapacity = SPIRIT_TEMPLE_SMALL_KEY_MAX;
+                            break;
+                        case SCENE_SHADOW_TEMPLE:
+                            result.maxCapacity = SHADOW_TEMPLE_SMALL_KEY_MAX;
+                            break;
+                        case SCENE_BOTTOM_OF_THE_WELL:
+                            result.maxCapacity = BOTTOM_OF_THE_WELL_SMALL_KEY_MAX;
+                            break;
+                        case SCENE_GERUDO_TRAINING_GROUND:
+                            result.maxCapacity = GERUDO_TRAINING_GROUND_SMALL_KEY_MAX;
+                            break;
+                        case SCENE_INSIDE_GANONS_CASTLE:
+                            result.maxCapacity = GANONS_CASTLE_SMALL_KEY_MAX;
+                            break;
+                    }
+                    break;
+                }
         }
     } else if (item.kind == ITEM_KIND_QUEST && item.id == QUEST_SKULL_TOKEN) {
         result.maxCapacity = result.currentCapacity = 100;
