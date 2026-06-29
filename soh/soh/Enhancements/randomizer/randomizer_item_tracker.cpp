@@ -16,7 +16,7 @@
 #include "soh/SohGui/SohGui.hpp"
 #include "soh/SohGui/SohMenu.h"
 #include "ShuffleSilver.h"
-#include "StaticData.h"
+#include "static_data.h"
 #include "soh/SohGui/UIWidgets.hpp"
 #include "soh/util.h"
 #include "soh/Enhancements/randomizer/randomizer.h"
@@ -952,7 +952,7 @@ void DrawItem(ItemTrackerItem item) {
         }
     } else if (item.kind == ITEM_KIND_RG) {
         actualItemId = item.id;
-        RandomizerInf randInf = StaticData::RandoGetToRandInf[itemLoc->GetPlacedRandomizerGet()];
+        RandomizerInf randInf = Rando::StaticData::RandoGetToRandInf[itemLoc->GetPlacedRandomizerGet()];
         if (randInf != (RandomizerInf)0) {
             hasItem = Flags_GetRandomizerInf(randInf);
         }
