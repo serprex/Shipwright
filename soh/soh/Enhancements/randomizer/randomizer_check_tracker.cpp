@@ -357,6 +357,25 @@ std::map<RandomizerGet, RandomizerCheckArea> MapRGtoRandomizerCheckArea = {
     { RG_ICE_CAVERN_MAP, RCAREA_ICE_CAVERN }
 };
 
+static const std::set<RandomizerGet> shouldSilverSpoil = {
+    { RG_SPIRIT_SILVER_CHILD },
+    { RG_SPIRIT_SILVER_SUN },
+    { RG_SPIRIT_SILVER_BOULDERS },
+    { RG_SPIRIT_MQ_SILVER_LOBBY },
+    { RG_SPIRIT_MQ_SILVER_BIG_WALL },
+    { RG_BOTW_SILVER },
+    { RG_ICE_CAVERN_SILVER_BLADES },
+    { RG_ICE_CAVERN_SILVER_BLOCK },
+    { RG_GANONS_CASTLE_SILVER_LIGHT },
+    { RG_GANONS_CASTLE_SILVER_FOREST },
+    { RG_GANONS_CASTLE_SILVER_SPIRIT },
+    { RG_GANONS_CASTLE_MQ_SILVER_WATER },
+    { RG_GANONS_CASTLE_MQ_SILVER_SHADOW },
+    { RG_DODONGOS_CAVERN_MQ_SILVER },
+    { RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES },
+};
+
+// RANDOTODO do we want keyrings and keys beyond lower total to spoil area too?
 void SpoilAreaFromCheck(RandomizerCheck rc) {
     Rando::Location* loc = Rando::StaticData::GetLocation(rc);
     Rando::ItemLocation* itemLoc = Rando::Context::GetInstance()->GetItemLocation(rc);
@@ -364,6 +383,12 @@ void SpoilAreaFromCheck(RandomizerCheck rc) {
         RandomizerCheckArea area = MapRGtoRandomizerCheckArea[itemLoc->GetPlacedRandomizerGet()];
         if (!IsAreaSpoiled(area)) {
             SetAreaSpoiled(area);
+        }
+    }
+    if (itemLoc->GetPlacedItem().GetItemType() == ItemType::ITEMTYPE_SILVER) {
+        if (shouldSilverSpoil.contains(itemLoc->GetPlacedRandomizerGet()) && 
+            !IsAreaSpoiled(Rando::StaticData::silverToArea[itemLoc->GetPlacedRandomizerGet()])) {
+            SetAreaSpoiled(Rando::StaticData::silverToArea[itemLoc->GetPlacedRandomizerGet()]);
         }
     }
     if (!IsAreaSpoiled(loc->GetArea())) {

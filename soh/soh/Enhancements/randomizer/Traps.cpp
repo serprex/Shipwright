@@ -1293,21 +1293,9 @@ static void InitTrickNames() {
         // TODO_TRANSLATE
         Text{ "Dodongo's Cave Silver" },
     };
-    trickNameTable[RG_SHADOW_MQ_SILVER_BLADES] = {
-        // TODO_TRANSLATE
-        Text{ "Shadow Silver: Blank" },
-    };
-    trickNameTable[RG_SHADOW_MQ_SILVER_PIT] = {
-        // TODO_TRANSLATE
-        Text{ "Shadow Silver: Pitch" },
-    };
     trickNameTable[RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES] = {
         // TODO_TRANSLATE
         Text{ "Shadow Silver: Invisible" },
-    };
-    trickNameTable[RG_SHADOW_MQ_SILVER_SPIKES] = {
-        // TODO_TRANSLATE
-        Text{ "Shadow Silver: Spire" },
     };
     trickNameTable[RG_SPIRIT_MQ_SILVER_LOBBY] = {
         // TODO_TRANSLATE
@@ -1316,22 +1304,6 @@ static void InitTrickNames() {
     trickNameTable[RG_SPIRIT_MQ_SILVER_BIG_WALL] = {
         // TODO_TRANSLATE
         Text{ "Spirit Silver: Brick" },
-    };
-    trickNameTable[RG_GTG_MQ_SILVER_SLOPE] = {
-        // TODO_TRANSLATE
-        Text{ "Training Ground Silver: Sleep" },
-    };
-    trickNameTable[RG_GTG_MQ_SILVER_LAVA] = {
-        // TODO_TRANSLATE
-        Text{ "Traning Ground Silver: Lake" },
-    };
-    trickNameTable[RG_GTG_MQ_SILVER_WATER] = {
-        // TODO_TRANSLATE
-        Text{ "Training Ground Silver: Waver" },
-    };
-    trickNameTable[RG_GANONS_CASTLE_MQ_SILVER_FIRE] = {
-        // TODO_TRANSLATE
-        Text{ "Ganon's Castle Silver: Firm" },
     };
     trickNameTable[RG_GANONS_CASTLE_MQ_SILVER_WATER] = {
         // TODO_TRANSLATE

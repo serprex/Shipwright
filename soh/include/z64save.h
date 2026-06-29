@@ -222,16 +222,9 @@ typedef struct ShipRandomizerSaveContextData {
     s8 silverGanonFire;
     s8 silverGanonSpirit;
     s8 silverMqDodongosCavern;
-    s8 silverMqShadowBlades;
-    s8 silverMqShadowPit;
     s8 silverMqShadowInvisibleBlades;
-    s8 silverMqShadowSpikes;
     s8 silverMqSpiritLobby;
     s8 silverMqSpiritBigWall;
-    s8 silverMqGtgSlope;
-    s8 silverMqGtgLava;
-    s8 silverMqGtgWater;
-    s8 silverMqGanonFire;
     s8 silverMqGanonWater;
     s8 silverMqGanonShadow;
 } ShipRandomizerSaveContextData;

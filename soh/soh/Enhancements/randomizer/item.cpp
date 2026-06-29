@@ -457,7 +457,6 @@ bool Item::IsMajorItem() const {
     }
 
     if (type == ITEMTYPE_SMALLKEY &&
-        !(randomizerGet >= RG_SHADOW_SILVER_BLADES && randomizerGet <= RG_SHADOW_SILVER_BLADES) &&
         (ctx->GetOption(RSK_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_VANILLA) ||
          ctx->GetOption(RSK_KEYSANITY).Is(RO_DUNGEON_ITEM_LOC_OWN_DUNGEON))) {
         return false;

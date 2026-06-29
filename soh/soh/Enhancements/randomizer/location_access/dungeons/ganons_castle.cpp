@@ -529,7 +529,7 @@ void RegionTable_Init_GanonsCastle() {
 
     areaTable[RR_GANONS_CASTLE_MQ_FIRE_TRIAL_FROM_OPEN] = Region("Ganon's Castle MQ Fire Trial From Open Door", SCENE_INSIDE_GANONS_CASTLE, {
         //Events
-        EVENT_ACCESS(LOGIC_GANONS_CASTLE_MQ_SILVER_FIRE, logic->FireTimer() >= 80 && logic->CanUse(RG_GOLDEN_GAUNTLETS);),
+        EVENT_ACCESS(LOGIC_GANONS_CASTLE_SILVER_FIRE, logic->FireTimer() >= 80 && logic->CanUse(RG_GOLDEN_GAUNTLETS);),
     }, {
         //Locations
         LOCATION(RC_GANONS_CASTLE_MQ_SILVER_FIRE_1, logic->FireTimer() >= 32),
@@ -551,7 +551,7 @@ void RegionTable_Init_GanonsCastle() {
 
     areaTable[RR_GANONS_CASTLE_MQ_FIRE_TRIAL_BARRED_DOOR] = Region("Ganon's Castle MQ Fire Trial Barred Door", SCENE_INSIDE_GANONS_CASTLE, {}, {}, {
         //Exits
-        ENTRANCE(RR_GANONS_CASTLE_MQ_FIRE_TRIAL_FINAL_ROOM, logic->HasItem(RG_GANONS_CASTLE_MQ_SILVER_FIRE)),
+        ENTRANCE(RR_GANONS_CASTLE_MQ_FIRE_TRIAL_FINAL_ROOM, logic->HasItem(RG_GANONS_CASTLE_SILVER_FIRE)),
     });
 
     areaTable[RR_GANONS_CASTLE_MQ_FIRE_TRIAL_FINAL_ROOM] = Region("Ganon's Castle MQ Fire Trial Final Room", SCENE_INSIDE_GANONS_CASTLE, {

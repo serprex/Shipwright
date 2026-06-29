@@ -10,13 +10,15 @@ typedef enum ItemKind {
     ITEM_KIND_ITEM,
     ITEM_KIND_QUEST,
     ITEM_KIND_RG,
+    ITEM_KIND_SPECIAL,
 } ItemKind;
 
 typedef struct ItemTrackerItem {
     uint32_t id;
     ItemKind kind;
-    std::string name;
-    std::string nameFaded;
+    std::string displayName;
+    std::string iconName;
+    std::string fadedIconName;
     uint32_t data;
     void (*drawFunc)(ItemTrackerItem);
 } ItemTrackerItem;
@@ -25,20 +27,20 @@ bool HasSong(ItemTrackerItem);
 bool HasQuestItem(ItemTrackerItem);
 bool HasEquipment(ItemTrackerItem);
 
-#define ITEM_TRACKER_ITEM(id, data, drawFunc) \
-    { id, ITEM_KIND_ITEM, #id, #id "_Faded", data, drawFunc }
-#define ITEM_TRACKER_ITEM_CUSTOM(id, name, data, drawFunc) \
-    { id, ITEM_KIND_ITEM, #name, #name "_Faded", data, drawFunc }
+#define ITEM_TRACKER_ITEM(id, displayName, data, drawFunc) \
+    { id, ITEM_KIND_ITEM, displayName, #id, #id "_Faded", data, drawFunc }
+#define ITEM_TRACKER_ITEM_CUSTOM(id, displayName, iconName, data, drawFunc) \
+    { id, ITEM_KIND_ITEM, displayName, #iconName, #iconName "_Faded", data, drawFunc }
 
-#define ITEM_TRACKER_QUEST(id, data, drawFunc) \
-    { id, ITEM_KIND_QUEST, #id, #id "_Faded", data, drawFunc }
-#define ITEM_TRACKER_QUEST_CUSTOM(id, name, data, drawFunc) \
-    { id, ITEM_KIND_QUEST, #name, #name "_Faded", data, drawFunc }
+#define ITEM_TRACKER_QUEST(id, displayName, data, drawFunc) \
+    { id, ITEM_KIND_QUEST, displayName, #id, #id "_Faded", data, drawFunc }
+#define ITEM_TRACKER_QUEST_CUSTOM(id, displayName, iconName, data, drawFunc) \
+    { id, ITEM_KIND_QUEST, displayName, #iconName, #iconName "_Faded", data, drawFunc }
 
-#define ITEM_TRACKER_RG(id, data, drawFunc) \
-    { id, ITEM_KIND_RG, #id, #id "_Faded", data, drawFunc }
-#define ITEM_TRACKER_RG_CUSTOM(id, name, data, drawFunc) \
-    { id, ITEM_KIND_RG, #name, #name "_Faded", data, drawFunc }
+#define ITEM_TRACKER_RG(id, displayName, data, drawFunc) \
+    { id, ITEM_KIND_RG, displayName, #id, #id "_Faded", data, drawFunc }
+#define ITEM_TRACKER_RG_CUSTOM(id, displayName, iconName, data, drawFunc) \
+    { id, ITEM_KIND_RG, displayName, #iconName, #iconName "_Faded", data, drawFunc }
 
 static std::array<const char*, 16> itemTrackerWindowIDs = { "Item Tracker",
                                                             "Inventory Items Tracker",

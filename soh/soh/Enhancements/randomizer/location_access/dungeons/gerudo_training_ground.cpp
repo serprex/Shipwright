@@ -277,7 +277,7 @@ void RegionTable_Init_GerudoTrainingGround() {
 
     areaTable[RR_GERUDO_TRAINING_GROUND_MQ_BOULDER_ROOM] = Region("Gerudo Training Ground MQ Left Side", SCENE_GERUDO_TRAINING_GROUND, {
         //Events
-        EVENT_ACCESS(LOGIC_GTG_MQ_SILVER_SLOPE, logic->CanUse(RG_LONGSHOT) || ctx->GetTrickOption(RT_GTG_MQ_WITHOUT_HOOKSHOT) || (ctx->GetTrickOption(RT_GTG_MQ_WITH_HOOKSHOT) && logic->IsAdult && logic->CanJumpslash() && logic->CanUse(RG_HOOKSHOT))),
+        EVENT_ACCESS(LOGIC_GTG_SILVER_SLOPE, logic->CanUse(RG_LONGSHOT) || ctx->GetTrickOption(RT_GTG_MQ_WITHOUT_HOOKSHOT) || (ctx->GetTrickOption(RT_GTG_MQ_WITH_HOOKSHOT) && logic->IsAdult && logic->CanJumpslash() && logic->CanUse(RG_HOOKSHOT))),
     }, {
         //Locations
         LOCATION(RC_GERUDO_TRAINING_GROUND_MQ_BOULDER_ROOM_STALAGMITE_1,           logic->CanClearStalagmite()),
@@ -301,7 +301,7 @@ void RegionTable_Init_GerudoTrainingGround() {
     }, {
         //Exits
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_SAND_ROOM,    true),
-        ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_STALFOS_ROOM, logic->HasItem(RG_GTG_MQ_SILVER_SLOPE)),
+        ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_STALFOS_ROOM, logic->HasItem(RG_GTG_SILVER_SLOPE)),
     });
 
     areaTable[RR_GERUDO_TRAINING_GROUND_MQ_STALFOS_ROOM] = Region("Gerudo Training Ground MQ Stalfos Room", SCENE_GERUDO_TRAINING_GROUND, {
@@ -383,12 +383,12 @@ void RegionTable_Init_GerudoTrainingGround() {
     areaTable[RR_GERUDO_TRAINING_GROUND_MQ_SWITCH_LEDGE] = Region("Gerudo Training Ground MQ Switch Ledge", SCENE_GERUDO_TRAINING_GROUND, {
         //Events
         EVENT_ACCESS(LOGIC_GTG_MQ_RIGHT_SIDE_SWITCH, logic->CanUse(RG_MEGATON_HAMMER)),
-        EVENT_ACCESS(LOGIC_GTG_MQ_SILVER_LAVA,       logic->CanUse(RG_FIRE_ARROWS) && logic->CanUse(RG_HOVER_BOOTS)),
+        EVENT_ACCESS(LOGIC_GTG_SILVER_LAVA,          logic->CanUse(RG_FIRE_ARROWS) && logic->CanUse(RG_HOVER_BOOTS)),
     }, {}, {
         //Exits
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_LEDGE_SIDE_PLATFORMS,  logic->CanUse(RG_FIRE_ARROWS)),
         //the fire bubble here is a jerk if you are aiming for the nearest hook platform, you have to aim to the right hand side with hook to dodge it
-        ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_PLATFORMS_UNLIT_TORCH, logic->CanUse(RG_LONGSHOT) || (logic->HasItem(RG_GTG_MQ_SILVER_LAVA) && logic->CanUse(RG_HOOKSHOT)) || (logic->CanUse(RG_FIRE_ARROWS) && logic->HasItem(RG_GTG_MQ_SILVER_LAVA) && logic->CanUse(RG_HOVER_BOOTS))),
+        ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_PLATFORMS_UNLIT_TORCH, logic->CanUse(RG_LONGSHOT) || (logic->HasItem(RG_GTG_SILVER_LAVA) && logic->CanUse(RG_HOOKSHOT)) || (logic->CanUse(RG_FIRE_ARROWS) && logic->HasItem(RG_GTG_SILVER_LAVA) && logic->CanUse(RG_HOVER_BOOTS))),
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_MAZE_RIGHT,            logic->Get(LOGIC_GTG_MQ_RIGHT_SIDE_SWITCH) && logic->CanUse(RG_LONGSHOT)),
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_TORCH_SLUG_ROOM,       true),
     });
@@ -414,14 +414,14 @@ void RegionTable_Init_GerudoTrainingGround() {
 
     areaTable[RR_GERUDO_TRAINING_GROUND_MQ_PLATFORMS_UNLIT_TORCH] = Region("Gerudo Training Ground MQ Platforms Unlit Torch", SCENE_GERUDO_TRAINING_GROUND, {
         //Events
-        EVENT_ACCESS(LOGIC_GTG_MQ_SILVER_LAVA, logic->HasFireSource() && logic->CanUse(RG_HOVER_BOOTS)),
+        EVENT_ACCESS(LOGIC_GTG_SILVER_LAVA, logic->HasFireSource() && logic->CanUse(RG_HOVER_BOOTS)),
     }, {
         LOCATION(RC_GTG_MQ_SILVER_LAVA_4, logic->HasFireSource()),
         LOCATION(RC_GTG_MQ_SILVER_LAVA_5, logic->HasFireSource()),
         LOCATION(RC_GTG_MQ_SILVER_LAVA_6, logic->HasFireSource()),
     }, {
         //Exits
-        ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_UNDERWATER,           logic->HasItem(RG_GTG_MQ_SILVER_LAVA)),
+        ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_UNDERWATER,           logic->HasItem(RG_GTG_SILVER_LAVA)),
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_LEDGE_SIDE_PLATFORMS, logic->HasFireSource() && logic->CanUse(RG_HOVER_BOOTS)),
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_TORCH_SIDE_PLATFORMS, logic->HasFireSource() || logic->CanUse(RG_LONGSHOT) || (ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_MEGATON_HAMMER))),
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_MAZE_RIGHT,           logic->Get(LOGIC_GTG_MQ_RIGHT_SIDE_SWITCH) && (logic->CanUse(RG_LONGSHOT) || (logic->CanUse(RG_HOOKSHOT) && logic->HasFireSource()))),
@@ -430,7 +430,7 @@ void RegionTable_Init_GerudoTrainingGround() {
     areaTable[RR_GERUDO_TRAINING_GROUND_MQ_TORCH_SIDE_PLATFORMS] = Region("Gerudo Training Ground Torch Side Platforms", SCENE_GERUDO_TRAINING_GROUND, {
         //Events
         //this torch shot is possible as child but tight and obtuse enough to be a trick
-        EVENT_ACCESS(LOGIC_GTG_MQ_SILVER_LAVA, ((logic->CanUse(RG_FAIRY_BOW) && logic->IsAdult) || logic->CanUse(RG_FIRE_ARROWS)) && logic->CanUse(RG_HOVER_BOOTS)),
+        EVENT_ACCESS(LOGIC_GTG_SILVER_LAVA, ((logic->CanUse(RG_FAIRY_BOW) && logic->IsAdult) || logic->CanUse(RG_FIRE_ARROWS)) && logic->CanUse(RG_HOVER_BOOTS)),
     }, {
         //Locations
         LOCATION(RC_GTG_MQ_SILVER_LAVA_4, (logic->CanUse(RG_FAIRY_BOW) && logic->IsAdult) || logic->CanUse(RG_FIRE_ARROWS)),
@@ -445,11 +445,11 @@ void RegionTable_Init_GerudoTrainingGround() {
     });
 
     areaTable[RR_GERUDO_TRAINING_GROUND_MQ_UNDERWATER] = Region("Gerudo Training Ground MQ Underwater", SCENE_GERUDO_TRAINING_GROUND, {
-        EVENT_ACCESS(LOGIC_GTG_MQ_SILVER_WATER, logic->HasFireSource() && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24 && logic->TakeDamage()),
+        EVENT_ACCESS(LOGIC_GTG_SILVER_WATER, logic->HasFireSource() && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24 && logic->TakeDamage()),
     }, {
         //Locations
         //it is possible to snipe the stingers with bow or sling before dropping in, or just get really lucky, and avoid needing to take damage, but that might be trick worthy
-        LOCATION(RC_GERUDO_TRAINING_GROUND_MQ_UNDERWATER_SILVER_RUPEE_CHEST, logic->HasItem(RG_GTG_MQ_SILVER_WATER) && logic->HasItem(RG_OPEN_CHEST)),
+        LOCATION(RC_GERUDO_TRAINING_GROUND_MQ_UNDERWATER_SILVER_RUPEE_CHEST, logic->HasItem(RG_GTG_SILVER_WATER) && logic->HasItem(RG_OPEN_CHEST)),
         LOCATION(RC_GTG_MQ_SILVER_WATER_1, logic->HasFireSource() && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24 && logic->TakeDamage()),
         LOCATION(RC_GTG_MQ_SILVER_WATER_2, logic->HasFireSource() && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24 && logic->TakeDamage()),
         LOCATION(RC_GTG_MQ_SILVER_WATER_3, logic->HasFireSource() && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24 && logic->TakeDamage()),
@@ -460,7 +460,7 @@ void RegionTable_Init_GerudoTrainingGround() {
 
     areaTable[RR_GERUDO_TRAINING_GROUND_MQ_MAZE_RIGHT] = Region("Gerudo Training Ground MQ Maze Right", SCENE_GERUDO_TRAINING_GROUND, {
         //Events
-        EVENT_ACCESS(LOGIC_GTG_MQ_SILVER_LAVA, logic->CanUse(RG_FIRE_ARROWS) && logic->CanUse(RG_HOVER_BOOTS)),
+        EVENT_ACCESS(LOGIC_GTG_SILVER_LAVA, logic->CanUse(RG_FIRE_ARROWS) && logic->CanUse(RG_HOVER_BOOTS)),
     }, {
         //Locations
         LOCATION(RC_GERUDO_TRAINING_GROUND_MQ_MAZE_RIGHT_CENTRAL_CHEST, logic->HasItem(RG_OPEN_CHEST)),
@@ -475,7 +475,7 @@ void RegionTable_Init_GerudoTrainingGround() {
         //Exits
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_LOBBY,                 true),
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_TORCH_SIDE_PLATFORMS,  logic->CanUse(RG_FIRE_ARROWS) || logic->CanUse(RG_LONGSHOT) || (ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_MEGATON_HAMMER))),
-        ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_PLATFORMS_UNLIT_TORCH, logic->CanUse(RG_FIRE_ARROWS) || logic->CanUse(logic->HasItem(RG_GTG_MQ_SILVER_LAVA) ? RG_HOOKSHOT : RG_LONGSHOT) || (ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && logic->Get(LOGIC_GTG_MQ_RIGHT_SIDE_SWITCH) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_MEGATON_HAMMER))),
+        ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_PLATFORMS_UNLIT_TORCH, logic->CanUse(RG_FIRE_ARROWS) || logic->CanUse(logic->HasItem(RG_GTG_SILVER_LAVA) ? RG_HOOKSHOT : RG_LONGSHOT) || (ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE) && logic->Get(LOGIC_GTG_MQ_RIGHT_SIDE_SWITCH) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_MEGATON_HAMMER))),
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_LEDGE_SIDE_PLATFORMS,  logic->CanUse(RG_FIRE_ARROWS)),
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_FURTHEST_PLATFORM,     logic->CanUse(RG_FIRE_ARROWS)),
     });

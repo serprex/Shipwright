@@ -4,6 +4,7 @@
 #include "draw.h"
 #include "static_data.h"
 #include "randomizer.h"
+#include "randomizer_check_tracker.h"
 
 extern "C" {
 #include "overlays/actors/ovl_En_G_Switch/z_en_g_switch.h"
@@ -13,84 +14,217 @@ extern SaveContext gSaveContext;
 
 extern void EnItem00_DrawRandomizedItem(EnItem00* enItem00, PlayState* play);
 
-static bool IsSilverCleared(s16 switchFlag) {
+bool IsSilverInPool(RandomizerGet rg){
+    auto ctx = Rando::Context::GetInstance();
+    switch (rg) {
+        case RG_SHADOW_SILVER_BLADES:
+        case RG_SHADOW_SILVER_PIT:
+        case RG_SHADOW_SILVER_SPIKES:
+        case RG_GTG_SILVER_SLOPE:
+        case RG_GTG_SILVER_LAVA:
+        case RG_GTG_SILVER_WATER:
+        case RG_GANONS_CASTLE_SILVER_FIRE:
+            return true;
+        case RG_SPIRIT_SILVER_CHILD:
+        case RG_SPIRIT_SILVER_SUN:
+        case RG_SPIRIT_SILVER_BOULDERS:
+            return ctx->GetDungeon(Rando::SPIRIT_TEMPLE)->IsVanilla();
+        case RG_BOTW_SILVER:
+            return ctx->GetDungeon(Rando::BOTTOM_OF_THE_WELL)->IsVanilla();
+        case RG_ICE_CAVERN_SILVER_BLADES:
+        case RG_ICE_CAVERN_SILVER_BLOCK:
+            return ctx->GetDungeon(Rando::ICE_CAVERN)->IsVanilla();
+        case RG_GANONS_CASTLE_SILVER_LIGHT:
+        case RG_GANONS_CASTLE_SILVER_FOREST:
+        case RG_GANONS_CASTLE_SILVER_SPIRIT:
+            return ctx->GetDungeon(Rando::GANONS_CASTLE)->IsVanilla();
+        case RG_DODONGOS_CAVERN_MQ_SILVER:
+            return ctx->GetDungeon(Rando::DODONGOS_CAVERN)->IsMQ();
+        case RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES:
+            return ctx->GetDungeon(Rando::SHADOW_TEMPLE)->IsMQ();
+        case RG_SPIRIT_MQ_SILVER_LOBBY:
+        case RG_SPIRIT_MQ_SILVER_BIG_WALL:
+            return ctx->GetDungeon(Rando::SPIRIT_TEMPLE)->IsMQ();
+        case RG_GANONS_CASTLE_MQ_SILVER_WATER:
+        case RG_GANONS_CASTLE_MQ_SILVER_SHADOW:
+            return ctx->GetDungeon(Rando::GANONS_CASTLE)->IsMQ();
+        default:
+            assert(false);
+            return false;
+    }
+}
+
+std::unordered_map<RandomizerGet, RandomizerCheckArea> Rando::StaticData::silverToArea = {
+    { RG_DODONGOS_CAVERN_MQ_SILVER, RCAREA_DODONGOS_CAVERN },
+    { RG_SPIRIT_SILVER_CHILD, RCAREA_SPIRIT_TEMPLE },
+    { RG_SPIRIT_SILVER_SUN, RCAREA_SPIRIT_TEMPLE },
+    { RG_SPIRIT_SILVER_BOULDERS, RCAREA_SPIRIT_TEMPLE },
+    { RG_SPIRIT_MQ_SILVER_LOBBY, RCAREA_SPIRIT_TEMPLE },
+    { RG_SPIRIT_MQ_SILVER_BIG_WALL, RCAREA_SPIRIT_TEMPLE },
+    { RG_SHADOW_SILVER_BLADES, RCAREA_SHADOW_TEMPLE },
+    { RG_SHADOW_SILVER_PIT, RCAREA_SHADOW_TEMPLE },
+    { RG_SHADOW_SILVER_SPIKES, RCAREA_SHADOW_TEMPLE },
+    { RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES, RCAREA_SHADOW_TEMPLE },
+    { RG_GANONS_CASTLE_SILVER_LIGHT, RCAREA_GANONS_CASTLE},
+    { RG_GANONS_CASTLE_SILVER_FOREST, RCAREA_GANONS_CASTLE },
+    { RG_GANONS_CASTLE_SILVER_FIRE, RCAREA_GANONS_CASTLE },
+    { RG_GANONS_CASTLE_SILVER_SPIRIT, RCAREA_GANONS_CASTLE },
+    { RG_GANONS_CASTLE_MQ_SILVER_WATER, RCAREA_GANONS_CASTLE },
+    { RG_GANONS_CASTLE_MQ_SILVER_SHADOW, RCAREA_GANONS_CASTLE },
+    { RG_ICE_CAVERN_SILVER_BLADES, RCAREA_ICE_CAVERN },
+    { RG_ICE_CAVERN_SILVER_BLOCK, RCAREA_ICE_CAVERN },
+    { RG_BOTW_SILVER, RCAREA_BOTTOM_OF_THE_WELL },
+    { RG_GTG_SILVER_SLOPE, RCAREA_GERUDO_TRAINING_GROUND },
+    { RG_GTG_SILVER_LAVA, RCAREA_GERUDO_TRAINING_GROUND },
+    { RG_GTG_SILVER_WATER, RCAREA_GERUDO_TRAINING_GROUND }
+};
+
+RandomizerGet SilverFromSwitchFlag(s16 switchFlag){
     bool isMQ = Rando::Context::GetInstance()->GetDungeonFromScene((SceneID)gPlayState->sceneNum)->IsMQ();
     switch (gPlayState->sceneNum) {
         case SCENE_DODONGOS_CAVERN:
-            return gSaveContext.ship.quest.data.randomizer.silverMqDodongosCavern >= 5;
+            return RG_DODONGOS_CAVERN_MQ_SILVER;
         case SCENE_SHADOW_TEMPLE:
             switch (switchFlag) {
                 case 1:
-
-                    return isMQ ? gSaveContext.ship.quest.data.randomizer.silverMqShadowBlades >= 5
-                                : gSaveContext.ship.quest.data.randomizer.silverShadowBlades >= 5;
+                    return RG_SHADOW_SILVER_BLADES;
                 case 3:
-                    return gSaveContext.ship.quest.data.randomizer.silverMqShadowInvisibleBlades >= 10;
+                    return RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES;
                 case 8:
-                    return isMQ ? gSaveContext.ship.quest.data.randomizer.silverMqShadowSpikes >= 10
-                                : gSaveContext.ship.quest.data.randomizer.silverShadowSpikes >= 5;
+                    return RG_SHADOW_SILVER_SPIKES;
                 case 9:
-                    return gSaveContext.ship.quest.data.randomizer.silverShadowPit >= 5;
+                    return RG_SHADOW_SILVER_PIT;
                 case 17:
-                    return gSaveContext.ship.quest.data.randomizer.silverMqShadowPit >= 5;
+                    return RG_SHADOW_SILVER_PIT;
             }
             break;
         case SCENE_SPIRIT_TEMPLE:
             switch (switchFlag) {
                 case 0:
-                    return gSaveContext.ship.quest.data.randomizer.silverMqSpiritBigWall >= 5;
+                    return RG_SPIRIT_MQ_SILVER_BIG_WALL;
                 case 2:
-                    return gSaveContext.ship.quest.data.randomizer.silverSpiritBoulders >= 5;
+                    return RG_SPIRIT_SILVER_BOULDERS;
                 case 5:
-                    return gSaveContext.ship.quest.data.randomizer.silverSpiritChild >= 5;
+                    return RG_SPIRIT_SILVER_CHILD;
                 case 10:
-                    return gSaveContext.ship.quest.data.randomizer.silverSpiritSun >= 5;
-                case 55:
-                    return gSaveContext.ship.quest.data.randomizer.silverMqSpiritLobby >= 5;
+                    return RG_SPIRIT_SILVER_SUN;
+                case 55: //Likely error
+                    return RG_SPIRIT_MQ_SILVER_LOBBY;
             }
             break;
         case SCENE_BOTTOM_OF_THE_WELL:
-            return gSaveContext.ship.quest.data.randomizer.silverBotw >= 5;
+            return RG_BOTW_SILVER;
         case SCENE_ICE_CAVERN:
             switch (switchFlag) {
                 case 8:
-                    return gSaveContext.ship.quest.data.randomizer.silverIceCavernBlock >= 5;
+                    return RG_ICE_CAVERN_SILVER_BLOCK;
                 case 31:
-                    return gSaveContext.ship.quest.data.randomizer.silverIceCavernBlades >= 5;
+                    return RG_ICE_CAVERN_SILVER_BLADES;
             }
             break;
         case SCENE_GERUDO_TRAINING_GROUND:
             switch (switchFlag) {
                 case 12:
-                    return isMQ ? gSaveContext.ship.quest.data.randomizer.silverMqGtgLava >= 6
-                                : gSaveContext.ship.quest.data.randomizer.silverGtgLava >= 5;
+                    return RG_GTG_SILVER_LAVA;
                 case 27:
-                    return isMQ ? gSaveContext.ship.quest.data.randomizer.silverMqGtgWater >= 3
-                                : gSaveContext.ship.quest.data.randomizer.silverGtgWater >= 5;
+                    return RG_GTG_SILVER_WATER;
                 case 28:
-                    return isMQ ? gSaveContext.ship.quest.data.randomizer.silverMqGtgSlope >= 5
-                                : gSaveContext.ship.quest.data.randomizer.silverGtgSlope >= 5;
+                    return RG_GTG_SILVER_SLOPE;
             }
             break;
         case SCENE_INSIDE_GANONS_CASTLE:
             switch (switchFlag) {
                 case 1:
-                    return gSaveContext.ship.quest.data.randomizer.silverMqGanonFire >= 5;
+                    return RG_GANONS_CASTLE_SILVER_FIRE;
                 case 2:
-                    return gSaveContext.ship.quest.data.randomizer.silverMqGanonWater >= 5;
+                    return RG_GANONS_CASTLE_MQ_SILVER_WATER;
                 case 9:
-                    return gSaveContext.ship.quest.data.randomizer.silverGanonFire >= 5;
+                    return RG_GANONS_CASTLE_SILVER_FIRE;
                 case 11:
-                    return isMQ ? gSaveContext.ship.quest.data.randomizer.silverMqGanonShadow >= 5
-                                : gSaveContext.ship.quest.data.randomizer.silverGanonSpirit >= 5;
+                    return isMQ ? RG_GANONS_CASTLE_MQ_SILVER_SHADOW
+                                : RG_GANONS_CASTLE_SILVER_SPIRIT;
                 case 14:
-                    return gSaveContext.ship.quest.data.randomizer.silverGanonForest >= 5;
+                    return RG_GANONS_CASTLE_SILVER_FOREST;
                 case 18:
-                    return gSaveContext.ship.quest.data.randomizer.silverGanonLight >= 5;
+                    return RG_GANONS_CASTLE_SILVER_LIGHT;
             }
             break;
+        assert(false); //no matching silver found
+        return RG_NONE;
     }
-    return false;
+}
+
+s8* SilverFieldFromSaveContext(SaveContext* saveContext, RandomizerGet rg) {
+    switch (rg) {
+        case RG_SHADOW_SILVER_BLADES:
+            return &saveContext->ship.quest.data.randomizer.silverShadowBlades;
+        case RG_SHADOW_SILVER_PIT:
+            return &saveContext->ship.quest.data.randomizer.silverShadowPit;
+        case RG_SHADOW_SILVER_SPIKES:
+            return &saveContext->ship.quest.data.randomizer.silverShadowSpikes;
+        case RG_SPIRIT_SILVER_CHILD:
+            return &saveContext->ship.quest.data.randomizer.silverSpiritChild;
+        case RG_SPIRIT_SILVER_SUN:
+            return &saveContext->ship.quest.data.randomizer.silverSpiritSun;
+        case RG_SPIRIT_SILVER_BOULDERS:
+            return &saveContext->ship.quest.data.randomizer.silverSpiritBoulders;
+        case RG_BOTW_SILVER:
+            return &saveContext->ship.quest.data.randomizer.silverBotw;
+        case RG_ICE_CAVERN_SILVER_BLADES:
+            return &saveContext->ship.quest.data.randomizer.silverIceCavernBlades;
+        case RG_ICE_CAVERN_SILVER_BLOCK:
+            return &saveContext->ship.quest.data.randomizer.silverIceCavernBlock;
+        case RG_GTG_SILVER_SLOPE:
+            return &saveContext->ship.quest.data.randomizer.silverGtgSlope;
+        case RG_GTG_SILVER_LAVA:
+            return &saveContext->ship.quest.data.randomizer.silverGtgLava;
+        case RG_GTG_SILVER_WATER:
+            return &saveContext->ship.quest.data.randomizer.silverGtgWater;
+        case RG_GANONS_CASTLE_SILVER_LIGHT:
+            return &saveContext->ship.quest.data.randomizer.silverGanonLight;
+        case RG_GANONS_CASTLE_SILVER_FOREST:
+            return &saveContext->ship.quest.data.randomizer.silverGanonForest;
+        case RG_GANONS_CASTLE_SILVER_FIRE:
+            return &saveContext->ship.quest.data.randomizer.silverGanonFire;
+        case RG_GANONS_CASTLE_SILVER_SPIRIT:
+            return &saveContext->ship.quest.data.randomizer.silverGanonSpirit;
+        case RG_DODONGOS_CAVERN_MQ_SILVER:
+            return &saveContext->ship.quest.data.randomizer.silverMqDodongosCavern;
+        case RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES:
+            return &saveContext->ship.quest.data.randomizer.silverMqShadowInvisibleBlades;
+        case RG_SPIRIT_MQ_SILVER_LOBBY:
+            return &saveContext->ship.quest.data.randomizer.silverMqSpiritLobby;
+        case RG_SPIRIT_MQ_SILVER_BIG_WALL:
+            return &saveContext->ship.quest.data.randomizer.silverMqSpiritBigWall;
+        case RG_GANONS_CASTLE_MQ_SILVER_WATER:
+            return &saveContext->ship.quest.data.randomizer.silverMqGanonWater;
+        case RG_GANONS_CASTLE_MQ_SILVER_SHADOW:
+            return &saveContext->ship.quest.data.randomizer.silverMqGanonShadow;
+        default:
+            return nullptr;
+    }
+}
+
+s8 SilverTotal(RandomizerGet rg) {
+    auto ctx = Rando::Context::GetInstance();
+    return rg == RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES || 
+           (rg == RG_SHADOW_SILVER_SPIKES && ctx->GetDungeon(Rando::SHADOW_TEMPLE)->IsMQ()) ? 10
+           : (rg == RG_GTG_SILVER_LAVA && ctx->GetDungeon(Rando::GERUDO_TRAINING_GROUND)->IsMQ())  ? 6
+           : (rg == RG_GTG_SILVER_WATER  && ctx->GetDungeon(Rando::GERUDO_TRAINING_GROUND)->IsMQ())  ? 3
+                                                                                          : 5;
+}
+
+bool IsSilverCleared(s16 switchFlag) {
+    RandomizerGet rg = SilverFromSwitchFlag(switchFlag);
+    return *SilverFieldFromSaveContext(&gSaveContext, rg) >= SilverTotal(rg);
+}
+
+bool IsSilverCleared(RandomizerGet rg) {
+    return *SilverFieldFromSaveContext(&gSaveContext, rg) >= SilverTotal(rg);
+}
+
+bool IsSilver(RandomizerGet rg){
+    return rg >= RG_SHADOW_SILVER_BLADES && rg <= RG_GANONS_CASTLE_MQ_SILVER_SHADOW;
 }
 
 extern "C" void EnGSwitch_RandomizerDraw(Actor* thisx, PlayState* play) {

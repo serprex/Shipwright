@@ -908,19 +908,21 @@ void GenerateItemPool() {
         ctx->possibleIceTrapModels.insert(RG_SHADOW_SILVER_BLADES); // ice traps reroll this into a random silver rupee
         bool isWallet = ctx->GetOption(RSK_SHUFFLE_SILVER).Is(RO_SHUFFLE_SILVER_WALLET);
         auto dungeons = ctx->GetDungeons();
+
+        AddFixedItemToPool(RG_SHADOW_SILVER_BLADES, isWallet ? 1 : 5, false);
+        AddFixedItemToPool(RG_SHADOW_SILVER_PIT, isWallet ? 1 : 5, false);
+        AddFixedItemToPool(RG_GTG_SILVER_SLOPE, isWallet ? 1 : 5, false);
+        AddFixedItemToPool(RG_GANONS_CASTLE_SILVER_FIRE, isWallet ? 1 : 5, false);
+
         if (dungeons->GetDungeonFromScene(SCENE_DODONGOS_CAVERN)->IsMQ()) {
             AddFixedItemToPool(RG_DODONGOS_CAVERN_MQ_SILVER, isWallet ? 1 : 5, false);
         }
 
-        if (dungeons->GetDungeonFromScene(SCENE_SHADOW_TEMPLE)->IsVanilla()) {
-            AddFixedItemToPool(RG_SHADOW_SILVER_BLADES, isWallet ? 1 : 5, false);
-            AddFixedItemToPool(RG_SHADOW_SILVER_PIT, isWallet ? 1 : 5, false);
+        if (dungeons->GetDungeonFromScene(SCENE_SHADOW_TEMPLE)->IsMQ()) {
             AddFixedItemToPool(RG_SHADOW_SILVER_SPIKES, isWallet ? 1 : 5, false);
         } else {
-            AddFixedItemToPool(RG_SHADOW_MQ_SILVER_BLADES, isWallet ? 1 : 5, false);
-            AddFixedItemToPool(RG_SHADOW_MQ_SILVER_PIT, isWallet ? 1 : 5, false);
             AddFixedItemToPool(RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES, isWallet ? 1 : 10, false);
-            AddFixedItemToPool(RG_SHADOW_MQ_SILVER_SPIKES, isWallet ? 1 : 10, false);
+            AddFixedItemToPool(RG_SHADOW_SILVER_SPIKES, isWallet ? 1 : 10, false);
         }
 
         if (dungeons->GetDungeonFromScene(SCENE_SPIRIT_TEMPLE)->IsVanilla()) {
@@ -942,22 +944,18 @@ void GenerateItemPool() {
         }
 
         if (dungeons->GetDungeonFromScene(SCENE_GERUDO_TRAINING_GROUND)->IsVanilla()) {
-            AddFixedItemToPool(RG_GTG_SILVER_SLOPE, isWallet ? 1 : 5, false);
             AddFixedItemToPool(RG_GTG_SILVER_LAVA, isWallet ? 1 : 5, false);
             AddFixedItemToPool(RG_GTG_SILVER_WATER, isWallet ? 1 : 5, false);
         } else {
-            AddFixedItemToPool(RG_GTG_MQ_SILVER_SLOPE, isWallet ? 1 : 5, false);
-            AddFixedItemToPool(RG_GTG_MQ_SILVER_LAVA, isWallet ? 1 : 6, false);
-            AddFixedItemToPool(RG_GTG_MQ_SILVER_WATER, isWallet ? 1 : 3, false);
+            AddFixedItemToPool(RG_GTG_SILVER_LAVA, isWallet ? 1 : 6, false);
+            AddFixedItemToPool(RG_GTG_SILVER_WATER, isWallet ? 1 : 3, false);
         }
 
         if (dungeons->GetDungeonFromScene(SCENE_INSIDE_GANONS_CASTLE)->IsVanilla()) {
             AddFixedItemToPool(RG_GANONS_CASTLE_SILVER_LIGHT, isWallet ? 1 : 5, false);
             AddFixedItemToPool(RG_GANONS_CASTLE_SILVER_FOREST, isWallet ? 1 : 5, false);
-            AddFixedItemToPool(RG_GANONS_CASTLE_SILVER_FIRE, isWallet ? 1 : 5, false);
             AddFixedItemToPool(RG_GANONS_CASTLE_SILVER_SPIRIT, isWallet ? 1 : 5, false);
         } else {
-            AddFixedItemToPool(RG_GANONS_CASTLE_MQ_SILVER_FIRE, isWallet ? 1 : 5, false);
             AddFixedItemToPool(RG_GANONS_CASTLE_MQ_SILVER_WATER, isWallet ? 1 : 5, false);
             AddFixedItemToPool(RG_GANONS_CASTLE_MQ_SILVER_SHADOW, isWallet ? 1 : 5, false);
         }

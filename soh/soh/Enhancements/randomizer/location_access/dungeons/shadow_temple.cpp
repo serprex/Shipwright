@@ -499,10 +499,10 @@ void RegionTable_Init_ShadowTemple() {
 
     areaTable[RR_SHADOW_TEMPLE_MQ_B2_SPINNING_BLADE_ROOM] = Region("Shadow Temple MQ B2 Spinning Blade Room", SCENE_SHADOW_TEMPLE, {
         //Events
-        EVENT_ACCESS(LOGIC_SHADOW_MQ_SILVER_BLADES, logic->CanKillEnemy(RE_BIG_SKULLTULA) && (logic->CanUse(RG_HOOKSHOT) || (logic->IsAdult && logic->CanUse(RG_HOVER_BOOTS)))),
+        EVENT_ACCESS(LOGIC_SHADOW_SILVER_BLADES, logic->CanKillEnemy(RE_BIG_SKULLTULA) && (logic->CanUse(RG_HOOKSHOT) || (logic->IsAdult && logic->CanUse(RG_HOVER_BOOTS)))),
     }, {
         //Locations
-        LOCATION(RC_SHADOW_TEMPLE_MQ_MAP_CHEST, logic->CanPassEnemy(RE_BIG_SKULLTULA) && logic->HasItem(RG_SHADOW_MQ_SILVER_BLADES) && logic->HasItem(RG_OPEN_CHEST)),
+        LOCATION(RC_SHADOW_TEMPLE_MQ_MAP_CHEST, logic->CanPassEnemy(RE_BIG_SKULLTULA) && logic->HasItem(RG_SHADOW_SILVER_BLADES) && logic->HasItem(RG_OPEN_CHEST)),
         LOCATION(RC_SHADOW_MQ_SILVER_BLADES_1,  logic->CanPassEnemy(RE_BIG_SKULLTULA)),
         LOCATION(RC_SHADOW_MQ_SILVER_BLADES_2,  logic->CanUse(RG_HOOKSHOT) || (logic->IsAdult && (logic->CanUse(RG_HOVER_BOOTS) || logic->CanGroundJump()))),
         LOCATION(RC_SHADOW_MQ_SILVER_BLADES_3,  true),
@@ -510,7 +510,7 @@ void RegionTable_Init_ShadowTemple() {
         LOCATION(RC_SHADOW_MQ_SILVER_BLADES_5,  logic->CanPassEnemy(RE_BIG_SKULLTULA)),
     }, {
         //Exits
-        ENTRANCE(RR_SHADOW_TEMPLE_MQ_FIRST_BEAMOS,  logic->HasItem(RG_SHADOW_MQ_SILVER_BLADES)),
+        ENTRANCE(RR_SHADOW_TEMPLE_MQ_FIRST_BEAMOS,  logic->HasItem(RG_SHADOW_SILVER_BLADES)),
         ENTRANCE(RR_SHADOW_TEMPLE_MQ_SHORTCUT_PATH, logic->CanPassEnemy(RE_BIG_SKULLTULA)),
     });
 
@@ -584,10 +584,10 @@ void RegionTable_Init_ShadowTemple() {
 
     areaTable[RR_SHADOW_TEMPLE_MQ_LOWER_HUGE_PIT] = Region("Shadow Temple MQ Lower Huge Pit", SCENE_SHADOW_TEMPLE, {
         //Events
-        EVENT_ACCESS(LOGIC_SHADOW_MQ_SILVER_PIT, logic->CanUse(RG_LONGSHOT)),
+        EVENT_ACCESS(LOGIC_SHADOW_SILVER_PIT, logic->CanUse(RG_LONGSHOT)),
     }, {
         //Locations
-        LOCATION(RC_SHADOW_TEMPLE_MQ_BEAMOS_SILVER_RUPEES_CHEST, logic->HasItem(RG_SHADOW_MQ_SILVER_PIT) && logic->HasItem(RG_OPEN_CHEST)),
+        LOCATION(RC_SHADOW_TEMPLE_MQ_BEAMOS_SILVER_RUPEES_CHEST, logic->HasItem(RG_SHADOW_SILVER_PIT) && logic->HasItem(RG_OPEN_CHEST)),
         LOCATION(RC_SHADOW_TEMPLE_MQ_LOWER_PIT_RECTANGLE_SIGN,   logic->CanRead()),
         LOCATION(RC_SHADOW_MQ_SILVER_PIT_1,                      true),
         LOCATION(RC_SHADOW_MQ_SILVER_PIT_2,                      logic->HasItem(RG_LONGSHOT)),
@@ -638,13 +638,13 @@ void RegionTable_Init_ShadowTemple() {
     //while the spikes here are annoying, they don't really stop you doing anything, so I'll assume either lens trick, lens to see them, or taking damage from them. Not hovers though as a new player won't see the threat without lens to react properly
     areaTable[RR_SHADOW_TEMPLE_MQ_FLOOR_SPIKES_ROOM] = Region("Shadow Temple MQ Floor Spikes Room", SCENE_SHADOW_TEMPLE, {
         //Events                                        //lens or trick is always required for hookshot targets. We handle it here to not complicate the RR_SHADOW_TEMPLE_MQ_FLOOR_SPIKES_UPPER_DOOR logic
-        EVENT_ACCESS(LOGIC_SHADOW_MQ_SILVER_SPIKES, (ctx->GetTrickOption(RT_LENS_SHADOW_MQ) || logic->CanUse(RG_LENS_OF_TRUTH)) &&
-                                                          //Upper door side high rupee needs (hookshot and redead kill(as either age) for chest and adult) or longshot. hovers can cross from the left side with a backflip but that would be a trick
-                                                          //East midair rupee needs (hookshot and(hover boots or jumpslash from the upper door platform)) or longshot.
-                                                          //Combined these are longshot or (IsAdult && hookshot && (CanJumpslash || (Hover Boots && Here(CanKillRedeads))))
-                                                          (logic->CanUse(RG_LONGSHOT) || (logic->IsAdult && logic->CanUse(RG_HOOKSHOT) && (logic->CanJumpslash() || (logic->CanUse(RG_HOVER_BOOTS) && AnyAgeTime([]{return logic->CanKillEnemy(RE_REDEAD);}))))) &&
-                                                          //1 rupee is in spikes, needs hovers or damage
-                                                          (logic->TakeDamage() || logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_GORON_TUNIC))),
+        EVENT_ACCESS(LOGIC_SHADOW_SILVER_SPIKES, (ctx->GetTrickOption(RT_LENS_SHADOW_MQ) || logic->CanUse(RG_LENS_OF_TRUTH)) &&
+                                                //Upper door side high rupee needs (hookshot and redead kill(as either age) for chest and adult) or longshot. hovers can cross from the left side with a backflip but that would be a trick
+                                                //East midair rupee needs (hookshot and(hover boots or jumpslash from the upper door platform)) or longshot.
+                                                //Combined these are longshot or (IsAdult && hookshot && (CanJumpslash || (Hover Boots && Here(CanKillRedeads))))
+                                                  (logic->CanUse(RG_LONGSHOT) || (logic->IsAdult && logic->CanUse(RG_HOOKSHOT) && (logic->CanJumpslash() || (logic->CanUse(RG_HOVER_BOOTS) && AnyAgeTime([]{return logic->CanKillEnemy(RE_REDEAD);}))))) &&
+                                                //1 rupee is in spikes, needs hovers or damage
+                                                  (logic->TakeDamage() || logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_GORON_TUNIC))),
     }, {
         //Locations
         LOCATION(RC_SHADOW_TEMPLE_MQ_INVISIBLE_SPIKES_CHEST, logic->CanKillEnemy(RE_REDEAD) && (ctx->GetTrickOption(RT_LENS_SHADOW_MQ) || logic->TakeDamage() || logic->CanUse(RG_LENS_OF_TRUTH) || logic->CanUse(RG_GORON_TUNIC)) && logic->HasItem(RG_OPEN_CHEST)),
@@ -659,9 +659,9 @@ void RegionTable_Init_ShadowTemple() {
     }, {
         //Exits
         ENTRANCE(RR_SHADOW_TEMPLE_MQ_LOWER_HUGE_PIT,        logic->SmallKeys(SCENE_SHADOW_TEMPLE, 3)),
-        ENTRANCE(RR_SHADOW_TEMPLE_MQ_STALFOS_ROOM,          logic->HasItem(RG_SHADOW_MQ_SILVER_SPIKES)),
+        ENTRANCE(RR_SHADOW_TEMPLE_MQ_STALFOS_ROOM,          logic->HasItem(RG_SHADOW_SILVER_SPIKES)),
         //We need to assume we can get here with or without the glass platforms
-        ENTRANCE(RR_SHADOW_TEMPLE_MQ_FLOOR_SPIKES_PLATFORM, ((logic->CanUse(RG_LONGSHOT) || (logic->IsAdult && logic->CanUse(RG_HOOKSHOT) && (logic->HasItem(RG_SHADOW_MQ_SILVER_SPIKES) || AnyAgeTime([]{return logic->CanKillEnemy(RE_REDEAD);})))) && (logic->CanJumpslash() || logic->CanUse(RG_HOVER_BOOTS))) ||
+        ENTRANCE(RR_SHADOW_TEMPLE_MQ_FLOOR_SPIKES_PLATFORM, ((logic->CanUse(RG_LONGSHOT) || (logic->IsAdult && logic->CanUse(RG_HOOKSHOT) && (logic->HasItem(RG_SHADOW_SILVER_SPIKES) || AnyAgeTime([]{return logic->CanKillEnemy(RE_REDEAD);})))) && (logic->CanJumpslash() || logic->CanUse(RG_HOVER_BOOTS))) ||
                                                             ((ctx->GetTrickOption(RT_LENS_SHADOW) || logic->CanUse(RG_LENS_OF_TRUTH)) && (logic->IsAdult && logic->CanMiddairGroundJump()))),
     });
 

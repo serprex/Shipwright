@@ -250,20 +250,11 @@ void SaveManager::LoadRandomizer() {
     SaveManager::Instance->LoadData("silverGanonSpirit", gSaveContext.ship.quest.data.randomizer.silverGanonSpirit);
     SaveManager::Instance->LoadData("silverMqDodongosCavern",
                                     gSaveContext.ship.quest.data.randomizer.silverMqDodongosCavern);
-    SaveManager::Instance->LoadData("silverMqShadowBlades",
-                                    gSaveContext.ship.quest.data.randomizer.silverMqShadowBlades);
-    SaveManager::Instance->LoadData("silverMqShadowPit", gSaveContext.ship.quest.data.randomizer.silverMqShadowPit);
     SaveManager::Instance->LoadData("silverMqShadowInvisibleBlades",
                                     gSaveContext.ship.quest.data.randomizer.silverMqShadowInvisibleBlades);
-    SaveManager::Instance->LoadData("silverMqShadowSpikes",
-                                    gSaveContext.ship.quest.data.randomizer.silverMqShadowSpikes);
     SaveManager::Instance->LoadData("silverMqSpiritLobby", gSaveContext.ship.quest.data.randomizer.silverMqSpiritLobby);
     SaveManager::Instance->LoadData("silverMqSpiritBigWall",
                                     gSaveContext.ship.quest.data.randomizer.silverMqSpiritBigWall);
-    SaveManager::Instance->LoadData("silverMqGtgSlope", gSaveContext.ship.quest.data.randomizer.silverMqGtgSlope);
-    SaveManager::Instance->LoadData("silverMqGtgLava", gSaveContext.ship.quest.data.randomizer.silverMqGtgLava);
-    SaveManager::Instance->LoadData("silverMqGtgWater", gSaveContext.ship.quest.data.randomizer.silverMqGtgWater);
-    SaveManager::Instance->LoadData("silverMqGanonFire", gSaveContext.ship.quest.data.randomizer.silverMqGanonFire);
     SaveManager::Instance->LoadData("silverMqGanonWater", gSaveContext.ship.quest.data.randomizer.silverMqGanonWater);
     SaveManager::Instance->LoadData("silverMqGanonShadow", gSaveContext.ship.quest.data.randomizer.silverMqGanonShadow);
 
@@ -441,20 +432,11 @@ void SaveManager::SaveRandomizer(SaveContext* saveContext, int sectionID, bool f
     SaveManager::Instance->SaveData("silverGanonSpirit", gSaveContext.ship.quest.data.randomizer.silverGanonSpirit);
     SaveManager::Instance->SaveData("silverMqDodongosCavern",
                                     gSaveContext.ship.quest.data.randomizer.silverMqDodongosCavern);
-    SaveManager::Instance->SaveData("silverMqShadowBlades",
-                                    gSaveContext.ship.quest.data.randomizer.silverMqShadowBlades);
-    SaveManager::Instance->SaveData("silverMqShadowPit", gSaveContext.ship.quest.data.randomizer.silverMqShadowPit);
     SaveManager::Instance->SaveData("silverMqShadowInvisibleBlades",
                                     gSaveContext.ship.quest.data.randomizer.silverMqShadowInvisibleBlades);
-    SaveManager::Instance->SaveData("silverMqShadowSpikes",
-                                    gSaveContext.ship.quest.data.randomizer.silverMqShadowSpikes);
     SaveManager::Instance->SaveData("silverMqSpiritLobby", gSaveContext.ship.quest.data.randomizer.silverMqSpiritLobby);
     SaveManager::Instance->SaveData("silverMqSpiritBigWall",
                                     gSaveContext.ship.quest.data.randomizer.silverMqSpiritBigWall);
-    SaveManager::Instance->SaveData("silverMqGtgSlope", gSaveContext.ship.quest.data.randomizer.silverMqGtgSlope);
-    SaveManager::Instance->SaveData("silverMqGtgLava", gSaveContext.ship.quest.data.randomizer.silverMqGtgLava);
-    SaveManager::Instance->SaveData("silverMqGtgWater", gSaveContext.ship.quest.data.randomizer.silverMqGtgWater);
-    SaveManager::Instance->SaveData("silverMqGanonFire", gSaveContext.ship.quest.data.randomizer.silverMqGanonFire);
     SaveManager::Instance->SaveData("silverMqGanonWater", gSaveContext.ship.quest.data.randomizer.silverMqGanonWater);
     SaveManager::Instance->SaveData("silverMqGanonShadow", gSaveContext.ship.quest.data.randomizer.silverMqGanonShadow);
 

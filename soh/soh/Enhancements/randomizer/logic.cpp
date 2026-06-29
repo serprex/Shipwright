@@ -291,16 +291,9 @@ bool Logic::HasItem(RandomizerGet itemName) {
         case RG_GANONS_CASTLE_SILVER_FIRE:
         case RG_GANONS_CASTLE_SILVER_SPIRIT:
         case RG_DODONGOS_CAVERN_MQ_SILVER:
-        case RG_SHADOW_MQ_SILVER_BLADES:
-        case RG_SHADOW_MQ_SILVER_PIT:
         case RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES:
-        case RG_SHADOW_MQ_SILVER_SPIKES:
         case RG_SPIRIT_MQ_SILVER_LOBBY:
         case RG_SPIRIT_MQ_SILVER_BIG_WALL:
-        case RG_GTG_MQ_SILVER_SLOPE:
-        case RG_GTG_MQ_SILVER_LAVA:
-        case RG_GTG_MQ_SILVER_WATER:
-        case RG_GANONS_CASTLE_MQ_SILVER_FIRE:
         case RG_GANONS_CASTLE_MQ_SILVER_WATER:
         case RG_GANONS_CASTLE_MQ_SILVER_SHADOW: {
             if (!ctx->GetOption(RSK_SHUFFLE_SILVER)) {
@@ -2389,44 +2382,45 @@ void Logic::ApplyItemEffect(Item& item, bool state) {
         case ITEMTYPE_BOSSKEY:
             SetDungeonItem(DUNGEON_KEY_BOSS, RandoGetToDungeonScene.find(item.GetRandomizerGet())->second, state);
             break;
+        case ITEMTYPE_SILVER:{
+            auto randoGet = item.GetRandomizerGet();
+            s8* field = Randomizer::SilverFieldFromSaveContext(mSaveContext, randoGet);
+            bool isWallet = ctx->GetOption(RSK_SHUFFLE_SILVER).Is(RO_SHUFFLE_SILVER_WALLET);
+            if (!state) {
+                if (isWallet) {
+                    *field = 0;
+                } else {
+                    *field -= 1;
+                }
+            } else {
+                if (isWallet) {
+                    *field = 10;
+                } else {
+                    *field += 1;
+                }
+            }
+            break;
+        }
         case ITEMTYPE_FORTRESS_SMALLKEY:
         case ITEMTYPE_SMALLKEY: {
             auto randoGet = item.GetRandomizerGet();
-            if (randoGet >= RG_SHADOW_SILVER_BLADES && randoGet <= RG_GANONS_CASTLE_MQ_SILVER_SHADOW) {
-                s8* field = Randomizer::SilverFieldFromSaveContext(mSaveContext, randoGet);
-                bool isWallet = ctx->GetOption(RSK_SHUFFLE_SILVER).Is(RO_SHUFFLE_SILVER_WALLET);
-                if (!state) {
-                    if (isWallet) {
-                        *field = 0;
-                    } else {
-                        *field -= 1;
-                    }
+            auto keyring = randoGet >= RG_FOREST_TEMPLE_KEY_RING && randoGet <= RG_GANONS_CASTLE_KEY_RING;
+            auto dungeonIndex = RandoGetToDungeonScene.find(randoGet)->second;
+            auto count = GetSmallKeyCount(dungeonIndex);
+            if (!state) {
+                if (keyring) {
+                    count = 0;
                 } else {
-                    if (isWallet) {
-                        *field = 10;
-                    } else {
-                        *field += 1;
-                    }
+                    count -= 1;
                 }
             } else {
-                auto keyring = randoGet >= RG_FOREST_TEMPLE_KEY_RING && randoGet <= RG_GANONS_CASTLE_KEY_RING;
-                auto dungeonIndex = RandoGetToDungeonScene.find(randoGet)->second;
-                auto count = GetSmallKeyCount(dungeonIndex);
-                if (!state) {
-                    if (keyring) {
-                        count = 0;
-                    } else {
-                        count -= 1;
-                    }
+                if (keyring) {
+                    count = 10;
                 } else {
-                    if (keyring) {
-                        count = 10;
-                    } else {
-                        count += 1;
-                    }
+                    count += 1;
                 }
-                SetSmallKeyCount(dungeonIndex, count);
             }
+            SetSmallKeyCount(dungeonIndex, count);
         } break;
         case ITEMTYPE_TOKEN:
             mSaveContext->inventory.gsTokens += (!state ? -1 : 1);
