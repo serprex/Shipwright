@@ -36,6 +36,7 @@ class Hint {
     static CustomMessage GetBridgeReqsText();
     static CustomMessage GetGanonBossKeyText();
     static CustomMessage GetGanonsSoulText();
+    static CustomMessage GetWinconText();
     void AddHintedLocation(RandomizerCheck location);
     std::vector<RandomizerCheck> GetHintedLocations() const;
     void SetHintType(HintType type);

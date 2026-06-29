@@ -2014,9 +2014,9 @@ void StaticData::HintTable_Init() {
                                                                    {QM_YELLOW}, {}, TEXTBOX_TYPE_BLUE));
                                                      // /*spanish*/$sLos sabios aguardarán a que el héroe obtenga #[[d]] símbolo||s| de skulltula dorada#.^
 
-    hintTextTable[RHT_BRIDGE_TRIFORCE_PIECES_HINT] = HintText(CustomMessage("$yThe awakened ones will await for the Hero to collect #[[d]] Triforce Piece||s|#.^",
-                                                                 /*german*/ "$yDie Weisen werden darauf&warten, daß der Held&#[[d]] Triforce-Fragment||e|# sammelt.^",
-                                                                 /*french*/ "$yLes êtres de sagesse attendront le héros muni de #[[d]] Morceau||x| de Triforce#.^",
+    hintTextTable[RHT_BRIDGE_TRIFORCE_PIECES_HINT] = HintText(CustomMessage("$wThe awakened ones will await for the Hero to collect #[[d]] Triforce Piece||s|#.^",
+                                                                 /*german*/ "$wDie Weisen werden darauf&warten, daß der Held&#[[d]] Triforce-Fragment||e|# sammelt.^",
+                                                                 /*french*/ "$wLes êtres de sagesse attendront le héros muni de #[[d]] Morceau||x| de Triforce#.^",
                                                                             {QM_YELLOW}, {}, TEXTBOX_TYPE_BLUE));
 
     hintTextTable[RHT_BRIDGE_GREG_HINT] = HintText(CustomMessage("$gThe awakened ones will await for the Hero to find #Greg#.^",
@@ -2136,6 +2136,46 @@ void StaticData::HintTable_Init() {
                                                                      /*german*/ "$bUnd die #Seele des Bösen# wird verliehen, sobald #[[d]] Triforce-Fragment|# gesammelt wurde|e# gesammelt wurden|.^",
                                                                      /*french*/ "$bAussi, l'#âme du Malin# sera fournie une fois |qu' #[[d]] Morceau de Triforce# aura été récupéré|que #[[d]] Morceaux de Triforce# auront été récupérés|.^",
                                                                                 {QM_PINK, QM_YELLOW, QM_YELLOW}));
+
+    /*--------------------------
+    |      WINCON HINT TEXT     |
+    ---------------------------*/
+
+    hintTextTable[RHT_WINCON_ANYWHERE_HINT] = HintText(CustomMessage("$wAnd the #Triforce# will be hidden somewhere&#in Hyrule#.^",
+                                                          /*german*/ "$wUnd das #Triforce# wird irgendwo #in Hyrule# zu finden sein.^",
+                                                          /*french*/ "$wAussi, la #Triforce# se trouve quelque part #dans Hyrule#.^",
+                                                                     {QM_YELLOW, QM_BLUE}));
+
+    hintTextTable[RHT_WINCON_MEDALLIONS_HINT] = HintText(CustomMessage("$wAnd the #Triforce# will be granted once #[[d]] Medallion|# is|s# are| retrieved.^",
+                                                            /*german*/ "$wUnd das #Triforce# wird gewährt, sobald #[[d]] Amulett|# geborgen wurde|e# geborgen wurden|.^",
+                                                            /*french*/ "$wAussi, la #Triforce# sera accordée une fois |qu' #[[d]] Médaillon# aura été récupéré|que #[[d]] Médaillons# auront été récupérés|.^",
+                                                                       {QM_YELLOW, QM_YELLOW, QM_RED}));
+
+    hintTextTable[RHT_WINCON_STONES_HINT] = HintText(CustomMessage("$wAnd the #Triforce# will be granted once #[[d]] Spiritual Stone|# is|s# are| retrieved.^",
+                                                        /*german*/ "$wUnd das #Triforce# wird gewährt, sobald #[[d]] Heilige|r Stein# geborgen wurde| Steine# geborgen wurden|.^",
+                                                        /*french*/ "$wAussi, la #Triforce# sera accordée une fois |qu' #[[d]] Pierre Ancestrale# aura été&récupérée|que #[[d]] Pierres Ancestrales# auront été récupérées|.^",
+                                                                   {QM_YELLOW, QM_YELLOW, QM_BLUE}));
+
+    hintTextTable[RHT_WINCON_REWARDS_HINT] = HintText(CustomMessage("$wAnd the #Triforce# will be granted once #[[d]]# #Spiritual Stone|# or #Medallion# is|s# and #Medallions# are| retrieved.^",
+                                                         /*german*/ "$wUnd das #Triforce# wird gewährt, sobald #[[d]]# #Heilige|r Stein# oder #Amulett#&geborgen wurde| Steine# oder #Amulette#&geborgen wurden|.^",
+                                                         /*french*/ "$wAussi, la #Triforce# sera accordée une fois qu|' #[[d]]# #Pierre Ancestrale# ou #[[d]] Médaillon# sera récupéré|e&#[[d]]# #Pierres Ancestrales# et&#Médaillons# seront récupérés|.^",
+                                                                    {QM_YELLOW, QM_YELLOW, QM_YELLOW, QM_BLUE, QM_RED}));
+
+    hintTextTable[RHT_WINCON_DUNGEONS_HINT] = HintText(CustomMessage("$wAnd the #Triforce# will be granted once #[[d]] Dungeon|# is|s# are| conquered.^",
+                                                          /*german*/ "$wUnd das #Triforce# wird gewährt, sobald #[[d]] Labyrinth|# abgeschloßen wurde|e# abgeschloßen wurden|.^",
+                                                          /*french*/ "$wAussi, la #Triforce# sera accordée une fois qu|' #[[d]] donjon #sera conquis|e #[[d]] donjons# seront conquis|.^",
+                                                                     {QM_YELLOW, QM_YELLOW, QM_PINK}));
+
+    hintTextTable[RHT_WINCON_TOKENS_HINT] = HintText(CustomMessage("$wAnd the #Triforce# will be granted once #[[d]] Gold Skulltula Token|# is|s# are| retrieved.^",
+                                                        /*german*/ "$wUnd das #Triforce# wird gewährt, sobald #[[d]] Skulltula-Symbol|# gesammelt wurde|e# gesammelt wurden|.^",
+                                                        /*french*/ "$wAussi, la #Triforce# sera accordée une fois |qu' #[[d]] symbole de Skulltula d'or #sera récupuéré"
+                                                                   "|que &#[[d]] symboles de Skulltula d'or&#seront recupérés|.^",
+                                                                   {QM_YELLOW, QM_YELLOW, QM_YELLOW}));
+
+    hintTextTable[RHT_WINCON_TRIFORCE_PIECES_HINT] = HintText(CustomMessage("$wAnd the #Triforce# will be granted once #[[d]] Triforce Piece|# is|s# are| retrieved.^",
+                                                                /*german*/ "$wUnd das #Triforce# wird gewährt, sobald #[[d]] Triforce-Fragment|# gesammelt wurde|e# gesammelt wurden|.^",
+                                                                /*french*/ "$wAussi, la #Triforce# sera accordée une fois |qu' #[[d]] Morceau de Triforce# aura été récupéré|que #[[d]] Morceaux de Triforce# auront été récupérés|.^",
+                                                                           {QM_YELLOW, QM_YELLOW, QM_YELLOW}));
 
     /*--------------------------
     |     TRIAL HINT TEXT      |

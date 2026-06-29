@@ -307,7 +307,7 @@ const CustomMessage Hint::GetHintMessage(MessageFormat format, size_t id) const 
         } else {
             hintText.SetTextBoxType(TEXTBOX_TYPE_BLUE);
         }
-        hintText += GetBridgeReqsText() + GetGanonBossKeyText() + GetGanonsSoulText() +
+        hintText += GetBridgeReqsText() + GetGanonBossKeyText() + GetGanonsSoulText() + GetWinconText() +
                     StaticData::hintTextTable[RHT_ADULT_ALTAR_TEXT_END].GetHintMessage();
     } else {
         hintText = GetHintText(id).GetHintMessage(chosenMessage);
@@ -642,6 +642,34 @@ CustomMessage Hint::GetGanonsSoulText() {
         ganonsSoulMessage.InsertNumber(ctx->GetOption(RSK_GANONS_SOUL_TRIFORCE_COUNT).Get());
     }
     return ganonsSoulMessage;
+}
+
+CustomMessage Hint::GetWinconText() {
+    auto ctx = Rando::Context::GetInstance();
+    CustomMessage winconMessage;
+
+    if (ctx->GetOption(RSK_WINCON).Is(RO_WINCON_ANYWHERE)) {
+        return StaticData::hintTextTable[RHT_WINCON_ANYWHERE_HINT].GetHintMessage();
+    } else if (ctx->GetOption(RSK_WINCON).Is(RO_WINCON_STONES)) {
+        winconMessage = StaticData::hintTextTable[RHT_WINCON_STONES_HINT].GetHintMessage();
+        winconMessage.InsertNumber(ctx->GetOption(RSK_WINCON_STONE_COUNT).Get());
+    } else if (ctx->GetOption(RSK_WINCON).Is(RO_WINCON_MEDALLIONS)) {
+        winconMessage = StaticData::hintTextTable[RHT_WINCON_MEDALLIONS_HINT].GetHintMessage();
+        winconMessage.InsertNumber(ctx->GetOption(RSK_WINCON_MEDALLION_COUNT).Get());
+    } else if (ctx->GetOption(RSK_WINCON).Is(RO_WINCON_REWARDS)) {
+        winconMessage = StaticData::hintTextTable[RHT_WINCON_REWARDS_HINT].GetHintMessage();
+        winconMessage.InsertNumber(ctx->GetOption(RSK_WINCON_REWARD_COUNT).Get());
+    } else if (ctx->GetOption(RSK_WINCON).Is(RO_WINCON_DUNGEONS)) {
+        winconMessage = StaticData::hintTextTable[RHT_WINCON_DUNGEONS_HINT].GetHintMessage();
+        winconMessage.InsertNumber(ctx->GetOption(RSK_WINCON_DUNGEON_COUNT).Get());
+    } else if (ctx->GetOption(RSK_WINCON).Is(RO_WINCON_TOKENS)) {
+        winconMessage = StaticData::hintTextTable[RHT_WINCON_TOKENS_HINT].GetHintMessage();
+        winconMessage.InsertNumber(ctx->GetOption(RSK_WINCON_TOKEN_COUNT).Get());
+    } else if (ctx->GetOption(RSK_WINCON).Is(RO_WINCON_TRIFORCE_PIECES)) {
+        winconMessage = StaticData::hintTextTable[RHT_WINCON_TRIFORCE_PIECES_HINT].GetHintMessage();
+        winconMessage.InsertNumber(ctx->GetOption(RSK_WINCON_TRIFORCE_COUNT).Get());
+    }
+    return winconMessage;
 }
 
 void Hint::AddHintedLocation(RandomizerCheck location) {
