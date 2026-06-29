@@ -2065,18 +2065,6 @@ void StaticData::HintTable_Init() {
                                                                        {QM_PINK, QM_BLUE}));
                                                          // /*spanish*/$bY la llave del #señor del mal# aguardará en #cualquier lugar de Hyrule#.^
 
-    hintTextTable[RHT_GANON_BK_TRIFORCE_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s key will be given to the Hero once the #Triforce## is completed.^",
-                                                            /*german*/ "$bUnd der #Schlüssel des Bösen# wird verliehen, sobald das #Triforce# vervollständigt wurde.^",
-                                                            /*french*/ "$bAussi, la #clé du Malin# se&révèlera une fois la #Triforce#&assemblée.^",
-                                                                       {QM_PINK, QM_YELLOW}));
-                                                         // /*spanish*/$bY el héroe recibirá la llave del #señor del mal# cuando haya completado la #Trifuerza#.^
-
-    hintTextTable[RHT_GANON_BK_SKULLTULA_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s key will be provided by the cursed rich man once #100 Gold Skulltula Tokens# are retrieved.^",
-                                                             /*german*/ "$bUnd der #Schlüssel des Bösen# wird von einem verfluchten reichen Mann verliehen, sobald #100 Skulltula-Symbole# gesammelt wurden.^",
-                                                             /*french*/ "$bAussi, la #clé du Malin# sera&donnée par l'homme maudit une fois que #100 Symboles de Skulltula d'or# auront été trouvés.^",
-                                                                        {QM_PINK, QM_YELLOW}));
-                                                          // /*spanish*/$bY el rico maldito entregará la llave&del #señor de mal# tras obtener&100 símbolos de skulltula dorada#.^
-
     hintTextTable[RHT_GBK_MEDALLIONS_HINT] = HintText(CustomMessage("$bAnd the #evil one#'s key will be provided once #[[d]] Medallion|# is|s# are| retrieved.^",
                                                           /*german*/ "$bUnd der #Schlüssel des Bösen# wird verliehen, sobald #[[d]] Amulett|# geborgen wurde|e# geborgen wurden|.^",
                                                           /*french*/ "$bAussi, la #clé du Malin# sera fournie une fois |qu' #[[d]] Médaillon# aura été récupéré|que #[[d]] Médaillons# auront été récupérés|.^",
