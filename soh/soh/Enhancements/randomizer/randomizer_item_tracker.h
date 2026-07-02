@@ -42,6 +42,14 @@ bool HasEquipment(ItemTrackerItem);
 #define ITEM_TRACKER_RG_CUSTOM(id, displayName, iconName, data, drawFunc) \
     { id, ITEM_KIND_RG, displayName, #iconName, #iconName "_Faded", data, drawFunc }
 
+
+#define IM_COL_WHITE IM_COL32(255, 255, 255, 255)
+#define IM_COL_RED IM_COL32(255, 0, 0, 255)
+#define IM_COL_GREEN IM_COL32(0, 255, 0, 255)
+#define IM_COL_GRAY IM_COL32(155, 155, 155, 255)
+#define IM_COL_PURPLE IM_COL32(180, 90, 200, 255)
+#define IM_COL_LIGHT_YELLOW IM_COL32(255, 255, 130, 255)
+
 static std::array<const char*, 16> itemTrackerWindowIDs = { "Item Tracker",
                                                             "Inventory Items Tracker",
                                                             "Equipment Items Tracker",

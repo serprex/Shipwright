@@ -441,9 +441,9 @@ static bool presetLoaded = false;
 static std::unordered_map<std::string, ImVec2> presetPos;
 static std::unordered_map<std::string, ImVec2> presetSize;
 
-void TrackSilverRupees(&std::vector<ItemTrackerItem> trackList){
+void TrackSilverRupees(std::vector<ItemTrackerItem> &trackList){
     for (auto silverRupee : silverRupeeItems) {
-        if (IsSilverInPool(static_cast<RandomizerGet>(silverRupee.id)) && 
+        if (IsSilverInPool(static_cast<RandomizerGet>(silverRupee.id)) &&
             CheckTracker::IsAreaSpoiled(Rando::StaticData::silverToArea[static_cast<RandomizerGet>(silverRupee.id)])) {
             trackList.push_back(silverRupee);
         }
@@ -451,6 +451,7 @@ void TrackSilverRupees(&std::vector<ItemTrackerItem> trackList){
 }
 
 void DrawName(std::string str){
+    int iconSize = CVarGetInteger(CVAR_TRACKER_ITEM("IconSize"), 36);
     ImVec2 p = ImGui::GetCursorScreenPos();
     ImGui::SetCursorScreenPos(
         ImVec2(p.x + (iconSize / 2) - (ImGui::CalcTextSize(str.c_str()).x / 2), p.y - (iconSize + 13)));
@@ -648,8 +649,8 @@ ItemTrackerNumbers GetItemCurrentAndMax(ItemTrackerItem item) {
             case RG_SPIRIT_MQ_SILVER_BIG_WALL:
             case RG_GANONS_CASTLE_MQ_SILVER_WATER:
             case RG_GANONS_CASTLE_MQ_SILVER_SHADOW:
-                result.currentCapacity = SilverTotal(item.id);
-                result.currentAmmo = *SilverFieldFromSaveContext(&gSaveContext, item.id);
+                result.currentCapacity = SilverTotal((RandomizerGet)item.id);
+                result.currentAmmo = *SilverFieldFromSaveContext(&gSaveContext, (RandomizerGet)item.id);
                 break;
             default:
                 break;
@@ -658,13 +659,6 @@ ItemTrackerNumbers GetItemCurrentAndMax(ItemTrackerItem item) {
 
     return result;
 }
-
-#define IM_COL_WHITE IM_COL32(255, 255, 255, 255)
-#define IM_COL_RED IM_COL32(255, 0, 0, 255)
-#define IM_COL_GREEN IM_COL32(0, 255, 0, 255)
-#define IM_COL_GRAY IM_COL32(155, 155, 155, 255)
-#define IM_COL_PURPLE IM_COL32(180, 90, 200, 255)
-#define IM_COL_LIGHT_YELLOW IM_COL32(255, 255, 130, 255)
 
 void DrawItemCount(ItemTrackerItem item, bool hideMax) {
     if (!GameInteractor::IsSaveLoaded()) {
@@ -724,7 +718,7 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         ImGui::PushStyleColor(ImGuiCol_Text, maxColor);
         ImGui::Text("%s", maxString.c_str());
         ImGui::PopStyleColor();
-    } else if (item.kind == ITEM_KIND_RG && IsSilver(item.id) && IsValidSaveFile()) {
+    } else if (item.kind == ITEM_KIND_RG && IsSilver((RandomizerGet)item.id) && IsValidSaveFile()) {
         std::string maxString = hideMax ? "???" : std::to_string(currentAndMax.maxCapacity);
         std::string str = std::to_string(currentAndMax.currentAmmo) + "/" + maxString;
 
@@ -732,7 +726,7 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         if (!hideMax && currentAndMax.maxCapacity == currentAndMax.currentAmmo){
             color = IM_COL_GREEN;
         }
-        
+
         ImGui::SetCursorScreenPos(
             ImVec2(p.x + (iconSize / 2) - (ImGui::CalcTextSize((str).c_str()).x / 2), p.y - 14));
         ImGui::PushStyleColor(ImGuiCol_Text, color);
