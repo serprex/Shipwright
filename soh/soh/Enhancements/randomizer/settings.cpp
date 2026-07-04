@@ -7,7 +7,9 @@
 
 #include <spdlog/spdlog.h>
 #include <libultraship/bridge/consolevariablebridge.h>
-#include <libultraship/classes.h>
+#include <ship/Context.h>
+#include <ship/window/Window.h>
+#include <ship/window/gui/Gui.h>
 
 namespace Rando {
 std::shared_ptr<Settings> Settings::mInstance;
@@ -815,6 +817,14 @@ void Settings::CreateOptions() {
     OPT_BOOL(RSK_SHUFFLE_MASTER_SWORD, "Shuffle Master Sword", CVAR_RANDOMIZER_SETTING("ShuffleMasterSword"), mOptionDescriptions[RSK_SHUFFLE_MASTER_SWORD]);
     OPT_BOOL(RSK_SWORDLESS_EPONA_ITEMS, "Swordless Epona Items", CVAR_RANDOMIZER_SETTING("SwordlessEponaItems"), mOptionDescriptions[RSK_SWORDLESS_EPONA_ITEMS]);
     OPT_BOOL(RSK_SHUFFLE_CHILD_WALLET, "Shuffle Child's Wallet", CVAR_RANDOMIZER_SETTING("ShuffleChildWallet"), mOptionDescriptions[RSK_SHUFFLE_CHILD_WALLET], IMFLAG_NONE);
+    OPT_CALLBACK(RSK_SHUFFLE_CHILD_WALLET, {
+        if (CVarGetInteger(CVAR_RANDOMIZER_SETTING("ShuffleChildWallet"), 0)) {
+            CVarSetInteger(CVAR_RANDOMIZER_SETTING("StartingWallet"), 0);
+            mOptions[RSK_STARTING_WALLET].Disable("Disabled because Shuffle Child's Wallet is on.");
+        } else {
+            mOptions[RSK_STARTING_WALLET].Enable();
+        }
+    });
     OPT_BOOL(RSK_INCLUDE_TYCOON_WALLET, "Include Tycoon Wallet", CVAR_RANDOMIZER_SETTING("IncludeTycoonWallet"), mOptionDescriptions[RSK_INCLUDE_TYCOON_WALLET]);
     OPT_BOOL(RSK_SHUFFLE_OCARINA, "Shuffle Ocarinas", CVAR_RANDOMIZER_SETTING("ShuffleOcarinas"), mOptionDescriptions[RSK_SHUFFLE_OCARINA]);
     OPT_CALLBACK(RSK_SHUFFLE_OCARINA, {
@@ -1694,6 +1704,7 @@ void Settings::CreateOptions() {
     OPT_TRICK(RT_DEKU_MQ_LOG, RCQUEST_MQ, RA_DEKU_TREE, { Tricks::Tag::NOVICE }, "DTLogRol");
     OPT_TRICK(RT_DC_SCARECROW_GS, RCQUEST_VANILLA, RA_DODONGOS_CAVERN, { Tricks::Tag::NOVICE }, "DCArmos");
     OPT_TRICK(RT_DC_VINES_GS, RCQUEST_VANILLA, RA_DODONGOS_CAVERN, { Tricks::Tag::NOVICE }, "DCGSLS");
+    OPT_TRICK(RT_DC_ALCOVE_GS, RCQUEST_VANILLA, RA_DODONGOS_CAVERN, { Tricks::Tag::INTERMEDIATE }, "DCAGSLS");
     OPT_TRICK(RT_DC_STAIRS_WITH_BOW, RCQUEST_VANILLA, RA_DODONGOS_CAVERN, { Tricks::Tag::NOVICE }, "DCStaBow");
     OPT_TRICK(RT_DC_SLINGSHOT_SKIP, RCQUEST_VANILLA, RA_DODONGOS_CAVERN, { Tricks::Tag::EXPERT }, "DCSliSkp");
     OPT_TRICK(RT_DC_SCRUB_ROOM, RCQUEST_VANILLA, RA_DODONGOS_CAVERN, { Tricks::Tag::NOVICE }, "DCSrbStr");
@@ -2722,6 +2733,9 @@ void Context::FinalizeSettings(const std::set<RandomizerCheck>& excludedLocation
     }
     if (mOptions[RSK_SHUFFLE_GRAB]) {
         mOptions[RSK_STARTING_STRENGTH].Set(0);
+    }
+    if (mOptions[RSK_SHUFFLE_CHILD_WALLET]) {
+        mOptions[RSK_STARTING_WALLET].Set(0);
     }
 
     if (mOptions[RSK_ZORAS_FOUNTAIN].IsNot(RO_ZF_OPEN) &&

@@ -1,15 +1,10 @@
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "ResourceManagerHelpers.h"
-#include <libultraship/libultraship.h>
 #include "soh/resource/type/Scene.h"
-#include <ship/utils/StringHelper.h>
 #include "global.h"
 #include "vt.h"
 #include "soh/resource/type/CollisionHeader.h"
-#include <fast/resource/type/DisplayList.h>
 #include "soh/resource/type/Cutscene.h"
-#include "soh/resource/type/Path.h"
-#include "soh/resource/type/Text.h"
 #include <ship/resource/type/Blob.h>
 #include <memory>
 #include <cassert>
@@ -34,6 +29,7 @@
 #include "soh/resource/type/scenecommand/SetSoundSettings.h"
 #include "soh/resource/type/scenecommand/SetEchoSettings.h"
 #include "soh/resource/type/scenecommand/SetAlternateHeaders.h"
+#include <spdlog/spdlog.h>
 
 extern Ship::IResource* OTRPlay_LoadFile(PlayState* play, const char* fileName);
 extern "C" s32 Object_Spawn(ObjectContext* objectCtx, s16 objectId);
@@ -205,6 +201,12 @@ bool Scene_CommandTransitionActorList(PlayState* play, SOH::ISceneCommand* cmd) 
 
     play->transiActorCtx.numActors = cmdActor->numTransitionActors;
     play->transiActorCtx.list = (TransitionActorEntry*)cmdActor->GetRawPointer();
+
+    // Loops transition actors and sets them to default values (not spawned yet)
+    // used as fix for doors / crawlspaces not loading after they've already been loaded once.
+    for (s32 i = 0; i < play->transiActorCtx.numActors; i++) {
+        play->transiActorCtx.list[i].id = ABS(play->transiActorCtx.list[i].id);
+    }
 
     return false;
 }

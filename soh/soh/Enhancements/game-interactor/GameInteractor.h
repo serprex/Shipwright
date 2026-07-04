@@ -89,7 +89,6 @@ void GameInteractor_SetTriforceHuntCreditsWarpActive(bool state);
 #include <functional>
 #include <cstring>
 
-#include <version>
 #ifdef __cpp_lib_source_location
 #include <source_location>
 #else

@@ -14,8 +14,6 @@
 #include "soh/SaveManager.h"
 #include "soh/framebuffer_effects.h"
 
-#include <libultraship/libultraship.h>
-
 #include <time.h>
 #include <assert.h>
 
@@ -35,7 +33,6 @@ Input* D_8012D1F8 = NULL;
 
 PlayState* gPlayState;
 s16 firstInit = 0;
-s16 gEnPartnerId;
 
 void Play_SpawnScene(PlayState* play, s32 sceneId, s32 spawn);
 
