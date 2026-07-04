@@ -252,7 +252,7 @@ static int GetMaxGSCount() {
                ctx->GetItemLocation(RC_KAK_10_GOLD_SKULLTULA_REWARD)->GetPlacedItem().GetItemType() != ITEMTYPE_TOKEN) {
         maxUseful = 10;
     }
-    // If bridge or GBK or Ganon's Soul is set to tokens, get how many are required
+    // If bridge, GBK, Ganon's Soul, or win condition is set to tokens, get how many are required
     if (ctx->GetOption(RSK_RAINBOW_BRIDGE).Is(RO_BRIDGE_TOKENS)) {
         maxUseful = std::max(maxUseful, (int)ctx->GetOption(RSK_RAINBOW_BRIDGE_TOKEN_COUNT).Get());
     }
@@ -261,6 +261,9 @@ static int GetMaxGSCount() {
     }
     if (ctx->GetOption(RSK_GANONS_SOUL).Is(RO_GANONS_SOUL_TOKENS)) {
         maxUseful = std::max(maxUseful, (int)ctx->GetOption(RSK_GANONS_SOUL_TOKEN_COUNT).Get());
+    }
+    if (ctx->GetOption(RSK_WINCON).Is(RO_WINCON_TOKENS)) {
+        maxUseful = std::max(maxUseful, (int)ctx->GetOption(RSK_WINCON_TOKEN_COUNT).Get());
     }
     // Return max of the two possible reasons tokens could be important, minus the tokens in the starting inventory
     return maxUseful - ctx->GetOption(RSK_STARTING_SKULLTULA_TOKEN).Get();
@@ -1157,6 +1160,14 @@ static void RandomizeDungeonItems() {
                 FilterAndEraseFromPool(itemPool, [](const auto i) { return i == RG_GANONS_CASTLE_BOSS_KEY; });
             AddElementsToPool(overworldItems, ganonBossKey);
         }
+    }
+
+    if (ctx->GetOption(RSK_GANONS_SOUL).Is(RO_GANONS_SOUL_ANY_DUNGEON)) {
+        auto ganonSoul = FilterAndEraseFromPool(itemPool, [](const auto i) { return i == RG_GANON_SOUL; });
+        AddElementsToPool(anyDungeonItems, ganonSoul);
+    } else if (ctx->GetOption(RSK_GANONS_SOUL).Is(RO_GANONS_SOUL_OVERWORLD)) {
+        auto ganonSoul = FilterAndEraseFromPool(itemPool, [](const auto i) { return i == RG_GANON_SOUL; });
+        AddElementsToPool(overworldItems, ganonSoul);
     }
 
     if (ctx->GetOption(RSK_GERUDO_KEYS).Is(RO_GERUDO_KEYS_ANY_DUNGEON)) {
