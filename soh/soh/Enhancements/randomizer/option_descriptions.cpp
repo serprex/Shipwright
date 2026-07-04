@@ -869,7 +869,6 @@ void Settings::CreateOptionDescriptions() {
         "Shuffle 10 bean souls which must be found to spawn corresponding soil / plant.";
     mOptionDescriptions[RSK_SHUFFLE_BOSS_SOULS] =
         "Shuffles 8 boss souls (one for each blue warp dungeon). A boss will not appear until you collect its "
-        "respective soul."
-        "\n\"On + Ganon\" will also hide Ganon and Ganondorf behind a boss soul.";
+        "respective soul.";
 }
 } // namespace Rando
