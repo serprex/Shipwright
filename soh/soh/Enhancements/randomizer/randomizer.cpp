@@ -870,6 +870,23 @@ u8 Randomizer::GetRandoSettingValue(RandomizerSettingKey randoSettingKey) {
     return Rando::Context::GetInstance()->GetOption(randoSettingKey).Get();
 }
 
+u8 Randomizer::GetTriforcePiecesRequired() {
+    u8 required = 0;
+    if (GetRandoSettingValue(RSK_RAINBOW_BRIDGE) == RO_BRIDGE_TRIFORCE_PIECES) {
+        required = std::max(required, GetRandoSettingValue(RSK_RAINBOW_BRIDGE_TRIFORCE_COUNT));
+    }
+    if (GetRandoSettingValue(RSK_GANONS_BOSS_KEY) == RO_GANON_BOSS_KEY_TRIFORCE_PIECES) {
+        required = std::max(required, GetRandoSettingValue(RSK_GBK_TRIFORCE_COUNT));
+    }
+    if (GetRandoSettingValue(RSK_GANONS_SOUL) == RO_GANONS_SOUL_TRIFORCE_PIECES) {
+        required = std::max(required, GetRandoSettingValue(RSK_GANONS_SOUL_TRIFORCE_COUNT));
+    }
+    if (GetRandoSettingValue(RSK_WINCON) == RO_WINCON_TRIFORCE_PIECES) {
+        required = std::max(required, GetRandoSettingValue(RSK_WINCON_TRIFORCE_COUNT));
+    }
+    return required;
+}
+
 GetItemEntry Randomizer::GetItemFromKnownCheck(RandomizerCheck randomizerCheck, GetItemID ogItemId,
                                                bool checkObtainability) {
     return Rando::Context::GetInstance()->GetFinalGIEntry(randomizerCheck, checkObtainability);

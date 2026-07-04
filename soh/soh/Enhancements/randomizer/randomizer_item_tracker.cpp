@@ -762,8 +762,12 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         std::string currentString = "";
         std::string requiredString = "";
         std::string maxString = "";
-        uint8_t piecesRequired = OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_WINCON_TRIFORCE_COUNT);
         uint8_t piecesTotal = OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT_PIECES_TOTAL);
+        uint8_t piecesRequired = OTRGlobals::Instance->gRandomizer->GetTriforcePiecesRequired();
+        // If no trigger uses Triforce Pieces they're just filler; gauge progress against the whole pool.
+        if (piecesRequired == 0) {
+            piecesRequired = piecesTotal;
+        }
         ImU32 currentColor = gSaveContext.ship.quest.data.randomizer.triforcePiecesCollected >= piecesRequired
                                  ? IM_COL_GREEN
                                  : IM_COL_WHITE;

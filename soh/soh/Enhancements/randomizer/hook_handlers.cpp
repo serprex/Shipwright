@@ -2810,14 +2810,6 @@ void RandomizerOnPlayerUpdateHandler() {
         }
     }
 
-    // Triforce Hunt needs the check if the player isn't being teleported to the credits scene.
-    if (!GameInteractor::IsGameplayPaused() && Flags_GetRandomizerInf(RAND_INF_GRANT_GANONS_BOSSKEY) &&
-        gPlayState->transitionTrigger != TRANS_TRIGGER_START &&
-        (1 << 0 & gSaveContext.inventory.dungeonItems[SCENE_GANONS_TOWER]) == 0) {
-        GiveItemEntryWithoutActor(gPlayState,
-                                  *Rando::StaticData::GetItemTable().at(RG_GANONS_CASTLE_BOSS_KEY).GetGIEntry());
-    }
-
     if (!GameInteractor::IsGameplayPaused()) {
         // Warp to credits once item queue has drained to avoid losing queued items
         if (GameInteractor::State::TriforceHuntCreditsWarpActive && randomizerQueuedChecks.empty() &&
