@@ -1,8 +1,11 @@
 #pragma once
 
+#include "ship/window/gui/GuiWindow.h"
+#include <nlohmann/json_fwd.hpp>
 #include <string>
 #include <vector>
 #include <stdint.h>
+#include <array>
 
 void DrawItemAmmo(int itemId);
 

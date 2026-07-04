@@ -3,8 +3,8 @@
 #include "SeedContext.h"
 #include "draw.h"
 #include "static_data.h"
-#include "randomizer.h"
-#include "randomizer_check_tracker.h"
+#include "randomizer.h"// IWYU pragma: keep
+
 
 extern "C" {
 #include "overlays/actors/ovl_En_G_Switch/z_en_g_switch.h"
@@ -207,7 +207,7 @@ s8* SilverFieldFromSaveContext(SaveContext* saveContext, RandomizerGet rg) {
 
 s8 SilverTotal(RandomizerGet rg) {
     auto ctx = Rando::Context::GetInstance();
-    return rg == RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES || 
+    return rg == RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES ||
            (rg == RG_SHADOW_SILVER_SPIKES && ctx->GetDungeon(Rando::SHADOW_TEMPLE)->IsMQ()) ? 10
            : (rg == RG_GTG_SILVER_LAVA && ctx->GetDungeon(Rando::GERUDO_TRAINING_GROUND)->IsMQ())  ? 6
            : (rg == RG_GTG_SILVER_WATER  && ctx->GetDungeon(Rando::GERUDO_TRAINING_GROUND)->IsMQ())  ? 3
