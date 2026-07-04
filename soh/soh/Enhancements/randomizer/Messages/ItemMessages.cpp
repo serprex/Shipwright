@@ -75,7 +75,7 @@ void BuildTriforcePieceMessage(CustomMessage& msg) {
             // to a high number, then looking for the lowest.
             // if we have the exact amount, it will be caught by the first check, so no worries there
             if (bridge < current) {
-                current = 255;
+                bridge = 255;
             }
             if (GBK < current) {
                 GBK = 255;
@@ -115,8 +115,7 @@ void BuildTriforcePieceMessage(CustomMessage& msg) {
                 condition = { "%gWin the game%w", TODO_TRANSLATE, TODO_TRANSLATE };
             } else if (next == bridge) {
                 condition = { "%csummon the Rainbow Bridge%w", TODO_TRANSLATE, TODO_TRANSLATE };
-            } else {
-                // final case is GBK
+            } else if (next == GBK) {
                 condition = { "%rfind the key to Ganondorf's Lair%w", TODO_TRANSLATE, TODO_TRANSLATE };
             }
             msg.Replace("[[condition]]", condition);
