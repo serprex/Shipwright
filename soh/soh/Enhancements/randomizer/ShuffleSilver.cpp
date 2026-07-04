@@ -4,6 +4,7 @@
 #include "draw.h"
 #include "static_data.h"
 #include "randomizer.h"// IWYU pragma: keep
+#include "ShuffleSilver.h"
 
 
 extern "C" {
@@ -154,7 +155,7 @@ RandomizerGet SilverFromSwitchFlag(s16 switchFlag){
     }
 }
 
-s8* SilverFieldFromSaveContext(SaveContext* saveContext, RandomizerGet rg) {
+s8* Randomizer::SilverFieldFromSaveContext(SaveContext* saveContext, RandomizerGet rg) {
     switch (rg) {
         case RG_SHADOW_SILVER_BLADES:
             return &saveContext->ship.quest.data.randomizer.silverShadowBlades;
@@ -216,11 +217,11 @@ s8 SilverTotal(RandomizerGet rg) {
 
 bool IsSilverCleared(s16 switchFlag) {
     RandomizerGet rg = SilverFromSwitchFlag(switchFlag);
-    return *SilverFieldFromSaveContext(&gSaveContext, rg) >= SilverTotal(rg);
+    return *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) >= SilverTotal(rg);
 }
 
 bool IsSilverCleared(RandomizerGet rg) {
-    return *SilverFieldFromSaveContext(&gSaveContext, rg) >= SilverTotal(rg);
+    return *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) >= SilverTotal(rg);
 }
 
 bool IsSilver(RandomizerGet rg){
