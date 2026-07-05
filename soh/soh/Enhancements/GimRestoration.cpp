@@ -1,9 +1,20 @@
-#pragma once
+#include "GimRestoration.h"
+#include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
+#include "soh/Enhancements/item-tables/ItemTableManager.h"
+#include "soh/ShipInit.hpp"
 
-#include "z64item.h"
+extern "C" {
+#include "macros.h"
+#include "variables.h"
+extern PlayState* gPlayState;
+}
 
-// This array is structured from input index (getItemID & 0xFF) - 128
-const uint8_t GimItemId[] = {
+// On N64, Get Item Manipulation (GIM) makes the player receive an item with a negative getItemId,
+// so the vanilla lookup `sGetItemTable[getItemId - 1]` reads out of bounds below the table. The
+// bytes it lands on are fixed player overlay data, so each negative getItemId deterministically
+// resolves to the itemId below, indexed by getItemId + 128. getItemId is s8 on console, so
+// [-128, -1] covers every value reachable there.
+static const uint8_t sGimItemIds[128] = {
     ITEM_POE,          ITEM_BOMB,         ITEM_NONE,         ITEM_BEAN,          ITEM_NUT,          ITEM_BOMB,
     ITEM_NONE,         ITEM_BOMBS_10,     ITEM_TUNIC_GORON,  ITEM_NONE,          ITEM_ARROW_FIRE,   ITEM_BOOTS_HOVER,
     ITEM_STICK,        ITEM_STICK,        ITEM_ARROW_FIRE,   ITEM_MASK_KEATON,   ITEM_NONE,         ITEM_BOMBS_5,
@@ -28,36 +39,17 @@ const uint8_t GimItemId[] = {
     ITEM_STICK,        ITEM_STICK
 };
 
-void Give_Gim_Bottle(PlayState* play, u8 item) {
-#define BUTTON_STATUS_INDEX(button) ((button) >= 4) ? ((button) + 1) : (button)
-
-    s16 i;
-    s16 temp = SLOT(item);
-
-    for (i = 0; i < 4; i++) {
-        if (gSaveContext.inventory.items[temp + i] == ITEM_BOTTLE) {
-            goto BOTTLE_FOUND;
-        }
+extern "C" GetItemEntry Gim_RetrieveOobItemEntry(int16_t getItemId) {
+    // SoH widened Player.getItemId from s8 to s16, so values below the console range can
+    // exist here; treat them (and the restoration being disabled) as an item table miss.
+    if (!CVarGetInteger(CVAR_ENHANCEMENT("GetItemManipulation"), 0) || getItemId < -128) {
+        return GET_ITEM_NONE;
     }
 
-    // No bottle found
-    i = 0;
-
-BOTTLE_FOUND:
-    // "Item_Pt(1)=%d Item_Pt(2)=%d Item_Pt(3)=%d   Empty Bottle=%d   Content=%d"
-    osSyncPrintf("Item_Pt(1)=%d Item_Pt(2)=%d Item_Pt(3)=%d   空瓶=%d   中味=%d\n", gSaveContext.equips.cButtonSlots[0],
-                 gSaveContext.equips.cButtonSlots[1], gSaveContext.equips.cButtonSlots[2], temp + i, item);
-
-    for (int buttonIndex = 1; buttonIndex < ARRAY_COUNT(gSaveContext.equips.buttonItems); buttonIndex++) {
-        if ((temp + i) == gSaveContext.equips.cButtonSlots[buttonIndex - 1]) {
-            gSaveContext.equips.buttonItems[buttonIndex] = item;
-            if (play != NULL) {
-                Interface_LoadItemIcon2(play, buttonIndex);
-            }
-            gSaveContext.buttonStatus[BUTTON_STATUS_INDEX(buttonIndex)] = BTN_ENABLED;
-            break;
-        }
-    }
-
-    gSaveContext.inventory.items[temp + i] = item;
+    // Only the received itemId of the console OOB read is documented, so use the compass
+    // entry as a stand-in for the rest (object, draw id, text) to keep the get-item
+    // cutscene valid.
+    GetItemEntry giEntry = ItemTableManager::Instance->RetrieveItemEntry(MOD_NONE, GI_COMPASS);
+    giEntry.itemId = sGimItemIds[getItemId + 128];
+    return giEntry;
 }

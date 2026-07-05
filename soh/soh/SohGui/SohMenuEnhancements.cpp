@@ -1258,6 +1258,11 @@ void SohMenu::AddMenuEnhancements() {
         .Options(CheckboxOptions().Tooltip(
             "Restores a bug from NTSC 1.0/1.1 that allows you to obtain the eyeball frog from King Zora "
             "instead of the Zora Tunic by Holding Shield."));
+    AddWidget(path, "Get Item Manipulation (GIM)", WIDGET_CVAR_CHECKBOX)
+        .CVar(CVAR_ENHANCEMENT("GetItemManipulation"))
+        .Options(CheckboxOptions().Tooltip(
+            "Restores Get Item Manipulation by emulating out-of-bounds get-item table read that "
+            "occurs on console when an item is received with negative get-item ID."));
 
     AddWidget(path, "Misc Restorations", WIDGET_SEPARATOR_TEXT);
     AddWidget(path, "Fix L&Z Page Switch in Pause Menu", WIDGET_CVAR_CHECKBOX)

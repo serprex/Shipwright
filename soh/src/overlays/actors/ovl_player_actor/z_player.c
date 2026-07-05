@@ -22,7 +22,6 @@
 #include "objects/object_link_child/object_link_child.h"
 #include <soh/Enhancements/custom-message/CustomMessageTypes.h>
 #include "soh/Enhancements/item-tables/ItemTableTypes.h"
-#include "soh/Enhancements/item-tables/GimSwapTable.h"
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/Enhancements/randomizer/randomizer_entrance.h"
 #include "soh/Enhancements/cosmetics/cosmeticsTypes.h"
@@ -13990,17 +13989,7 @@ s32 func_8084DFF4(PlayState* play, Player* this) {
     }
 
     if (this->av1.actionVar1 == 0) {
-        if (this->getItemId < 0) {
-            // Don't handle undocumented (or potentially invalid) OOB values
-            if (this->getItemId < -128)
-                return 1;
-
-            // SoH GIM Detection
-            giEntry = ItemTable_Retrieve(64); // Preload compass
-
-            // Replace item id with GIM swap table value
-            giEntry.itemId = GimItemId[(this->getItemId & 0xFF) - 128];
-        } else if (this->getItemEntry.objectId == OBJECT_INVALID || (this->getItemId != this->getItemEntry.getItemId)) {
+        if (this->getItemEntry.objectId == OBJECT_INVALID || (this->getItemId != this->getItemEntry.getItemId)) {
             giEntry = ItemTable_Retrieve(this->getItemId);
         } else {
             giEntry = this->getItemEntry;
@@ -14019,13 +14008,7 @@ s32 func_8084DFF4(PlayState* play, Player* this) {
                     gSaveContext.bgsFlag = true;
                     gSaveContext.swordHealth = 8;
                 }
-                // GIM bottle handler
-                if (this->getItemId < 0 && (giEntry.itemId >= ITEM_POTION_RED && giEntry.itemId <= ITEM_POE)) {
-                    Give_Gim_Bottle(play, giEntry.itemId);
-                } else {
-                    // Normal item giver
-                    Item_Give(play, giEntry.itemId);
-                }
+                Item_Give(play, giEntry.itemId);
             } else {
                 Randomizer_Item_Give(play, giEntry);
             }
