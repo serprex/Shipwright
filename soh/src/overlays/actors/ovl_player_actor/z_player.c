@@ -14000,8 +14000,7 @@ s32 func_8084DFF4(PlayState* play, Player* this) {
 
             // Replace item id with GIM swap table value
             giEntry.itemId = GimItemId[(this->getItemId & 0xFF) - 128];
-        }
-        else if (this->getItemEntry.objectId == OBJECT_INVALID || (this->getItemId != this->getItemEntry.getItemId)) {
+        } else if (this->getItemEntry.objectId == OBJECT_INVALID || (this->getItemId != this->getItemEntry.getItemId)) {
             giEntry = ItemTable_Retrieve(this->getItemId);
         } else {
             giEntry = this->getItemEntry;
@@ -14022,7 +14021,7 @@ s32 func_8084DFF4(PlayState* play, Player* this) {
                 }
                 // GIM bottle handler
                 if (this->getItemId < 0 && (giEntry.itemId >= ITEM_POTION_RED && giEntry.itemId <= ITEM_POE)) {
-                    Give_Gim_Bottle(play,giEntry.itemId);
+                    Give_Gim_Bottle(play, giEntry.itemId);
                 } else {
                     // Normal item giver
                     Item_Give(play, giEntry.itemId);
