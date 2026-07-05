@@ -150,9 +150,11 @@ RandomizerGet SilverFromSwitchFlag(s16 switchFlag){
                     return RG_GANONS_CASTLE_SILVER_LIGHT;
             }
             break;
-        assert(false); //no matching silver found
-        return RG_NONE;
+        default:
+            break;
     }
+    assert(false); //no matching silver found
+    return RG_NONE;
 }
 
 s8* Randomizer::SilverFieldFromSaveContext(SaveContext* saveContext, RandomizerGet rg) {
@@ -206,7 +208,7 @@ s8* Randomizer::SilverFieldFromSaveContext(SaveContext* saveContext, RandomizerG
     }
 }
 
-s8 SilverTotal(RandomizerGet rg) {
+s8 Randomizer::SilverTotal(RandomizerGet rg) {
     auto ctx = Rando::Context::GetInstance();
     return rg == RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES ||
            (rg == RG_SHADOW_SILVER_SPIKES && ctx->GetDungeon(Rando::SHADOW_TEMPLE)->IsMQ()) ? 10
@@ -217,11 +219,11 @@ s8 SilverTotal(RandomizerGet rg) {
 
 bool IsSilverCleared(s16 switchFlag) {
     RandomizerGet rg = SilverFromSwitchFlag(switchFlag);
-    return *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) >= SilverTotal(rg);
+    return *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) >= Randomizer::SilverTotal(rg);
 }
 
 bool IsSilverCleared(RandomizerGet rg) {
-    return *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) >= SilverTotal(rg);
+    return *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) >= Randomizer::SilverTotal(rg);
 }
 
 bool IsSilver(RandomizerGet rg){

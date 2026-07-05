@@ -455,7 +455,7 @@ void DrawName(std::string str){
     int iconSize = CVarGetInteger(CVAR_TRACKER_ITEM("IconSize"), 36);
     ImVec2 p = ImGui::GetCursorScreenPos();
     ImGui::SetCursorScreenPos(
-        ImVec2(p.x + (iconSize / 2) - (ImGui::CalcTextSize(str.c_str()).x / 2), p.y - (iconSize + 13)));
+        ImVec2(p.x + (iconSize >> 1) - (ImGui::CalcTextSize(str.c_str()).x / 2), p.y - (iconSize + 13)));
     ImGui::PushStyleColor(ImGuiCol_Text, IM_COL_WHITE);
     ImGui::Text("%s", str.c_str());
     ImGui::PopStyleColor();
@@ -650,7 +650,7 @@ ItemTrackerNumbers GetItemCurrentAndMax(ItemTrackerItem item) {
             case RG_SPIRIT_MQ_SILVER_BIG_WALL:
             case RG_GANONS_CASTLE_MQ_SILVER_WATER:
             case RG_GANONS_CASTLE_MQ_SILVER_SHADOW:
-                result.currentCapacity = SilverTotal(static_cast<RandomizerGet>(item.id));
+                result.currentCapacity = Randomizer::SilverTotal(static_cast<RandomizerGet>(item.id));
                 result.currentAmmo = *Randomizer::SilverFieldFromSaveContext(&gSaveContext, static_cast<RandomizerGet>(item.id));
                 break;
             default:
@@ -679,7 +679,7 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         (actualItemId == ITEM_HOOKSHOT || actualItemId == ITEM_LONGSHOT)) {
         // Calculate the scaled position for the text
         ImVec2 textPos =
-            ImVec2(p.x + (iconSize / 2) -
+            ImVec2(p.x + (iconSize  >> 1) -
                        (ImGui::CalcTextSize(item.id == ITEM_HOOKSHOT ? "H" : "L").x * textScalingFactor / 2) +
                        8 * textScalingFactor,
                    p.y - 22 * textScalingFactor);
@@ -711,7 +711,7 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         }
 
         ImGui::SetCursorScreenPos(
-            ImVec2(p.x + (iconSize / 2) - (ImGui::CalcTextSize((currentString + maxString).c_str()).x / 2), p.y - 14));
+            ImVec2(p.x + (iconSize  >> 1) - (ImGui::CalcTextSize((currentString + maxString).c_str()).x / 2), p.y - 14));
         ImGui::PushStyleColor(ImGuiCol_Text, currentColor);
         ImGui::Text("%s", currentString.c_str());
         ImGui::PopStyleColor();
@@ -729,7 +729,7 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         }
 
         ImGui::SetCursorScreenPos(
-            ImVec2(p.x + (iconSize / 2) - (ImGui::CalcTextSize((str).c_str()).x / 2), p.y - 14));
+            ImVec2(p.x + (iconSize >> 1) - (ImGui::CalcTextSize((str).c_str()).x / 2), p.y - 14));
         ImGui::PushStyleColor(ImGuiCol_Text, color);
         ImGui::Text("%s", str.c_str());
         ImGui::PopStyleColor();
@@ -783,7 +783,7 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
 
         float x = shouldAlignToLeft
                       ? p.x
-                      : p.x + (iconSize / 2) - (ImGui::CalcTextSize((currentString + maxString).c_str()).x / 2);
+                      : p.x + (iconSize >> 1) - (ImGui::CalcTextSize((currentString + maxString).c_str()).x / 2);
 
         ImGui::SetCursorScreenPos(ImVec2(x, p.y - 14));
         ImGui::PushStyleColor(ImGuiCol_Text, currentColor);
@@ -822,7 +822,7 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         }
 
         ImGui::SetCursorScreenPos(
-            ImVec2(p.x + (iconSize / 2) - (ImGui::CalcTextSize((currentString + maxString).c_str()).x / 2), p.y - 14));
+            ImVec2(p.x + (iconSize >> 1) - (ImGui::CalcTextSize((currentString + maxString).c_str()).x / 2), p.y - 14));
         ImGui::PushStyleColor(ImGuiCol_Text, currentColor);
         ImGui::Text("%s", currentString.c_str());
         ImGui::PopStyleColor();
@@ -844,7 +844,7 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         current += "/";
         max += std::to_string(rupeesMax);
         ImGui::SetCursorScreenPos(
-            ImVec2(p.x + (iconSize / 2) - (ImGui::CalcTextSize((current + max).c_str()).x / 2), p.y - 14));
+            ImVec2(p.x + (iconSize >> 1) - (ImGui::CalcTextSize((current + max).c_str()).x / 2), p.y - 14));
         ImGui::PushStyleColor(ImGuiCol_Text, currentColor);
         ImGui::Text("%d/", rupees);
         ImGui::PopStyleColor();
@@ -1409,7 +1409,7 @@ void DrawItemsInRows(std::vector<ItemTrackerItem> items, int columns = 6) {
     int topPadding =
         (CVarGetInteger(CVAR_TRACKER_ITEM("WindowType"), TRACKER_WINDOW_FLOATING) == TRACKER_WINDOW_WINDOW) ? 20 : 0;
 
-    for (int i = 0; i < items.size(); i++) {
+    for (size_t i = 0; i < items.size(); i++) {
         int row = i / columns;
         int column = i % columns;
         ImGui::SetCursorPos(
@@ -1429,7 +1429,7 @@ void DrawItemsInACircle(std::vector<ItemTrackerItem> items) {
     ImVec2 max = ImGui::GetWindowContentRegionMax();
     float radius = (iconSize + iconSpacing) * 2.0f;
 
-    for (int i = 0; i < items.size(); i++) {
+    for (size_t i = 0; i < items.size(); i++) {
         float angle = static_cast<float>(i) / items.size() * 2.0f * M_PIf;
         float x = (radius / 2.0f) * cos(angle) + max.x / 2.0f;
         float y = (radius / 2.0f) * sin(angle) + max.y / 2.0f;
