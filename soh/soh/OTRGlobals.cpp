@@ -76,7 +76,7 @@
 
 #include <functions.h>
 #include "Enhancements/item-tables/ItemTableManager.h"
-#include "Enhancements/GimRestoration.h"
+#include "Enhancements/Restorations/GetItemManipulation.h"
 #include "Enhancements/Lang/Lang.h"
 #include "soh/SohGui/ImGuiUtils.h"
 #include "ActorDB.h"
