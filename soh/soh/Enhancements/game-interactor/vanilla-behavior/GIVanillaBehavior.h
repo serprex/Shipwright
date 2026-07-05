@@ -286,6 +286,17 @@ typedef enum {
     VB_BOTTLE_BIG_POE,
 
     // #### `result`
+    // SoH returns early when `Item_Give` finds no slot for bottle contents; vanilla instead
+    // falls through to default inventory write, storing contents in the first bottle slot.
+    // When `false`, fallthrough is restored for console Get Item Manipulation behavior.
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `u8` (item)
+    VB_BOTTLE_CONTENTS_REQUIRE_EMPTY_BOTTLE,
+
+    // #### `result`
     // ```c
     // this->currentShield == PLAYER_SHIELD_DEKU
     // ```

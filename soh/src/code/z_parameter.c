@@ -2382,7 +2382,7 @@ u8 Item_Give(PlayState* play, u8 item) {
                     }
 
                     gSaveContext.inventory.items[temp + i] = item;
-                    break;
+                    return Return_Item(item, MOD_NONE, ITEM_NONE);
                 }
             }
         } else {
@@ -2392,11 +2392,17 @@ u8 Item_Give(PlayState* play, u8 item) {
             for (i = 0; i < 4; i++) {
                 if (gSaveContext.inventory.items[temp + i] == ITEM_NONE) {
                     gSaveContext.inventory.items[temp + i] = item;
-                    break;
+                    return Return_Item(item, MOD_NONE, ITEM_NONE);
                 }
             }
         }
-        return Return_Item(item, MOD_NONE, ITEM_NONE);
+
+        // No slot could hold the contents. Vanilla has no return here and falls through to the
+        // default write at the end of the function, storing the contents in the first bottle
+        // slot; this early return diverges from that to avoid clobbering a filled bottle.
+        if (GameInteractor_Should(VB_BOTTLE_CONTENTS_REQUIRE_EMPTY_BOTTLE, true, item)) {
+            return Return_Item(item, MOD_NONE, ITEM_NONE);
+        }
     } else if ((item >= ITEM_WEIRD_EGG) && (item <= ITEM_CLAIM_CHECK)) {
         if (GameInteractor_Should(VB_POACHERS_SAW_SET_DEKU_NUT_UPGRADE_FLAG, item == ITEM_SAW)) {
             Flags_SetItemGetInf(ITEMGETINF_OBTAINED_NUT_UPGRADE_FROM_STAGE);
