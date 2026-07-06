@@ -93,6 +93,7 @@ class StaticData {
     static std::unordered_map<u32, RandomizerHint> stoneParamsToHint;
     static std::unordered_map<u32, RandomizerHint> grottoChestParamsToHint;
     static std::unordered_map<RandomizerGet, RandomizerCheckArea> silverToArea;
+    static std::set<RandomizerGet> constantSilvers;
     static std::unordered_map<std::string, RandomizerTrick> trickToEnum;
     static std::array<HintText, RHT_MAX> hintTextTable;
     static std::vector<RandomizerGet> normalBottles;

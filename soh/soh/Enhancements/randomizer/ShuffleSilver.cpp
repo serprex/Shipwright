@@ -55,6 +55,16 @@ bool IsSilverInPool(RandomizerGet rg){
     }
 }
 
+std::set<RandomizerGet> Rando::StaticData::constantSilvers = {
+    RG_SHADOW_SILVER_BLADES,
+    RG_SHADOW_SILVER_PIT,
+    RG_SHADOW_SILVER_SPIKES,
+    RG_GTG_SILVER_SLOPE,
+    RG_GTG_SILVER_LAVA,
+    RG_GTG_SILVER_WATER,
+    RG_GANONS_CASTLE_SILVER_FIRE
+};
+
 std::unordered_map<RandomizerGet, RandomizerCheckArea> Rando::StaticData::silverToArea = {
     { RG_DODONGOS_CAVERN_MQ_SILVER, RCAREA_DODONGOS_CAVERN },
     { RG_SPIRIT_SILVER_CHILD, RCAREA_SPIRIT_TEMPLE },

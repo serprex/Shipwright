@@ -442,11 +442,13 @@ static bool presetLoaded = false;
 static std::unordered_map<std::string, ImVec2> presetPos;
 static std::unordered_map<std::string, ImVec2> presetSize;
 
-void TrackSilverRupees(std::vector<ItemTrackerItem> trackList){
+void TrackSilverRupees(std::vector<ItemTrackerItem>* trackList){
     for (auto silverRupee : silverRupeeItems) {
-        if (IsSilverInPool(static_cast<RandomizerGet>(silverRupee.id)) &&
-            CheckTracker::IsAreaSpoiled(Rando::StaticData::silverToArea[static_cast<RandomizerGet>(silverRupee.id)])) {
-            trackList.push_back(silverRupee);
+        RandomizerGet rg = static_cast<RandomizerGet>(silverRupee.id);
+        if (IsSilverInPool(rg) &&
+            (Rando::StaticData::constantSilvers.contains(rg) ||
+             CheckTracker::IsAreaSpoiled(Rando::StaticData::silverToArea[rg]))) {
+            trackList->push_back(silverRupee);
         }
     }
 }
@@ -650,7 +652,7 @@ ItemTrackerNumbers GetItemCurrentAndMax(ItemTrackerItem item) {
             case RG_SPIRIT_MQ_SILVER_BIG_WALL:
             case RG_GANONS_CASTLE_MQ_SILVER_WATER:
             case RG_GANONS_CASTLE_MQ_SILVER_SHADOW:
-                result.currentCapacity = Randomizer::SilverTotal(static_cast<RandomizerGet>(item.id));
+                result.maxCapacity = Randomizer::SilverTotal(static_cast<RandomizerGet>(item.id));
                 result.currentAmmo = *Randomizer::SilverFieldFromSaveContext(&gSaveContext, static_cast<RandomizerGet>(item.id));
                 break;
             default:
@@ -719,7 +721,8 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         ImGui::PushStyleColor(ImGuiCol_Text, maxColor);
         ImGui::Text("%s", maxString.c_str());
         ImGui::PopStyleColor();
-    } else if (item.kind == ITEM_KIND_RG && IsSilver(static_cast<RandomizerGet>(item.id)) && IsValidSaveFile()) {
+    } else if (item.kind == ITEM_KIND_RG && IsSilver(static_cast<RandomizerGet>(item.id)) && IsValidSaveFile() &&
+               IS_RANDO && OTRGlobals::Instance->gRandoContext->GetOption(RSK_SHUFFLE_SILVER).Get()) {
         std::string maxString = hideMax ? "???" : std::to_string(currentAndMax.maxCapacity);
         std::string str = std::to_string(currentAndMax.currentAmmo) + "/" + maxString;
 
@@ -829,28 +832,6 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         ImGui::SameLine(0, 0.0f);
         ImGui::PushStyleColor(ImGuiCol_Text, maxColor);
         ImGui::Text("%s", maxString.c_str());
-        ImGui::PopStyleColor();
-    } else if (item.kind == ITEM_KIND_RG && item.id >= RG_SHADOW_SILVER_BLADES &&
-               item.id <= RG_GANONS_CASTLE_MQ_SILVER_SHADOW && IS_RANDO &&
-               OTRGlobals::Instance->gRandoContext->GetOption(RSK_SHUFFLE_SILVER).Get() && IsValidSaveFile()) {
-        RandomizerGet rg = static_cast<RandomizerGet>(item.id);
-        std::string current = "";
-        std::string max = "";
-        uint8_t rupees = *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg);
-        uint8_t rupeesMax = Randomizer::SilverTotal(rg);
-        ImU32 currentColor = rupees >= rupeesMax ? IM_COL_GREEN : IM_COL_WHITE;
-        ImU32 maxColor = IM_COL_GREEN;
-        current += std::to_string(rupees);
-        current += "/";
-        max += std::to_string(rupeesMax);
-        ImGui::SetCursorScreenPos(
-            ImVec2(p.x + (iconSize >> 1) - (ImGui::CalcTextSize((current + max).c_str()).x / 2), p.y - 14));
-        ImGui::PushStyleColor(ImGuiCol_Text, currentColor);
-        ImGui::Text("%d/", rupees);
-        ImGui::PopStyleColor();
-        ImGui::SameLine(0, 0.0f);
-        ImGui::PushStyleColor(ImGuiCol_Text, maxColor);
-        ImGui::Text("%d", rupeesMax);
         ImGui::PopStyleColor();
     } else {
         ImGui::SetCursorScreenPos(ImVec2(p.x, p.y - 14));
@@ -1165,7 +1146,7 @@ void DrawItem(ItemTrackerItem item) {
             case RG_SPIRIT_MQ_SILVER_BIG_WALL:
             case RG_GANONS_CASTLE_MQ_SILVER_WATER:
             case RG_GANONS_CASTLE_MQ_SILVER_SHADOW:
-                hideMax = CheckTracker::IsAreaSpoiled(Rando::StaticData::silverToArea[static_cast<RandomizerGet>(item.id)]);
+                hideMax = !CheckTracker::IsAreaSpoiled(Rando::StaticData::silverToArea[static_cast<RandomizerGet>(item.id)]);
                 hasItem = IsSilverCleared(static_cast<RandomizerGet>(item.id));
                 itemName = Rando::StaticData::RetrieveItem(static_cast<RandomizerGet>(actualItemId)).GetName().GetForLanguage(CVarGetInteger(CVAR_SETTING("Languages"), LANGUAGE_ENG));
                 break;
@@ -1721,7 +1702,7 @@ void UpdateVectors() {
         while (mainWindowItems.size() % 6) {
             mainWindowItems.push_back(ITEM_TRACKER_ITEM(ITEM_NONE, "", 0, DrawItem));
         }
-        TrackSilverRupees(mainWindowItems);
+        TrackSilverRupees(&mainWindowItems);
     }
 
     shouldUpdateVectors = false;
@@ -1919,7 +1900,7 @@ void ItemTrackerWindow::DrawElement() {
         if (CVarGetInteger(CVAR_TRACKER_ITEM("DisplayType.SilverRupees"), SECTION_DISPLAY_HIDDEN) ==
             SECTION_DISPLAY_SEPARATE) {
             std::vector<ItemTrackerItem> questMatchingSilverRupeeItems;
-            TrackSilverRupees(questMatchingSilverRupeeItems);
+            TrackSilverRupees(&questMatchingSilverRupeeItems);
             BeginFloatingWindows("Silver Rupee Tracker");
             DrawItemsInRows(questMatchingSilverRupeeItems);
             EndFloatingWindows();
