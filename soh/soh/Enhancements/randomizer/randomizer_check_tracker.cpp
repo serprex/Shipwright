@@ -2,6 +2,7 @@
 #include "randomizer_entrance_tracker.h"
 #include "randomizer_item_tracker.h"
 #include "randomizerTypes.h"
+#include "soh/Enhancements/randomizer/static_data.h"
 #include "soh/OTRGlobals.h"
 #include "soh/SaveManager.h"
 #include "soh/ResourceManagerHelpers.h"
@@ -357,24 +358,6 @@ std::map<RandomizerGet, RandomizerCheckArea> MapRGtoRandomizerCheckArea = {
     { RG_ICE_CAVERN_MAP, RCAREA_ICE_CAVERN }
 };
 
-static const std::set<RandomizerGet> shouldSilverSpoil = {
-    { RG_SPIRIT_SILVER_CHILD },
-    { RG_SPIRIT_SILVER_SUN },
-    { RG_SPIRIT_SILVER_BOULDERS },
-    { RG_SPIRIT_MQ_SILVER_LOBBY },
-    { RG_SPIRIT_MQ_SILVER_BIG_WALL },
-    { RG_BOTW_SILVER },
-    { RG_ICE_CAVERN_SILVER_BLADES },
-    { RG_ICE_CAVERN_SILVER_BLOCK },
-    { RG_GANONS_CASTLE_SILVER_LIGHT },
-    { RG_GANONS_CASTLE_SILVER_FOREST },
-    { RG_GANONS_CASTLE_SILVER_SPIRIT },
-    { RG_GANONS_CASTLE_MQ_SILVER_WATER },
-    { RG_GANONS_CASTLE_MQ_SILVER_SHADOW },
-    { RG_DODONGOS_CAVERN_MQ_SILVER },
-    { RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES },
-};
-
 // RANDOTODO do we want keyrings and keys beyond lower total to spoil area too?
 void SpoilAreaFromCheck(RandomizerCheck rc) {
     Rando::Location* loc = Rando::StaticData::GetLocation(rc);
@@ -386,7 +369,7 @@ void SpoilAreaFromCheck(RandomizerCheck rc) {
         }
     }
     if (itemLoc->GetPlacedItem().GetItemType() == ItemType::ITEMTYPE_SILVER) {
-        if (shouldSilverSpoil.contains(itemLoc->GetPlacedRandomizerGet()) && 
+        if (!Rando::StaticData::constantSilvers.contains(itemLoc->GetPlacedRandomizerGet()) &&
             !IsAreaSpoiled(Rando::StaticData::silverToArea[itemLoc->GetPlacedRandomizerGet()])) {
             SetAreaSpoiled(Rando::StaticData::silverToArea[itemLoc->GetPlacedRandomizerGet()]);
         }
@@ -587,6 +570,7 @@ void CheckTrackerLoadGame(int32_t fileNum) {
     }
     for (int i = RCAREA_KOKIRI_FOREST; i < RCAREA_INVALID; i++) {
         if (!IsAreaSpoiled(static_cast<RandomizerCheckArea>(i)) &&
+
             (RandomizerCheckObjects::AreaIsOverworld(static_cast<RandomizerCheckArea>(i)) || !IS_RANDO ||
              OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_MQ_DUNGEON_RANDOM) == RO_MQ_DUNGEONS_NONE ||
              (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_MQ_DUNGEON_RANDOM) ==
