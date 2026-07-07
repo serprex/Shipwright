@@ -327,6 +327,10 @@ u8 CheckDungeonCount() {
         dungeonCount++;
     }
 
+    if (Flags_GetRandomizerInf(RAND_INF_DUNGEONS_DONE_GANONS_TOWER)) {
+        dungeonCount++;
+    }
+
     return dungeonCount;
 }
 
@@ -346,24 +350,6 @@ u8 CheckBridgeRewardCount() {
             break;
     }
     return bridgeRewardCount;
-}
-
-u8 CheckLACSRewardCount() {
-    u8 lacsRewardCount = 0;
-
-    switch (Randomizer_GetSettingValue(RSK_LACS_OPTIONS)) {
-        case RO_LACS_WILDCARD_REWARD:
-            if (Flags_GetRandomizerInf(RAND_INF_GREG_FOUND)) {
-                lacsRewardCount += 1;
-            }
-            break;
-        case RO_LACS_GREG_REWARD:
-            if (Flags_GetRandomizerInf(RAND_INF_GREG_FOUND)) {
-                lacsRewardCount += 1;
-            }
-            break;
-    }
-    return lacsRewardCount;
 }
 
 void Play_Init(GameState* thisx) {
@@ -593,7 +579,7 @@ void Play_Init(GameState* thisx) {
     gItemAgeReqs[ITEM_ROCS_FEATHER] = AGE_REQ_NONE;
     gSlotAgeReqs[SLOT_NAYRUS_LOVE] = AGE_REQ_NONE;
 
-    func_800304DC(play, &play->actorCtx, play->linkActorEntry);
+    Actor_InitContext(play, &play->actorCtx, play->linkActorEntry);
 
     while (!func_800973FC(play, &play->roomCtx)) {
         ; // Empty Loop
@@ -634,7 +620,7 @@ void Play_Init(GameState* thisx) {
     Environment_PlaySceneSequence(play);
     gSaveContext.seqId = play->sequenceCtx.seqId;
     gSaveContext.natureAmbienceId = play->sequenceCtx.natureAmbienceId;
-    func_8002DF18(play, GET_PLAYER(play));
+    Actor_InitPlayerHorse(play, GET_PLAYER(play));
     AnimationContext_Update(play, &play->animationCtx);
     gSaveContext.respawnFlag = 0;
 
@@ -1560,7 +1546,7 @@ void Play_Draw(PlayState* play) {
         }
 
         if ((HREG(80) != 10) || (HREG(85) != 0)) {
-            func_800315AC(play, &play->actorCtx);
+            Actor_DrawAll(play, &play->actorCtx);
         }
 
         if ((HREG(80) != 10) || (HREG(86) != 0)) {
