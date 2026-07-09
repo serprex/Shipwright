@@ -940,7 +940,7 @@ void DrawItem(ItemTrackerItem item) {
         }
         switch (item.id) {
             case RG_TRIFORCE_PIECE:
-                hasItem = IS_RANDO && (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT_PIECES_TOTAL) > 0)
+                hasItem = IS_RANDO && (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT_PIECES_TOTAL) > 0);
                 itemName = "Triforce Piece";
                 break;
             case ITEM_NAYRUS_LOVE:
