@@ -1,4 +1,5 @@
 #include "PlayerFormSystem.h"
+#include "soh/Enhancements/mm/forms/FormsCommon.h"
 
 #include <libultraship/bridge.h>
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
@@ -227,7 +228,10 @@ void PlayerForm_EnforceInvariants(Player* player) {
         }
         player->ageProperties = props;
     }
-    player->actor.shape.shadowScale = props->unk_04;
+    // The Goron roll manages its own (smaller) ball shadow
+    if (!GoronForm_IsRolling()) {
+        player->actor.shape.shadowScale = props->unk_04;
+    }
 
     // Vanilla resets mass to 50 every frame at the end of Player_UpdateCommon (z_player.c),
     // before this runs from OnPlayerUpdate; MASS_IMMOVABLE (cutscene/dead) is left alone

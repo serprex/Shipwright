@@ -1,19 +1,15 @@
 #include "PlayerFormSystem.h"
+#include "soh/Enhancements/mm/forms/FormsCommon.h"
 
 #include <libultraship/bridge.h>
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/ShipInit.hpp"
+#include "soh/frame_interpolation.h"
 
 extern "C" {
-#include "z64.h"
-#include "macros.h"
-#include "functions.h"
-#include "variables.h"
 #include "soh/ResourceManagerHelpers.h"
 #include "assets/mm/objects/object_link_goron/object_link_goron.h"
 #include "assets/mm/objects/object_link_zora/object_link_zora.h"
-
-extern PlayState* gPlayState;
 }
 
 // While transformed, the flat mask display list is suppressed and the vanilla hand/sheath/waist
@@ -55,6 +51,46 @@ static const char* sFormMouthTextures[PLAYER_SHIPFORM_MAX][4] = {
     {},
     { gLinkZoraMouthClosedTex, gLinkZoraMouthHalfTex, gLinkZoraMouthOpenTex, gLinkZoraMouthSmileTex },
 };
+
+// While Goron-rolling, the skeleton is hidden and MM's curled ball display list is drawn in
+// its place with squash/stretch and the spin from shape.rot (mm z_player.c Player_Draw,
+// gLinkGoronCurledDL block). This is emitted at the root limb so it inherits the player's
+// lighting and runs inside the player's frame-interpolation record.
+static void DrawGoronBall(PlayState* play, Player* player) {
+    f32 squash = GoronForm_GetSquash();
+    f32 stretchY = squash + 1.0f;
+    f32 stretchXZ = 1.0f - (squash * 0.5f);
+    // Ball tint ramps white -> blue with the spike charge (MM tints the spinning ball the
+    // same way through D_8085D580/D_8085D584)
+    f32 tint = CLAMP(GoronForm_GetChargeTint(), 0.0f, 1.0f);
+    u8 r = (u8)(255.0f + ((80.0f - 255.0f) * tint));
+    u8 g = (u8)(255.0f + ((80.0f - 255.0f) * tint));
+    u8 b = (u8)(255.0f + ((200.0f - 255.0f) * tint));
+
+    OPEN_DISPS(play->state.gfxCtx);
+
+    FrameInterpolation_RecordActorPosRotMatrix();
+    Matrix_Push();
+    Matrix_Translate(player->actor.world.pos.x,
+                     player->actor.world.pos.y + (1200.0f * player->actor.scale.y * stretchY),
+                     player->actor.world.pos.z, MTXMODE_NEW);
+    Matrix_RotateY(BINANG_TO_RAD(player->actor.shape.rot.y), MTXMODE_APPLY);
+    Matrix_RotateZ(BINANG_TO_RAD(player->actor.shape.rot.z), MTXMODE_APPLY);
+    Matrix_Scale(player->actor.scale.x * stretchXZ * 1.15f, player->actor.scale.y * stretchY * 1.15f,
+                 CLAMP_MIN(stretchY, stretchXZ) * player->actor.scale.z * 1.15f, MTXMODE_APPLY);
+    Matrix_RotateX(BINANG_TO_RAD(player->actor.shape.rot.x), MTXMODE_APPLY);
+
+    Gfx_SetupDL_25Opa(play->state.gfxCtx);
+    gDPSetEnvColor(POLY_OPA_DISP++, r, g, b, 255);
+    gSPMatrix(POLY_OPA_DISP++, MATRIX_NEWMTX(play->state.gfxCtx), G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
+    gSPDisplayList(POLY_OPA_DISP++, (Gfx*)ResourceMgr_LoadGfxByName(gLinkGoronCurledDL));
+    if (GoronForm_IsSpiked()) {
+        gSPDisplayList(POLY_OPA_DISP++, (Gfx*)ResourceMgr_LoadGfxByName(gLinkGoronRollingSpikesDL));
+    }
+    Matrix_Pop();
+
+    CLOSE_DISPS(play->state.gfxCtx);
+}
 
 static void OverrideFormLimbDraw(s32 limbIndex, Gfx** dList, Player* player, bool inPauseMenu) {
     const FormLimbDLs& dls = sFormLimbDLs[PlayerForm_GetApplied()];
@@ -124,6 +160,15 @@ static void RegisterPlayerFormDraw() {
         // actors (Dark Link) keep Link's limbs
         if (gPlayState == NULL || player != GET_PLAYER(gPlayState) ||
             (player->stateFlags1 & PLAYER_STATE1_FIRST_PERSON)) {
+            return;
+        }
+
+        // While curled into the Goron ball, hide every limb and draw the ball instead
+        if (GoronForm_IsRolling()) {
+            *dList = NULL;
+            if (limbIndex == PLAYER_LIMB_ROOT) {
+                DrawGoronBall(gPlayState, player);
+            }
             return;
         }
 

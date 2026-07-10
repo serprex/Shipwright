@@ -81,6 +81,10 @@ static const ALIGN_ASSET(2) char gLinkGoronRightThighDL[] = dgLinkGoronRightThig
 #define dgLinkGoronRollingSpikesAndEffectDL "__OTR__objects/object_link_goron/gLinkGoronRollingSpikesAndEffectDL"
 static const ALIGN_ASSET(2) char gLinkGoronRollingSpikesAndEffectDL[] = dgLinkGoronRollingSpikesAndEffectDL;
 
+// Opaque spike ring drawn on the curled ball while spike-rolling (unnamed in 2Ship's XML)
+#define dgLinkGoronRollingSpikesDL "__OTR__objects/object_link_goron/object_link_goron_DL_00C540"
+static const ALIGN_ASSET(2) char gLinkGoronRollingSpikesDL[] = dgLinkGoronRollingSpikesDL;
+
 #define dgLinkGoronSheathDL "__OTR__objects/object_link_goron/gLinkGoronSheathDL"
 static const ALIGN_ASSET(2) char gLinkGoronSheathDL[] = dgLinkGoronSheathDL;
 

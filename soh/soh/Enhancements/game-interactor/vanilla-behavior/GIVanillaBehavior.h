@@ -2170,6 +2170,28 @@ typedef enum {
     // - `s16 yawTarget` (stick world-space yaw, promoted to int in va_list)
     VB_PLAYER_ROLL_STEER,
 
+    // Fired from func_8083D53C when the player is deep in water but not in one of the
+    // vanilla swim actions. Return false to keep a custom (enhancement-installed) swim
+    // action from being reset into the vanilla tread-water action.
+    // #### `result`
+    // ```c
+    // <player is not held in place by iron boots and actionFunc is not a vanilla swim action>
+    // ```
+    // #### `args`
+    // - `*Player`
+    VB_PLAYER_RESET_SWIM_STATE,
+
+    // Fired at the top of Player_UseItem for every item use attempt (C buttons / assignable
+    // buttons). Return false to block the item from being used.
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `s32` item (ItemID)
+    VB_PLAYER_USE_ITEM,
+
     // #### `result`
     // ```c
     // item == ITEM_SAW
