@@ -2184,6 +2184,20 @@ typedef enum {
     // - `*Player`
     VB_PLAYER_RESET_SWIM_STATE,
 
+    // Fired where an animation's root translation is scaled down for child Link:
+    // Player_OverrideLimbDrawGameplayCommon (drawn root limb position) and
+    // Player_ApplyAnimMovementScaledByAge (anim-driven world movement). Write *scale to
+    // substitute another factor (e.g. a form skeleton's own translation scale) and return
+    // true to apply it; return false to leave the translation unscaled.
+    // #### `result`
+    // ```c
+    // !LINK_IS_ADULT
+    // ```
+    // #### `args`
+    // - `*Player`
+    // - `*f32` scale (preset to the vanilla child factor, 0.64)
+    VB_PLAYER_SCALE_ANIM_TRANSLATION,
+
     // Fired at the top of Player_UseItem for every item use attempt (C buttons / assignable
     // buttons). Return false to block the item from being used.
     // #### `result`

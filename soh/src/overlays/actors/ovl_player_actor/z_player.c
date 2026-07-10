@@ -1941,9 +1941,11 @@ void Player_ApplyAnimMovementScaledByAge(Player* this, s32 movementFlags) {
     SkelAnime_UpdateTranslation(&this->skelAnime, &diff, this->actor.shape.rot.y);
 
     if (movementFlags & 1) {
-        if (!LINK_IS_ADULT) {
-            diff.x *= 0.64f;
-            diff.z *= 0.64f;
+        f32 ageTranslScale = 0.64f;
+
+        if (GameInteractor_Should(VB_PLAYER_SCALE_ANIM_TRANSLATION, !LINK_IS_ADULT, this, &ageTranslScale)) {
+            diff.x *= ageTranslScale;
+            diff.z *= ageTranslScale;
         }
 
         this->actor.world.pos.x += diff.x * this->actor.scale.x;

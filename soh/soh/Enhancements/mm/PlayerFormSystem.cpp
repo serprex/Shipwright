@@ -181,11 +181,6 @@ PlayerShipForm PlayerForm_GetTarget() {
         return PLAYER_SHIPFORM_HUMAN;
     }
 
-    s32 devForm = CVarGetInteger(CVAR_MM_FORM_SWAP_NAME, PLAYER_SHIPFORM_HUMAN);
-    if (devForm > PLAYER_SHIPFORM_HUMAN && devForm < PLAYER_SHIPFORM_MAX) {
-        return (PlayerShipForm)devForm;
-    }
-
     if (!CVarGetInteger(CVAR_TRANSFORMATION_MASKS_NAME, 0)) {
         return PLAYER_SHIPFORM_HUMAN;
     }
@@ -281,6 +276,21 @@ static void RegisterPlayerFormSystem() {
         }
         if (player != NULL) {
             sAppliedForm = target;
+        }
+    });
+
+    // OOT scales anim root translations by a hardcoded 0.64 as child (its child skeleton is
+    // authored smaller than the animations); the MM form skeletons are full-size, so that
+    // scale draws their root too low and sinks the feet into the floor. MM instead scales by
+    // the form's own translation scale for every form (mm z_player_lib.c
+    // Player_OverrideLimbDrawGameplayCommon), which is what unk_08 holds here.
+    REGISTER_VB_SHOULD(VB_PLAYER_SCALE_ANIM_TRANSLATION, {
+        Player* player = va_arg(args, Player*);
+        f32* scale = va_arg(args, f32*);
+
+        if (sAppliedForm != PLAYER_SHIPFORM_HUMAN && gPlayState != nullptr && player == GET_PLAYER(gPlayState)) {
+            *scale = sFormAgeProperties[sAppliedForm].unk_08;
+            *should = true;
         }
     });
 }

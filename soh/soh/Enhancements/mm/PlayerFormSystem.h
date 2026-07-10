@@ -11,8 +11,6 @@ typedef enum PlayerShipForm {
 } PlayerShipForm;
 
 #define CVAR_TRANSFORMATION_MASKS_NAME CVAR_ENHANCEMENT("TransformationMasks")
-// Developer override: forces a form regardless of the equipped mask (0 = off/human, 1 = Goron, 2 = Zora)
-#define CVAR_MM_FORM_SWAP_NAME CVAR_DEVELOPER_TOOLS("MMFormSwap")
 
 #ifdef __cplusplus
 extern "C" {

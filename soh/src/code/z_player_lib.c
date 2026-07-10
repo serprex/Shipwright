@@ -1292,14 +1292,16 @@ s32 Player_OverrideLimbDrawGameplayCommon(PlayState* play, s32 limbIndex, Gfx** 
         sRightHandType = this->rightHandType;
         D_80160000 = &this->meleeWeaponInfo[2].base;
 
-        if (!LINK_IS_ADULT) {
+        f32 ageTranslScale = 0.64f;
+
+        if (GameInteractor_Should(VB_PLAYER_SCALE_ANIM_TRANSLATION, !LINK_IS_ADULT, this, &ageTranslScale)) {
             if (!(this->skelAnime.movementFlags & 4) || (this->skelAnime.movementFlags & 1)) {
-                pos->x *= 0.64f;
-                pos->z *= 0.64f;
+                pos->x *= ageTranslScale;
+                pos->z *= ageTranslScale;
             }
 
             if (!(this->skelAnime.movementFlags & 4) || (this->skelAnime.movementFlags & 2)) {
-                pos->y *= 0.64f;
+                pos->y *= ageTranslScale;
             }
         }
 

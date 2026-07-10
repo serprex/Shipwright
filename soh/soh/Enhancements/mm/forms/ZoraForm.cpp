@@ -20,7 +20,8 @@ extern "C" {
 //   same result comes from temporarily forcing OOT's iron boots: the vanilla
 //   currentBoots != prevBoots block in Player_UpdateCommon does the whole swim → sink →
 //   land transition, and restoring the boots floats back up through func_8083D36C the same
-//   way. A mid-sink cancels back into a swim; A on the lakebed kicks off into a swim.
+//   way. While sunk (mid-descent or on the lakebed), A with the stick neutral floats back
+//   to the surface (MM's A control); A with stick input kicks into the fast swim.
 // - Releasing A winds down through pz_swimtowait back to the vanilla paddle.
 // - MM zeroes underwaterTimer for the Zora every frame (mm z_player.c func_8083BB4C); doing
 //   the same here disables OOT's underwater env-hazard timer and drowning damage.
@@ -79,7 +80,9 @@ static void StartFastSwim(PlayState* play, Player* player) {
     // Carry the current motion into the pitched swim direction (MM Action_28)
     sSwim.pitch = Math_Atan2S(player->linearVelocity, -player->actor.velocity.y);
     sSwim.pitch = CLAMP(sSwim.pitch, -0x3000, 0x3000);
-    sSwim.speed3D = CLAMP_MIN(sqrtf(SQ(player->linearVelocity) + SQ(player->actor.velocity.y)), 3.0f);
+    // MM's swim kick (Action_56 entry phase) bursts the swim speed to 16.0, which the
+    // AsymStep in the steering then bleeds down to the 9.0 sustained target
+    sSwim.speed3D = 16.0f;
     Player_PlaySfx(&player->actor, NA_SE_PL_SWIM);
 }
 
@@ -101,6 +104,17 @@ static void StartSink(PlayState* play, Player* player) {
             func_80838F18(play, player);
         }
     }
+    Player_PlaySfx(&player->actor, NA_SE_PL_DIVE_BUBBLE);
+}
+
+static void StartFloat(PlayState* play, Player* player) {
+    // MM func_8083A04C: A while on the underwater boots switches back to the land boots and
+    // buoyancy floats the Zora to the surface. prevBoots is deliberately left stale (still
+    // iron) so Player_UpdateCommon's boots-diff block runs func_8083D36C, the vanilla
+    // boots-off-underwater transition that puts the player into the rising swim.
+    sSwim.bootsForced = false;
+    player->currentBoots = CUR_EQUIP_VALUE(EQUIP_TYPE_BOOTS) - 1;
+    Player_SetBootData(play, player);
     Player_PlaySfx(&player->actor, NA_SE_PL_DIVE_BUBBLE);
 }
 
@@ -296,21 +310,30 @@ static void RegisterZoraForm() {
         Input* input = &play->state.input[0];
 
         if (CHECK_BTN_ALL(input->press.button, BTN_A)) {
+            bool stickNeutral = (ABS(input->rel.stick_x) < 10) && (ABS(input->rel.stick_y) < 10);
+
             if (sSwim.bootsForced) {
-                // A releases from the lakebed — or cancels a sink mid-descent — back into a
-                // swim (MM func_8083A04C: A switches ZORA_UNDERWATER boots back to LAND)
-                if ((player->actor.bgCheckFlags & 1) && IsNeutralGroundAction(player)) {
-                    StartFastSwim(play, player);
-                    sSwim.pitch = -0x1800; // kick off slightly upward
-                    sSwim.speed3D = 5.0f;
-                } else if (!(player->actor.bgCheckFlags & 1)) {
-                    StartFastSwim(play, player);
+                bool grounded = (player->actor.bgCheckFlags & 1) != 0;
+
+                if (!grounded || IsNeutralGroundAction(player)) {
+                    if (stickNeutral) {
+                        // A while sunk — standing or mid-descent — floats back up to the
+                        // surface (MM func_8083A04C: A switches the underwater boots back
+                        // to the land boots)
+                        StartFloat(play, player);
+                    } else {
+                        // With stick input, kick straight into the fast swim instead
+                        StartFastSwim(play, player);
+                        if (grounded) {
+                            sSwim.pitch = -0x1800; // kick off the lakebed slightly upward
+                        }
+                    }
                 }
             } else if (IsVanillaSwimAction(player->actionFunc) ||
                        player->actionFunc == ZoraForm_SwimToWaitAction) {
                 // Dive with the stick neutral sinks to the lakebed; with stick input it
                 // starts the fast swim (replacing the vanilla depth-limited dive)
-                if ((ABS(input->rel.stick_x) < 10) && (ABS(input->rel.stick_y) < 10)) {
+                if (stickNeutral) {
                     StartSink(play, player);
                 } else {
                     StartFastSwim(play, player);
