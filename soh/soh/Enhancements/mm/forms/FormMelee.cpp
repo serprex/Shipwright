@@ -92,8 +92,7 @@ void FormMelee_PunchAction(Player* player, PlayState* play) {
     player->stateFlags2 |= PLAYER_STATE2_DISABLE_ROTATION_Z_TARGET;
     Player_DecelerateToZero(player);
 
-    if (CHECK_BTN_ALL(input->press.button, BTN_B) && (player->av1.actionVar1 < 2) &&
-        (frame >= punch->startFrame)) {
+    if (CHECK_BTN_ALL(input->press.button, BTN_B) && (player->av1.actionVar1 < 2) && (frame >= punch->startFrame)) {
         player->av2.actionVar2 = 1;
     }
 

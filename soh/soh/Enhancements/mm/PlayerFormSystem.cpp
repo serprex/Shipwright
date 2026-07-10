@@ -88,20 +88,22 @@ static PlayerAgeProperties sFormAgeProperties[PLAYER_SHIPFORM_MAX] = {
         {
             { -0x638, 0x1256, 0x17C },
             { -0x637, 0x17EA, 0x167 },
-        },                                                  // unk_86
-        0,                                                  // unk_92 (patched per age)
-        0x80,                                               // unk_94 (patched per age)
-        (LinkAnimationHeader*)gPlayerAnim_pg_Tbox_open,     // unk_98
+        },                                                          // unk_86
+        0,                                                          // unk_92 (patched per age)
+        0x80,                                                       // unk_94 (patched per age)
+        (LinkAnimationHeader*)gPlayerAnim_pg_Tbox_open,             // unk_98
         (LinkAnimationHeader*)gPlayerAnim_link_demo_back_to_past,   // unk_9C
         (LinkAnimationHeader*)gPlayerAnim_link_demo_return_to_past, // unk_A0
-        (LinkAnimationHeader*)gPlayerAnim_pg_climb_startA,  // unk_A4
-        (LinkAnimationHeader*)gPlayerAnim_pg_climb_startB,  // unk_A8
+        (LinkAnimationHeader*)gPlayerAnim_pg_climb_startA,          // unk_A4
+        (LinkAnimationHeader*)gPlayerAnim_pg_climb_startB,          // unk_A8
         { (LinkAnimationHeader*)gPlayerAnim_pg_climb_upL, (LinkAnimationHeader*)gPlayerAnim_pg_climb_upR,
           (LinkAnimationHeader*)gPlayerAnim_pg_climb_upL, (LinkAnimationHeader*)gPlayerAnim_pg_climb_upR }, // unk_AC
         { (LinkAnimationHeader*)gPlayerAnim_link_normal_Fclimb_sideL,
-          (LinkAnimationHeader*)gPlayerAnim_link_normal_Fclimb_sideR },                                     // unk_BC
-        { (LinkAnimationHeader*)gPlayerAnim_pg_climb_endAL, (LinkAnimationHeader*)gPlayerAnim_pg_climb_endAR }, // unk_C4
-        { (LinkAnimationHeader*)gPlayerAnim_pg_climb_endBR, (LinkAnimationHeader*)gPlayerAnim_pg_climb_endBL }, // unk_CC
+          (LinkAnimationHeader*)gPlayerAnim_link_normal_Fclimb_sideR }, // unk_BC
+        { (LinkAnimationHeader*)gPlayerAnim_pg_climb_endAL,
+          (LinkAnimationHeader*)gPlayerAnim_pg_climb_endAR }, // unk_C4
+        { (LinkAnimationHeader*)gPlayerAnim_pg_climb_endBR,
+          (LinkAnimationHeader*)gPlayerAnim_pg_climb_endBL }, // unk_CC
     },
     // PLAYER_SHIPFORM_ZORA
     {
@@ -142,21 +144,23 @@ static PlayerAgeProperties sFormAgeProperties[PLAYER_SHIPFORM_MAX] = {
         {
             { -0x638, 0x1256, 0x17C },
             { -0x637, 0x17EA, 0x167 },
-        },                                                  // unk_86
-        0,                                                  // unk_92 (patched per age)
-        0x80,                                               // unk_94 (patched per age)
-        (LinkAnimationHeader*)gPlayerAnim_pz_Tbox_open,     // unk_98
+        },                                                          // unk_86
+        0,                                                          // unk_92 (patched per age)
+        0x80,                                                       // unk_94 (patched per age)
+        (LinkAnimationHeader*)gPlayerAnim_pz_Tbox_open,             // unk_98
         (LinkAnimationHeader*)gPlayerAnim_link_demo_back_to_past,   // unk_9C
         (LinkAnimationHeader*)gPlayerAnim_link_demo_return_to_past, // unk_A0
-        (LinkAnimationHeader*)gPlayerAnim_pz_climb_startA,  // unk_A4
-        (LinkAnimationHeader*)gPlayerAnim_pz_climb_startB,  // unk_A8
+        (LinkAnimationHeader*)gPlayerAnim_pz_climb_startA,          // unk_A4
+        (LinkAnimationHeader*)gPlayerAnim_pz_climb_startB,          // unk_A8
         { (LinkAnimationHeader*)gPlayerAnim_pz_climb_upL, (LinkAnimationHeader*)gPlayerAnim_pz_climb_upR,
           (LinkAnimationHeader*)gPlayerAnim_link_normal_Fclimb_upL,
           (LinkAnimationHeader*)gPlayerAnim_link_normal_Fclimb_upR }, // unk_AC
         { (LinkAnimationHeader*)gPlayerAnim_link_normal_Fclimb_sideL,
-          (LinkAnimationHeader*)gPlayerAnim_link_normal_Fclimb_sideR },                                     // unk_BC
-        { (LinkAnimationHeader*)gPlayerAnim_pz_climb_endAL, (LinkAnimationHeader*)gPlayerAnim_pz_climb_endAR }, // unk_C4
-        { (LinkAnimationHeader*)gPlayerAnim_pz_climb_endBR, (LinkAnimationHeader*)gPlayerAnim_pz_climb_endBL }, // unk_CC
+          (LinkAnimationHeader*)gPlayerAnim_link_normal_Fclimb_sideR }, // unk_BC
+        { (LinkAnimationHeader*)gPlayerAnim_pz_climb_endAL,
+          (LinkAnimationHeader*)gPlayerAnim_pz_climb_endAR }, // unk_C4
+        { (LinkAnimationHeader*)gPlayerAnim_pz_climb_endBR,
+          (LinkAnimationHeader*)gPlayerAnim_pz_climb_endBL }, // unk_CC
     },
 };
 
@@ -201,9 +205,8 @@ PlayerShipForm PlayerForm_GetTarget() {
 
 void PlayerForm_EnforceInvariants(Player* player) {
     if (sAppliedForm == PLAYER_SHIPFORM_HUMAN) {
-        if (sVanillaAgeProperties != nullptr &&
-            (player->ageProperties == &sFormAgeProperties[PLAYER_SHIPFORM_GORON] ||
-             player->ageProperties == &sFormAgeProperties[PLAYER_SHIPFORM_ZORA])) {
+        if (sVanillaAgeProperties != nullptr && (player->ageProperties == &sFormAgeProperties[PLAYER_SHIPFORM_GORON] ||
+                                                 player->ageProperties == &sFormAgeProperties[PLAYER_SHIPFORM_ZORA])) {
             player->ageProperties = sVanillaAgeProperties;
             player->actor.shape.shadowScale = sVanillaAgeProperties->unk_04;
         }

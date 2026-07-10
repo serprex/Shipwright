@@ -137,8 +137,7 @@ void ZoraForm_FastSwimAction(Player* player, PlayState* play) {
     }
 
     if (!(player->stateFlags1 & PLAYER_STATE1_IN_WATER)) {
-        if ((player->actor.bgCheckFlags & 0x20) &&
-            (player->actor.yDistToWater > player->ageProperties->unk_2C)) {
+        if ((player->actor.bgCheckFlags & 0x20) && (player->actor.yDistToWater > player->ageProperties->unk_2C)) {
             // Splashed back in: redo func_8083D36C's water-entry housekeeping and carry the
             // arc velocity back into the swim direction
             if (func_8083CFA8(play, player, player->actor.velocity.y, 500)) {
@@ -329,8 +328,7 @@ static void RegisterZoraForm() {
                         }
                     }
                 }
-            } else if (IsVanillaSwimAction(player->actionFunc) ||
-                       player->actionFunc == ZoraForm_SwimToWaitAction) {
+            } else if (IsVanillaSwimAction(player->actionFunc) || player->actionFunc == ZoraForm_SwimToWaitAction) {
                 // Dive with the stick neutral sinks to the lakebed; with stick input it
                 // starts the fast swim (replacing the vanilla depth-limited dive)
                 if (stickNeutral) {
