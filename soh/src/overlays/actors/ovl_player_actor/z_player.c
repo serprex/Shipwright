@@ -10703,6 +10703,7 @@ static EffectBlureInit2 blureSword = {
 static Vec3s sSkeletonBaseTransl = { -57, 3377, 0 };
 
 void Player_InitCommon(Player* this, PlayState* play, FlexSkeletonHeader* skelHeader) {
+    GameInteractor_Should(VB_PLAYER_INIT_SKELETON, true, this, &skelHeader);
     this->getItemEntry = (GetItemEntry)GET_ITEM_NONE;
     this->ageProperties = &sAgeProperties[gSaveContext.linkAge];
     Actor_ProcessInitChain(&this->actor, sInitChain);

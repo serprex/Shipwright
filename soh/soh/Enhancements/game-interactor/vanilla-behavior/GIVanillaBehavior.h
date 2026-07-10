@@ -605,6 +605,18 @@ typedef enum {
     // - `*PlayState play`
     VB_DRAW_PLAYER_MASK,
 
+    // Vanilla draws the strength upgrade (gauntlets / Goron bracelet) and iron/hover boots
+    // display lists on top of the player skeleton. These DLs rig to Link's limb matrices,
+    // so they should be suppressed when the player model is not Link.
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `void*` player (Player*)
+    // - `*PlayState play`
+    VB_DRAW_PLAYER_STRENGTH_AND_BOOTS,
+
     // #### `result`
     // In `Interface_DrawAmmoCount`:
     // ```c
@@ -2035,6 +2047,19 @@ typedef enum {
     // - `*int32_t` (arrowType)
     VB_PLAYER_ARROW_MAGIC_CONSUMPTION,
 
+    // Fired from Player_DrawImpl before the eye/mouth textures are written to segments 8/9.
+    // Write to *eyeTexture / *mouthTexture to substitute the textures (OTR paths or resolved pointers).
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `void**` eyeTexture
+    // - `void**` mouthTexture
+    // - `s32` eyeIndex
+    // - `s32` mouthIndex
+    VB_PLAYER_APPLY_FACE_TEXTURES,
+
     // #### `result`
     // ```c
     // true
@@ -2043,6 +2068,17 @@ typedef enum {
     // - `void*` player (Player*)
     // - `PlayState*` play
     VB_PLAYER_DRAW_BOTTLE,
+
+    // Fired before the player skeleton is initialized (Player_InitCommon, and the pause menu
+    // player preview where player is NULL). Write to *skelHeader to substitute the skeleton.
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `void*` player (Player*, NULL for the pause menu preview)
+    // - `FlexSkeletonHeader**` skelHeader
+    VB_PLAYER_INIT_SKELETON,
 
     // #### `result`
     // ```c
@@ -2102,6 +2138,16 @@ typedef enum {
     // - `*Player`
     // - `*PlayState`
     VB_PLAYER_UPDATE_BOTTLE_HELD,
+
+    // Fired from Player_DrawImpl. Return true to force the most detailed LOD (lod 0),
+    // e.g. for skeletons whose limbs have no far display lists.
+    // #### `result`
+    // ```c
+    // false
+    // ```
+    // #### `args`
+    // - `void*` player (Player*)
+    VB_PLAYER_USE_MAX_LOD,
 
     // #### `result`
     // ```c
