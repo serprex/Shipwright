@@ -362,6 +362,10 @@ void GoronForm_RollAction(Player* player, PlayState* play) {
     s16 yawTarget = player->yaw;
     s32 spinTarget;
 
+    // Without this, going airborne (rolling off a ledge, the ball jump, the bonk pop-up)
+    // makes func_8083AA10 stomp the action into vanilla freefall, uncurling the ball
+    player->stateFlags3 |= PLAYER_STATE3_MIDAIR;
+
     if ((player->av1.actionVar1 == 0) && !CurlFinished(play, player)) {
         return;
     }
@@ -564,6 +568,9 @@ void GoronForm_RollAction(Player* player, PlayState* play) {
 
 void GoronForm_UncurlAction(Player* player, PlayState* play) {
     player->stateFlags2 |= PLAYER_STATE2_DISABLE_ROTATION_Z_TARGET;
+    // Let the uncurl anim finish even if airborne (A released mid-jump, bonk pop-up);
+    // once it ends, func_80839F90's idle hands any remaining fall to vanilla freefall
+    player->stateFlags3 |= PLAYER_STATE3_MIDAIR;
     Player_DecelerateToZero(player);
 
     if (LinkAnimation_Update(play, &player->skelAnime)) {

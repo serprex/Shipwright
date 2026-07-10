@@ -12,20 +12,24 @@ extern "C" {
 // MM's Zora swim actions (2Ship2Harkinian Player_Action_56 / func_80850BF8 / func_80850BA8)
 // and grafted onto OOT's swim system:
 //
-// - Holding A while in any vanilla swim action starts the MM fast swim (pz_fishswim, full 3D
-//   movement steered by pitch/yaw), replacing OOT's depth-limited A-dive entirely — diving is
-//   simply swimming downward.
-// - Releasing A winds down through pz_swimtowait; if that happens deep underwater the form
-//   sinks and walks the lakebed. MM implements this with PLAYER_BOOTS_ZORA_UNDERWATER; here
-//   the same result comes from temporarily forcing OOT's iron boots, whose sink/walk/land
-//   handling already exists on every relevant engine path. Pressing A on the lakebed kicks
-//   back off into a swim.
+// - A with stick input while in any vanilla swim action starts the MM fast swim (pz_fishswim,
+//   full 3D movement steered by pitch/yaw), replacing OOT's depth-limited A-dive.
+// - Dive (A) with the stick neutral — or B while swimming, MM's actual control (mm
+//   func_8083A04C toggles PLAYER_BOOTS_ZORA_UNDERWATER on B) — sinks to the lakebed for
+//   underwater walking. MM implements the sink with PLAYER_BOOTS_ZORA_UNDERWATER; here the
+//   same result comes from temporarily forcing OOT's iron boots: the vanilla
+//   currentBoots != prevBoots block in Player_UpdateCommon does the whole swim → sink →
+//   land transition, and restoring the boots floats back up through func_8083D36C the same
+//   way. A mid-sink cancels back into a swim; A on the lakebed kicks off into a swim.
+// - Releasing A winds down through pz_swimtowait back to the vanilla paddle.
 // - MM zeroes underwaterTimer for the Zora every frame (mm z_player.c func_8083BB4C); doing
 //   the same here disables OOT's underwater env-hazard timer and drowning damage.
 // - Regular paddling gets MM's Zora speed edge via VB_PLAYER_MODIFY_SWIM_SPEED.
 //
-// VB_PLAYER_RESET_SWIM_STATE keeps func_8083D53C from resetting the custom swim actions
-// into the vanilla tread-water action every frame.
+// VB_PLAYER_RESET_SWIM_STATE keeps func_8083D53C from stomping the custom swim actions:
+// deep water would reset them into the vanilla tread-water action every frame, and nearing
+// the surface would pop the player out of the water (turn-in-place + water exit) — the
+// fast swim handles breaching itself instead (ballistic arc, splash back in).
 
 typedef struct ZoraSwimState {
     bool fastSwim;      // MM PLAYER_STATE3_8000: in the fish-swim actions
@@ -59,6 +63,9 @@ static void RestoreBoots(PlayState* play, Player* player) {
     if (sSwim.bootsForced) {
         sSwim.bootsForced = false;
         player->currentBoots = CUR_EQUIP_VALUE(EQUIP_TYPE_BOOTS) - 1;
+        // Sync prevBoots so Player_UpdateCommon's boots-diff block doesn't run
+        // func_8083D36C and stomp an action we install this same frame
+        player->prevBoots = player->currentBoots;
         Player_SetBootData(play, player);
     }
 }
@@ -81,26 +88,67 @@ static void ExitFastSwim(PlayState* play, Player* player) {
     player->actor.shape.rot.x = 0;
 }
 
+static void StartSink(PlayState* play, Player* player) {
+    sSwim.bootsForced = true;
+    // prevBoots is deliberately left stale: Player_UpdateCommon's boots-diff block sees the
+    // change and performs the whole swim -> sink transition (and gates off the vanilla
+    // A-dive, func_8083D12C's currentBoots != PLAYER_BOOTS_IRON check)
+    player->currentBoots = PLAYER_BOOTS_IRON;
+    Player_SetBootData(play, player);
+    if (sSwim.fastSwim) {
+        ExitFastSwim(play, player);
+        if (IsZoraSwimActionFunc(player->actionFunc)) {
+            func_80838F18(play, player);
+        }
+    }
+    Player_PlaySfx(&player->actor, NA_SE_PL_DIVE_BUBBLE);
+}
+
 void ZoraForm_FastSwimAction(Player* player, PlayState* play) {
     Input* input = &play->state.input[0];
 
     player->stateFlags2 |= PLAYER_STATE2_DISABLE_ROTATION_Z_TARGET;
+    // Without this, func_8083AA10 stomps the action into vanilla freefall during the breach arc
+    player->stateFlags3 |= PLAYER_STATE3_MIDAIR;
 
     // Anim speed follows the swim speed (MM func_808477D0)
     player->skelAnime.playSpeed = CLAMP(sSwim.speed3D * 0.15f, 1.0f, 2.5f) * PLAYER_ANIM_ADJUSTED_SPEED;
     LinkAnimation_Update(play, &player->skelAnime);
 
-    if (!(player->actor.bgCheckFlags & 0x20)) {
-        // Breached the surface: ballistic arc until landing or splashing back in
-        player->actor.gravity = -1.0f;
-        sSwim.pitch = Math_Atan2S(player->linearVelocity, -player->actor.velocity.y);
-        player->actor.shape.rot.x = -sSwim.pitch;
+    if ((player->stateFlags1 & PLAYER_STATE1_IN_WATER) && !(player->actor.bgCheckFlags & 0x20)) {
+        // Breached the surface: vanilla water-exit housekeeping, but keep this action
+        // (the vanilla near-surface pop-out in func_8083D53C is suppressed via
+        // VB_PLAYER_RESET_SWIM_STATE, so this is the only exit path while fast swimming)
+        func_8083D0A8(play, player, player->actor.velocity.y);
+    }
 
-        if (player->actor.bgCheckFlags & 1) {
-            ExitFastSwim(play, player);
-            func_80839F90(player, play);
+    if (!(player->stateFlags1 & PLAYER_STATE1_IN_WATER)) {
+        if ((player->actor.bgCheckFlags & 0x20) &&
+            (player->actor.yDistToWater > player->ageProperties->unk_2C)) {
+            // Splashed back in: redo func_8083D36C's water-entry housekeeping and carry the
+            // arc velocity back into the swim direction
+            if (func_8083CFA8(play, player, player->actor.velocity.y, 500)) {
+                Player_PlaySfx(&player->actor, NA_SE_EV_DIVE_INTO_WATER);
+            }
+            player->stateFlags1 |= PLAYER_STATE1_IN_WATER;
+            player->stateFlags1 &= ~(PLAYER_STATE1_JUMPING | PLAYER_STATE1_FREEFALL);
+            player->stateFlags2 |= PLAYER_STATE2_UNDERWATER;
+            Player_SetBootData(play, player);
+            sSwim.pitch = Math_Atan2S(player->linearVelocity, -player->actor.velocity.y);
+            sSwim.pitch = CLAMP(sSwim.pitch, -0x3000, 0x3000);
+            sSwim.speed3D = CLAMP_MIN(sqrtf(SQ(player->linearVelocity) + SQ(player->actor.velocity.y)), 3.0f);
+        } else {
+            // Ballistic arc until splashing back in or landing (shallow water counts as land)
+            player->actor.gravity = -1.0f;
+            sSwim.pitch = Math_Atan2S(player->linearVelocity, -player->actor.velocity.y);
+            player->actor.shape.rot.x = sSwim.pitch;
+
+            if (player->actor.bgCheckFlags & 1) {
+                ExitFastSwim(play, player);
+                func_80839F90(player, play);
+            }
+            return;
         }
-        return;
     }
 
     player->actor.gravity = 0.0f;
@@ -153,11 +201,14 @@ void ZoraForm_FastSwimAction(Player* player, PlayState* play) {
         }
     }
 
-    // Apply the pitched swim velocity (MM func_80850BA8)
+    // Apply the pitched swim velocity (MM func_80850BA8). Positive shape.rot.x pitches the
+    // model nose-DOWN — same sign as the dive pitch (MM rotates the root limb by +unk_AAA,
+    // mm z_player_lib.c:2442); note this is opposite to Actor_UpdateVelocityXYZ's
+    // world.rot.x, where positive means upward velocity
     player->linearVelocity = Math_CosS(sSwim.pitch) * sSwim.speed3D;
     player->actor.velocity.y = -Math_SinS(sSwim.pitch) * sSwim.speed3D;
     player->actor.shape.rot.y = player->yaw;
-    player->actor.shape.rot.x = -sSwim.pitch;
+    player->actor.shape.rot.x = sSwim.pitch;
 
     if ((play->gameplayFrames % 16) == 0) {
         Player_PlaySfx(&player->actor, NA_SE_PL_SWIM); // MM NA_SE_PL_ZORA_SWIM_LV
@@ -220,10 +271,12 @@ static void RegisterZoraForm() {
             ExitFastSwim(play, player);
         }
 
-        // Iron-boots override while settled deep underwater
+        // Iron-boots override while sunk. Keep the boots for as long as the engine says we
+        // are in water: vanilla clears IN_WATER itself once the player walks up into the
+        // shallows (func_8083D53C's near-surface exit). A depth test here would release the
+        // boots the moment a sink starts from the surface, where yDistToWater is still small
         if (sSwim.bootsForced) {
-            bool stillUnder = (player->stateFlags1 & PLAYER_STATE1_IN_WATER) &&
-                              (player->actor.yDistToWater > player->ageProperties->unk_2C);
+            bool stillUnder = (player->stateFlags1 & PLAYER_STATE1_IN_WATER) != 0;
 
             if (!stillUnder || sSwim.fastSwim) {
                 RestoreBoots(play, player);
@@ -240,16 +293,33 @@ static void RegisterZoraForm() {
             return;
         }
 
-        if (CHECK_BTN_ALL(play->state.input[0].press.button, BTN_A)) {
-            // Holding A in any vanilla swim state starts the fast swim (this replaces the
-            // vanilla depth-limited dive), and A on the lakebed kicks back off into a swim
-            if (IsVanillaSwimAction(player->actionFunc) || player->actionFunc == ZoraForm_SwimToWaitAction) {
-                StartFastSwim(play, player);
-            } else if (sSwim.bootsForced && (player->actor.bgCheckFlags & 1) && IsNeutralGroundAction(player)) {
-                StartFastSwim(play, player);
-                sSwim.pitch = -0x1800; // kick off slightly upward
-                sSwim.speed3D = 5.0f;
+        Input* input = &play->state.input[0];
+
+        if (CHECK_BTN_ALL(input->press.button, BTN_A)) {
+            if (sSwim.bootsForced) {
+                // A releases from the lakebed — or cancels a sink mid-descent — back into a
+                // swim (MM func_8083A04C: A switches ZORA_UNDERWATER boots back to LAND)
+                if ((player->actor.bgCheckFlags & 1) && IsNeutralGroundAction(player)) {
+                    StartFastSwim(play, player);
+                    sSwim.pitch = -0x1800; // kick off slightly upward
+                    sSwim.speed3D = 5.0f;
+                } else if (!(player->actor.bgCheckFlags & 1)) {
+                    StartFastSwim(play, player);
+                }
+            } else if (IsVanillaSwimAction(player->actionFunc) ||
+                       player->actionFunc == ZoraForm_SwimToWaitAction) {
+                // Dive with the stick neutral sinks to the lakebed; with stick input it
+                // starts the fast swim (replacing the vanilla depth-limited dive)
+                if ((ABS(input->rel.stick_x) < 10) && (ABS(input->rel.stick_y) < 10)) {
+                    StartSink(play, player);
+                } else {
+                    StartFastSwim(play, player);
+                }
             }
+        } else if (CHECK_BTN_ALL(input->press.button, BTN_B) && !sSwim.bootsForced &&
+                   (IsVanillaSwimAction(player->actionFunc) || IsZoraSwimActionFunc(player->actionFunc))) {
+            // MM's actual sink control: B while swimming (mm func_8083A04C)
+            StartSink(play, player);
         }
     });
 
@@ -261,7 +331,8 @@ static void RegisterZoraForm() {
         }
     });
 
-    // Keep func_8083D53C from resetting the custom swim actions into the vanilla tread
+    // Keep func_8083D53C from stomping the custom swim actions (deep-water tread reset
+    // and the near-surface pop-out; the fast swim handles breaching itself)
     REGISTER_VB_SHOULD(VB_PLAYER_RESET_SWIM_STATE, {
         Player* player = va_arg(args, Player*);
 

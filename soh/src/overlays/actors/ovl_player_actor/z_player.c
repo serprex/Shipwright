@@ -6936,10 +6936,12 @@ void func_8083D53C(PlayState* play, Player* this) {
             }
         } else if ((this->stateFlags1 & PLAYER_STATE1_IN_WATER) &&
                    (this->actor.yDistToWater < this->ageProperties->unk_24)) {
-            if ((this->skelAnime.movementFlags == 0) && (this->currentBoots != PLAYER_BOOTS_IRON)) {
-                Player_SetupTurnInPlace(play, this, this->actor.shape.rot.y);
+            if (GameInteractor_Should(VB_PLAYER_RESET_SWIM_STATE, true, this)) {
+                if ((this->skelAnime.movementFlags == 0) && (this->currentBoots != PLAYER_BOOTS_IRON)) {
+                    Player_SetupTurnInPlace(play, this, this->actor.shape.rot.y);
+                }
+                func_8083D0A8(play, this, this->actor.velocity.y);
             }
-            func_8083D0A8(play, this, this->actor.velocity.y);
         }
     }
 }

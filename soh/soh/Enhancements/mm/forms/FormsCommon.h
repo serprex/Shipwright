@@ -42,6 +42,10 @@ void Player_RequestRumble(Player* player, s32 sourceStrength, s32 duration, s32 
 void Player_SetInvulnerability(Player* player, s32 timer);
 // Enter the tread-water swim action
 void func_80838F18(PlayState* play, Player* player);
+// Water-exit housekeeping: splash, sets JUMPING, clears IN_WATER, boot data (keeps actionFunc)
+void func_8083D0A8(PlayState* play, Player* player, f32 yVelocity);
+// Spawn the water-surface splash for the given y velocity; returns nonzero if spawned
+s32 func_8083CFA8(PlayState* play, Player* player, f32 yVelocity, s32 splashScale);
 // Return to the appropriate idle action (lock-on aware)
 void func_80839F90(Player* player, PlayState* play);
 // Roll/slide floor dust effect
