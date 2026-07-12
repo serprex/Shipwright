@@ -15,14 +15,38 @@
 #include <functions.h>
 #include "z64map_mark.h"
 #include "savestate_serialize.h"
-#include "../../src/overlays/actors/ovl_Boss_Tw/z_boss_tw.h"
-#include "../../src/overlays/actors/ovl_En_Clear_Tag/z_en_clear_tag.h"
-#include "../../src/overlays/actors/ovl_En_Fr/z_en_fr.h"
 
 extern "C" PlayState* gPlayState;
 
+extern "C" void BgDdanKd_SaveState(SaveStateCtx* ctx);
+extern "C" void BgDodoago_SaveState(SaveStateCtx* ctx);
+extern "C" void BgHakaTrap_SaveState(SaveStateCtx* ctx);
+extern "C" void BgHidanRock_SaveState(SaveStateCtx* ctx);
+extern "C" void BgMenkuriEye_SaveState(SaveStateCtx* ctx);
+extern "C" void BgMoriHineri_SaveState(SaveStateCtx* ctx);
+extern "C" void BgPoEvent_SaveState(SaveStateCtx* ctx);
+extern "C" void BgRelayObjects_SaveState(SaveStateCtx* ctx);
+extern "C" void BgSpot18Basket_SaveState(SaveStateCtx* ctx);
 extern "C" void BossGanon_SaveState(SaveStateCtx* ctx);
 extern "C" void BossGanon2_SaveState(SaveStateCtx* ctx);
+extern "C" void BossTw_SaveState(SaveStateCtx* ctx);
+extern "C" void Demo6k_SaveState(SaveStateCtx* ctx);
+extern "C" void DemoDu_SaveState(SaveStateCtx* ctx);
+extern "C" void DemoKekkai_SaveState(SaveStateCtx* ctx);
+extern "C" void EnBw_SaveState(SaveStateCtx* ctx);
+extern "C" void EnClearTag_SaveState(SaveStateCtx* ctx);
+extern "C" void EnFr_SaveState(SaveStateCtx* ctx);
+extern "C" void EnGoma_SaveState(SaveStateCtx* ctx);
+extern "C" void EnInsect_SaveState(SaveStateCtx* ctx);
+extern "C" void EnIshi_SaveState(SaveStateCtx* ctx);
+extern "C" void EnNiw_SaveState(SaveStateCtx* ctx);
+extern "C" void EnPoField_SaveState(SaveStateCtx* ctx);
+extern "C" void EnTakaraMan_SaveState(SaveStateCtx* ctx);
+extern "C" void EnXc_SaveState(SaveStateCtx* ctx);
+extern "C" void EnZf_SaveState(SaveStateCtx* ctx);
+extern "C" void EnZl3_SaveState(SaveStateCtx* ctx);
+extern "C" void ObjectKankyo_SaveState(SaveStateCtx* ctx);
+extern "C" void EnHeishi1_SaveState(SaveStateCtx* ctx);
 
 static void SaveOverlayState(std::unique_ptr<uint8_t[]>& buf, void (*fn)(SaveStateCtx*)) {
     SaveStateCtx ctx = {};
@@ -155,109 +179,35 @@ typedef struct SaveStateInfo {
     uint16_t gTimeIncrement_copy;
 
     // Overlay static data
-    //   z_bg_ddan_kd
-    Vec3f sBgDdanKdVelocity_copy;
-    Vec3f sBgDdanKdAccel_copy;
-
-    // z_bg_dodoago
-    s16 sBgDodoagoFirstExplosiveFlag_copy;
-    u8 sBgDodoagoDisableBombCatcher_copy;
-    s32 sBgDodoagoTimer_copy;
-
-    // z_bg_haka_trap
-    uint32_t D_80880F30_copy;
-    uint32_t D_80881014_copy;
-
-    // z_bg_hidan_rock
-    float D_8088BFC0_copy;
-
-    // z_bg_menkuri_eye
-    int32_t D_8089C1A0_copy;
-
-    // z_bg_mori_hineri
-    int16_t sBgMoriHineriNextCamIdx_copy;
-
-    // z_bg_po_event
-    uint8_t sBgPoEventBlocksAtRest_copy;
-    uint8_t sBgPoEventPuzzleState_copy;
-    float sBgPoEventblockPushDist_copy;
-
-    // z_bg_relay_objects
-    uint32_t D_808A9508_copy;
-
-    // z_bg_spot18_basket
-    int16_t D_808B85D0_copy;
-
+    std::unique_ptr<uint8_t[]> bgDdanKdState;
+    std::unique_ptr<uint8_t[]> bgDodoagoState;
+    std::unique_ptr<uint8_t[]> bgHakaTrapState;
+    std::unique_ptr<uint8_t[]> bgHidanRockState;
+    std::unique_ptr<uint8_t[]> bgMenkuriEyeState;
+    std::unique_ptr<uint8_t[]> bgMoriHineriState;
+    std::unique_ptr<uint8_t[]> bgPoEventState;
+    std::unique_ptr<uint8_t[]> bgRelayObjectsState;
+    std::unique_ptr<uint8_t[]> bgSpot18BasketState;
     std::unique_ptr<uint8_t[]> bossGanonState;
     std::unique_ptr<uint8_t[]> bossGanon2State;
-
-    // z_boss_tw
-    uint8_t sTwInitalized_copy;
-    BossTwEffect sTwEffects_copy[150];
-
-    // z_demo_6k
-    Vec3f sDemo6kVelocity_copy;
-
-    // z_demo_du
-    int32_t D_8096CE94_copy;
-
-    // z_demo_kekkai
-    Vec3f demoKekkaiVel_copy;
-
-    // z_en_bw
-    int32_t sSlugGroup_copy;
-
-    // z_en_clear_tag
-    uint8_t sClearTagIsEffectInitialized_copy;
-    EnClearTagEffect sClearTagEffects_copy[CLEAR_TAG_EFFECT_MAX_COUNT];
-
-    // z_en_fr
-    EnFrPointers sEnFrPointers_copy;
-
-    // z_en_goma
-    uint8_t sSpawnNum_copy;
-
-    // z_en_insect
-    float D_80A7DEB0_copy;
-    int16_t D_80A7DEB4_copy;
-    int16_t D_80A7DEB8_copy;
-
-    // z_en_ishi
-    int16_t sRockRotSpeedX_copy;
-    int16_t sRockRotSpeedY_copy;
-
-    // z_en_niw
-    int16_t D_80AB85E0_copy;
-    uint8_t sLowerRiverSpawned_copy;
-    uint8_t sUpperRiverSpawned_copy;
-
-    // z_en_po_field
-    int32_t sEnPoFieldNumSpawned_copy;
-    Vec3s sEnPoFieldSpawnPositions_copy[10];
-    u8 sEnPoFieldSpawnSwitchFlags_copy[10];
-
-    // z_en_takara_man
-    uint8_t sTakaraIsInitialized_copy;
-
-    // z_en_xc
-    int32_t D_80B41D90_copy;
-    int32_t sEnXcFlameSpawned_copy;
-    int32_t D_80B41DA8_copy;
-    int32_t D_80B41DAC_copy;
-
-    // z_en_zf
-    int16_t D_80B4A1B0_copy;
-    int16_t D_80B4A1B4_copy;
-
-    int32_t D_80B5A468_copy;
-    int32_t D_80B5A494_copy;
-    int32_t D_80B5A4BC_copy;
-
-    uint8_t sKankyoIsSpawned_copy;
-    int16_t sTrailingFairies_copy;
-
-    // z_en_heishi1
-    uint32_t sHeishi1PlayerIsCaughtCopy;
+    std::unique_ptr<uint8_t[]> bossTwState;
+    std::unique_ptr<uint8_t[]> demo6kState;
+    std::unique_ptr<uint8_t[]> demoDuState;
+    std::unique_ptr<uint8_t[]> demoKekkaiState;
+    std::unique_ptr<uint8_t[]> enBwState;
+    std::unique_ptr<uint8_t[]> enClearTagState;
+    std::unique_ptr<uint8_t[]> enFrState;
+    std::unique_ptr<uint8_t[]> enGomaState;
+    std::unique_ptr<uint8_t[]> enInsectState;
+    std::unique_ptr<uint8_t[]> enIshiState;
+    std::unique_ptr<uint8_t[]> enNiwState;
+    std::unique_ptr<uint8_t[]> enPoFieldState;
+    std::unique_ptr<uint8_t[]> enTakaraManState;
+    std::unique_ptr<uint8_t[]> enXcState;
+    std::unique_ptr<uint8_t[]> enZfState;
+    std::unique_ptr<uint8_t[]> enZl3State;
+    std::unique_ptr<uint8_t[]> objectKankyoState;
+    std::unique_ptr<uint8_t[]> enHeishi1State;
 
     // Misc static data
     //  z_map_exp
@@ -548,117 +498,67 @@ void SaveState::LoadOnePointDemoData(void) {
 }
 
 void SaveState::SaveOverlayStaticData(void) {
-    info->sBgDdanKdVelocity_copy = sBgDdanKdVelocity;
-    info->sBgDdanKdAccel_copy = sBgDdanKdAccel;
-    info->sBgDodoagoFirstExplosiveFlag_copy = sBgDodoagoFirstExplosiveFlag;
-    info->sBgDodoagoDisableBombCatcher_copy = sBgDodoagoDisableBombCatcher;
-    info->sBgDodoagoTimer_copy = sBgDodoagoTimer;
-    info->D_80880F30_copy = D_80880F30;
-    info->D_80881014_copy = D_80881014;
-    info->D_8088BFC0_copy = D_8088BFC0;
-    info->sBgMoriHineriNextCamIdx_copy = sBgMoriHineriNextCamIdx;
-    info->sBgPoEventBlocksAtRest_copy = sBgPoEventBlocksAtRest;
-    info->sBgPoEventPuzzleState_copy = sBgPoEventPuzzleState;
-    info->sBgPoEventblockPushDist_copy = sBgPoEventblockPushDist;
-    info->D_808A9508_copy = D_808A9508;
-    info->D_808B85D0_copy = D_808B85D0;
+    SaveOverlayState(info->bgDdanKdState, BgDdanKd_SaveState);
+    SaveOverlayState(info->bgDodoagoState, BgDodoago_SaveState);
+    SaveOverlayState(info->bgHakaTrapState, BgHakaTrap_SaveState);
+    SaveOverlayState(info->bgHidanRockState, BgHidanRock_SaveState);
+    SaveOverlayState(info->bgMenkuriEyeState, BgMenkuriEye_SaveState);
+    SaveOverlayState(info->bgMoriHineriState, BgMoriHineri_SaveState);
+    SaveOverlayState(info->bgPoEventState, BgPoEvent_SaveState);
+    SaveOverlayState(info->bgRelayObjectsState, BgRelayObjects_SaveState);
+    SaveOverlayState(info->bgSpot18BasketState, BgSpot18Basket_SaveState);
     SaveOverlayState(info->bossGanonState, BossGanon_SaveState);
     SaveOverlayState(info->bossGanon2State, BossGanon2_SaveState);
-    info->sTwInitalized_copy = sTwInitalized;
-    memcpy(info->sTwEffects_copy, sTwEffects, sizeof(sTwEffects));
-    info->sDemo6kVelocity_copy = sDemo6kVelocity;
-    info->D_8096CE94_copy = D_8096CE94;
-    info->demoKekkaiVel_copy = demoKekkaiVel;
-    info->sSlugGroup_copy = sSlugGroup;
-    info->sClearTagIsEffectInitialized_copy = sClearTagIsEffectsInitialized;
-    memcpy(info->sClearTagEffects_copy, sClearTagEffects, sizeof(sClearTagEffects));
-
-    memcpy(&info->sEnFrPointers_copy, &sEnFrPointers, sizeof(info->sEnFrPointers_copy));
-    info->sSpawnNum_copy = sSpawnNum;
-
-    info->D_80A7DEB0_copy = D_80A7DEB0;
-    info->D_80A7DEB4_copy = D_80A7DEB4;
-    info->D_80A7DEB8_copy = D_80A7DEB8;
-    info->sRockRotSpeedX_copy = sRockRotSpeedX;
-    info->sRockRotSpeedY_copy = sRockRotSpeedY;
-    info->D_80AB85E0_copy = D_80AB85E0;
-    info->sLowerRiverSpawned_copy = sLowerRiverSpawned;
-    info->sUpperRiverSpawned_copy = sUpperRiverSpawned;
-    info->sEnPoFieldNumSpawned_copy = sEnPoFieldNumSpawned;
-    memcpy(info->sEnPoFieldSpawnPositions_copy, sEnPoFieldSpawnPositions, sizeof(info->sEnPoFieldSpawnPositions_copy));
-    memcpy(info->sEnPoFieldSpawnSwitchFlags_copy, sEnPoFieldSpawnSwitchFlags,
-           sizeof(info->sEnPoFieldSpawnSwitchFlags_copy));
-
-    info->sTakaraIsInitialized_copy = sTakaraIsInitialized;
-    info->D_80B41D90_copy = D_80B41D90;
-    info->sEnXcFlameSpawned_copy = sEnXcFlameSpawned;
-    info->D_80B41DA8_copy = D_80B41DA8;
-    info->D_80B41DAC_copy = D_80B41DAC;
-    info->D_80B4A1B0_copy = D_80B4A1B0;
-    info->D_80B4A1B4_copy = D_80B4A1B4;
-    info->D_80B5A468_copy = D_80B5A468;
-    info->D_80B5A494_copy = D_80B5A494;
-    info->D_80B5A4BC_copy = D_80B5A4BC;
-    info->sKankyoIsSpawned_copy = sKankyoIsSpawned;
-    info->sTrailingFairies_copy = sTrailingFairies;
-
-    info->sHeishi1PlayerIsCaughtCopy = sHeishi1PlayerIsCaught;
+    SaveOverlayState(info->bossTwState, BossTw_SaveState);
+    SaveOverlayState(info->demo6kState, Demo6k_SaveState);
+    SaveOverlayState(info->demoDuState, DemoDu_SaveState);
+    SaveOverlayState(info->demoKekkaiState, DemoKekkai_SaveState);
+    SaveOverlayState(info->enBwState, EnBw_SaveState);
+    SaveOverlayState(info->enClearTagState, EnClearTag_SaveState);
+    SaveOverlayState(info->enFrState, EnFr_SaveState);
+    SaveOverlayState(info->enGomaState, EnGoma_SaveState);
+    SaveOverlayState(info->enInsectState, EnInsect_SaveState);
+    SaveOverlayState(info->enIshiState, EnIshi_SaveState);
+    SaveOverlayState(info->enNiwState, EnNiw_SaveState);
+    SaveOverlayState(info->enPoFieldState, EnPoField_SaveState);
+    SaveOverlayState(info->enTakaraManState, EnTakaraMan_SaveState);
+    SaveOverlayState(info->enXcState, EnXc_SaveState);
+    SaveOverlayState(info->enZfState, EnZf_SaveState);
+    SaveOverlayState(info->enZl3State, EnZl3_SaveState);
+    SaveOverlayState(info->objectKankyoState, ObjectKankyo_SaveState);
+    SaveOverlayState(info->enHeishi1State, EnHeishi1_SaveState);
 }
 
 void SaveState::LoadOverlayStaticData(void) {
-    sBgDdanKdVelocity = info->sBgDdanKdVelocity_copy;
-    sBgDdanKdAccel = info->sBgDdanKdAccel_copy;
-    sBgDodoagoFirstExplosiveFlag = info->sBgDodoagoFirstExplosiveFlag_copy;
-    sBgDodoagoDisableBombCatcher = info->sBgDodoagoDisableBombCatcher_copy;
-    sBgDodoagoTimer = info->sBgDodoagoTimer_copy;
-    D_80880F30 = info->D_80880F30_copy;
-    D_80881014 = info->D_80881014_copy;
-    D_8088BFC0 = info->D_8088BFC0_copy;
-    sBgMoriHineriNextCamIdx = info->sBgMoriHineriNextCamIdx_copy;
-    sBgPoEventBlocksAtRest = info->sBgPoEventBlocksAtRest_copy;
-    sBgPoEventPuzzleState = info->sBgPoEventPuzzleState_copy;
-    sBgPoEventblockPushDist = info->sBgPoEventblockPushDist_copy;
-    D_808A9508 = info->D_808A9508_copy;
-    D_808B85D0 = info->D_808B85D0_copy;
+    LoadOverlayState(info->bgDdanKdState, BgDdanKd_SaveState);
+    LoadOverlayState(info->bgDodoagoState, BgDodoago_SaveState);
+    LoadOverlayState(info->bgHakaTrapState, BgHakaTrap_SaveState);
+    LoadOverlayState(info->bgHidanRockState, BgHidanRock_SaveState);
+    LoadOverlayState(info->bgMenkuriEyeState, BgMenkuriEye_SaveState);
+    LoadOverlayState(info->bgMoriHineriState, BgMoriHineri_SaveState);
+    LoadOverlayState(info->bgPoEventState, BgPoEvent_SaveState);
+    LoadOverlayState(info->bgRelayObjectsState, BgRelayObjects_SaveState);
+    LoadOverlayState(info->bgSpot18BasketState, BgSpot18Basket_SaveState);
     LoadOverlayState(info->bossGanonState, BossGanon_SaveState);
     LoadOverlayState(info->bossGanon2State, BossGanon2_SaveState);
-    sTwInitalized = info->sTwInitalized_copy;
-    memcpy(sTwEffects, info->sTwEffects_copy, sizeof(sTwEffects));
-    sDemo6kVelocity = info->sDemo6kVelocity_copy;
-
-    D_8096CE94 = info->D_8096CE94_copy;
-    demoKekkaiVel = info->demoKekkaiVel_copy;
-    sSlugGroup = info->sSlugGroup_copy;
-    sClearTagIsEffectsInitialized = info->sClearTagIsEffectInitialized_copy;
-    memcpy(sClearTagEffects, info->sClearTagEffects_copy, sizeof(sClearTagEffects));
-
-    D_80A7DEB0 = info->D_80A7DEB0_copy;
-    D_80A7DEB4 = info->D_80A7DEB4_copy;
-    D_80A7DEB8 = info->D_80A7DEB8_copy;
-    sRockRotSpeedX = info->sRockRotSpeedX_copy;
-    sRockRotSpeedY = info->sRockRotSpeedY_copy;
-    D_80AB85E0 = info->D_80AB85E0_copy;
-    sLowerRiverSpawned = info->sLowerRiverSpawned_copy;
-    sUpperRiverSpawned = info->sUpperRiverSpawned_copy;
-    sEnPoFieldNumSpawned = info->sEnPoFieldNumSpawned_copy;
-    memcpy(sEnPoFieldSpawnPositions, info->sEnPoFieldSpawnPositions_copy, sizeof(info->sEnPoFieldSpawnPositions_copy));
-    memcpy(sEnPoFieldSpawnSwitchFlags, info->sEnPoFieldSpawnSwitchFlags_copy,
-           sizeof(info->sEnPoFieldSpawnSwitchFlags_copy));
-
-    sTakaraIsInitialized = info->sTakaraIsInitialized_copy;
-    D_80B41D90 = info->D_80B41D90_copy;
-    sEnXcFlameSpawned = info->sEnXcFlameSpawned_copy;
-    D_80B41DA8 = info->D_80B41DA8_copy;
-    D_80B41DAC = info->D_80B41DAC_copy;
-    D_80B4A1B0 = info->D_80B4A1B0_copy;
-    D_80B4A1B4 = info->D_80B4A1B4_copy;
-    D_80B5A468 = info->D_80B5A468_copy;
-    D_80B5A494 = info->D_80B5A494_copy;
-    D_80B5A4BC = info->D_80B5A4BC_copy;
-    sKankyoIsSpawned = info->sKankyoIsSpawned_copy;
-    sTrailingFairies = info->sTrailingFairies_copy;
-
-    sHeishi1PlayerIsCaught = info->sHeishi1PlayerIsCaughtCopy;
+    LoadOverlayState(info->bossTwState, BossTw_SaveState);
+    LoadOverlayState(info->demo6kState, Demo6k_SaveState);
+    LoadOverlayState(info->demoDuState, DemoDu_SaveState);
+    LoadOverlayState(info->demoKekkaiState, DemoKekkai_SaveState);
+    LoadOverlayState(info->enBwState, EnBw_SaveState);
+    LoadOverlayState(info->enClearTagState, EnClearTag_SaveState);
+    LoadOverlayState(info->enFrState, EnFr_SaveState);
+    LoadOverlayState(info->enGomaState, EnGoma_SaveState);
+    LoadOverlayState(info->enInsectState, EnInsect_SaveState);
+    LoadOverlayState(info->enIshiState, EnIshi_SaveState);
+    LoadOverlayState(info->enNiwState, EnNiw_SaveState);
+    LoadOverlayState(info->enPoFieldState, EnPoField_SaveState);
+    LoadOverlayState(info->enTakaraManState, EnTakaraMan_SaveState);
+    LoadOverlayState(info->enXcState, EnXc_SaveState);
+    LoadOverlayState(info->enZfState, EnZf_SaveState);
+    LoadOverlayState(info->enZl3State, EnZl3_SaveState);
+    LoadOverlayState(info->objectKankyoState, ObjectKankyo_SaveState);
+    LoadOverlayState(info->enHeishi1State, EnHeishi1_SaveState);
 }
 
 void SaveState::SaveMiscCodeData(void) {
