@@ -13,7 +13,6 @@
 #include "z64save.h"
 #include <variables.h>
 #include <functions.h>
-#include "z64map_mark.h"
 #include "savestate_serialize.h"
 
 extern "C" PlayState* gPlayState;
@@ -33,6 +32,7 @@ extern "C" void BossTw_SaveState(SaveStateCtx* ctx);
 extern "C" void Demo6k_SaveState(SaveStateCtx* ctx);
 extern "C" void DemoDu_SaveState(SaveStateCtx* ctx);
 extern "C" void DemoKekkai_SaveState(SaveStateCtx* ctx);
+extern "C" void DoorWarp1_SaveState(SaveStateCtx* ctx);
 extern "C" void EnBw_SaveState(SaveStateCtx* ctx);
 extern "C" void EnClearTag_SaveState(SaveStateCtx* ctx);
 extern "C" void EnFr_SaveState(SaveStateCtx* ctx);
@@ -47,6 +47,16 @@ extern "C" void EnZf_SaveState(SaveStateCtx* ctx);
 extern "C" void EnZl3_SaveState(SaveStateCtx* ctx);
 extern "C" void ObjectKankyo_SaveState(SaveStateCtx* ctx);
 extern "C" void EnHeishi1_SaveState(SaveStateCtx* ctx);
+
+extern "C" void Matrix_SaveState(SaveStateCtx* ctx);
+extern "C" void Lights_SaveState(SaveStateCtx* ctx);
+extern "C" void MapMark_SaveState(SaveStateCtx* ctx);
+extern "C" void Camera_SaveState(SaveStateCtx* ctx);
+extern "C" void OnePointCutscene_SaveState(SaveStateCtx* ctx);
+extern "C" void Environment_SaveState(SaveStateCtx* ctx);
+extern "C" void MapExp_SaveState(SaveStateCtx* ctx);
+extern "C" void AudioOca_SaveState(SaveStateCtx* ctx);
+extern "C" void MessagePAL_SaveState(SaveStateCtx* ctx);
 
 static void SaveOverlayState(std::unique_ptr<uint8_t[]>& buf, void (*fn)(SaveStateCtx*)) {
     SaveStateCtx ctx = {};
@@ -67,30 +77,14 @@ static void LoadOverlayState(std::unique_ptr<uint8_t[]>& buf, void (*fn)(SaveSta
     fn(&ctx);
 }
 
-// FROM z_lights.c
-// I didn't feel like moving it into a header file.
-#define LIGHTS_BUFFER_SIZE 32
-
-typedef struct {
-    /* 0x000 */ s32 numOccupied;
-    /* 0x004 */ s32 searchIndex;
-    /* 0x008 */ LightNode buf[LIGHTS_BUFFER_SIZE];
-} LightsBuffer; // size = 0x188
-
-#include "savestates_extern.inc"
-
 typedef struct SaveStateInfo {
     unsigned char sysHeapCopy[SYSTEM_HEAP_SIZE];
     unsigned char audioHeapCopy[AUDIO_HEAP_SIZE];
 
     SaveContext saveContextCopy;
     GameInfo gameInfoCopy;
-    LightsBuffer lightBufferCopy;
     AudioContext audioContextCopy;
-    MtxF mtxStackCopy[20]; // always 20 matricies
-    MtxF currentMtxCopy;
     uint32_t rngSeed;
-    int16_t blueWarpTimerCopy; /* From door_warp_1 */
 
     SeqScriptState seqScriptStateCopy[4]; // Unrelocated
     ActiveSequence gActiveSeqsCopy[4];
@@ -104,79 +98,18 @@ typedef struct SaveStateInfo {
     uint16_t gAudioSfxSwapTarget_copy[10];
     uint8_t gAudioSfxSwapMode_copy[10];
     void (*D_801755D0_copy)(void);
-    MapMarkData** sLoadedMarkDataTableCopy;
 
-    // Static Data
-
-    // Camera data
-    int32_t sInitRegs_copy;
-    int32_t gDbgCamEnabled_copy;
-    int32_t sDbgModeIdx_copy;
-    int16_t sNextUID_copy;
-    int32_t sCameraInterfaceFlags_copy;
-    int32_t sCameraInterfaceAlpha_copy;
-    int32_t sCameraShrinkWindowVal_copy;
-    int32_t D_8011D3AC_copy;
-    int32_t sDemo5PrevAction12Frame_copy;
-    int32_t sDemo5PrevSfxFrame_copy;
-    int32_t D_8011D3F0_copy;
-    OnePointCsFull D_8011D6AC_copy[3];
-    OnePointCsFull D_8011D724_copy[3];
-    OnePointCsFull D_8011D79C_copy[3];
-    OnePointCsFull D_8011D83C_copy[2];
-    OnePointCsFull D_8011D88C_copy[2];
-    OnePointCsFull D_8011D8DC_copy[3];
-    OnePointCsFull D_8011D954_copy[4];
-    OnePointCsFull D_8011D9F4_copy[3];
-    int16_t depthPhase_copy;
-    int16_t screenPlanePhase_copy;
-    int32_t sOOBTimer_copy;
-    f32 D_8015CE50_copy;
-    f32 D_8015CE54_copy;
-    CamColChk D_8015CE58_copy;
-
-    // Gameover
-    uint16_t gGameOverTimer_copy;
-
-    // One point demo
-    uint32_t sPrevFrameCs1100_copy;
-    CutsceneCameraPoint D_8012013C_copy[14];
-    CutsceneCameraPoint D_8012021C_copy[14];
-    CutsceneCameraPoint D_801204D4_copy[14];
-    CutsceneCameraPoint D_801205B4_copy[14];
-    OnePointCsFull D_801208EC_copy[3];
-    OnePointCsFull D_80120964_copy[2];
-    OnePointCsFull D_801209B4_copy[4];
-    OnePointCsFull D_80120ACC_copy[5];
-    OnePointCsFull D_80120B94_copy[11];
-    OnePointCsFull D_80120D4C_copy[7];
-    OnePointCsFull D_80120FA4_copy[6];
-    OnePointCsFull D_80121184_copy[2];
-    OnePointCsFull D_801211D4_copy[2];
-    OnePointCsFull D_8012133C_copy[3];
-    OnePointCsFull D_801213B4_copy[5];
-    OnePointCsFull D_8012151C_copy[2];
-    OnePointCsFull D_8012156C_copy[2];
-    OnePointCsFull D_801215BC_copy[1];
-    OnePointCsFull D_80121C24_copy[7];
-    OnePointCsFull D_80121D3C_copy[3];
-    OnePointCsFull D_80121F1C_copy[4];
-    OnePointCsFull D_80121FBC_copy[4];
-    OnePointCsFull D_801220D4_copy[5];
-    OnePointCsFull D_80122714_copy[4];
-    OnePointCsFull D_80122CB4_copy[2];
-    OnePointCsFull D_80122D04_copy[2];
-    OnePointCsFull D_80122E44_copy[2][7];
-    OnePointCsFull D_8012313C_copy[3];
-    OnePointCsFull D_801231B4_copy[4];
-    OnePointCsFull D_80123254_copy[2];
-    OnePointCsFull D_801232A4_copy[1];
-    OnePointCsFull D_80123894_copy[3];
-    OnePointCsFull D_8012390C_copy[2];
-    OnePointCsFull D_8012395C_copy[3];
-    OnePointCsFull D_801239D4_copy[3];
-
-    uint16_t gTimeIncrement_copy;
+    // Static data (per-translation-unit, serialized via SAVESTATE_DEFINE)
+    std::unique_ptr<uint8_t[]> matrixState;
+    std::unique_ptr<uint8_t[]> lightsState;
+    std::unique_ptr<uint8_t[]> doorWarp1State;
+    std::unique_ptr<uint8_t[]> mapMarkState;
+    std::unique_ptr<uint8_t[]> cameraState;
+    std::unique_ptr<uint8_t[]> onePointCutsceneState;
+    std::unique_ptr<uint8_t[]> environmentState;
+    std::unique_ptr<uint8_t[]> mapExpState;
+    std::unique_ptr<uint8_t[]> audioOcaState;
+    std::unique_ptr<uint8_t[]> messagePalState;
 
     // Overlay static data
     std::unique_ptr<uint8_t[]> bgDdanKdState;
@@ -209,65 +142,6 @@ typedef struct SaveStateInfo {
     std::unique_ptr<uint8_t[]> objectKankyoState;
     std::unique_ptr<uint8_t[]> enHeishi1State;
 
-    // Misc static data
-    //  z_map_exp
-
-    s16 sPlayerInitialPosX_copy;
-    s16 sPlayerInitialPosZ_copy;
-    s16 sPlayerInitialDirection_copy;
-
-    // code_800E(something. fill me in later)
-    u8 sOcarinaInpEnabled_copy;
-    s8 D_80130F10_copy;
-    u8 sCurOcarinaBtnVal_copy;
-    u8 sPrevOcarinaNoteVal_copy;
-    u8 sCurOcarinaBtnIdx_copy;
-    u8 sLearnSongLastBtn_copy;
-    f32 D_80130F24_copy;
-    f32 D_80130F28_copy;
-    s8 D_80130F2C_copy;
-    s8 D_80130F30_copy;
-    s8 D_80130F34_copy;
-    u8 sDisplayedNoteValue_copy;
-    u8 sPlaybackState_copy;
-    u32 D_80130F3C_copy;
-    u32 sNotePlaybackTimer_copy;
-    u16 sPlaybackNotePos_copy;
-    u16 sStaffPlaybackPos_copy;
-
-    u32 sCurOcarinaBtnPress_copy;
-    u32 D_8016BA10_copy;
-    u32 sPrevOcarinaBtnPress_copy;
-    s32 D_8016BA18_copy;
-    s32 D_8016BA1C_copy;
-    u8 sCurOcarinaSong_copy[8];
-    u8 sOcarinaSongAppendPos_copy;
-    u8 sOcarinaHasStartedSong_copy;
-    u8 sOcarinaSongNoteStartIdx_copy;
-    u8 sOcarinaSongCnt_copy;
-    u16 sOcarinaAvailSongs_copy;
-    u8 sStaffPlayingPos_copy;
-    u16 sLearnSongPos_copy[0x10];
-    u16 D_8016BA50_copy[0x10];
-    u16 D_8016BA70_copy[0x10];
-    u8 sLearnSongExpectedNote_copy[0x10];
-    OcarinaNote D_8016BAA0_copy;
-    u8 sAudioHasMalonBgm_copy;
-    f32 sAudioMalonBgmDist_copy;
-
-    // Message_PAL
-    s16 sOcarinaNoteBufPos_copy;
-    s16 sOcarinaNoteBufLen_copy;
-    u8 sOcarinaNoteBuf_copy[12];
-
-    u8 D_8014B2F4_copy;
-    u8 sTextboxSkipped_copy;
-    u16 sNextTextId_copy;
-    s16 sLastPlayedSong_copy;
-    s16 sHasSunsSong_copy;
-    s16 sMessageHasSetSfx_copy;
-    u16 sOcarinaSongBitFlags_copy;
-
     u8 transitionActorCount_copy;
     s16 transitionActorIds_copy[256];
 
@@ -288,14 +162,8 @@ class SaveState {
     void Load(void);
     void BackupSeqScriptState(void);
     void LoadSeqScriptState(void);
-    void BackupCameraData(void);
-    void LoadCameraData(void);
-    void SaveOnePointDemoData(void);
-    void LoadOnePointDemoData(void);
     void SaveOverlayStaticData(void);
     void LoadOverlayStaticData(void);
-    void SaveMiscCodeData(void);
-    void LoadMiscCodeData(void);
     void SaveTransitionActors(void);
     void LoadTransitionActors(void);
 
@@ -364,140 +232,17 @@ void SaveState::LoadSeqScriptState(void) {
     }
 }
 
-void SaveState::BackupCameraData(void) {
-    info->sInitRegs_copy = sInitRegs;
-    info->gDbgCamEnabled_copy = gDbgCamEnabled;
-    info->sNextUID_copy = sNextUID;
-    info->sCameraInterfaceFlags_copy = sCameraInterfaceFlags;
-    info->sCameraInterfaceAlpha_copy = sCameraInterfaceAlpha;
-    info->sCameraShrinkWindowVal_copy = sCameraShrinkWindowVal;
-    info->D_8011D3AC_copy = D_8011D3AC;
-    info->sDemo5PrevAction12Frame_copy = sDemo5PrevAction12Frame;
-    info->sDemo5PrevSfxFrame_copy = sDemo5PrevSfxFrame;
-    info->D_8011D3F0_copy = D_8011D3F0;
-    memcpy(info->D_8011D6AC_copy, D_8011D6AC, sizeof(info->D_8011D6AC_copy));
-    memcpy(info->D_8011D724_copy, D_8011D724, sizeof(info->D_8011D724_copy));
-    memcpy(info->D_8011D79C_copy, D_8011D79C, sizeof(info->D_8011D79C_copy));
-    memcpy(info->D_8011D83C_copy, D_8011D83C, sizeof(info->D_8011D83C_copy));
-    memcpy(info->D_8011D88C_copy, D_8011D88C, sizeof(info->D_8011D88C_copy));
-    memcpy(info->D_8011D8DC_copy, D_8011D8DC, sizeof(info->D_8011D8DC_copy));
-    memcpy(info->D_8011D954_copy, D_8011D954, sizeof(info->D_8011D954_copy));
-    memcpy(info->D_8011D9F4_copy, D_8011D9F4, sizeof(info->D_8011D9F4_copy));
-    info->depthPhase_copy = depthPhase;
-    info->screenPlanePhase_copy = screenPlanePhase;
-    info->sOOBTimer_copy = sOOBTimer;
-    info->D_8015CE50_copy = D_8015CE50;
-    info->D_8015CE54_copy = D_8015CE54;
-    memcpy(&info->D_8015CE58_copy, &D_8015CE58, sizeof(info->D_8015CE58_copy));
-}
-
-void SaveState::LoadCameraData(void) {
-    sInitRegs = info->sInitRegs_copy;
-    gDbgCamEnabled = info->gDbgCamEnabled_copy;
-    sDbgModeIdx = info->sDbgModeIdx_copy;
-    sNextUID = info->sNextUID_copy;
-    sCameraInterfaceAlpha = info->sCameraInterfaceAlpha_copy;
-    sCameraInterfaceFlags = info->sCameraInterfaceFlags_copy;
-    sCameraShrinkWindowVal = info->sCameraShrinkWindowVal_copy;
-    D_8011D3AC = info->D_8011D3AC_copy;
-    sDemo5PrevAction12Frame = info->sDemo5PrevAction12Frame_copy;
-    sDemo5PrevSfxFrame = info->sDemo5PrevSfxFrame_copy;
-    D_8011D3F0 = info->D_8011D3F0_copy;
-    memcpy(D_8011D6AC, info->D_8011D6AC_copy, sizeof(info->D_8011D6AC_copy));
-    memcpy(D_8011D724, info->D_8011D724_copy, sizeof(info->D_8011D724_copy));
-    memcpy(D_8011D79C, info->D_8011D79C_copy, sizeof(info->D_8011D79C_copy));
-    memcpy(D_8011D83C, info->D_8011D83C_copy, sizeof(info->D_8011D83C_copy));
-    memcpy(D_8011D88C, info->D_8011D88C_copy, sizeof(info->D_8011D88C_copy));
-    memcpy(D_8011D8DC, info->D_8011D8DC_copy, sizeof(info->D_8011D8DC_copy));
-    memcpy(D_8011D954, info->D_8011D954_copy, sizeof(info->D_8011D954_copy));
-    memcpy(D_8011D9F4, info->D_8011D9F4_copy, sizeof(info->D_8011D9F4_copy));
-    depthPhase = info->depthPhase_copy;
-    screenPlanePhase = info->screenPlanePhase_copy;
-    sOOBTimer = info->sOOBTimer_copy;
-    D_8015CE50 = info->D_8015CE50_copy;
-    D_8015CE54 = info->D_8015CE54_copy;
-    memcpy(&D_8015CE58, &info->D_8015CE58_copy, sizeof(info->D_8015CE58_copy));
-}
-
-void SaveState::SaveOnePointDemoData(void) {
-    info->sPrevFrameCs1100_copy = sPrevFrameCs1100;
-    memcpy(info->D_8012013C_copy, D_8012013C, sizeof(info->D_8012013C_copy));
-    memcpy(info->D_8012021C_copy, D_8012021C, sizeof(info->D_8012021C_copy));
-    memcpy(info->D_801204D4_copy, D_801204D4, sizeof(info->D_801204D4_copy));
-    memcpy(info->D_801205B4_copy, D_801205B4, sizeof(info->D_801205B4_copy));
-    memcpy(info->D_801208EC_copy, D_801208EC, sizeof(info->D_801208EC_copy));
-    memcpy(info->D_80120964_copy, D_80120964, sizeof(info->D_80120964_copy));
-    memcpy(info->D_801209B4_copy, D_801209B4, sizeof(info->D_801209B4_copy));
-    memcpy(info->D_80120ACC_copy, D_80120ACC, sizeof(info->D_80120ACC_copy));
-    memcpy(info->D_80120B94_copy, D_80120B94, sizeof(info->D_80120B94_copy));
-    memcpy(info->D_80120D4C_copy, D_80120D4C, sizeof(info->D_80120D4C_copy));
-    memcpy(info->D_80120FA4_copy, D_80120FA4, sizeof(info->D_80120FA4_copy));
-    memcpy(info->D_80121184_copy, D_80121184, sizeof(info->D_80121184_copy));
-    memcpy(info->D_801211D4_copy, D_801211D4, sizeof(info->D_801211D4_copy));
-    memcpy(info->D_8012133C_copy, D_8012133C, sizeof(info->D_8012133C_copy));
-    memcpy(info->D_801213B4_copy, D_801213B4, sizeof(info->D_801213B4_copy));
-    memcpy(info->D_8012151C_copy, D_8012151C, sizeof(info->D_8012151C_copy));
-    memcpy(info->D_8012156C_copy, D_8012156C, sizeof(info->D_8012156C_copy));
-    memcpy(info->D_801215BC_copy, D_801215BC, sizeof(info->D_801215BC_copy));
-    memcpy(info->D_80121C24_copy, D_80121C24, sizeof(info->D_80121C24_copy));
-    memcpy(info->D_80121D3C_copy, D_80121D3C, sizeof(info->D_80121D3C_copy));
-    memcpy(info->D_80121F1C_copy, D_80121F1C, sizeof(info->D_80121F1C_copy));
-    memcpy(info->D_80121FBC_copy, D_80121FBC, sizeof(info->D_80121FBC_copy));
-    memcpy(info->D_801220D4_copy, D_801220D4, sizeof(info->D_801220D4_copy));
-    memcpy(info->D_80122714_copy, D_80122714, sizeof(info->D_80122714_copy));
-    memcpy(info->D_80122CB4_copy, D_80122CB4, sizeof(info->D_80122CB4_copy));
-    memcpy(info->D_80122D04_copy, D_80122D04, sizeof(info->D_80122D04_copy));
-    memcpy(info->D_80122E44_copy, D_80122E44, sizeof(info->D_80122E44_copy));
-    memcpy(info->D_8012313C_copy, D_8012313C, sizeof(info->D_8012313C_copy));
-    memcpy(info->D_801231B4_copy, D_801231B4, sizeof(info->D_801231B4_copy));
-    memcpy(info->D_80123254_copy, D_80123254, sizeof(info->D_80123254_copy));
-    memcpy(info->D_801232A4_copy, D_801232A4, sizeof(info->D_801232A4_copy));
-    memcpy(info->D_80123894_copy, D_80123894, sizeof(info->D_80123894_copy));
-    memcpy(info->D_8012390C_copy, D_8012390C, sizeof(info->D_8012390C_copy));
-    memcpy(info->D_8012395C_copy, D_8012395C, sizeof(info->D_8012395C_copy));
-    memcpy(info->D_801239D4_copy, D_801239D4, sizeof(info->D_801239D4_copy));
-}
-
-void SaveState::LoadOnePointDemoData(void) {
-    sPrevFrameCs1100 = info->sPrevFrameCs1100_copy;
-    memcpy(D_8012013C, info->D_8012013C_copy, sizeof(info->D_8012013C_copy));
-    memcpy(D_8012021C, info->D_8012021C_copy, sizeof(info->D_8012021C_copy));
-    memcpy(D_801204D4, info->D_801204D4_copy, sizeof(info->D_801204D4_copy));
-    memcpy(D_801205B4, info->D_801205B4_copy, sizeof(info->D_801205B4_copy));
-    memcpy(D_801208EC, info->D_801208EC_copy, sizeof(info->D_801208EC_copy));
-    memcpy(D_80120964, info->D_80120964_copy, sizeof(info->D_80120964_copy));
-    memcpy(D_801209B4, info->D_801209B4_copy, sizeof(info->D_801209B4_copy));
-    memcpy(D_80120ACC, info->D_80120ACC_copy, sizeof(info->D_80120ACC_copy));
-    memcpy(D_80120B94, info->D_80120B94_copy, sizeof(info->D_80120B94_copy));
-    memcpy(D_80120D4C, info->D_80120D4C_copy, sizeof(info->D_80120D4C_copy));
-    memcpy(D_80120FA4, info->D_80120FA4_copy, sizeof(info->D_80120FA4_copy));
-    memcpy(D_80121184, info->D_80121184_copy, sizeof(info->D_80121184_copy));
-    memcpy(D_801211D4, info->D_801211D4_copy, sizeof(info->D_801211D4_copy));
-    memcpy(D_8012133C, info->D_8012133C_copy, sizeof(info->D_8012133C_copy));
-    memcpy(D_801213B4, info->D_801213B4_copy, sizeof(info->D_801213B4_copy));
-    memcpy(D_8012151C, info->D_8012151C_copy, sizeof(info->D_8012151C_copy));
-    memcpy(D_8012156C, info->D_8012156C_copy, sizeof(info->D_8012156C_copy));
-    memcpy(D_801215BC, info->D_801215BC_copy, sizeof(info->D_801215BC_copy));
-    memcpy(D_80121C24, info->D_80121C24_copy, sizeof(info->D_80121C24_copy));
-    memcpy(D_80121D3C, info->D_80121D3C_copy, sizeof(info->D_80121D3C_copy));
-    memcpy(D_80121F1C, info->D_80121F1C_copy, sizeof(info->D_80121F1C_copy));
-    memcpy(D_80121FBC, info->D_80121FBC_copy, sizeof(info->D_80121FBC_copy));
-    memcpy(D_801220D4, info->D_801220D4_copy, sizeof(info->D_801220D4_copy));
-    memcpy(D_80122714, info->D_80122714_copy, sizeof(info->D_80122714_copy));
-    memcpy(D_80122CB4, info->D_80122CB4_copy, sizeof(info->D_80122CB4_copy));
-    memcpy(D_80122D04, info->D_80122D04_copy, sizeof(info->D_80122D04_copy));
-    memcpy(D_80122E44, info->D_80122E44_copy, sizeof(info->D_80122E44_copy));
-    memcpy(D_8012313C, info->D_8012313C_copy, sizeof(info->D_8012313C_copy));
-    memcpy(D_801231B4, info->D_801231B4_copy, sizeof(info->D_801231B4_copy));
-    memcpy(D_80123254, info->D_80123254_copy, sizeof(info->D_80123254_copy));
-    memcpy(D_801232A4, info->D_801232A4_copy, sizeof(info->D_801232A4_copy));
-    memcpy(D_80123894, info->D_80123894_copy, sizeof(info->D_80123894_copy));
-    memcpy(D_8012390C, info->D_8012390C_copy, sizeof(info->D_8012390C_copy));
-    memcpy(D_8012395C, info->D_8012395C_copy, sizeof(info->D_8012395C_copy));
-    memcpy(D_801239D4, info->D_801239D4_copy, sizeof(info->D_801239D4_copy));
-}
-
 void SaveState::SaveOverlayStaticData(void) {
+    SaveOverlayState(info->matrixState, Matrix_SaveState);
+    SaveOverlayState(info->lightsState, Lights_SaveState);
+    SaveOverlayState(info->doorWarp1State, DoorWarp1_SaveState);
+    SaveOverlayState(info->mapMarkState, MapMark_SaveState);
+    SaveOverlayState(info->cameraState, Camera_SaveState);
+    SaveOverlayState(info->onePointCutsceneState, OnePointCutscene_SaveState);
+    SaveOverlayState(info->environmentState, Environment_SaveState);
+    SaveOverlayState(info->mapExpState, MapExp_SaveState);
+    SaveOverlayState(info->audioOcaState, AudioOca_SaveState);
+    SaveOverlayState(info->messagePalState, MessagePAL_SaveState);
     SaveOverlayState(info->bgDdanKdState, BgDdanKd_SaveState);
     SaveOverlayState(info->bgDodoagoState, BgDodoago_SaveState);
     SaveOverlayState(info->bgHakaTrapState, BgHakaTrap_SaveState);
@@ -530,6 +275,16 @@ void SaveState::SaveOverlayStaticData(void) {
 }
 
 void SaveState::LoadOverlayStaticData(void) {
+    LoadOverlayState(info->matrixState, Matrix_SaveState);
+    LoadOverlayState(info->lightsState, Lights_SaveState);
+    LoadOverlayState(info->doorWarp1State, DoorWarp1_SaveState);
+    LoadOverlayState(info->mapMarkState, MapMark_SaveState);
+    LoadOverlayState(info->cameraState, Camera_SaveState);
+    LoadOverlayState(info->onePointCutsceneState, OnePointCutscene_SaveState);
+    LoadOverlayState(info->environmentState, Environment_SaveState);
+    LoadOverlayState(info->mapExpState, MapExp_SaveState);
+    LoadOverlayState(info->audioOcaState, AudioOca_SaveState);
+    LoadOverlayState(info->messagePalState, MessagePAL_SaveState);
     LoadOverlayState(info->bgDdanKdState, BgDdanKd_SaveState);
     LoadOverlayState(info->bgDodoagoState, BgDodoago_SaveState);
     LoadOverlayState(info->bgHakaTrapState, BgHakaTrap_SaveState);
@@ -559,125 +314,6 @@ void SaveState::LoadOverlayStaticData(void) {
     LoadOverlayState(info->enZl3State, EnZl3_SaveState);
     LoadOverlayState(info->objectKankyoState, ObjectKankyo_SaveState);
     LoadOverlayState(info->enHeishi1State, EnHeishi1_SaveState);
-}
-
-void SaveState::SaveMiscCodeData(void) {
-    info->gGameOverTimer_copy = gGameOverTimer;
-    info->gTimeIncrement_copy = gTimeIncrement;
-    info->sLoadedMarkDataTableCopy = sLoadedMarkDataTable;
-
-    info->sPlayerInitialPosX_copy = sPlayerInitialPosX;
-    info->sPlayerInitialPosZ_copy = sPlayerInitialPosZ;
-    info->sPlayerInitialDirection_copy = sPlayerInitialDirection;
-
-    info->sOcarinaInpEnabled_copy = sOcarinaInpEnabled;
-    info->D_80130F10_copy = D_80130F10;
-    info->sCurOcarinaBtnVal_copy = sCurOcarinaBtnVal;
-    info->sPrevOcarinaNoteVal_copy = sPrevOcarinaNoteVal;
-    info->sCurOcarinaBtnIdx_copy = sCurOcarinaBtnIdx;
-    info->sLearnSongLastBtn_copy = sLearnSongLastBtn;
-    info->D_80130F24_copy = D_80130F24;
-    info->D_80130F28_copy = D_80130F28;
-    info->D_80130F2C_copy = D_80130F2C;
-    info->D_80130F30_copy = D_80130F30;
-    info->D_80130F34_copy = D_80130F34;
-    info->sPlaybackState_copy = sPlaybackState;
-    info->D_80130F3C_copy = D_80130F3C;
-    info->sNotePlaybackTimer_copy = sNotePlaybackTimer;
-    info->sPlaybackNotePos_copy = sPlaybackNotePos;
-    info->sStaffPlaybackPos_copy = sStaffPlaybackPos;
-
-    info->sCurOcarinaBtnPress_copy = sCurOcarinaBtnPress;
-    info->D_8016BA10_copy = D_8016BA10;
-    info->sPrevOcarinaBtnPress_copy = sPrevOcarinaBtnPress;
-    info->D_8016BA18_copy = D_8016BA18;
-    info->D_8016BA1C_copy = D_8016BA1C;
-    memcpy(info->sCurOcarinaSong_copy, sCurOcarinaSong, sizeof(sCurOcarinaSong));
-    info->sOcarinaSongAppendPos_copy = sOcarinaSongAppendPos;
-    info->sOcarinaHasStartedSong_copy = sOcarinaHasStartedSong;
-    info->sOcarinaSongNoteStartIdx_copy = sOcarinaSongNoteStartIdx;
-    info->sOcarinaSongCnt_copy = sOcarinaSongCnt;
-    info->sOcarinaAvailSongs_copy = sOcarinaAvailSongs;
-    info->sStaffPlayingPos_copy = sStaffPlayingPos;
-    memcpy(info->sLearnSongPos_copy, sLearnSongPos, sizeof(sLearnSongPos));
-    memcpy(info->D_8016BA50_copy, D_8016BA50, sizeof(D_8016BA50));
-    memcpy(info->D_8016BA70_copy, D_8016BA70, sizeof(D_8016BA70));
-    memcpy(info->sLearnSongExpectedNote_copy, sLearnSongExpectedNote, sizeof(sLearnSongExpectedNote));
-    memcpy(&info->D_8016BAA0_copy, &D_8016BAA0, sizeof(D_8016BAA0));
-    info->sAudioHasMalonBgm_copy = sAudioHasMalonBgm;
-    info->sAudioMalonBgmDist_copy = sAudioMalonBgmDist;
-    info->sDisplayedNoteValue_copy = sDisplayedNoteValue;
-
-    info->sOcarinaNoteBufPos_copy = sOcarinaNoteBufPos;
-    info->sOcarinaNoteBufLen_copy = sOcarinaNoteBufLen;
-    memcpy(info->sOcarinaNoteBuf_copy, sOcarinaNoteBuf, sizeof(sOcarinaNoteBuf));
-    info->D_8014B2F4_copy = D_8014B2F4;
-    info->sTextboxSkipped_copy = sTextboxSkipped;
-    info->sNextTextId_copy = sNextTextId;
-    info->sLastPlayedSong_copy = sLastPlayedSong;
-    info->sHasSunsSong_copy = sHasSunsSong;
-    info->sMessageHasSetSfx_copy = sMessageHasSetSfx;
-    info->sOcarinaSongBitFlags_copy = sOcarinaSongBitFlags;
-}
-
-void SaveState::LoadMiscCodeData(void) {
-    gGameOverTimer = info->gGameOverTimer_copy;
-    gTimeIncrement = info->gTimeIncrement_copy;
-    sLoadedMarkDataTable = info->sLoadedMarkDataTableCopy;
-
-    sPlayerInitialPosX = info->sPlayerInitialPosX_copy;
-    sPlayerInitialPosZ = info->sPlayerInitialPosZ_copy;
-    sPlayerInitialDirection = info->sPlayerInitialDirection_copy;
-
-    sOcarinaInpEnabled = info->sOcarinaInpEnabled_copy;
-    D_80130F10 = info->D_80130F10_copy;
-    sCurOcarinaBtnVal = info->sCurOcarinaBtnVal_copy;
-    sPrevOcarinaNoteVal = info->sPrevOcarinaNoteVal_copy;
-    sCurOcarinaBtnIdx = info->sCurOcarinaBtnIdx_copy;
-    sLearnSongLastBtn = info->sLearnSongLastBtn_copy;
-    D_80130F24 = info->D_80130F24_copy;
-    D_80130F28 = info->D_80130F28_copy;
-    D_80130F2C = info->D_80130F2C_copy;
-    D_80130F30 = info->D_80130F30_copy;
-    D_80130F34 = info->D_80130F34_copy;
-    sPlaybackState = info->sPlaybackState_copy;
-    D_80130F3C = info->D_80130F3C_copy;
-    sNotePlaybackTimer = info->sNotePlaybackTimer_copy;
-    sPlaybackNotePos = info->sPlaybackNotePos_copy;
-    sStaffPlaybackPos = info->sStaffPlaybackPos_copy;
-
-    sCurOcarinaBtnPress = info->sCurOcarinaBtnPress_copy;
-    D_8016BA10 = info->D_8016BA10_copy;
-    sPrevOcarinaBtnPress = info->sPrevOcarinaBtnPress_copy;
-    D_8016BA18 = info->D_8016BA18_copy;
-    D_8016BA1C = info->D_8016BA1C_copy;
-    memcpy(sCurOcarinaSong, info->sCurOcarinaSong_copy, sizeof(sCurOcarinaSong));
-    sOcarinaSongAppendPos = info->sOcarinaSongAppendPos_copy;
-    sOcarinaHasStartedSong = info->sOcarinaHasStartedSong_copy;
-    sOcarinaSongNoteStartIdx = info->sOcarinaSongNoteStartIdx_copy;
-    sOcarinaSongCnt = info->sOcarinaSongCnt_copy;
-    sOcarinaAvailSongs = info->sOcarinaAvailSongs_copy;
-    sStaffPlayingPos = info->sStaffPlayingPos_copy;
-    memcpy(info->sLearnSongPos_copy, info->sLearnSongPos_copy, sizeof(sLearnSongPos));
-    memcpy(info->D_8016BA50_copy, info->D_8016BA50_copy, sizeof(D_8016BA50));
-    memcpy(info->D_8016BA70_copy, info->D_8016BA70_copy, sizeof(D_8016BA70));
-    memcpy(info->sLearnSongExpectedNote_copy, info->sLearnSongExpectedNote_copy, sizeof(sLearnSongExpectedNote));
-    memcpy(&D_8016BAA0, &info->D_8016BAA0_copy, sizeof(D_8016BAA0));
-    sAudioHasMalonBgm = info->sAudioHasMalonBgm_copy;
-    sAudioMalonBgmDist = info->sAudioMalonBgmDist_copy;
-    sDisplayedNoteValue = info->sDisplayedNoteValue_copy;
-
-    sOcarinaNoteBufPos = info->sOcarinaNoteBufPos_copy;
-    sOcarinaNoteBufLen = info->sOcarinaNoteBufLen_copy;
-    memcpy(sOcarinaNoteBuf, info->sOcarinaNoteBuf_copy, sizeof(sOcarinaNoteBuf));
-
-    D_8014B2F4 = info->D_8014B2F4_copy;
-    sTextboxSkipped = info->sTextboxSkipped_copy;
-    sNextTextId = info->sNextTextId_copy;
-    sLastPlayedSong = info->sLastPlayedSong_copy;
-    sHasSunsSong = info->sHasSunsSong_copy;
-    sMessageHasSetSfx = info->sMessageHasSetSfx_copy;
-    sOcarinaSongBitFlags = info->sOcarinaSongBitFlags_copy;
 }
 
 void SaveState::SaveTransitionActors(void) {
@@ -790,16 +426,9 @@ void SaveState::Save(void) {
 
     memcpy(&info->saveContextCopy, &gSaveContext, sizeof(gSaveContext));
     memcpy(&info->gameInfoCopy, gGameInfo, sizeof(*gGameInfo));
-    memcpy(&info->lightBufferCopy, &sLightsBuffer, sizeof(sLightsBuffer));
-    memcpy(&info->mtxStackCopy, sMatrixStack, sizeof(MtxF) * 20);
-    memcpy(&info->currentMtxCopy, sCurrentMatrix, sizeof(MtxF));
 
     // Various static data
-    info->blueWarpTimerCopy = sWarpTimerTarget;
-    BackupCameraData();
-    SaveOnePointDemoData();
     SaveOverlayStaticData();
-    SaveMiscCodeData();
     SaveTransitionActors();
 }
 
@@ -814,10 +443,6 @@ void SaveState::Load(void) {
 
     memcpy(&gSaveContext, &info->saveContextCopy, sizeof(gSaveContext));
     memcpy(gGameInfo, &info->gameInfoCopy, sizeof(*gGameInfo));
-    memcpy(&sLightsBuffer, &info->lightBufferCopy, sizeof(sLightsBuffer));
-    memcpy(sMatrixStack, &info->mtxStackCopy, sizeof(MtxF) * 20);
-    memcpy(sCurrentMatrix, &info->currentMtxCopy, sizeof(MtxF));
-    sWarpTimerTarget = info->blueWarpTimerCopy;
 
     memcpy(gActiveSounds, info->gActiveSoundsCopy, sizeof(gActiveSounds));
     memcpy(gSoundBankMuted, &info->gSoundBankMutedCopy, sizeof(info->gSoundBankMutedCopy));
@@ -830,9 +455,6 @@ void SaveState::Load(void) {
 
     // Various static data
     D_801755D0 = info->D_801755D0_copy;
-    LoadCameraData();
-    LoadOnePointDemoData();
     LoadOverlayStaticData();
-    LoadMiscCodeData();
     LoadTransitionActors();
 }
