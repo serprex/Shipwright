@@ -1,5 +1,6 @@
 #include "savestates.h"
 
+#include <memory>
 #include <spdlog/spdlog.h>
 
 #include <ship/Context.h>
@@ -13,13 +14,34 @@
 #include <variables.h>
 #include <functions.h>
 #include "z64map_mark.h"
-#include "../../src/overlays/actors/ovl_Boss_Ganon/z_boss_ganon.h"
-#include "../../src/overlays/actors/ovl_Boss_Ganon2/z_boss_ganon2.h"
+#include "savestate_serialize.h"
 #include "../../src/overlays/actors/ovl_Boss_Tw/z_boss_tw.h"
 #include "../../src/overlays/actors/ovl_En_Clear_Tag/z_en_clear_tag.h"
 #include "../../src/overlays/actors/ovl_En_Fr/z_en_fr.h"
 
 extern "C" PlayState* gPlayState;
+
+extern "C" void BossGanon_SaveState(SaveStateCtx* ctx);
+extern "C" void BossGanon2_SaveState(SaveStateCtx* ctx);
+
+static void SaveOverlayState(std::unique_ptr<uint8_t[]>& buf, void (*fn)(SaveStateCtx*)) {
+    SaveStateCtx ctx = {};
+    ctx.mode = SAVESTATE_MEASURE;
+    fn(&ctx);
+    buf = std::make_unique<uint8_t[]>(ctx.offset);
+    ctx.mode = SAVESTATE_SAVE;
+    ctx.buffer = buf.get();
+    ctx.offset = 0;
+    fn(&ctx);
+}
+
+static void LoadOverlayState(std::unique_ptr<uint8_t[]>& buf, void (*fn)(SaveStateCtx*)) {
+    SaveStateCtx ctx = {};
+    ctx.mode = SAVESTATE_LOAD;
+    ctx.buffer = buf.get();
+    ctx.offset = 0;
+    fn(&ctx);
+}
 
 // FROM z_lights.c
 // I didn't feel like moving it into a header file.
@@ -166,35 +188,8 @@ typedef struct SaveStateInfo {
     // z_bg_spot18_basket
     int16_t D_808B85D0_copy;
 
-    // z_boss_ganon
-    uint32_t sBossGanonSeed1_copy;
-    uint32_t sBossGanonSeed2_copy;
-    uint32_t sBossGanonSeed3_copy;
-    void* sBossGanonGanondorf_copy;
-    void* sBossGanonZelda_copy;
-    void* sBossGanonCape_copy;
-    GanondorfEffect sBossGanonEffectBuf_copy[200];
-
-    // z_boss_ganon
-    uint32_t sBossGanonSeed1;
-    uint32_t sBossGanonSeed2;
-    uint32_t sBossGanonSeed3;
-    void* sBossGanonGanondorf;
-    void* sBossGanonZelda;
-    void* sBossGanonCape;
-    GanondorfEffect sBossGanonEffectBuf[200];
-
-    // z_boss_ganon2
-    Vec3f D_8090EB20_copy;
-    int8_t D_80910638_copy;
-    void* sBossGanon2Zelda_copy;
-    void* D_8090EB30_copy;
-    int32_t sBossGanon2Seed1_copy;
-    int32_t sBossGanon2Seed2_copy;
-    int32_t sBossGanon2Seed3_copy;
-    Vec3f D_809105D8_copy[4];
-    Vec3f D_80910608_copy[4];
-    BossGanon2Effect sBossGanon2Particles_copy[100];
+    std::unique_ptr<uint8_t[]> bossGanonState;
+    std::unique_ptr<uint8_t[]> bossGanon2State;
 
     // z_boss_tw
     uint8_t sTwInitalized_copy;
@@ -567,23 +562,8 @@ void SaveState::SaveOverlayStaticData(void) {
     info->sBgPoEventblockPushDist_copy = sBgPoEventblockPushDist;
     info->D_808A9508_copy = D_808A9508;
     info->D_808B85D0_copy = D_808B85D0;
-    info->sBossGanonSeed1_copy = sBossGanonSeed1;
-    info->sBossGanonSeed2_copy = sBossGanonSeed2;
-    info->sBossGanonSeed3_copy = sBossGanonSeed3;
-    info->sBossGanonGanondorf_copy = sBossGanonGanondorf;
-    info->sBossGanonZelda_copy = sBossGanonZelda;
-    info->sBossGanonCape_copy = sBossGanonCape;
-    memcpy(info->sBossGanonEffectBuf_copy, sBossGanonEffectBuf, sizeof(info->sBossGanonEffectBuf_copy));
-    info->D_8090EB20_copy = D_8090EB20;
-    info->D_80910638_copy = D_80910638;
-    info->sBossGanon2Zelda_copy = sBossGanon2Zelda;
-    info->D_8090EB30_copy = D_8090EB30;
-    info->sBossGanon2Seed1_copy = sBossGanon2Seed1;
-    info->sBossGanon2Seed2_copy = sBossGanon2Seed2;
-    info->sBossGanon2Seed3_copy = sBossGanon2Seed3;
-    memcpy(info->D_809105D8_copy, D_809105D8, sizeof(D_809105D8));
-    memcpy(info->D_80910608_copy, D_80910608, sizeof(D_80910608));
-    memcpy(info->sBossGanon2Particles_copy, sBossGanon2Particles, sizeof(sBossGanon2Particles));
+    SaveOverlayState(info->bossGanonState, BossGanon_SaveState);
+    SaveOverlayState(info->bossGanon2State, BossGanon2_SaveState);
     info->sTwInitalized_copy = sTwInitalized;
     memcpy(info->sTwEffects_copy, sTwEffects, sizeof(sTwEffects));
     info->sDemo6kVelocity_copy = sDemo6kVelocity;
@@ -640,24 +620,8 @@ void SaveState::LoadOverlayStaticData(void) {
     sBgPoEventblockPushDist = info->sBgPoEventblockPushDist_copy;
     D_808A9508 = info->D_808A9508_copy;
     D_808B85D0 = info->D_808B85D0_copy;
-    sBossGanonSeed1 = info->sBossGanonSeed1_copy;
-    sBossGanonSeed2 = info->sBossGanonSeed2_copy;
-    sBossGanonSeed3 = info->sBossGanonSeed3_copy;
-    sBossGanonGanondorf = info->sBossGanonGanondorf_copy;
-    sBossGanonZelda = info->sBossGanonZelda_copy;
-    sBossGanonCape = info->sBossGanonCape_copy;
-    memcpy(sBossGanonEffectBuf, info->sBossGanonEffectBuf_copy, sizeof(info->sBossGanonEffectBuf_copy));
-
-    D_8090EB20 = info->D_8090EB20_copy;
-    D_80910638 = info->D_80910638_copy;
-    sBossGanon2Zelda = info->sBossGanon2Zelda_copy;
-    D_8090EB30 = info->D_8090EB30_copy;
-    sBossGanon2Seed1 = info->sBossGanon2Seed1_copy;
-    sBossGanon2Seed2 = info->sBossGanon2Seed2_copy;
-    sBossGanon2Seed3 = info->sBossGanon2Seed3_copy;
-    memcpy(D_809105D8, info->D_809105D8_copy, sizeof(D_809105D8));
-    memcpy(D_80910608, info->D_80910608_copy, sizeof(D_80910608));
-    memcpy(sBossGanon2Particles, info->sBossGanon2Particles_copy, sizeof(sBossGanon2Particles));
+    LoadOverlayState(info->bossGanonState, BossGanon_SaveState);
+    LoadOverlayState(info->bossGanon2State, BossGanon2_SaveState);
     sTwInitalized = info->sTwInitalized_copy;
     memcpy(sTwEffects, info->sTwEffects_copy, sizeof(sTwEffects));
     sDemo6kVelocity = info->sDemo6kVelocity_copy;

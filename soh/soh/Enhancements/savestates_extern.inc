@@ -105,27 +105,6 @@ extern "C" uint32_t D_808A9508;
 // z_bg_spot18_basket
 extern "C" int16_t D_808B85D0;
 
-// z_boss_ganon
-extern "C" uint32_t sBossGanonSeed1;
-extern "C" uint32_t sBossGanonSeed2;
-extern "C" uint32_t sBossGanonSeed3;
-extern "C" void* sBossGanonGanondorf;
-extern "C" void* sBossGanonZelda;
-extern "C" void* sBossGanonCape;
-extern "C" GanondorfEffect sBossGanonEffectBuf[200];
-
-// z_boss_ganon2
-extern "C" Vec3f D_8090EB20;
-extern "C" int8_t D_80910638;
-extern "C" void* sBossGanon2Zelda;
-extern "C" void* D_8090EB30;
-extern "C" int32_t sBossGanon2Seed1;
-extern "C" int32_t sBossGanon2Seed2;
-extern "C" int32_t sBossGanon2Seed3;
-extern "C" Vec3f D_809105D8[4];
-extern "C" Vec3f D_80910608[4];
-extern "C" BossGanon2Effect sBossGanon2Particles[100];
-
 // z_boss_tw
 extern "C" uint8_t sTwInitalized;
 extern "C" BossTwEffect sTwEffects[150];
