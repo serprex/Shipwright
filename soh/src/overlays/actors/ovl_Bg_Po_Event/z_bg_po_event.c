@@ -385,12 +385,12 @@ void BgPoEvent_BlockIdle(BgPoEvent* this, PlayState* play) {
 
 static f32 sBgPoEventblockPushDist = 0.0f;
 
-#define BG_PO_EVENT_SAVESTATE_FIELDS(F) \
-    F(sBgPoEventBlocksAtRest)           \
-    F(sBgPoEventPuzzleState)            \
+#define BG_PO_EVENT_SHIP_SAVESTATE_FIELDS(F) \
+    F(sBgPoEventBlocksAtRest)                \
+    F(sBgPoEventPuzzleState)                 \
     F(sBgPoEventblockPushDist)
 
-SAVESTATE_DEFINE(BgPoEvent, BG_PO_EVENT_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(BgPoEvent, BG_PO_EVENT_SHIP_SAVESTATE_FIELDS)
 
 void BgPoEvent_BlockPush(BgPoEvent* this, PlayState* play) {
     f32 displacement;

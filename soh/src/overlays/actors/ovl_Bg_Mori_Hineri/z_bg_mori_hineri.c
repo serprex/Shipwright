@@ -33,9 +33,9 @@ s32 Object_Spawn(ObjectContext* objectCtx, s16 objectId);
 
 static s16 sBgMoriHineriNextCamIdx = SUBCAM_NONE;
 
-#define BG_MORI_HINERI_SAVESTATE_FIELDS(F) F(sBgMoriHineriNextCamIdx)
+#define BG_MORI_HINERI_SHIP_SAVESTATE_FIELDS(F) F(sBgMoriHineriNextCamIdx)
 
-SAVESTATE_DEFINE(BgMoriHineri, BG_MORI_HINERI_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(BgMoriHineri, BG_MORI_HINERI_SHIP_SAVESTATE_FIELDS)
 
 const ActorInit Bg_Mori_Hineri_InitVars = {
     ACTOR_BG_MORI_HINERI,

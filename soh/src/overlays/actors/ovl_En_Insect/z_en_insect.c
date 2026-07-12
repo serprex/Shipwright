@@ -38,12 +38,12 @@ static f32 D_80A7DEB0 = 0.0f;
 static s16 D_80A7DEB4 = 0;
 s16 D_80A7DEB8 = 0; // not static: read by NoBugsDespawn.cpp
 
-#define EN_INSECT_SAVESTATE_FIELDS(F) \
-    F(D_80A7DEB0)                     \
-    F(D_80A7DEB4)                     \
+#define EN_INSECT_SHIP_SAVESTATE_FIELDS(F) \
+    F(D_80A7DEB0)                          \
+    F(D_80A7DEB4)                          \
     F(D_80A7DEB8)
 
-SAVESTATE_DEFINE(EnInsect, EN_INSECT_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(EnInsect, EN_INSECT_SHIP_SAVESTATE_FIELDS)
 
 const ActorInit En_Insect_InitVars = {
     ACTOR_EN_INSECT,

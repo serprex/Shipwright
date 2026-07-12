@@ -82,9 +82,9 @@ void DemoDu_CsAfterGanon_Reset(DemoDu* this) {
 
 static s32 D_8096CE94 = false;
 
-#define DEMO_DU_SAVESTATE_FIELDS(F) F(D_8096CE94)
+#define DEMO_DU_SHIP_SAVESTATE_FIELDS(F) F(D_8096CE94)
 
-SAVESTATE_DEFINE(DemoDu, DEMO_DU_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(DemoDu, DEMO_DU_SHIP_SAVESTATE_FIELDS)
 
 void DemoDu_CsAfterGanon_CheckIfShouldReset(DemoDu* this, PlayState* play) {
 

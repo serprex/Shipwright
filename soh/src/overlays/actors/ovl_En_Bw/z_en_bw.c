@@ -127,9 +127,9 @@ static DamageTable sDamageTable = {
 
 static s32 sSlugGroup = 0;
 
-#define EN_BW_SAVESTATE_FIELDS(F) F(sSlugGroup)
+#define EN_BW_SHIP_SAVESTATE_FIELDS(F) F(sSlugGroup)
 
-SAVESTATE_DEFINE(EnBw, EN_BW_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(EnBw, EN_BW_SHIP_SAVESTATE_FIELDS)
 
 void EnBw_SetupAction(EnBw* this, EnBwActionFunc actionFunc) {
     this->actionFunc = actionFunc;

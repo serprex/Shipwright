@@ -35,9 +35,9 @@ void EnHeishi1_WaitNight(EnHeishi1* this, PlayState* play);
 
 static s32 sHeishi1PlayerIsCaught = false;
 
-#define EN_HEISHI1_SAVESTATE_FIELDS(F) F(sHeishi1PlayerIsCaught)
+#define EN_HEISHI1_SHIP_SAVESTATE_FIELDS(F) F(sHeishi1PlayerIsCaught)
 
-SAVESTATE_DEFINE(EnHeishi1, EN_HEISHI1_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(EnHeishi1, EN_HEISHI1_SHIP_SAVESTATE_FIELDS)
 
 const ActorInit En_Heishi1_InitVars = {
     ACTOR_EN_HEISHI1,

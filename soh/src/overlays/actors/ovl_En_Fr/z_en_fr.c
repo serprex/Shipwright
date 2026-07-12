@@ -101,9 +101,9 @@ static EnFrPointers sEnFrPointers = {
     },
 };
 
-#define EN_FR_SAVESTATE_FIELDS(F) F(sEnFrPointers)
+#define EN_FR_SHIP_SAVESTATE_FIELDS(F) F(sEnFrPointers)
 
-SAVESTATE_DEFINE(EnFr, EN_FR_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(EnFr, EN_FR_SHIP_SAVESTATE_FIELDS)
 
 // Flags for gSaveContext.eventChkInf[13]
 static u16 sSongIndex[] = {

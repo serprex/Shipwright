@@ -4705,16 +4705,16 @@ UNK_TYPE D_80153D7C = 0x00000000;
 // late_rodata section of this file is in the way
 s16 gGameOverTimer = 0;
 
-#define MESSAGE_PAL_SAVESTATE_FIELDS(F) \
-    F(sOcarinaNoteBufPos)               \
-    F(sOcarinaNoteBufLen)               \
-    F(sOcarinaNoteBuf)                  \
-    F(D_8014B2F4)                       \
-    F(sTextboxSkipped)                  \
-    F(sNextTextId)                      \
-    F(sLastPlayedSong)                  \
-    F(sHasSunsSong)                     \
-    F(sMessageHasSetSfx)                \
-    F(sOcarinaSongBitFlags)             \
+#define MESSAGE_PAL_SHIP_SAVESTATE_FIELDS(F) \
+    F(sOcarinaNoteBufPos)                    \
+    F(sOcarinaNoteBufLen)                    \
+    F(sOcarinaNoteBuf)                       \
+    F(D_8014B2F4)                            \
+    F(sTextboxSkipped)                       \
+    F(sNextTextId)                           \
+    F(sLastPlayedSong)                       \
+    F(sHasSunsSong)                          \
+    F(sMessageHasSetSfx)                     \
+    F(sOcarinaSongBitFlags)                  \
     F(gGameOverTimer)
-SAVESTATE_DEFINE(MessagePAL, MESSAGE_PAL_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(MessagePAL, MESSAGE_PAL_SHIP_SAVESTATE_FIELDS)

@@ -142,9 +142,9 @@ void DemoKekkai_Destroy(Actor* thisx, PlayState* play) {
 
 static Vec3f demoKekkaiVel = { 0.0f, 0.0f, 0.0f };
 
-#define DEMO_KEKKAI_SAVESTATE_FIELDS(F) F(demoKekkaiVel)
+#define DEMO_KEKKAI_SHIP_SAVESTATE_FIELDS(F) F(demoKekkaiVel)
 
-SAVESTATE_DEFINE(DemoKekkai, DEMO_KEKKAI_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(DemoKekkai, DEMO_KEKKAI_SHIP_SAVESTATE_FIELDS)
 
 void DemoKekkai_SpawnParticles(DemoKekkai* this, PlayState* play) {
     static Vec3f accel = { 0.0f, 0.0f, 0.0f };

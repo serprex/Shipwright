@@ -35,11 +35,11 @@ void EnIshi_SpawnDustLarge(EnIshi* this, PlayState* play);
 static s16 sRockRotSpeedX = 0;
 static s16 sRockRotSpeedY = 0;
 
-#define EN_ISHI_SAVESTATE_FIELDS(F) \
-    F(sRockRotSpeedX)               \
+#define EN_ISHI_SHIP_SAVESTATE_FIELDS(F) \
+    F(sRockRotSpeedX)                    \
     F(sRockRotSpeedY)
 
-SAVESTATE_DEFINE(EnIshi, EN_ISHI_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(EnIshi, EN_ISHI_SHIP_SAVESTATE_FIELDS)
 
 const ActorInit En_Ishi_InitVars = {
     ACTOR_EN_ISHI,

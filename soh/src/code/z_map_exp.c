@@ -18,11 +18,11 @@ static s16 sPlayerInitialPosZ = 0;
 static s16 sPlayerInitialDirection = 0;
 s16 sEntranceIconMapIndex = 0;
 
-#define MAP_EXP_SAVESTATE_FIELDS(F) \
-    F(sPlayerInitialPosX)           \
-    F(sPlayerInitialPosZ)           \
+#define MAP_EXP_SHIP_SAVESTATE_FIELDS(F) \
+    F(sPlayerInitialPosX)                \
+    F(sPlayerInitialPosZ)                \
     F(sPlayerInitialDirection)
-SAVESTATE_DEFINE(MapExp, MAP_EXP_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(MapExp, MAP_EXP_SHIP_SAVESTATE_FIELDS)
 
 s16 Top_MM_Margin = 0;
 s16 Left_MM_Margin = 0;

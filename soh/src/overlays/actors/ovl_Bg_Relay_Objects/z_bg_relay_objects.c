@@ -49,9 +49,9 @@ static InitChainEntry sInitChain[] = {
 
 static u32 D_808A9508 = 0;
 
-#define BG_RELAY_OBJECTS_SAVESTATE_FIELDS(F) F(D_808A9508)
+#define BG_RELAY_OBJECTS_SHIP_SAVESTATE_FIELDS(F) F(D_808A9508)
 
-SAVESTATE_DEFINE(BgRelayObjects, BG_RELAY_OBJECTS_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(BgRelayObjects, BG_RELAY_OBJECTS_SHIP_SAVESTATE_FIELDS)
 
 void BgRelayObjects_Init(Actor* thisx, PlayState* play) {
     BgRelayObjects* this = (BgRelayObjects*)thisx;

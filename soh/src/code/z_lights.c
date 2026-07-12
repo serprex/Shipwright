@@ -19,8 +19,8 @@ typedef struct {
 
 static LightsBuffer sLightsBuffer;
 
-#define LIGHTS_SAVESTATE_FIELDS(F) F(sLightsBuffer)
-SAVESTATE_DEFINE(Lights, LIGHTS_SAVESTATE_FIELDS)
+#define LIGHTS_SHIP_SAVESTATE_FIELDS(F) F(sLightsBuffer)
+SHIP_SAVESTATE_DEFINE(Lights, LIGHTS_SHIP_SAVESTATE_FIELDS)
 
 void Lights_PointSetInfo(LightInfo* info, s16 x, s16 y, s16 z, u8 r, u8 g, u8 b, s16 radius, s32 type) {
     info->type = type;

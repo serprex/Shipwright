@@ -58,8 +58,8 @@ static MapMarkInfo sMapMarkInfoTable[] = {
 
 static MapMarkData** sLoadedMarkDataTable;
 
-#define MAP_MARK_SAVESTATE_FIELDS(F) F(sLoadedMarkDataTable)
-SAVESTATE_DEFINE(MapMark, MAP_MARK_SAVESTATE_FIELDS)
+#define MAP_MARK_SHIP_SAVESTATE_FIELDS(F) F(sLoadedMarkDataTable)
+SHIP_SAVESTATE_DEFINE(MapMark, MAP_MARK_SHIP_SAVESTATE_FIELDS)
 
 void MapMark_Init(PlayState* play) {
     // MapMarkDataOverlay* overlay = &sMapMarkDataOvl;

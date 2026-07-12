@@ -104,9 +104,9 @@ static ColliderCylinderInit D_80A4B7CC = {
 static u8 sSpawnNum = 0;
 static Vec3f sDeadEffectVel = { 0.0f, 0.0f, 0.0f };
 
-#define EN_GOMA_SAVESTATE_FIELDS(F) F(sSpawnNum)
+#define EN_GOMA_SHIP_SAVESTATE_FIELDS(F) F(sSpawnNum)
 
-SAVESTATE_DEFINE(EnGoma, EN_GOMA_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(EnGoma, EN_GOMA_SHIP_SAVESTATE_FIELDS)
 
 static InitChainEntry sInitChain[] = {
     ICHAIN_U8(targetMode, 3, ICHAIN_CONTINUE),

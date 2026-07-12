@@ -83,12 +83,12 @@ static u8 sBgDodoagoDisableBombCatcher;
 
 static s32 sBgDodoagoTimer;
 
-#define BG_DODOAGO_SAVESTATE_FIELDS(F) \
-    F(sBgDodoagoFirstExplosiveFlag)    \
-    F(sBgDodoagoDisableBombCatcher)    \
+#define BG_DODOAGO_SHIP_SAVESTATE_FIELDS(F) \
+    F(sBgDodoagoFirstExplosiveFlag)         \
+    F(sBgDodoagoDisableBombCatcher)         \
     F(sBgDodoagoTimer)
 
-SAVESTATE_DEFINE(BgDodoago, BG_DODOAGO_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(BgDodoago, BG_DODOAGO_SHIP_SAVESTATE_FIELDS)
 
 void BgDodoago_SetupAction(BgDodoago* this, BgDodoagoActionFunc actionFunc) {
     this->actionFunc = actionFunc;

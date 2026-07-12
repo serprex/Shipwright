@@ -58,8 +58,8 @@ static InitChainEntry sInitChain[] = {
 
 static s16 sWarpTimerTarget;
 
-#define DOOR_WARP1_SAVESTATE_FIELDS(F) F(sWarpTimerTarget)
-SAVESTATE_DEFINE(DoorWarp1, DOOR_WARP1_SAVESTATE_FIELDS)
+#define DOOR_WARP1_SHIP_SAVESTATE_FIELDS(F) F(sWarpTimerTarget)
+SHIP_SAVESTATE_DEFINE(DoorWarp1, DOOR_WARP1_SHIP_SAVESTATE_FIELDS)
 
 void DoorWarp1_SetupAction(DoorWarp1* this, DoorWarp1ActionFunc actionFunc) {
     this->actionFunc = actionFunc;

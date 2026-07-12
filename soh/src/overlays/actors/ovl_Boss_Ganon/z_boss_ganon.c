@@ -125,15 +125,15 @@ static EnZl3* sBossGanonZelda;
 
 static GanondorfEffect sBossGanonEffectBuf[200];
 
-#define BOSS_GANON_SAVESTATE_FIELDS(F) \
-    F(sBossGanonSeed1)                 \
-    F(sBossGanonSeed2)                 \
-    F(sBossGanonSeed3)                 \
-    F(sBossGanonGanondorf)             \
-    F(sBossGanonZelda)                 \
-    F(sBossGanonCape)                  \
+#define BOSS_GANON_SHIP_SAVESTATE_FIELDS(F) \
+    F(sBossGanonSeed1)                      \
+    F(sBossGanonSeed2)                      \
+    F(sBossGanonSeed3)                      \
+    F(sBossGanonGanondorf)                  \
+    F(sBossGanonZelda)                      \
+    F(sBossGanonCape)                       \
     F(sBossGanonEffectBuf)
-SAVESTATE_DEFINE(BossGanon, BOSS_GANON_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(BossGanon, BOSS_GANON_SHIP_SAVESTATE_FIELDS)
 
 static u8 sWindowShatterTex[2048] = { { 0 } };
 

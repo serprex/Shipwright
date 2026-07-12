@@ -68,12 +68,12 @@ static Vec3f D_80B5A4B0 = { 42.0f, 260.0f, 13.0f };
 
 static u32 D_80B5A4BC = 0;
 
-#define EN_ZL3_SAVESTATE_FIELDS(F) \
-    F(D_80B5A468)                  \
-    F(D_80B5A494)                  \
+#define EN_ZL3_SHIP_SAVESTATE_FIELDS(F) \
+    F(D_80B5A468)                       \
+    F(D_80B5A494)                       \
     F(D_80B5A4BC)
 
-SAVESTATE_DEFINE(EnZl3, EN_ZL3_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(EnZl3, EN_ZL3_SHIP_SAVESTATE_FIELDS)
 
 void func_80B533B0(Actor* thisx, PlayState* play) {
     EnZl3* this = (EnZl3*)thisx;

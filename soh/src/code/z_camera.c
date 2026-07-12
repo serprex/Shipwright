@@ -8355,30 +8355,30 @@ s16 func_8005B1A4(Camera* camera) {
     return camera->thisIdx;
 }
 
-#define CAMERA_SAVESTATE_FIELDS(F) \
-    F(sInitRegs)                   \
-    F(gDbgCamEnabled)              \
-    F(sDbgModeIdx)                 \
-    F(sNextUID)                    \
-    F(sCameraInterfaceFlags)       \
-    F(sCameraInterfaceAlpha)       \
-    F(sCameraShrinkWindowVal)      \
-    F(D_8011D3AC)                  \
-    F(sDemo5PrevAction12Frame)     \
-    F(sDemo5PrevSfxFrame)          \
-    F(D_8011D3F0)                  \
-    F(D_8011D6AC)                  \
-    F(D_8011D724)                  \
-    F(D_8011D79C)                  \
-    F(D_8011D83C)                  \
-    F(D_8011D88C)                  \
-    F(D_8011D8DC)                  \
-    F(D_8011D954)                  \
-    F(D_8011D9F4)                  \
-    F(depthPhase)                  \
-    F(screenPlanePhase)            \
-    F(sOOBTimer)                   \
-    F(D_8015CE50)                  \
-    F(D_8015CE54)                  \
+#define CAMERA_SHIP_SAVESTATE_FIELDS(F) \
+    F(sInitRegs)                        \
+    F(gDbgCamEnabled)                   \
+    F(sDbgModeIdx)                      \
+    F(sNextUID)                         \
+    F(sCameraInterfaceFlags)            \
+    F(sCameraInterfaceAlpha)            \
+    F(sCameraShrinkWindowVal)           \
+    F(D_8011D3AC)                       \
+    F(sDemo5PrevAction12Frame)          \
+    F(sDemo5PrevSfxFrame)               \
+    F(D_8011D3F0)                       \
+    F(D_8011D6AC)                       \
+    F(D_8011D724)                       \
+    F(D_8011D79C)                       \
+    F(D_8011D83C)                       \
+    F(D_8011D88C)                       \
+    F(D_8011D8DC)                       \
+    F(D_8011D954)                       \
+    F(D_8011D9F4)                       \
+    F(depthPhase)                       \
+    F(screenPlanePhase)                 \
+    F(sOOBTimer)                        \
+    F(D_8015CE50)                       \
+    F(D_8015CE54)                       \
     F(D_8015CE58)
-SAVESTATE_DEFINE(Camera, CAMERA_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(Camera, CAMERA_SHIP_SAVESTATE_FIELDS)

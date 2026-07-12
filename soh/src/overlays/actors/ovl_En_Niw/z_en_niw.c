@@ -77,12 +77,12 @@ static u8 sLowerRiverSpawned = false;
 
 static u8 sUpperRiverSpawned = false;
 
-#define EN_NIW_SAVESTATE_FIELDS(F) \
-    F(D_80AB85E0)                  \
-    F(sLowerRiverSpawned)          \
+#define EN_NIW_SHIP_SAVESTATE_FIELDS(F) \
+    F(D_80AB85E0)                       \
+    F(sLowerRiverSpawned)               \
     F(sUpperRiverSpawned)
 
-SAVESTATE_DEFINE(EnNiw, EN_NIW_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(EnNiw, EN_NIW_SHIP_SAVESTATE_FIELDS)
 
 static ColliderCylinderInit sCylinderInit1 = {
     {

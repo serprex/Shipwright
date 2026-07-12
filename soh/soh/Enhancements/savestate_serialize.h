@@ -8,9 +8,9 @@ extern "C" {
 #endif
 
 typedef enum SaveStateMode {
-    SAVESTATE_MEASURE,
-    SAVESTATE_SAVE,
-    SAVESTATE_LOAD,
+    SHIP_SAVESTATE_MEASURE,
+    SHIP_SAVESTATE_SAVE,
+    SHIP_SAVESTATE_LOAD,
 } SaveStateMode;
 
 typedef struct SaveStateCtx {
@@ -21,23 +21,23 @@ typedef struct SaveStateCtx {
 
 static inline void SaveState_Blob(SaveStateCtx* ctx, void* data, size_t len) {
     switch (ctx->mode) {
-        case SAVESTATE_SAVE:
+        case SHIP_SAVESTATE_SAVE:
             memcpy(ctx->buffer + ctx->offset, data, len);
             break;
-        case SAVESTATE_LOAD:
+        case SHIP_SAVESTATE_LOAD:
             memcpy(data, ctx->buffer + ctx->offset, len);
             break;
-        case SAVESTATE_MEASURE:
+        case SHIP_SAVESTATE_MEASURE:
         default:
             break;
     }
     ctx->offset += len;
 }
 
-#define SAVESTATE_SERIALIZE_FIELD(field) SaveState_Blob(ctx, &(field), sizeof(field));
-#define SAVESTATE_DEFINE(Tag, FIELDS)         \
-    void Tag##_SaveState(SaveStateCtx* ctx) { \
-        FIELDS(SAVESTATE_SERIALIZE_FIELD)     \
+#define SHIP_SAVESTATE_SERIALIZE_FIELD(field) SaveState_Blob(ctx, &(field), sizeof(field));
+#define SHIP_SAVESTATE_DEFINE(Tag, FIELDS)     \
+    void Tag##_SaveState(SaveStateCtx* ctx) {  \
+        FIELDS(SHIP_SAVESTATE_SERIALIZE_FIELD) \
     }
 
 #ifdef __cplusplus

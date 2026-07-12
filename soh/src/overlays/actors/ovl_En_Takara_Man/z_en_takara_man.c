@@ -43,9 +43,9 @@ const ActorInit En_Takara_Man_InitVars = {
 
 static u8 sTakaraIsInitialized = false;
 
-#define EN_TAKARA_MAN_SAVESTATE_FIELDS(F) F(sTakaraIsInitialized)
+#define EN_TAKARA_MAN_SHIP_SAVESTATE_FIELDS(F) F(sTakaraIsInitialized)
 
-SAVESTATE_DEFINE(EnTakaraMan, EN_TAKARA_MAN_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(EnTakaraMan, EN_TAKARA_MAN_SHIP_SAVESTATE_FIELDS)
 
 void EnTakaraMan_Reset(Actor* thisx, PlayState* play) {
     sTakaraIsInitialized = false;

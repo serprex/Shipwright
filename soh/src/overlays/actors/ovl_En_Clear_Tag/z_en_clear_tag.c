@@ -89,11 +89,11 @@ static ColliderCylinderInit sLaserCylinderInit = {
 
 static EnClearTagEffect sClearTagEffects[CLEAR_TAG_EFFECT_MAX_COUNT];
 
-#define EN_CLEAR_TAG_SAVESTATE_FIELDS(F) \
-    F(sClearTagIsEffectsInitialized)     \
+#define EN_CLEAR_TAG_SHIP_SAVESTATE_FIELDS(F) \
+    F(sClearTagIsEffectsInitialized)          \
     F(sClearTagEffects)
 
-SAVESTATE_DEFINE(EnClearTag, EN_CLEAR_TAG_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(EnClearTag, EN_CLEAR_TAG_SHIP_SAVESTATE_FIELDS)
 
 #include "overlays/ovl_En_Clear_Tag/ovl_En_Clear_Tag.h"
 

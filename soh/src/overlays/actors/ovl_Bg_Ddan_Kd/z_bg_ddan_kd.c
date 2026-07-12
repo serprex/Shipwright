@@ -125,11 +125,11 @@ void BgDdanKd_CheckForExplosions(BgDdanKd* this, PlayState* play) {
 static Vec3f sBgDdanKdVelocity = { 0.0f, 5.0f, 0.0f };
 static Vec3f sBgDdanKdAccel = { 0.0f, -0.45f, 0.0f };
 
-#define BG_DDAN_KD_SAVESTATE_FIELDS(F) \
-    F(sBgDdanKdVelocity)               \
+#define BG_DDAN_KD_SHIP_SAVESTATE_FIELDS(F) \
+    F(sBgDdanKdVelocity)                    \
     F(sBgDdanKdAccel)
 
-SAVESTATE_DEFINE(BgDdanKd, BG_DDAN_KD_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(BgDdanKd, BG_DDAN_KD_SHIP_SAVESTATE_FIELDS)
 
 void BgDdanKd_LowerStairs(BgDdanKd* this, PlayState* play) {
     Vec3f pos1;

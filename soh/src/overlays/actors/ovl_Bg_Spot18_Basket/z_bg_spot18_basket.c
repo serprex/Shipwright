@@ -88,9 +88,9 @@ void BgSpot18Basket_InitColliderJntSph(Actor* thisx, PlayState* play) {
 
 static s16 D_808B85D0 = 0;
 
-#define BG_SPOT18_BASKET_SAVESTATE_FIELDS(F) F(D_808B85D0)
+#define BG_SPOT18_BASKET_SHIP_SAVESTATE_FIELDS(F) F(D_808B85D0)
 
-SAVESTATE_DEFINE(BgSpot18Basket, BG_SPOT18_BASKET_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(BgSpot18Basket, BG_SPOT18_BASKET_SHIP_SAVESTATE_FIELDS)
 
 void BgSpot18Basket_SpawnDustClouds(BgSpot18Basket* this, PlayState* play, f32 arg2) {
     Vec3f acceleration;

@@ -103,11 +103,11 @@ static Vec3f sPlatformPositions[] = {
 static s16 D_80B4A1B0 = 0;
 static s16 D_80B4A1B4 = 1;
 
-#define EN_ZF_SAVESTATE_FIELDS(F) \
-    F(D_80B4A1B0)                 \
+#define EN_ZF_SHIP_SAVESTATE_FIELDS(F) \
+    F(D_80B4A1B0)                      \
     F(D_80B4A1B4)
 
-SAVESTATE_DEFINE(EnZf, EN_ZF_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(EnZf, EN_ZF_SHIP_SAVESTATE_FIELDS)
 
 const ActorInit En_Zf_InitVars = {
     ACTOR_EN_ZF,

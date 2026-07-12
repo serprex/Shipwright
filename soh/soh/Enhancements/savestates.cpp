@@ -60,10 +60,10 @@ extern "C" void MessagePAL_SaveState(SaveStateCtx* ctx);
 
 static void SaveOverlayState(std::unique_ptr<uint8_t[]>& buf, void (*fn)(SaveStateCtx*)) {
     SaveStateCtx ctx = {};
-    ctx.mode = SAVESTATE_MEASURE;
+    ctx.mode = SHIP_SAVESTATE_MEASURE;
     fn(&ctx);
     buf = std::make_unique<uint8_t[]>(ctx.offset);
-    ctx.mode = SAVESTATE_SAVE;
+    ctx.mode = SHIP_SAVESTATE_SAVE;
     ctx.buffer = buf.get();
     ctx.offset = 0;
     fn(&ctx);
@@ -71,7 +71,7 @@ static void SaveOverlayState(std::unique_ptr<uint8_t[]>& buf, void (*fn)(SaveSta
 
 static void LoadOverlayState(std::unique_ptr<uint8_t[]>& buf, void (*fn)(SaveStateCtx*)) {
     SaveStateCtx ctx = {};
-    ctx.mode = SAVESTATE_LOAD;
+    ctx.mode = SHIP_SAVESTATE_LOAD;
     ctx.buffer = buf.get();
     ctx.offset = 0;
     fn(&ctx);
@@ -99,7 +99,7 @@ typedef struct SaveStateInfo {
     uint8_t gAudioSfxSwapMode_copy[10];
     void (*D_801755D0_copy)(void);
 
-    // Static data (per-translation-unit, serialized via SAVESTATE_DEFINE)
+    // Static data (per-translation-unit, serialized via SHIP_SAVESTATE_DEFINE)
     std::unique_ptr<uint8_t[]> matrixState;
     std::unique_ptr<uint8_t[]> lightsState;
     std::unique_ptr<uint8_t[]> doorWarp1State;

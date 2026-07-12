@@ -110,11 +110,11 @@ static InitChainEntry sInitChain[] = {
 
 static UNK_TYPE D_80881014 = 0;
 
-#define BG_HAKA_TRAP_SAVESTATE_FIELDS(F) \
-    F(D_80880F30)                        \
+#define BG_HAKA_TRAP_SHIP_SAVESTATE_FIELDS(F) \
+    F(D_80880F30)                             \
     F(D_80881014)
 
-SAVESTATE_DEFINE(BgHakaTrap, BG_HAKA_TRAP_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(BgHakaTrap, BG_HAKA_TRAP_SHIP_SAVESTATE_FIELDS)
 
 void BgHakaTrap_Init(Actor* thisx, PlayState* play) {
     BgHakaTrap* this = (BgHakaTrap*)thisx;

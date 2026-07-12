@@ -1445,13 +1445,13 @@ void func_80B3F534(PlayState* play) {
 
 static s32 D_80B41DAC = 1;
 
-#define EN_XC_SAVESTATE_FIELDS(F) \
-    F(D_80B41D90)                 \
-    F(sEnXcFlameSpawned)          \
-    F(D_80B41DA8)                 \
+#define EN_XC_SHIP_SAVESTATE_FIELDS(F) \
+    F(D_80B41D90)                      \
+    F(sEnXcFlameSpawned)               \
+    F(D_80B41DA8)                      \
     F(D_80B41DAC)
 
-SAVESTATE_DEFINE(EnXc, EN_XC_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(EnXc, EN_XC_SHIP_SAVESTATE_FIELDS)
 
 void func_80B3F59C(EnXc* this, PlayState* play) {
     CsCmdActorCue* npcAction = EnXc_GetCsCmd(play, 0);

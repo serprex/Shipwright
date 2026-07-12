@@ -75,18 +75,18 @@ static Vec3f D_80910608[4];
 
 static s8 D_80910638;
 
-#define BOSS_GANON2_SAVESTATE_FIELDS(F) \
-    F(D_8090EB20)                       \
-    F(D_80910638)                       \
-    F(sBossGanon2Zelda)                 \
-    F(D_8090EB30)                       \
-    F(sBossGanon2Seed1)                 \
-    F(sBossGanon2Seed2)                 \
-    F(sBossGanon2Seed3)                 \
-    F(D_809105D8)                       \
-    F(D_80910608)                       \
+#define BOSS_GANON2_SHIP_SAVESTATE_FIELDS(F) \
+    F(D_8090EB20)                            \
+    F(D_80910638)                            \
+    F(sBossGanon2Zelda)                      \
+    F(D_8090EB30)                            \
+    F(sBossGanon2Seed1)                      \
+    F(sBossGanon2Seed2)                      \
+    F(sBossGanon2Seed3)                      \
+    F(D_809105D8)                            \
+    F(D_80910608)                            \
     F(sBossGanon2Particles)
-SAVESTATE_DEFINE(BossGanon2, BOSS_GANON2_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(BossGanon2, BOSS_GANON2_SHIP_SAVESTATE_FIELDS)
 
 void BossGanon2_InitRand(s32 seedInit0, s32 seedInit1, s32 seedInit2) {
     sBossGanon2Seed1 = seedInit0;

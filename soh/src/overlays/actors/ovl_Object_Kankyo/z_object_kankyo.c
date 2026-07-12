@@ -64,11 +64,11 @@ const ActorInit Object_Kankyo_InitVars = {
 static u8 sKankyoIsSpawned = false;
 static s16 sTrailingFairies = 0;
 
-#define OBJECT_KANKYO_SAVESTATE_FIELDS(F) \
-    F(sKankyoIsSpawned)                   \
+#define OBJECT_KANKYO_SHIP_SAVESTATE_FIELDS(F) \
+    F(sKankyoIsSpawned)                        \
     F(sTrailingFairies)
 
-SAVESTATE_DEFINE(ObjectKankyo, OBJECT_KANKYO_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(ObjectKankyo, OBJECT_KANKYO_SHIP_SAVESTATE_FIELDS)
 
 void ObjectKankyo_SetupAction(ObjectKankyo* this, ObjectKankyoActionFunc action) {
     this->actionFunc = action;

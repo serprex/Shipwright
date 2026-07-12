@@ -201,11 +201,11 @@ static s16 D_8094C87C;
 static u8 D_8094C87E;
 static BossTwEffect sTwEffects[150];
 
-#define BOSS_TW_SAVESTATE_FIELDS(F) \
-    F(sTwInitalized)                \
+#define BOSS_TW_SHIP_SAVESTATE_FIELDS(F) \
+    F(sTwInitalized)                     \
     F(sTwEffects)
 
-SAVESTATE_DEFINE(BossTw, BOSS_TW_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(BossTw, BOSS_TW_SHIP_SAVESTATE_FIELDS)
 
 void BossTw_AddDotEffect(PlayState* play, Vec3f* initalPos, Vec3f* initalSpeed, Vec3f* accel, f32 scale, s16 args,
                          s16 countLimit) {

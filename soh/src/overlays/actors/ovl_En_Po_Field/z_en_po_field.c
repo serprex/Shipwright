@@ -154,12 +154,12 @@ static Vec3s sEnPoFieldSpawnPositions[10];
 static u8 sEnPoFieldSpawnSwitchFlags[10];
 static MtxF sLimb7Mtx;
 
-#define EN_PO_FIELD_SAVESTATE_FIELDS(F) \
-    F(sEnPoFieldNumSpawned)             \
-    F(sEnPoFieldSpawnPositions)         \
+#define EN_PO_FIELD_SHIP_SAVESTATE_FIELDS(F) \
+    F(sEnPoFieldNumSpawned)                  \
+    F(sEnPoFieldSpawnPositions)              \
     F(sEnPoFieldSpawnSwitchFlags)
 
-SAVESTATE_DEFINE(EnPoField, EN_PO_FIELD_SAVESTATE_FIELDS)
+SHIP_SAVESTATE_DEFINE(EnPoField, EN_PO_FIELD_SHIP_SAVESTATE_FIELDS)
 
 void EnPoField_Init(Actor* thisx, PlayState* play) {
     EnPoField* this = (EnPoField*)thisx;
