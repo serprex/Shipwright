@@ -8,12 +8,14 @@
 #include <array>
 
 void DrawItemAmmo(int itemId);
+void RefreshItemTrackerMainWindow();
 
 typedef enum ItemKind {
     ITEM_KIND_ITEM,
     ITEM_KIND_QUEST,
     ITEM_KIND_RG,
-    ITEM_KIND_SPECIAL,
+	ITEM_KIND_SPECIAL,
+	ITEM_KIND_DUMMY,
 } ItemKind;
 
 typedef struct ItemTrackerItem {

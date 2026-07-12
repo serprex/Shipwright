@@ -1241,9 +1241,8 @@ extern "C" void Randomizer_DrawOpenChest(PlayState* play, GetItemEntry* getItemE
 extern "C" void Randomizer_DrawSilverRupee(PlayState* play, GetItemEntry* getItemEntry) {
     OPEN_DISPS(play->state.gfxCtx);
     Gfx_SetupDL_25Opa(play->state.gfxCtx);
-    Matrix_Scale(0.1f, 0.1f, 0.1f, MTXMODE_APPLY);
     Color_RGB8 defaultColor = { 255, 255, 255 };
-    if (CVarGetInteger("gNewDrops", 0) != 0) {
+    if (CVarGetInteger("gEnhancements.NewDrops", 0) != 0) {
         gSPMatrix(POLY_OPA_DISP++, Matrix_NewMtx(play->state.gfxCtx, (char*)__FILE__, __LINE__),
                   G_MTX_MODELVIEW | G_MTX_LOAD);
         Color_RGB8 silverRupeeColor = CVarGetColor24("gCosmetics.Consumable_SilverRupee.Value", defaultColor);
@@ -1261,6 +1260,7 @@ extern "C" void Randomizer_DrawSilverRupee(PlayState* play, GetItemEntry* getIte
                        silverRupeeColor.b * 0.75f, 255);
         gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gGiRupeeOuterDL);
     } else {
+		Matrix_Scale(0.05f, 0.05f, 0.05f, MTXMODE_APPLY);
         gSPMatrix(POLY_OPA_DISP++, Matrix_NewMtx(play->state.gfxCtx, (char*)__FILE__, __LINE__),
                   G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         if (CVarGetInteger("gCosmetics.Consumable_SilverRupee.Changed", 0)) {
