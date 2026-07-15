@@ -22,7 +22,7 @@ typedef enum {
 
     // #### `result`
     // ```c
-    // sBgPoEventPuzzleState == 0xF
+    // sPuzzleState == 0xF
     // ```
     // #### `args`
     // - None
@@ -1495,6 +1495,14 @@ typedef enum {
     // #### `args`
     // - `*EnKz`
     VB_KING_ZORA_TUNIC_CHECK,
+
+    // #### `result`
+    // ```c
+    // false if in Jabu, carrying Ruto, abducted flag set, door is id 21 or 3
+    // ```
+    // #### `args`
+    // - `*Actor` (shutter door)
+    VB_JABU_PREVENT_RUTO_REENTER_BIGOCTO,
 
     // #### `result`
     // ```c
