@@ -1421,8 +1421,8 @@ void DrawItemsInRows(std::vector<ItemTrackerItem> items, int columns = 6) {
         (CVarGetInteger(CVAR_TRACKER_ITEM("WindowType"), TRACKER_WINDOW_FLOATING) == TRACKER_WINDOW_WINDOW) ? 20 : 0;
 
     for (size_t i = 0; i < items.size(); i++) {
-        int row = i / columns;
-        int column = i % columns;
+        size_t row = i / columns;
+        size_t column = i % columns;
         ImGui::SetCursorPos(
             ImVec2((column * (iconSize + iconSpacing) + 8.0f), (row * (iconSize + iconSpacing)) + 8.0f + topPadding));
         items[i].drawFunc(items[i]);
