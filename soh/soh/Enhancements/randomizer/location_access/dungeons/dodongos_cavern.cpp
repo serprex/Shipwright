@@ -123,6 +123,7 @@ void RegionTable_Init_DodongosCavern() {
 
     areaTable[RR_DODONGOS_CAVERN_STAIRS_LOWER] = Region("Dodongos Cavern Stairs Lower", SCENE_DODONGOS_CAVERN, {}, {
         //Locations
+        LOCATION(RC_DODONGOS_CAVERN_GS_ALCOVE_ABOVE_STAIRS, ctx->GetTrickOption(RT_DC_ALCOVE_GS) && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_LONGSHOT)),
         LOCATION(RC_DODONGOS_CAVERN_GS_VINES_ABOVE_STAIRS, ctx->GetTrickOption(RT_DC_VINES_GS) && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_LONGSHOT)),
     }, {
         //Exits
@@ -133,6 +134,7 @@ void RegionTable_Init_DodongosCavern() {
 
     areaTable[RR_DODONGOS_CAVERN_STAIRS_UPPER] = Region("Dodongos Cavern Stairs Upper", SCENE_DODONGOS_CAVERN, {}, {
         //Locations
+        //Jump from vines can reach stairs without climb
         LOCATION(RC_DODONGOS_CAVERN_GS_ALCOVE_ABOVE_STAIRS, logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, logic->Get(LOGIC_DC_LIFT_PLATFORM) ? ED_BOOMERANG : ED_LONGSHOT)),
         LOCATION(RC_DODONGOS_CAVERN_GS_VINES_ABOVE_STAIRS,  (logic->HasItem(RG_CLIMB) && logic->HasItem(RG_POWER_BRACELET)) || logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG)),
         LOCATION(RC_DODONGOS_CAVERN_STAIRCASE_POT_1,        logic->CanBreakPots()),
@@ -354,13 +356,13 @@ void RegionTable_Init_DodongosCavern() {
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_POT_4,         logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_LOWER_CRATE_1, logic->CanBreakCrates()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_LOWER_CRATE_2, logic->CanBreakCrates()),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_1,                true),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_2,                logic->CanBreakCrates()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_BEAMOS_SILVER,                true),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_1F_CRATE_SILVER,                logic->CanBreakCrates()),
     }, {
         //Exits
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_LOBBY,               true),
         //This is possible with sticks and shield, igniting a first flower by "touch" then very quickly crouch stabbing in a way that cuts the corner to light the 3rd bomb on the other side, but that's a trick
-        ENTRANCE(RR_DODONGOS_CAVERN_MQ_STAIRS_UPPER,         AnyAgeTime([]{return logic->HasExplosives() || logic->CanUse(RG_DINS_FIRE) || (ctx->GetTrickOption(RT_DC_STAIRS_WITH_BOW) && logic->CanUse(RG_FAIRY_BOW));})),
+        ENTRANCE(RR_DODONGOS_CAVERN_MQ_STAIRS_UPPER,         AnyAgeTime([]{return logic->HasExplosives() || logic->CanUse(RG_DINS_FIRE) || (ctx->GetTrickOption(RT_DC_STAIRS_WITH_BOW) && logic->CanUse(RG_FAIRY_BOW));}) || (ctx->GetTrickOption(RT_VISIBLE_COLLISION) && logic->CanUse(RG_HOOKSHOT))),
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_STAIRS_PAST_MUD_WALL, AnyAgeTime([]{return logic->HasItem(RG_GORONS_BRACELET) || logic->CanBreakMudWalls();})),
     });
 
@@ -381,13 +383,14 @@ void RegionTable_Init_DodongosCavern() {
         EVENT_ACCESS(LOGIC_DODONGOS_CAVERN_MQ_SILVER, (logic->CanPassEnemy(RE_BIG_SKULLTULA) || logic->CanUse(RG_HOVER_BOOTS)) && logic->HasItem(RG_CLIMB)),
     }, {
         //Locations
-        LOCATION(RC_DODONGOS_CAVERN_MQ_DEKU_SCRUB_STAIRCASE,    logic->CanStunDeku() && logic->HasItem(RG_SPEAK_DEKU) && GetCheckPrice() <= GetWalletCapacity()),
+        //Jump from vines can reach stairs without climb
+        LOCATION(RC_DODONGOS_CAVERN_MQ_DEKU_SCRUB_STAIRCASE, logic->CanStunDeku() && logic->HasItem(RG_SPEAK_DEKU) && GetCheckPrice() <= GetWalletCapacity()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_UPPER_CRATE_1, logic->CanBreakCrates()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_UPPER_CRATE_2, logic->CanBreakCrates()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_UPPER_CRATE_3, logic->CanBreakCrates()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_UPPER_CRATE_4, logic->CanBreakCrates()),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_3,                logic->CanBreakCrates()),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_5,                logic->CanBreakCrates()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LOWER_2F_CRATE_SILVER,                logic->CanBreakCrates()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_UPPER_2F_CRATE_SILVER,                logic->CanBreakCrates()),
     }, {
         //Exits
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_STAIRS_LOWER,               true),
@@ -396,7 +399,7 @@ void RegionTable_Init_DodongosCavern() {
 
     areaTable[RR_DODONGOS_CAVERN_MQ_STAIRS_PAST_BIG_SKULLTULAS] = Region("Dodongos Cavern MQ Past Big Skulltulas", SCENE_DODONGOS_CAVERN, {}, {
         //Locations
-        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_4, true /*CanClimb()*/),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_VINES_SILVER, true /*CanClimb()*/),
     }, {
         //Exits
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_STAIRS_UPPER, logic->CanPassEnemy(RE_BIG_SKULLTULA) || logic->CanUse(RG_HOVER_BOOTS)),

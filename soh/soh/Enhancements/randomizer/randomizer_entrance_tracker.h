@@ -9,7 +9,7 @@
 #include <libultraship/color.h>
 #include <libultraship/libultra.h>
 #include <ship/window/gui/GuiWindow.h>
-#include "randomizerTypes.h"
+#include "randomizerEnums.h"
 
 typedef enum {
     // ENTRANCE_GROUP_NO_GROUP,
@@ -114,7 +114,7 @@ void InitEntranceTrackingData();
 s16 GetLastEntranceOverride();
 s16 GetCurrentGrottoId();
 const EntranceData* GetEntranceData(s16);
-void LoadFromPreset(nlohmann::json info);
+void LoadFromPreset(const nlohmann::json& info);
 
 class EntranceTrackerSettingsWindow final : public Ship::GuiWindow {
   public:

@@ -2,6 +2,8 @@
 #include "randomizer_entrance_tracker.h"
 #include "randomizer_item_tracker.h"
 #include "randomizerTypes.h"
+#include "soh/Enhancements/randomizer/randomizerEnums.h"
+#include "soh/Enhancements/randomizer/static_data.h"
 #include "soh/OTRGlobals.h"
 #include "soh/SaveManager.h"
 #include "soh/ResourceManagerHelpers.h"
@@ -357,6 +359,7 @@ std::map<RandomizerGet, RandomizerCheckArea> MapRGtoRandomizerCheckArea = {
     { RG_ICE_CAVERN_MAP, RCAREA_ICE_CAVERN }
 };
 
+// RANDOTODO do we want keyrings and keys beyond lower total to spoil area too?
 void SpoilAreaFromCheck(RandomizerCheck rc) {
     Rando::Location* loc = Rando::StaticData::GetLocation(rc);
     Rando::ItemLocation* itemLoc = Rando::Context::GetInstance()->GetItemLocation(rc);
@@ -364,6 +367,12 @@ void SpoilAreaFromCheck(RandomizerCheck rc) {
         RandomizerCheckArea area = MapRGtoRandomizerCheckArea[itemLoc->GetPlacedRandomizerGet()];
         if (!IsAreaSpoiled(area)) {
             SetAreaSpoiled(area);
+        }
+    }
+    if (itemLoc->GetPlacedItem().GetItemType() == ItemType::ITEMTYPE_SILVER) {
+        if (!Rando::StaticData::constantSilvers.contains(itemLoc->GetPlacedRandomizerGet()) &&
+            !IsAreaSpoiled(Rando::StaticData::silverToArea[itemLoc->GetPlacedRandomizerGet()])) {
+            SetAreaSpoiled(Rando::StaticData::silverToArea[itemLoc->GetPlacedRandomizerGet()]);
         }
     }
     if (!IsAreaSpoiled(loc->GetArea())) {
@@ -562,6 +571,7 @@ void CheckTrackerLoadGame(int32_t fileNum) {
     }
     for (int i = RCAREA_KOKIRI_FOREST; i < RCAREA_INVALID; i++) {
         if (!IsAreaSpoiled(static_cast<RandomizerCheckArea>(i)) &&
+
             (RandomizerCheckObjects::AreaIsOverworld(static_cast<RandomizerCheckArea>(i)) || !IS_RANDO ||
              OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_MQ_DUNGEON_RANDOM) == RO_MQ_DUNGEONS_NONE ||
              (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_MQ_DUNGEON_RANDOM) ==
@@ -974,9 +984,17 @@ bool IsAreaSpoiled(RandomizerCheckArea rcArea) {
     return areasSpoiled & (1 << rcArea);
 }
 
+// we don't care how many silvers for this check, only that all possible silver items are known
+bool AreAllSilversSpoiled() {
+    return IsAreaSpoiled(RCAREA_DODONGOS_CAVERN) && IsAreaSpoiled(RCAREA_BOTTOM_OF_THE_WELL) &&
+           IsAreaSpoiled(RCAREA_GANONS_CASTLE) && IsAreaSpoiled(RCAREA_SHADOW_TEMPLE) &&
+           IsAreaSpoiled(RCAREA_SPIRIT_TEMPLE) && IsAreaSpoiled(RCAREA_ICE_CAVERN);
+}
+
 void SetAreaSpoiled(RandomizerCheckArea rcArea) {
     areasSpoiled |= (1 << rcArea);
     SaveManager::Instance->SaveSection(gSaveContext.fileNum, sectionId, true);
+    RefreshItemTrackerMainWindow();
 }
 
 void InternalRecalculateAvailableChecks(RandomizerRegion startingRegion, RandoAgeTime startingAgeTime);
@@ -1634,23 +1652,23 @@ void LoadSettings() {
     }
 
     switch (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_GANONS_BOSS_KEY)) {
-        case RO_GANON_BOSS_KEY_LACS_STONES:
-            Rando::Context::GetInstance()->LACSCondition(RO_LACS_STONES);
+        case RO_GANON_BOSS_KEY_STONES:
+            Rando::Context::GetInstance()->GBKCondition(RO_CHECK_TRIGGER_STONES);
             break;
-        case RO_GANON_BOSS_KEY_LACS_MEDALLIONS:
-            Rando::Context::GetInstance()->LACSCondition(RO_LACS_MEDALLIONS);
+        case RO_GANON_BOSS_KEY_MEDALLIONS:
+            Rando::Context::GetInstance()->GBKCondition(RO_CHECK_TRIGGER_MEDALLIONS);
             break;
-        case RO_GANON_BOSS_KEY_LACS_REWARDS:
-            Rando::Context::GetInstance()->LACSCondition(RO_LACS_REWARDS);
+        case RO_GANON_BOSS_KEY_REWARDS:
+            Rando::Context::GetInstance()->GBKCondition(RO_CHECK_TRIGGER_REWARDS);
             break;
-        case RO_GANON_BOSS_KEY_LACS_DUNGEONS:
-            Rando::Context::GetInstance()->LACSCondition(RO_LACS_DUNGEONS);
+        case RO_GANON_BOSS_KEY_DUNGEONS:
+            Rando::Context::GetInstance()->GBKCondition(RO_CHECK_TRIGGER_DUNGEONS);
             break;
-        case RO_GANON_BOSS_KEY_LACS_TOKENS:
-            Rando::Context::GetInstance()->LACSCondition(RO_LACS_TOKENS);
+        case RO_GANON_BOSS_KEY_TOKENS:
+            Rando::Context::GetInstance()->GBKCondition(RO_CHECK_TRIGGER_TOKENS);
             break;
         default:
-            Rando::Context::GetInstance()->LACSCondition(RO_LACS_VANILLA);
+            Rando::Context::GetInstance()->GBKCondition(RO_CHECK_TRIGGER_NONE);
             break;
     }
 }
@@ -1673,7 +1691,7 @@ bool IsCheckShuffled(RandomizerCheck rc) {
                 (showShops &&
                  OTRGlobals::Instance->gRandomizer->IdentifyShopItem(loc->GetScene(), loc->GetActorParams() + 1)
                          .enGirlAShopItem == 50)) &&
-               (rc != RC_TRIFORCE_COMPLETED) && (rc != RC_GANON) &&
+               (rc != RC_WINCON) && (rc != RC_GANON) &&
                (loc->GetRCType() != RCTYPE_SCRUB || showScrubs ||
                 (showMajorScrubs && (rc == RC_LW_DEKU_SCRUB_NEAR_BRIDGE || // The 3 scrubs that are always randomized
                                      rc == RC_HF_DEKU_SCRUB_GROTTO || rc == RC_LW_DEKU_SCRUB_GROTTO_FRONT))) &&
@@ -2075,7 +2093,7 @@ void DrawLocation(RandomizerCheck rc) {
                     } else if (revealItemName) {
                         txt = itemLoc->GetPlacedItem().GetName().GetForLanguage(gSaveContext.language);
                     }
-                    if (IsVisibleInCheckTracker(rc) && status == RCSHOW_IDENTIFIED) {
+                    if (itemLoc->CanBePurchased() && IsVisibleInCheckTracker(rc) && status == RCSHOW_IDENTIFIED) {
                         auto price = OTRGlobals::Instance->gRandoContext->GetItemLocation(rc)->GetPrice();
                         txt = !txt.empty() ? fmt::format("{} - {}", txt, price) : fmt::format("{}", price);
                     }
@@ -2276,10 +2294,10 @@ void RecalculateAvailableChecks(RandomizerRegion startingRegion /* = RR_ROOT */,
     availableChecksStartingAgeTime = startingAgeTime;
 }
 
-void LoadFromPreset(nlohmann::json info) {
+void LoadFromPreset(const nlohmann::json& info) {
     presetLoaded = true;
-    presetPos = { info["pos"]["x"], info["pos"]["y"] };
-    presetSize = { info["size"]["width"], info["size"]["height"] };
+    presetPos = { info.at("pos").at("x"), info.at("pos").at("y") };
+    presetSize = { info.at("size").at("width"), info.at("size").at("height") };
 }
 
 void CheckTrackerWindow::Draw() {

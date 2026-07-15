@@ -411,8 +411,21 @@ extern "C" void Randomizer_DrawTriforcePieceGI(PlayState* play, GetItemEntry get
 
     Gfx_SetupDL_25Xlu(play->state.gfxCtx);
 
+    auto rando = OTRGlobals::Instance->gRandomizer;
     uint8_t current = gSaveContext.ship.quest.data.randomizer.triforcePiecesCollected;
-    uint8_t required = OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT_PIECES_REQUIRED) + 1;
+    bool fullTriforce = false;
+    if (rando->GetRandoSettingValue(RSK_RAINBOW_BRIDGE) == RO_BRIDGE_TRIFORCE_PIECES) {
+        fullTriforce = rando->GetRandoSettingValue(RSK_RAINBOW_BRIDGE_TRIFORCE_COUNT) == current;
+    }
+    if (rando->GetRandoSettingValue(RSK_WINCON) == RO_WINCON_TRIFORCE_PIECES) {
+        fullTriforce = fullTriforce || (rando->GetRandoSettingValue(RSK_WINCON_TRIFORCE_COUNT) == current);
+    }
+    if (rando->GetRandoSettingValue(RSK_GANONS_BOSS_KEY) == RO_GANON_BOSS_KEY_TRIFORCE_PIECES) {
+        fullTriforce = fullTriforce || (rando->GetRandoSettingValue(RSK_GBK_TRIFORCE_COUNT) == current);
+    }
+    if (rando->GetRandoSettingValue(RSK_GANONS_SOUL) == RO_GANONS_SOUL_TRIFORCE_PIECES) {
+        fullTriforce = fullTriforce || (rando->GetRandoSettingValue(RSK_GANONS_SOUL_TRIFORCE_COUNT) == current);
+    }
 
     Matrix_Scale(triforcePieceScale, triforcePieceScale, triforcePieceScale, MTXMODE_APPLY);
 
@@ -424,7 +437,7 @@ extern "C" void Randomizer_DrawTriforcePieceGI(PlayState* play, GetItemEntry get
 
     // Animation. When not the completed triforce, create delay before showing the piece to bypass interpolation.
     // If the completed triforce, make it grow slowly.
-    if (current != required) {
+    if (!fullTriforce) {
         if (triforcePieceScale > 0.00008f && triforcePieceScale < 0.034f) {
             triforcePieceScale = 0.034f;
         } else if (triforcePieceScale < 0.035f) {
@@ -439,13 +452,13 @@ extern "C" void Randomizer_DrawTriforcePieceGI(PlayState* play, GetItemEntry get
 
     // Show piece when not currently completing the triforce. Use the scale to create a delay so interpolation doesn't
     // make the triforce twitch when the size is set to a higher value.
-    if (current != required && triforcePieceScale > 0.035f) {
+    if (!fullTriforce && triforcePieceScale > 0.035f) {
         // Get shard DL. Remove one before division to account for triforce piece given in the textbox
         // to match up the shard from the overworld model.
         Gfx* triforcePieceDL = Randomizer_GetTriforcePieceDL((current - 1) % 3);
 
         gSPDisplayList(POLY_XLU_DISP++, triforcePieceDL);
-    } else if (current == required && triforcePieceScale > 0.00008f) {
+    } else if (fullTriforce && triforcePieceScale > 0.00008f) {
         gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gTriforcePieceCompletedDL);
     }
 
@@ -1228,9 +1241,8 @@ extern "C" void Randomizer_DrawOpenChest(PlayState* play, GetItemEntry* getItemE
 extern "C" void Randomizer_DrawSilverRupee(PlayState* play, GetItemEntry* getItemEntry) {
     OPEN_DISPS(play->state.gfxCtx);
     Gfx_SetupDL_25Opa(play->state.gfxCtx);
-    Matrix_Scale(0.1f, 0.1f, 0.1f, MTXMODE_APPLY);
     Color_RGB8 defaultColor = { 255, 255, 255 };
-    if (CVarGetInteger("gNewDrops", 0) != 0) {
+    if (CVarGetInteger("gEnhancements.NewDrops", 0) != 0) {
         gSPMatrix(POLY_OPA_DISP++, Matrix_NewMtx(play->state.gfxCtx, (char*)__FILE__, __LINE__),
                   G_MTX_MODELVIEW | G_MTX_LOAD);
         Color_RGB8 silverRupeeColor = CVarGetColor24("gCosmetics.Consumable_SilverRupee.Value", defaultColor);
@@ -1248,6 +1260,7 @@ extern "C" void Randomizer_DrawSilverRupee(PlayState* play, GetItemEntry* getIte
                        silverRupeeColor.b * 0.75f, 255);
         gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gGiRupeeOuterDL);
     } else {
+        Matrix_Scale(0.05f, 0.05f, 0.05f, MTXMODE_APPLY);
         gSPMatrix(POLY_OPA_DISP++, Matrix_NewMtx(play->state.gfxCtx, (char*)__FILE__, __LINE__),
                   G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         if (CVarGetInteger("gCosmetics.Consumable_SilverRupee.Changed", 0)) {

@@ -661,6 +661,12 @@ static void InitTrickNames() {
         Text{ "Triforce Shard", "Éclat de Triforce", "Triforce-Fragment" }, // "Triforce Shard"
         Text{ "Shiny Rock", "Caillou Brillant", "glänzender Stein" },       // "Shiny Rock"
     };
+    trickNameTable[RG_TRIFORCE] = {
+        // TODO_TRANSLATE
+        Text{ "Cheese Triangle" },
+        Text{ "Triumph Fork" },
+        Text{ "Force Gem" },
+    };
     trickNameTable[RG_ROCS_FEATHER] = {
         Text{ "Chicken Wing", "Chicken Wing", "Chicken Wing" }, // "Chicken Wing"
         Text{ "Roc's Leg", "Roc's Leg", "Roc's Leg" },          // "Roc's Leg"
@@ -1293,21 +1299,9 @@ static void InitTrickNames() {
         // TODO_TRANSLATE
         Text{ "Dodongo's Cave Silver" },
     };
-    trickNameTable[RG_SHADOW_MQ_SILVER_BLADES] = {
-        // TODO_TRANSLATE
-        Text{ "Shadow Silver: Blank" },
-    };
-    trickNameTable[RG_SHADOW_MQ_SILVER_PIT] = {
-        // TODO_TRANSLATE
-        Text{ "Shadow Silver: Pitch" },
-    };
     trickNameTable[RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES] = {
         // TODO_TRANSLATE
         Text{ "Shadow Silver: Invisible" },
-    };
-    trickNameTable[RG_SHADOW_MQ_SILVER_SPIKES] = {
-        // TODO_TRANSLATE
-        Text{ "Shadow Silver: Spire" },
     };
     trickNameTable[RG_SPIRIT_MQ_SILVER_LOBBY] = {
         // TODO_TRANSLATE
@@ -1316,22 +1310,6 @@ static void InitTrickNames() {
     trickNameTable[RG_SPIRIT_MQ_SILVER_BIG_WALL] = {
         // TODO_TRANSLATE
         Text{ "Spirit Silver: Brick" },
-    };
-    trickNameTable[RG_GTG_MQ_SILVER_SLOPE] = {
-        // TODO_TRANSLATE
-        Text{ "Training Ground Silver: Sleep" },
-    };
-    trickNameTable[RG_GTG_MQ_SILVER_LAVA] = {
-        // TODO_TRANSLATE
-        Text{ "Traning Ground Silver: Lake" },
-    };
-    trickNameTable[RG_GTG_MQ_SILVER_WATER] = {
-        // TODO_TRANSLATE
-        Text{ "Training Ground Silver: Waver" },
-    };
-    trickNameTable[RG_GANONS_CASTLE_MQ_SILVER_FIRE] = {
-        // TODO_TRANSLATE
-        Text{ "Ganon's Castle Silver: Firm" },
     };
     trickNameTable[RG_GANONS_CASTLE_MQ_SILVER_WATER] = {
         // TODO_TRANSLATE
@@ -1817,7 +1795,7 @@ static const char* const frenchIceTrapMessages[] = {
     "Tu savais que le G de ZFG signifie #Glace#?",
     "Tu as obtenu #L'Âge de Glace (2002)#!",
     "Maintenant, tu peux lancer un #sort# que tu ne connais pas.",
-    "Que dirais-tu d'un héros #sur glace# ?",
+    "Que dirais-tu d'un héros #sur glace#?",
     "Pas de tunique pour #ça#!",
     "Je savais que tu étais #partiellement Metroid#!",
     "Voilà juste la #cerise sur le gâteau#!",
@@ -1838,7 +1816,7 @@ static const char* const frenchIceTrapMessages[] = {
     "#Continue#",
     "QU'EST-CE QU'ELLE VA FAIRE, ME FAIRE UNE #[Glace]#!?",
     "Tu as rencontré un #terrible destin#, n'est-ce pas?",
-    "Alors comme ça, tu aimes Shining ? Voici comment ça #finit#.",
+    "Alors comme ça, tu aimes Shining? Voici comment ça #finit#.",
     "Petite erreur de trajectoire. #Je gagne#.",
     "Prends ce #L#, @.",
     "#Problème de compétence#",

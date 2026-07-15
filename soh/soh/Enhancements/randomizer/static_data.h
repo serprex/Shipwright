@@ -37,9 +37,9 @@ class StaticData {
     static Location* GetLocation(RandomizerCheck locKey);
     static std::array<Rando::Location, RC_MAX>& GetLocationTable();
     static std::unordered_map<std::string, uint32_t>
-    PopulateTranslationMap(std::unordered_map<uint32_t, CustomMessage> input);
+    PopulateTranslationMap(const std::unordered_map<uint32_t, CustomMessage>& input);
     static std::unordered_map<std::string, uint32_t>
-    PopulateTranslationMap(std::unordered_map<uint32_t, RandomizerHintTextKey> input);
+    PopulateTranslationMap(const std::unordered_map<uint32_t, RandomizerHintTextKey>& input);
     static std::multimap<std::tuple<s16, s16, s32>, RandomizerCheck> CheckFromActorMultimap;
     static std::vector<RandomizerCheck> GetAllDungeonLocations();
     static std::vector<RandomizerCheck> dungeonRewardLocations;
@@ -92,6 +92,8 @@ class StaticData {
     static std::unordered_map<RandomizerHint, StaticHintInfo> staticHintInfoMap;
     static std::unordered_map<u32, RandomizerHint> stoneParamsToHint;
     static std::unordered_map<u32, RandomizerHint> grottoChestParamsToHint;
+    static std::unordered_map<RandomizerGet, RandomizerCheckArea> silverToArea;
+    static std::set<RandomizerGet> constantSilvers;
     static std::unordered_map<std::string, RandomizerTrick> trickToEnum;
     static std::array<HintText, RHT_MAX> hintTextTable;
     static std::vector<RandomizerGet> normalBottles;
