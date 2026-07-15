@@ -91,11 +91,11 @@ void RegionTable_Init_SpiritTemple() {
         LOCATION(RC_SPIRIT_TEMPLE_CHILD_EARLY_TORCHES_CHEST, logic->Get(LOGIC_SPIRIT_SILVER_RUPEE_BRIDGE_TORCHES) && logic->HasItem(RG_OPEN_CHEST)),
         // possible to collect by climbing around token without lowering fence, should be a trick. boomerang can grab through fence
         LOCATION(RC_SPIRIT_TEMPLE_GS_METAL_FENCE,            logic->HasItem(RG_SPIRIT_SILVER_CHILD) && logic->CanKillEnemy(RE_GOLD_SKULLTULA, ED_BOMB_THROW) && logic->HasItem(RG_CLIMB)),
-        LOCATION(RC_SPIRIT_SILVER_CHILD_1, logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT)),
-        LOCATION(RC_SPIRIT_SILVER_CHILD_2, true),
-        LOCATION(RC_SPIRIT_SILVER_CHILD_3, true),
-        LOCATION(RC_SPIRIT_SILVER_CHILD_4, logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT)),
-        LOCATION(RC_SPIRIT_SILVER_CHILD_5, true),
+        LOCATION(RC_SPIRIT_W_HIGH_CHILD_SILVER, logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT)),
+        LOCATION(RC_SPIRIT_W_LOW_CHILD_SILVER, true),
+        LOCATION(RC_SPIRIT_E_LOW_CHILD_SILVER, true),
+        LOCATION(RC_SPIRIT_E_HIGH_CHILD_SILVER, logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT)),
+        LOCATION(RC_SPIRIT_TORCH_CHILD_SILVER, true),
     }, {
         //Exits
         ENTRANCE(RR_SPIRIT_TEMPLE_RUPEE_BRIDGE_SOUTH, logic->HasItem(RG_SPIRIT_SILVER_CHILD)),
@@ -171,7 +171,7 @@ void RegionTable_Init_SpiritTemple() {
         EVENT_ACCESS(LOGIC_SPIRIT_SILVER_BOULDERS, logic->CanUse(RG_HOVER_BOOTS) || logic->CanJumpslash() || logic->CanUse(RG_LONGSHOT)/* || CanBunnyHop()*/),
     }, {
         //Locations
-        LOCATION(RC_SPIRIT_SILVER_BOULDERS_5, logic->Get(LOGIC_SPIRIT_SILVER_BOULDERS)),
+        LOCATION(RC_SPIRIT_AIRBORNE_BOULDER_SILVER, logic->Get(LOGIC_SPIRIT_SILVER_BOULDERS)),
     }, {
         //Exits
         ENTRANCE(RR_SPIRIT_TEMPLE_ADULT_SIDE_HUB, true),
@@ -181,10 +181,10 @@ void RegionTable_Init_SpiritTemple() {
     areaTable[RR_SPIRIT_TEMPLE_BOULDERS] = Region("Spirit Temple Boulders", SCENE_SPIRIT_TEMPLE, {}, {
         //Locations
         LOCATION(RC_SPIRIT_TEMPLE_GS_BOULDER_ROOM, logic->CanUse(RG_SONG_OF_TIME) && logic->CanKillEnemy(RE_GOLD_SKULLTULA)),
-        LOCATION(RC_SPIRIT_SILVER_BOULDERS_1, true),
-        LOCATION(RC_SPIRIT_SILVER_BOULDERS_2, true),
-        LOCATION(RC_SPIRIT_SILVER_BOULDERS_3, true),
-        LOCATION(RC_SPIRIT_SILVER_BOULDERS_4, true),
+        LOCATION(RC_SPIRIT_NW_BOULDER_SILVER, true),
+        LOCATION(RC_SPIRIT_SW_BOULDER_SILVER, true),
+        LOCATION(RC_SPIRIT_SE_BOULDER_SILVER, true),
+        LOCATION(RC_SPIRIT_NE_BOULDER_SILVER, true),
     }, {
         //Exits
         ENTRANCE(RR_SPIRIT_TEMPLE_ABOVE_BOULDERS, logic->IsAdult || logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT) || logic->CanGroundJump()),
@@ -303,10 +303,10 @@ void RegionTable_Init_SpiritTemple() {
 
     areaTable[RR_SPIRIT_TEMPLE_SUN_BLOCK_ROOM] = Region("Spirit Temple Sun Block Room", SCENE_SPIRIT_TEMPLE, {}, {
         //Locations
-        LOCATION(RC_SPIRIT_SILVER_SUN_1, true),
-        LOCATION(RC_SPIRIT_SILVER_SUN_2, true),
-        LOCATION(RC_SPIRIT_SILVER_SUN_3, true),
-        LOCATION(RC_SPIRIT_SILVER_SUN_5, true),
+        LOCATION(RC_SPIRIT_NEAR_LIGHT_SUN_SILVER, true),
+        LOCATION(RC_SPIRIT_AIRBORNE_SUN_SILVER, true),
+        LOCATION(RC_SPIRIT_MID_PLATFORM_SUN_SILVER, true),
+        LOCATION(RC_SPIRIT_NEAR_DOOR_SUN_SILVER, true),
     }, {
         //Exits
         ENTRANCE(RR_SPIRIT_TEMPLE_EMPTY_STAIRS,          logic->HasItem(RG_POWER_BRACELET) || logic->SunlightArrows()),
@@ -326,7 +326,7 @@ void RegionTable_Init_SpiritTemple() {
                                                                      []{return logic->HasFireSource() || 
                                                                                (logic->HasItem(RG_SPIRIT_SILVER_SUN) &&
                                                                                 (logic->CanUse(RG_STICKS) || (ctx->GetTrickOption(RT_SPIRIT_SUN_CHEST) && logic->CanUse(RG_FAIRY_BOW))));}) && logic->HasItem(RG_OPEN_CHEST)), 
-        LOCATION(RC_SPIRIT_SILVER_SUN_4, SpiritShared(RR_SPIRIT_TEMPLE_SUN_BLOCK_CHEST_LEDGE, []{return true;}, true)),
+        LOCATION(RC_SPIRIT_NEAR_CHEST_SUN_SILVER, SpiritShared(RR_SPIRIT_TEMPLE_SUN_BLOCK_CHEST_LEDGE, []{return true;}, true)),
     }, {
         //Exits
         ENTRANCE(RR_SPIRIT_TEMPLE_SUN_BLOCK_ROOM, true),
@@ -594,11 +594,11 @@ void RegionTable_Init_SpiritTemple() {
         LOCATION(RC_SPIRIT_TEMPLE_MQ_ENTRANCE_CEILING_BOULDER,   logic->CanUse(RG_BOMBCHU_5)),
         LOCATION(RC_SPIRIT_TEMPLE_LEFT_SNAKE_STATUE,             logic->CanRead()),
         LOCATION(RC_SPIRIT_TEMPLE_RIGHT_SNAKE_STATUE,            logic->CanRead()),
-        LOCATION(RC_SPIRIT_MQ_SILVER_LOBBY_1,                    true),
-        LOCATION(RC_SPIRIT_MQ_SILVER_LOBBY_2,                    true),
-        LOCATION(RC_SPIRIT_MQ_SILVER_LOBBY_3,                    true),
-        LOCATION(RC_SPIRIT_MQ_SILVER_LOBBY_4,                    true),
-        LOCATION(RC_SPIRIT_MQ_SILVER_LOBBY_5,                    true),
+        LOCATION(RC_SPIRIT_MQ_STAIRS_LOBBY_SILVER,                    true),
+        LOCATION(RC_SPIRIT_MQ_E_BOULDER_LOBBY_SILVER,                    true),
+        LOCATION(RC_SPIRIT_MQ_W_BOULDER_LOBBY_SILVER,                    true),
+        LOCATION(RC_SPIRIT_MQ_CORNER_LOBBY_SILVER,                    true),
+        LOCATION(RC_SPIRIT_MQ_JET_LOBBY_SILVER,                    true),
     }, {
         //Exits
         ENTRANCE(RR_SPIRIT_TEMPLE_ENTRYWAY,           true),
@@ -1084,11 +1084,11 @@ void RegionTable_Init_SpiritTemple() {
         //Getting some of these with just climbing downwards is theoretically possible but definitely a trick
         EVENT_ACCESS(LOGIC_SPIRIT_MQ_BIG_WALL_SILVERS, (logic->CanKillEnemy(RE_KEESE) || logic->CanUse(RG_SKULL_MASK)) && (logic->HasItem(RG_CLIMB) || logic->CanUse(RG_LONGSHOT))),
     }, {
-        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_1, logic->Get(LOGIC_SPIRIT_MQ_SILVER_BIG_WALL) || logic->TakeDamage()),
-        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_2, logic->Get(LOGIC_SPIRIT_MQ_SILVER_BIG_WALL) || logic->TakeDamage()),
-        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_3, logic->Get(LOGIC_SPIRIT_MQ_SILVER_BIG_WALL) || logic->TakeDamage()),
-        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_4, logic->Get(LOGIC_SPIRIT_MQ_SILVER_BIG_WALL) || logic->TakeDamage()),
-        LOCATION(RC_SPIRIT_MQ_SILVER_BIG_WALL_5, logic->Get(LOGIC_SPIRIT_MQ_SILVER_BIG_WALL) || logic->TakeDamage()),
+        LOCATION(RC_SPIRIT_MQ_LOWEST_WALL_SILVER, logic->Get(LOGIC_SPIRIT_MQ_SILVER_BIG_WALL) || logic->TakeDamage()),
+        LOCATION(RC_SPIRIT_MQ_MID_LOW_WALL_SILVER, logic->Get(LOGIC_SPIRIT_MQ_SILVER_BIG_WALL) || logic->TakeDamage()),
+        LOCATION(RC_SPIRIT_MQ_MID_HIGH_WALL_SILVER, logic->Get(LOGIC_SPIRIT_MQ_SILVER_BIG_WALL) || logic->TakeDamage()),
+        LOCATION(RC_SPIRIT_MQ_HIGHEST_WALL_SILVER, logic->Get(LOGIC_SPIRIT_MQ_SILVER_BIG_WALL) || logic->TakeDamage()),
+        LOCATION(RC_SPIRIT_MQ_MIDDLE_WALL_SILVER, logic->Get(LOGIC_SPIRIT_MQ_SILVER_BIG_WALL) || logic->TakeDamage()),
     }, {
         //Exits
         ENTRANCE(RR_SPIRIT_TEMPLE_MQ_BIG_WALL_BASE, true),

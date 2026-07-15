@@ -2449,7 +2449,7 @@ void Logic::ApplyItemEffect(Item& item, bool state) {
         case ITEMTYPE_BOSSKEY:
             SetDungeonItem(DUNGEON_KEY_BOSS, RandoGetToDungeonScene.find(item.GetRandomizerGet())->second, state);
             break;
-        case ITEMTYPE_SILVER:{
+        case ITEMTYPE_SILVER: {
             auto randoGet = item.GetRandomizerGet();
             s8* field = Randomizer::SilverFieldFromSaveContext(mSaveContext, randoGet);
             bool isWallet = ctx->GetOption(RSK_SHUFFLE_SILVER).Is(RO_SHUFFLE_SILVER_WALLET);

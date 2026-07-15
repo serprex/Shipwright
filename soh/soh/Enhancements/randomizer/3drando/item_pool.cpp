@@ -921,10 +921,10 @@ void GenerateItemPool() {
         }
 
         if (dungeons->GetDungeonFromScene(SCENE_SHADOW_TEMPLE)->IsMQ()) {
-            AddFixedItemToPool(RG_SHADOW_SILVER_SPIKES, isWallet ? 1 : 5, false);
+			AddFixedItemToPool(RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES, isWallet ? 1 : 10, false);
+			AddFixedItemToPool(RG_SHADOW_SILVER_SPIKES, isWallet ? 1 : 10, false);
         } else {
-            AddFixedItemToPool(RG_SHADOW_MQ_SILVER_INVISIBLE_BLADES, isWallet ? 1 : 10, false);
-            AddFixedItemToPool(RG_SHADOW_SILVER_SPIKES, isWallet ? 1 : 10, false);
+			AddFixedItemToPool(RG_SHADOW_SILVER_SPIKES, isWallet ? 1 : 5, false);
         }
 
         if (dungeons->GetDungeonFromScene(SCENE_SPIRIT_TEMPLE)->IsVanilla()) {

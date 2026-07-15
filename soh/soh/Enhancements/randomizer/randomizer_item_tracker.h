@@ -14,8 +14,8 @@ typedef enum ItemKind {
     ITEM_KIND_ITEM,
     ITEM_KIND_QUEST,
     ITEM_KIND_RG,
-	ITEM_KIND_SPECIAL,
-	ITEM_KIND_DUMMY,
+    ITEM_KIND_SPECIAL,
+    ITEM_KIND_DUMMY,
 } ItemKind;
 
 typedef struct ItemTrackerItem {
@@ -46,7 +46,6 @@ bool HasEquipment(ItemTrackerItem);
     { id, ITEM_KIND_RG, displayName, #id, #id "_Faded", data, drawFunc }
 #define ITEM_TRACKER_RG_CUSTOM(id, displayName, iconName, data, drawFunc) \
     { id, ITEM_KIND_RG, displayName, #iconName, #iconName "_Faded", data, drawFunc }
-
 
 #define IM_COL_WHITE IM_COL32(255, 255, 255, 255)
 #define IM_COL_RED IM_COL32(255, 0, 0, 255)

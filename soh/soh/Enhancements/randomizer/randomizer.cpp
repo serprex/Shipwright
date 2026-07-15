@@ -1139,9 +1139,9 @@ extern "C" u16 Randomizer_Item_Give(PlayState* play, GetItemEntry giEntry) {
 
     // Gameplay stats: Update the time the item was obtained
     Randomizer_GameplayStats_SetTimestamp(item);
-	
-	auto test = Rando::StaticData::RandoGetToRandInf.find(item);
-	auto test2 = Rando::StaticData::RandoGetToRandInf.end();
+
+    auto test = Rando::StaticData::RandoGetToRandInf.find(item);
+    auto test2 = Rando::StaticData::RandoGetToRandInf.end();
 
     // if it's an item that just sets a randomizerInf, set it
     if (Rando::StaticData::RandoGetToRandInf.find(item) != Rando::StaticData::RandoGetToRandInf.end()) {

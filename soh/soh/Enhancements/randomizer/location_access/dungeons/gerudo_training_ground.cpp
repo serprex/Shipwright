@@ -43,11 +43,11 @@ void RegionTable_Init_GerudoTrainingGround() {
         EVENT_ACCESS(LOGIC_GTG_SILVER_SLOPE, logic->CanUse(logic->IsAdult ? RG_HOOKSHOT : RG_LONGSHOT) || ctx->GetTrickOption(RT_GTG_WITHOUT_HOOKSHOT)),
     }, {
         //Locations
-        LOCATION(RC_GTG_SILVER_SLOPE_1, true),
-        LOCATION(RC_GTG_SILVER_SLOPE_2, true),
-        LOCATION(RC_GTG_SILVER_SLOPE_3, logic->CanUse(logic->IsAdult ? RG_HOOKSHOT : RG_LONGSHOT) || ctx->GetTrickOption(RT_GTG_WITHOUT_HOOKSHOT)),
-        LOCATION(RC_GTG_SILVER_SLOPE_4, true),
-        LOCATION(RC_GTG_SILVER_SLOPE_5, true),
+        LOCATION(RC_GTG_FIRE_WALL_SLOPE_SILVER, true),
+        LOCATION(RC_GTG_LOWER_BOULDER_SLOPE_SILVER, true),
+        LOCATION(RC_GTG_TARGET_SLOPE_SILVER, logic->CanUse(logic->IsAdult ? RG_HOOKSHOT : RG_LONGSHOT) || ctx->GetTrickOption(RT_GTG_WITHOUT_HOOKSHOT)),
+        LOCATION(RC_GTG_JUMPDOWN_SLOPE_SILVER, true),
+        LOCATION(RC_GTG_UPPER_BOULDER_SLOPE_SILVER, true),
     }, {
         //Exits
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_SAND_ROOM,        true),
@@ -72,7 +72,7 @@ void RegionTable_Init_GerudoTrainingGround() {
         LOCATION(RC_GERUDO_TRAINING_GROUND_MAZE_RIGHT_CENTRAL_CHEST, logic->HasItem(RG_OPEN_CHEST)),
         LOCATION(RC_GERUDO_TRAINING_GROUND_MAZE_RIGHT_SIDE_CHEST,    logic->HasItem(RG_OPEN_CHEST)),
         LOCATION(RC_GERUDO_TRAINING_GROUND_FREESTANDING_KEY,         true),
-        LOCATION(RC_GTG_SILVER_LAVA_5,                               true),
+        LOCATION(RC_GTG_UNDER_LEDGE_LAVA_SILVER,                               true),
     }, {
         //Exits
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_LAVA_ROOM,             true),
@@ -163,10 +163,10 @@ void RegionTable_Init_GerudoTrainingGround() {
         EVENT_ACCESS(LOGIC_GTG_SILVER_LAVA, logic->CanUse(RG_HOOKSHOT) && (logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_SONG_OF_TIME) || logic->IsChild)),
     }, {
         //Locations
-        LOCATION(RC_GTG_SILVER_LAVA_1, true),
-        LOCATION(RC_GTG_SILVER_LAVA_2, true),
-        LOCATION(RC_GTG_SILVER_LAVA_3, logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_SONG_OF_TIME)),
-        LOCATION(RC_GTG_SILVER_LAVA_5, logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_SONG_OF_TIME)),
+        LOCATION(RC_GTG_NEAR_SWITCH_LAVA_SILVER, true),
+        LOCATION(RC_GTG_NEAR_BARRED_DOOR_LAVA_SILVER, true),
+        LOCATION(RC_GTG_FIRE_RING_LAVA_SILVER, logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_SONG_OF_TIME)),
+        LOCATION(RC_GTG_UNDER_LEDGE_LAVA_SILVER, logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_SONG_OF_TIME)),
     }, {
         //Exits
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_DINALFOS,              true),
@@ -176,8 +176,8 @@ void RegionTable_Init_GerudoTrainingGround() {
     });
 
     areaTable[RR_GERUDO_TRAINING_GROUND_LAVA_ROOM_UPPER_LEDGE] = Region("Gerudo Training Ground Lava Room", SCENE_GERUDO_TRAINING_GROUND, {}, {
-        LOCATION(RC_GTG_SILVER_LAVA_4, logic->CanUse(RG_HOOKSHOT)),
-        LOCATION(RC_GTG_SILVER_LAVA_5, true),
+        LOCATION(RC_GTG_UPPER_LAVA_SILVER, logic->CanUse(RG_HOOKSHOT)),
+        LOCATION(RC_GTG_UNDER_LEDGE_LAVA_SILVER, true),
     }, {
         //Exits
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_LAVA_ROOM,   logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_SONG_OF_TIME) || logic->IsChild || (logic->IsAdult && ctx->GetTrickOption(RT_GTG_LAVA_JUMP)) || (ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->CanUse(RG_BOMB_BAG) && logic->TakeDamage())),
@@ -191,11 +191,11 @@ void RegionTable_Init_GerudoTrainingGround() {
         //Locations
         LOCATION(RC_GERUDO_TRAINING_GROUND_UNDERWATER_SILVER_RUPEE_CHEST, logic->HasItem(RG_GTG_SILVER_WATER) && logic->HasItem(RG_OPEN_CHEST)),
         // 3 & 5 can be retrieved with only iron boots by attempting to backflip underwater
-        LOCATION(RC_GTG_SILVER_WATER_1, logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 16),
-        LOCATION(RC_GTG_SILVER_WATER_2, logic->CanUse(RG_SONG_OF_TIME) && (logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 16) || logic->HasItem(RG_GOLDEN_SCALE)),
-        LOCATION(RC_GTG_SILVER_WATER_3, logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 16),
-        LOCATION(RC_GTG_SILVER_WATER_4, logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_IRON_BOOTS) && (logic->HasItem(RG_BRONZE_SCALE) || logic->CanUse(RG_HOOKSHOT)) && logic->WaterTimer() >= 16),
-        LOCATION(RC_GTG_SILVER_WATER_5, logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 16),
+        LOCATION(RC_GTG_MIDDLE_WATER_SILVER, logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 16),
+        LOCATION(RC_GTG_ABOVE_TARGET_WATER_SILVER, logic->CanUse(RG_SONG_OF_TIME) && (logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 16) || logic->HasItem(RG_GOLDEN_SCALE)),
+        LOCATION(RC_GTG_LEFT_WATER_SILVER, logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 16),
+        LOCATION(RC_GTG_UNDER_TARGET_WATER_SILVER, logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_IRON_BOOTS) && (logic->HasItem(RG_BRONZE_SCALE) || logic->CanUse(RG_HOOKSHOT)) && logic->WaterTimer() >= 16),
+        LOCATION(RC_GTG_RIGHT_WATER_SILVER, logic->CanUse(RG_SONG_OF_TIME) && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 16),
     }, {
         //Exits
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_LAVA_ROOM, true),
@@ -293,11 +293,11 @@ void RegionTable_Init_GerudoTrainingGround() {
         LOCATION(RC_GERUDO_TRAINING_GROUND_MQ_BOULDER_ROOM_TOP_RIGHT_STALACTITE_1, true),
         LOCATION(RC_GERUDO_TRAINING_GROUND_MQ_BOULDER_ROOM_TOP_RIGHT_STALACTITE_2, true),
         LOCATION(RC_GERUDO_TRAINING_GROUND_MQ_BOULDER_ROOM_TOP_RIGHT_STALACTITE_3, true),
-        LOCATION(RC_GTG_MQ_SILVER_SLOPE_1, true),
-        LOCATION(RC_GTG_MQ_SILVER_SLOPE_2, true),
-        LOCATION(RC_GTG_MQ_SILVER_SLOPE_3, logic->CanUse(RG_LONGSHOT) || ctx->GetTrickOption(RT_GTG_MQ_WITHOUT_HOOKSHOT) || (ctx->GetTrickOption(RT_GTG_MQ_WITH_HOOKSHOT) && logic->IsAdult && logic->CanJumpslash() && logic->CanUse(RG_HOOKSHOT))),
-        LOCATION(RC_GTG_MQ_SILVER_SLOPE_4, true),
-        LOCATION(RC_GTG_MQ_SILVER_SLOPE_5, true),
+        LOCATION(RC_GTG_MQ_ICICLES_SLOPE_SILVER, true),
+        LOCATION(RC_GTG_MQ_JUMPDOWN_SLOPE_SILVER, true),
+        LOCATION(RC_GTG_MQ_HIGH_SLOPE_SILVER, logic->CanUse(RG_LONGSHOT) || ctx->GetTrickOption(RT_GTG_MQ_WITHOUT_HOOKSHOT) || (ctx->GetTrickOption(RT_GTG_MQ_WITH_HOOKSHOT) && logic->IsAdult && logic->CanJumpslash() && logic->CanUse(RG_HOOKSHOT))),
+        LOCATION(RC_GTG_MQ_FREEZARD_SLOPE_SILVER, true),
+        LOCATION(RC_GTG_MQ_PIT_SLOPE_SILVER, true),
     }, {
         //Exits
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_SAND_ROOM,    true),
@@ -395,8 +395,8 @@ void RegionTable_Init_GerudoTrainingGround() {
 
     //This covers the 2 platforms that can be jumped to directly from RR_GERUDO_TRAINING_GROUND_MQ_SWITCH_LEDGE, without flame circles
     areaTable[RR_GERUDO_TRAINING_GROUND_MQ_LEDGE_SIDE_PLATFORMS] = Region("Gerudo Training Ground MQ Ledge Side Platforms", SCENE_GERUDO_TRAINING_GROUND, {}, {
-        LOCATION(RC_GTG_MQ_SILVER_LAVA_1, true),
-        LOCATION(RC_GTG_MQ_SILVER_LAVA_3, true),
+        LOCATION(RC_GTG_MQ_NEAR_SWITCH_LAVA_SILVER, true),
+        LOCATION(RC_GTG_MQ_MIDDLE_LAVA_SILVER, true),
     }, {
         //Exits
         //This is merely to extend this region's logic if you have hovers
@@ -405,7 +405,7 @@ void RegionTable_Init_GerudoTrainingGround() {
 
     //This covers the platform that needs hover boots or the spawned targets to reach from any starting point other than RR_GERUDO_TRAINING_GROUND_MQ_MAZE_RIGHT, without flame circles
     areaTable[RR_GERUDO_TRAINING_GROUND_MQ_FURTHEST_PLATFORM] = Region("Gerudo Training Ground MQ Furthest Platform", SCENE_GERUDO_TRAINING_GROUND, {}, {
-        LOCATION(RC_GTG_MQ_SILVER_LAVA_2, true),
+        LOCATION(RC_GTG_MQ_FAR_LAVA_SILVER, true),
     }, {
         //Exits
         //This is merely to extend this region's logic if you have hovers
@@ -416,9 +416,9 @@ void RegionTable_Init_GerudoTrainingGround() {
         //Events
         EVENT_ACCESS(LOGIC_GTG_SILVER_LAVA, logic->HasFireSource() && logic->CanUse(RG_HOVER_BOOTS)),
     }, {
-        LOCATION(RC_GTG_MQ_SILVER_LAVA_4, logic->HasFireSource()),
-        LOCATION(RC_GTG_MQ_SILVER_LAVA_5, logic->HasFireSource()),
-        LOCATION(RC_GTG_MQ_SILVER_LAVA_6, logic->HasFireSource()),
+        LOCATION(GTG_MQ_NEAR_BARRED_DOOR_LAVA_SILVER, logic->HasFireSource()),
+        LOCATION(RC_GTG_MQ_NEAR_MAZE_LEDGE_LAVA_SILVER, logic->HasFireSource()),
+        LOCATION(RC_GTG_MQ_NEAR_LIT_TORCH_LAVA_SILVER, logic->HasFireSource()),
     }, {
         //Exits
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_UNDERWATER,           logic->HasItem(RG_GTG_SILVER_LAVA)),
@@ -433,9 +433,9 @@ void RegionTable_Init_GerudoTrainingGround() {
         EVENT_ACCESS(LOGIC_GTG_SILVER_LAVA, ((logic->CanUse(RG_FAIRY_BOW) && logic->IsAdult) || logic->CanUse(RG_FIRE_ARROWS)) && logic->CanUse(RG_HOVER_BOOTS)),
     }, {
         //Locations
-        LOCATION(RC_GTG_MQ_SILVER_LAVA_4, (logic->CanUse(RG_FAIRY_BOW) && logic->IsAdult) || logic->CanUse(RG_FIRE_ARROWS)),
-        LOCATION(RC_GTG_MQ_SILVER_LAVA_5, (logic->CanUse(RG_FAIRY_BOW) && logic->IsAdult) || logic->CanUse(RG_FIRE_ARROWS)),
-        LOCATION(RC_GTG_MQ_SILVER_LAVA_6, (logic->CanUse(RG_FAIRY_BOW) && logic->IsAdult) || logic->CanUse(RG_FIRE_ARROWS)),
+        LOCATION(GTG_MQ_NEAR_BARRED_DOOR_LAVA_SILVER, (logic->CanUse(RG_FAIRY_BOW) && logic->IsAdult) || logic->CanUse(RG_FIRE_ARROWS)),
+        LOCATION(RC_GTG_MQ_NEAR_MAZE_LEDGE_LAVA_SILVER, (logic->CanUse(RG_FAIRY_BOW) && logic->IsAdult) || logic->CanUse(RG_FIRE_ARROWS)),
+        LOCATION(RC_GTG_MQ_NEAR_LIT_TORCH_LAVA_SILVER, (logic->CanUse(RG_FAIRY_BOW) && logic->IsAdult) || logic->CanUse(RG_FIRE_ARROWS)),
     }, {
         //Exits
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_LEDGE_SIDE_PLATFORMS,  ((logic->CanUse(RG_FAIRY_BOW) && logic->IsAdult) || logic->CanUse(RG_FIRE_ARROWS)) && (logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && ctx->GetTrickOption(RT_GTG_LAVA_JUMP)) || (ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->CanUse(RG_BOMB_BAG) && logic->TakeDamage()))),
@@ -450,9 +450,9 @@ void RegionTable_Init_GerudoTrainingGround() {
         //Locations
         //it is possible to snipe the stingers with bow or sling before dropping in, or just get really lucky, and avoid needing to take damage, but that might be trick worthy
         LOCATION(RC_GERUDO_TRAINING_GROUND_MQ_UNDERWATER_SILVER_RUPEE_CHEST, logic->HasItem(RG_GTG_SILVER_WATER) && logic->HasItem(RG_OPEN_CHEST)),
-        LOCATION(RC_GTG_MQ_SILVER_WATER_1, logic->HasFireSource() && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24 && logic->TakeDamage()),
-        LOCATION(RC_GTG_MQ_SILVER_WATER_2, logic->HasFireSource() && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24 && logic->TakeDamage()),
-        LOCATION(RC_GTG_MQ_SILVER_WATER_3, logic->HasFireSource() && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24 && logic->TakeDamage()),
+        LOCATION(RC_GTG_MQ_BACK_WATER_SILVER, logic->HasFireSource() && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24 && logic->TakeDamage()),
+        LOCATION(RC_GTG_MQ_MIDDLE_WATER_SILVER, logic->HasFireSource() && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24 && logic->TakeDamage()),
+        LOCATION(RC_GTG_MQ_FRONT_WATER_SILVER, logic->HasFireSource() && logic->CanUse(RG_IRON_BOOTS) && logic->WaterTimer() >= 24 && logic->TakeDamage()),
     }, {
         //Exits
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_PLATFORMS_UNLIT_TORCH, true),
@@ -465,12 +465,12 @@ void RegionTable_Init_GerudoTrainingGround() {
         //Locations
         LOCATION(RC_GERUDO_TRAINING_GROUND_MQ_MAZE_RIGHT_CENTRAL_CHEST, logic->HasItem(RG_OPEN_CHEST)),
         LOCATION(RC_GERUDO_TRAINING_GROUND_MQ_MAZE_RIGHT_SIDE_CHEST,    logic->HasItem(RG_OPEN_CHEST)),
-        LOCATION(RC_GTG_MQ_SILVER_LAVA_1,                               logic->CanUse(RG_FIRE_ARROWS)),
-        LOCATION(RC_GTG_MQ_SILVER_LAVA_2,                               logic->CanUse(RG_FIRE_ARROWS)),
-        LOCATION(RC_GTG_MQ_SILVER_LAVA_3,                               logic->CanUse(RG_FIRE_ARROWS)),
-        LOCATION(RC_GTG_MQ_SILVER_LAVA_4,                               logic->CanUse(RG_FIRE_ARROWS)),
-        LOCATION(RC_GTG_MQ_SILVER_LAVA_5,                               logic->CanUse(RG_FIRE_ARROWS)),
-        LOCATION(RC_GTG_MQ_SILVER_LAVA_6,                               logic->CanUse(RG_FIRE_ARROWS)),
+        LOCATION(RC_GTG_MQ_NEAR_SWITCH_LAVA_SILVER,                               logic->CanUse(RG_FIRE_ARROWS)),
+        LOCATION(RC_GTG_MQ_FAR_LAVA_SILVER,                               logic->CanUse(RG_FIRE_ARROWS)),
+        LOCATION(RC_GTG_MQ_MIDDLE_LAVA_SILVER,                               logic->CanUse(RG_FIRE_ARROWS)),
+        LOCATION(GTG_MQ_NEAR_BARRED_DOOR_LAVA_SILVER,                               logic->CanUse(RG_FIRE_ARROWS)),
+        LOCATION(RC_GTG_MQ_NEAR_MAZE_LEDGE_LAVA_SILVER,                               logic->CanUse(RG_FIRE_ARROWS)),
+        LOCATION(RC_GTG_MQ_NEAR_LIT_TORCH_LAVA_SILVER,                               logic->CanUse(RG_FIRE_ARROWS)),
     }, {
         //Exits
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_LOBBY,                 true),

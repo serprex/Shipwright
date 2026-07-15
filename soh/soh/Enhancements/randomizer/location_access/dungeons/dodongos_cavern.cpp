@@ -356,8 +356,8 @@ void RegionTable_Init_DodongosCavern() {
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_POT_4,         logic->CanBreakPots()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_LOWER_CRATE_1, logic->CanBreakCrates()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_LOWER_CRATE_2, logic->CanBreakCrates()),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_1,                true),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_2,                logic->CanBreakCrates()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_BEAMOS_SILVER,                true),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_1F_CRATE_SILVER,                logic->CanBreakCrates()),
     }, {
         //Exits
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_LOBBY,               true),
@@ -389,8 +389,8 @@ void RegionTable_Init_DodongosCavern() {
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_UPPER_CRATE_2, logic->CanBreakCrates()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_UPPER_CRATE_3, logic->CanBreakCrates()),
         LOCATION(RC_DODONGOS_CAVERN_MQ_STAIRCASE_UPPER_CRATE_4, logic->CanBreakCrates()),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_3,                logic->CanBreakCrates()),
-        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_5,                logic->CanBreakCrates()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_LOWER_2F_CRATE_SILVER,                logic->CanBreakCrates()),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_UPPER_2F_CRATE_SILVER,                logic->CanBreakCrates()),
     }, {
         //Exits
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_STAIRS_LOWER,               true),
@@ -399,7 +399,7 @@ void RegionTable_Init_DodongosCavern() {
 
     areaTable[RR_DODONGOS_CAVERN_MQ_STAIRS_PAST_BIG_SKULLTULAS] = Region("Dodongos Cavern MQ Past Big Skulltulas", SCENE_DODONGOS_CAVERN, {}, {
         //Locations
-        LOCATION(RC_DODONGOS_CAVERN_MQ_SILVER_4, true /*CanClimb()*/),
+        LOCATION(RC_DODONGOS_CAVERN_MQ_VINES_SILVER, true /*CanClimb()*/),
     }, {
         //Exits
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_STAIRS_UPPER, logic->CanPassEnemy(RE_BIG_SKULLTULA) || logic->CanUse(RG_HOVER_BOOTS)),

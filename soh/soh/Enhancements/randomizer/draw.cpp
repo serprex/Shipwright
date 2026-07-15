@@ -1260,7 +1260,7 @@ extern "C" void Randomizer_DrawSilverRupee(PlayState* play, GetItemEntry* getIte
                        silverRupeeColor.b * 0.75f, 255);
         gSPDisplayList(POLY_XLU_DISP++, (Gfx*)gGiRupeeOuterDL);
     } else {
-		Matrix_Scale(0.05f, 0.05f, 0.05f, MTXMODE_APPLY);
+        Matrix_Scale(0.05f, 0.05f, 0.05f, MTXMODE_APPLY);
         gSPMatrix(POLY_OPA_DISP++, Matrix_NewMtx(play->state.gfxCtx, (char*)__FILE__, __LINE__),
                   G_MTX_NOPUSH | G_MTX_LOAD | G_MTX_MODELVIEW);
         if (CVarGetInteger("gCosmetics.Consumable_SilverRupee.Changed", 0)) {

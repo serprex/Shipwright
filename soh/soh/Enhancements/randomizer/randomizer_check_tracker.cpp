@@ -984,16 +984,17 @@ bool IsAreaSpoiled(RandomizerCheckArea rcArea) {
     return areasSpoiled & (1 << rcArea);
 }
 
-//we don't care how many silvers for this check, only that all possible silver items are known
-bool AreAllSilversSpoiled(){
-	return IsAreaSpoiled(RCAREA_DODONGOS_CAVERN) && IsAreaSpoiled(RCAREA_BOTTOM_OF_THE_WELL) && IsAreaSpoiled(RCAREA_GANONS_CASTLE) &&
-		   IsAreaSpoiled(RCAREA_SHADOW_TEMPLE) && IsAreaSpoiled(RCAREA_SPIRIT_TEMPLE) && IsAreaSpoiled(RCAREA_ICE_CAVERN);
+// we don't care how many silvers for this check, only that all possible silver items are known
+bool AreAllSilversSpoiled() {
+    return IsAreaSpoiled(RCAREA_DODONGOS_CAVERN) && IsAreaSpoiled(RCAREA_BOTTOM_OF_THE_WELL) &&
+           IsAreaSpoiled(RCAREA_GANONS_CASTLE) && IsAreaSpoiled(RCAREA_SHADOW_TEMPLE) &&
+           IsAreaSpoiled(RCAREA_SPIRIT_TEMPLE) && IsAreaSpoiled(RCAREA_ICE_CAVERN);
 }
 
 void SetAreaSpoiled(RandomizerCheckArea rcArea) {
     areasSpoiled |= (1 << rcArea);
     SaveManager::Instance->SaveSection(gSaveContext.fileNum, sectionId, true);
-	RefreshItemTrackerMainWindow();
+    RefreshItemTrackerMainWindow();
 }
 
 void InternalRecalculateAvailableChecks(RandomizerRegion startingRegion, RandoAgeTime startingAgeTime);

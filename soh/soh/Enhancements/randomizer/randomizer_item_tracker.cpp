@@ -89,12 +89,18 @@ std::vector<ItemTrackerItem> inventoryItems = {
 };
 
 std::vector<ItemTrackerItem> equipmentItems = {
-    ITEM_TRACKER_ITEM(ITEM_SWORD_KOKIRI, "", 1 << 0, DrawEquip),  ITEM_TRACKER_ITEM(ITEM_SWORD_MASTER, "", 1 << 1, DrawEquip),
-    ITEM_TRACKER_ITEM(ITEM_SWORD_BGS, "", 1 << 2, DrawEquip),     ITEM_TRACKER_ITEM(ITEM_TUNIC_KOKIRI, "", 1 << 8, DrawEquip),
-    ITEM_TRACKER_ITEM(ITEM_TUNIC_GORON, "", 1 << 9, DrawEquip),   ITEM_TRACKER_ITEM(ITEM_TUNIC_ZORA, "", 1 << 10, DrawEquip),
-    ITEM_TRACKER_ITEM(ITEM_SHIELD_DEKU, "", 1 << 4, DrawEquip),   ITEM_TRACKER_ITEM(ITEM_SHIELD_HYLIAN, "", 1 << 5, DrawEquip),
-    ITEM_TRACKER_ITEM(ITEM_SHIELD_MIRROR, "", 1 << 6, DrawEquip), ITEM_TRACKER_ITEM(ITEM_BOOTS_KOKIRI, "", 1 << 12, DrawEquip),
-    ITEM_TRACKER_ITEM(ITEM_BOOTS_IRON, "", 1 << 13, DrawEquip),   ITEM_TRACKER_ITEM(ITEM_BOOTS_HOVER, "", 1 << 14, DrawEquip),
+    ITEM_TRACKER_ITEM(ITEM_SWORD_KOKIRI, "", 1 << 0, DrawEquip),
+    ITEM_TRACKER_ITEM(ITEM_SWORD_MASTER, "", 1 << 1, DrawEquip),
+    ITEM_TRACKER_ITEM(ITEM_SWORD_BGS, "", 1 << 2, DrawEquip),
+    ITEM_TRACKER_ITEM(ITEM_TUNIC_KOKIRI, "", 1 << 8, DrawEquip),
+    ITEM_TRACKER_ITEM(ITEM_TUNIC_GORON, "", 1 << 9, DrawEquip),
+    ITEM_TRACKER_ITEM(ITEM_TUNIC_ZORA, "", 1 << 10, DrawEquip),
+    ITEM_TRACKER_ITEM(ITEM_SHIELD_DEKU, "", 1 << 4, DrawEquip),
+    ITEM_TRACKER_ITEM(ITEM_SHIELD_HYLIAN, "", 1 << 5, DrawEquip),
+    ITEM_TRACKER_ITEM(ITEM_SHIELD_MIRROR, "", 1 << 6, DrawEquip),
+    ITEM_TRACKER_ITEM(ITEM_BOOTS_KOKIRI, "", 1 << 12, DrawEquip),
+    ITEM_TRACKER_ITEM(ITEM_BOOTS_IRON, "", 1 << 13, DrawEquip),
+    ITEM_TRACKER_ITEM(ITEM_BOOTS_HOVER, "", 1 << 14, DrawEquip),
 };
 
 std::vector<ItemTrackerItem> miscItems = {
@@ -181,10 +187,14 @@ std::vector<ItemTrackerItem> beanSoulItems = {
 };
 
 std::vector<ItemTrackerItem> bossSoulItems = {
-    ITEM_TRACKER_RG(RG_GOHMA_SOUL, "GOHMA", 0, DrawItem),       ITEM_TRACKER_RG(RG_KING_DODONGO_SOUL, "KD", 0, DrawItem),
-    ITEM_TRACKER_RG(RG_BARINADE_SOUL, "BARI", 0, DrawItem),     ITEM_TRACKER_RG(RG_PHANTOM_GANON_SOUL, "PG", 0, DrawItem),
-    ITEM_TRACKER_RG(RG_VOLVAGIA_SOUL, "VOLV", 0, DrawItem),     ITEM_TRACKER_RG(RG_MORPHA_SOUL, "MORPH", 0, DrawItem),
-    ITEM_TRACKER_RG(RG_BONGO_BONGO_SOUL, "BONGO", 0, DrawItem), ITEM_TRACKER_RG(RG_TWINROVA_SOUL, "TWIN", 0, DrawItem),
+    ITEM_TRACKER_RG(RG_GOHMA_SOUL, "GOHMA", 0, DrawItem),
+    ITEM_TRACKER_RG(RG_KING_DODONGO_SOUL, "KD", 0, DrawItem),
+    ITEM_TRACKER_RG(RG_BARINADE_SOUL, "BARI", 0, DrawItem),
+    ITEM_TRACKER_RG(RG_PHANTOM_GANON_SOUL, "PG", 0, DrawItem),
+    ITEM_TRACKER_RG(RG_VOLVAGIA_SOUL, "VOLV", 0, DrawItem),
+    ITEM_TRACKER_RG(RG_MORPHA_SOUL, "MORPH", 0, DrawItem),
+    ITEM_TRACKER_RG(RG_BONGO_BONGO_SOUL, "BONGO", 0, DrawItem),
+    ITEM_TRACKER_RG(RG_TWINROVA_SOUL, "TWIN", 0, DrawItem),
     ITEM_TRACKER_RG(RG_GANON_SOUL, "GANON", 0, DrawItem),
 };
 
@@ -443,23 +453,22 @@ static bool presetLoaded = false;
 static std::unordered_map<std::string, ImVec2> presetPos;
 static std::unordered_map<std::string, ImVec2> presetSize;
 
-void TrackSilverRupees(std::vector<ItemTrackerItem>* trackList){
+void TrackSilverRupees(std::vector<ItemTrackerItem>* trackList) {
     for (auto silverRupee : silverRupeeItems) {
         RandomizerGet rg = static_cast<RandomizerGet>(silverRupee.id);
-        if ((gSaveContext.gameMode != GAMEMODE_NORMAL && silverRupee.id <= RG_GANONS_CASTLE_SILVER_SPIRIT) || 
-		    (IsSilverInPool(rg) && 
-			 (Rando::StaticData::constantSilvers.contains(rg) ||
-              CheckTracker::IsAreaSpoiled(Rando::StaticData::silverToArea[rg])))) {
+        if ((gSaveContext.gameMode != GAMEMODE_NORMAL && silverRupee.id <= RG_GANONS_CASTLE_SILVER_SPIRIT) ||
+            (IsSilverInPool(rg) && (Rando::StaticData::constantSilvers.contains(rg) ||
+                                    CheckTracker::IsAreaSpoiled(Rando::StaticData::silverToArea[rg])))) {
             trackList->push_back(silverRupee);
         }
     }
-	if (gSaveContext.gameMode == GAMEMODE_NORMAL && !CheckTracker::AreAllSilversSpoiled()){
-		trackList->push_back({ (uint32_t)ITEMTYPE_SILVER, ITEM_KIND_DUMMY, "????", 
-			"ITEM_RUPEE_SILVER", "ITEM_RUPEE_SILVER_Faded", 0, DrawItem });
-	}
+    if (gSaveContext.gameMode == GAMEMODE_NORMAL && !CheckTracker::AreAllSilversSpoiled()) {
+        trackList->push_back({ (uint32_t)ITEMTYPE_SILVER, ITEM_KIND_DUMMY, "????", "ITEM_RUPEE_SILVER",
+                               "ITEM_RUPEE_SILVER_Faded", 0, DrawItem });
+    }
 }
 
-void DrawName(std::string str, ImU32 color){
+void DrawName(std::string str, ImU32 color) {
     int iconSize = CVarGetInteger(CVAR_TRACKER_ITEM("IconSize"), 36);
     ImVec2 p = ImGui::GetCursorScreenPos();
     ImGui::SetCursorScreenPos(
@@ -659,7 +668,8 @@ ItemTrackerNumbers GetItemCurrentAndMax(ItemTrackerItem item) {
             case RG_GANONS_CASTLE_MQ_SILVER_WATER:
             case RG_GANONS_CASTLE_MQ_SILVER_SHADOW:
                 result.maxCapacity = Randomizer::SilverTotal(static_cast<RandomizerGet>(item.id));
-                result.currentAmmo = *Randomizer::SilverFieldFromSaveContext(&gSaveContext, static_cast<RandomizerGet>(item.id));
+                result.currentAmmo =
+                    *Randomizer::SilverFieldFromSaveContext(&gSaveContext, static_cast<RandomizerGet>(item.id));
                 break;
             default:
                 break;
@@ -687,7 +697,7 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         (actualItemId == ITEM_HOOKSHOT || actualItemId == ITEM_LONGSHOT)) {
         // Calculate the scaled position for the text
         ImVec2 textPos =
-            ImVec2(p.x + (iconSize  >> 1) -
+            ImVec2(p.x + (iconSize >> 1) -
                        (ImGui::CalcTextSize(item.id == ITEM_HOOKSHOT ? "H" : "L").x * textScalingFactor / 2) +
                        8 * textScalingFactor,
                    p.y - 22 * textScalingFactor);
@@ -719,7 +729,7 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         }
 
         ImGui::SetCursorScreenPos(
-            ImVec2(p.x + (iconSize  >> 1) - (ImGui::CalcTextSize((currentString + maxString).c_str()).x / 2), p.y - 14));
+            ImVec2(p.x + (iconSize >> 1) - (ImGui::CalcTextSize((currentString + maxString).c_str()).x / 2), p.y - 14));
         ImGui::PushStyleColor(ImGuiCol_Text, currentColor);
         ImGui::Text("%s", currentString.c_str());
         ImGui::PopStyleColor();
@@ -733,12 +743,11 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         std::string str = std::to_string(currentAndMax.currentAmmo) + "/" + maxString;
 
         ImU32 color = IM_COL_WHITE;
-        if (!hideMax && currentAndMax.maxCapacity == currentAndMax.currentAmmo){
+        if (!hideMax && currentAndMax.maxCapacity == currentAndMax.currentAmmo) {
             color = IM_COL_GREEN;
         }
 
-        ImGui::SetCursorScreenPos(
-            ImVec2(p.x + (iconSize >> 1) - (ImGui::CalcTextSize((str).c_str()).x / 2), p.y - 14));
+        ImGui::SetCursorScreenPos(ImVec2(p.x + (iconSize >> 1) - (ImGui::CalcTextSize((str).c_str()).x / 2), p.y - 14));
         ImGui::PushStyleColor(ImGuiCol_Text, color);
         ImGui::Text("%s", str.c_str());
         ImGui::PopStyleColor();
@@ -940,12 +949,14 @@ void DrawItem(ItemTrackerItem item) {
         }
     } else if (item.kind == ITEM_KIND_RG) {
         actualItemId = item.id;
-		if (Rando::StaticData::RandoGetToRandInf.contains(static_cast<RandomizerGet>(item.id))){
-			hasItem = Flags_GetRandomizerInf(static_cast<RandomizerInf>(Rando::StaticData::RandoGetToRandInf.at(static_cast<RandomizerGet>(item.id))));
-		}
+        if (Rando::StaticData::RandoGetToRandInf.contains(static_cast<RandomizerGet>(item.id))) {
+            hasItem = Flags_GetRandomizerInf(static_cast<RandomizerInf>(
+                Rando::StaticData::RandoGetToRandInf.at(static_cast<RandomizerGet>(item.id))));
+        }
         switch (item.id) {
             case RG_TRIFORCE_PIECE:
-                hasItem = IS_RANDO && (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT_PIECES_TOTAL) > 0);
+                hasItem = IS_RANDO &&
+                          (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_TRIFORCE_HUNT_PIECES_TOTAL) > 0);
                 itemName = "Triforce Piece";
                 break;
             case ITEM_NAYRUS_LOVE:
@@ -1156,9 +1167,12 @@ void DrawItem(ItemTrackerItem item) {
             case RG_SPIRIT_MQ_SILVER_BIG_WALL:
             case RG_GANONS_CASTLE_MQ_SILVER_WATER:
             case RG_GANONS_CASTLE_MQ_SILVER_SHADOW:
-                hideMax = !CheckTracker::IsAreaSpoiled(Rando::StaticData::silverToArea[static_cast<RandomizerGet>(item.id)]);
-                hasItem = IsSilverCleared(static_cast<RandomizerGet>(item.id));
-                itemName = Rando::StaticData::RetrieveItem(static_cast<RandomizerGet>(actualItemId)).GetName().GetForLanguage(CVarGetInteger(CVAR_SETTING("Languages"), LANGUAGE_ENG));
+                hideMax =
+                    !CheckTracker::IsAreaSpoiled(Rando::StaticData::silverToArea[static_cast<RandomizerGet>(item.id)]);
+                hasItem = IsSilverCleared(static_cast<RandomizerGet>(item.id)) && !hideMax;
+                itemName = Rando::StaticData::RetrieveItem(static_cast<RandomizerGet>(actualItemId))
+                               .GetName()
+                               .GetForLanguage(CVarGetInteger(CVAR_SETTING("Languages"), LANGUAGE_ENG));
                 break;
             case RG_BRONZE_SCALE:
                 itemName = "Swim";
@@ -1176,12 +1190,12 @@ void DrawItem(ItemTrackerItem item) {
                 itemName = "Open";
                 break;
         }
-    } else if (item.kind == ITEM_KIND_DUMMY){
-		if (item.id == ITEMTYPE_SILVER){
-			hasItem = false;
-			itemName = "More Silver Rupees may or may not exist based on unknown dungeons.";
-		}
-	}
+    } else if (item.kind == ITEM_KIND_DUMMY) {
+        if (item.id == ITEMTYPE_SILVER) {
+            hasItem = false;
+            itemName = "More Silver Rupees may or may not exist based on unknown dungeons.";
+        }
+    }
 
     if (GameInteractor::IsSaveLoaded() &&
         (hasItem && item.kind == ITEM_KIND_ITEM && item.id != actualItemId &&
@@ -1197,7 +1211,7 @@ void DrawItem(ItemTrackerItem item) {
 
     DrawItemCount(item, hideMax);
 
-    if(item.displayName != ""){
+    if (item.displayName != "") {
         DrawName(item.displayName, item.kind == ITEM_KIND_DUMMY ? IM_COL_GREEN : IM_COL_WHITE);
     }
 
@@ -1461,11 +1475,13 @@ std::vector<ItemTrackerItem> GetDungeonItemsVector(std::vector<ItemTrackerDungeo
                             dungeonItems.push_back(
                                 ITEM_TRACKER_ITEM(ITEM_KEY_BOSS, "", SCENE_GANONS_TOWER, DrawDungeonItem));
                         } else {
-                            dungeonItems.push_back(ITEM_TRACKER_ITEM(ITEM_KEY_BOSS, "", dungeons[j].id, DrawDungeonItem));
+                            dungeonItems.push_back(
+                                ITEM_TRACKER_ITEM(ITEM_KEY_BOSS, "", dungeons[j].id, DrawDungeonItem));
                         }
                         break;
                     case ITEM_DUNGEON_MAP:
-                        dungeonItems.push_back(ITEM_TRACKER_ITEM(ITEM_DUNGEON_MAP, "", dungeons[j].id, DrawDungeonItem));
+                        dungeonItems.push_back(
+                            ITEM_TRACKER_ITEM(ITEM_DUNGEON_MAP, "", dungeons[j].id, DrawDungeonItem));
                         break;
                     case ITEM_COMPASS:
                         dungeonItems.push_back(ITEM_TRACKER_ITEM(ITEM_COMPASS, "", dungeons[j].id, DrawDungeonItem));
@@ -1487,9 +1503,8 @@ std::vector<ItemTrackerItem> GetDungeonItemsVector(std::vector<ItemTrackerDungeo
 }
 /* ****************************************************** */
 
-
-void RefreshItemTrackerMainWindow(){
-	shouldUpdateVectors = true;
+void RefreshItemTrackerMainWindow() {
+    shouldUpdateVectors = true;
 }
 
 void UpdateVectors() {
@@ -1954,7 +1969,7 @@ void ItemTrackerWindow::DrawElement() {
         }
     }
     if (presetLoaded) {
-		RefreshItemTrackerMainWindow();
+        RefreshItemTrackerMainWindow();
         presetLoaded = false;
     }
 }
