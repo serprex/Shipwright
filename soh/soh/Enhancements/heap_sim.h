@@ -18,6 +18,8 @@ s32 HeapSim_MirrorMalloc(void* ptr, size_t size);
 s32 HeapSim_MirrorMallocR(void* ptr, size_t size);
 void HeapSim_MirrorFree(void* ptr);
 void HeapSim_MirrorGameAlloc(void* ptr, size_t size);
+void HeapSim_MirrorMapMarkLoad(void);
+s32 HeapSim_MirrorEffectSsOverlay(s32 type);
 s32 HeapSim_RegisterActorOverlayIfNeeded(ActorDBEntry* dbEntry);
 void HeapSim_UnregisterActorOverlayIfNeeded(ActorDBEntry* dbEntry);
 void HeapSim_FreeAbsoluteSpace(void);
