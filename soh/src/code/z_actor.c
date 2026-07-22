@@ -14,6 +14,7 @@
 #include "soh/Enhancements/game-interactor/GameInteractor.h"
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "soh/Enhancements/nametag.h"
+#include "soh/Enhancements/heap_sim.h"
 
 #include "soh/ActorDB.h"
 #include "soh/OTRGlobals.h"
@@ -3236,6 +3237,8 @@ void func_80031C3C(ActorContext* actorCtx, PlayState* play) {
         actorCtx->absoluteSpace = NULL;
     }
 
+    HeapSim_FreeAbsoluteSpace();
+
     Play_SaveSceneFlags(play);
     func_80030488(play);
 }
@@ -3303,6 +3306,8 @@ void Actor_FreeOverlay(ActorDBEntry* dbEntry) {
             dbEntry->reset();
         }
 
+        HeapSim_UnregisterActorOverlayIfNeeded(dbEntry);
+
         if (HREG(20) != 0) {
             osSyncPrintf("アクタークライアントが０になりました\n"); // "Actor client is now 0"
         }
@@ -3338,6 +3343,11 @@ Actor* Actor_Spawn(ActorContext* actorCtx, PlayState* play, s16 actorId, f32 pos
         LUSLOG_WARN("Actor_Spawn: Actor number max exceeded");
         // "Ａｃｔｏｒ set number exceeded"
         osSyncPrintf(VT_COL(YELLOW, BLACK) "Ａｃｔｏｒセット数オーバー\n" VT_RST);
+        return NULL;
+    }
+
+    // Heap sim: fail the spawn if the overlay would not have fit on the N64 heap
+    if (!HeapSim_RegisterActorOverlayIfNeeded(dbEntry)) {
         return NULL;
     }
 
