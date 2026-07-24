@@ -742,7 +742,7 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         ImGui::Text("%s", maxString.c_str());
         ImGui::PopStyleColor();
     } else if (item.kind == ITEM_KIND_RG && IsSilver(static_cast<RandomizerGet>(item.id)) && IsValidSaveFile() &&
-               IS_RANDO && OTRGlobals::Instance->gRandoContext->GetOption(RSK_SHUFFLE_SILVER).Get()) {
+               IS_RANDO && OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON) {
         std::string maxString = hideMax ? "???" : std::to_string(currentAndMax.maxCapacity);
         std::string str = std::to_string(currentAndMax.currentAmmo) + "/" + maxString;
 
@@ -957,6 +957,7 @@ void DrawItem(ItemTrackerItem item) {
             hasItem = Flags_GetRandomizerInf(static_cast<RandomizerInf>(
                 Rando::StaticData::RandoGetToRandInf.at(static_cast<RandomizerGet>(item.id))));
         }
+        auto test = OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER);
         switch (item.id) {
             case RG_TRIFORCE_PIECE:
                 hasItem = IS_RANDO &&
@@ -1173,7 +1174,8 @@ void DrawItem(ItemTrackerItem item) {
             case RG_GANONS_CASTLE_MQ_SILVER_SHADOW:
                 hideMax =
                     !CheckTracker::IsAreaSpoiled(Rando::StaticData::silverToArea[static_cast<RandomizerGet>(item.id)]);
-                hasItem = IsSilverCleared(static_cast<RandomizerGet>(item.id)) && !hideMax;
+                hasItem = IsSilverCleared(static_cast<RandomizerGet>(item.id)) && 
+                          (!hideMax || OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) != RO_SHUFFLE_SILVER_ON);
                 itemName = Rando::StaticData::RetrieveItem(static_cast<RandomizerGet>(actualItemId))
                                .GetName()
                                .GetForLanguage(CVarGetInteger(CVAR_SETTING("Languages"), LANGUAGE_ENG));

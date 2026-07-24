@@ -360,7 +360,8 @@ std::map<RandomizerGet, RandomizerCheckArea> MapRGtoRandomizerCheckArea = {
     { RG_ICE_CAVERN_MAP, RCAREA_ICE_CAVERN }
 };
 
-// RANDOTODO do we want keyrings and keys beyond lower total to spoil area too?
+// In the case that we get an excess key or silver rupee, it spoils the MQ status
+// because it is turned into a blue rupee as excess.
 void SpoilAreaFromCheck(RandomizerCheck rc) {
     Rando::Location* loc = Rando::StaticData::GetLocation(rc);
     Rando::ItemLocation* itemLoc = Rando::Context::GetInstance()->GetItemLocation(rc);
@@ -374,10 +375,54 @@ void SpoilAreaFromCheck(RandomizerCheck rc) {
         if (!Rando::StaticData::constantSilvers.contains(itemLoc->GetPlacedRandomizerGet()) &&
             !IsAreaSpoiled(Rando::StaticData::silverToArea[itemLoc->GetPlacedRandomizerGet()])) {
             SetAreaSpoiled(Rando::StaticData::silverToArea[itemLoc->GetPlacedRandomizerGet()]);
+        } else if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON){
+            switch(itemLoc->GetPlacedRandomizerGet()){
+                case RG_SHADOW_SILVER_SPIKES:
+                    if (*Randomizer::SilverFieldFromSaveContext(&gSaveContext, itemLoc->GetPlacedRandomizerGet()) >= 6){
+                        SetAreaSpoiled(RCAREA_SHADOW_TEMPLE);
+                    }
+                case RG_GTG_SILVER_LAVA:
+                    if (*Randomizer::SilverFieldFromSaveContext(&gSaveContext, itemLoc->GetPlacedRandomizerGet()) >= 6){
+                        SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
+                    }
+                case RG_GTG_SILVER_WATER:
+                    if (*Randomizer::SilverFieldFromSaveContext(&gSaveContext, itemLoc->GetPlacedRandomizerGet()) >= 4){
+                        SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
+                    }
+                default:
+                    break;
+            }
+
         }
     }
     if (!IsAreaSpoiled(loc->GetArea())) {
         SetAreaSpoiled(loc->GetArea());
+    }
+}
+
+void SpoilAreaFromCantObtain(RandomizerGet rg){
+    switch (rg){
+        case RG_SHADOW_SILVER_SPIKES:
+            //only spoil if it wouldn't transform anyway, in case someone manages to glitch this value
+            if(OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON &&
+               *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) < 10){
+                SetAreaSpoiled(RCAREA_SHADOW_TEMPLE);
+            }
+            break;
+        case RG_GTG_SILVER_LAVA:
+            if(OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON &&
+               *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) < 6){
+                SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
+            }
+            break;
+        case RG_GTG_SILVER_WATER:
+            if(OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON &&
+               *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) < 5){
+                SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
+            }
+            break;
+        default:
+            return;
     }
 }
 

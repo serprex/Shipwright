@@ -227,6 +227,8 @@ bool IsSilverCleared(s16 switchFlag) {
 }
 
 bool IsSilverCleared(RandomizerGet rg) {
+    auto test = *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg);
+    auto test2 = Randomizer::SilverTotal(rg);
     return *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) >= Randomizer::SilverTotal(rg);
 }
 
