@@ -711,6 +711,10 @@ bool Logic::CanOpenUnderwaterChest() {
            HasItem(RG_OPEN_CHEST);
 }
 
+bool Logic::CanOpenLargeChest() {
+    return CheckRandoInf(RAND_INF_CAN_OPEN_LARGE_CHEST);
+}
+
 uint8_t GetDifficultyValueFromString(Rando::Option& glitchOption) {
     return 0;
 }
@@ -2119,7 +2123,17 @@ void Logic::ApplyItemEffect(Item& item, bool state) {
                     SetRandoInf(RAND_INF_CAN_CRAWL, state);
                     break;
                 case RG_OPEN_CHEST:
-                    SetRandoInf(RAND_INF_CAN_OPEN_CHEST, state);
+                    if (ctx->GetOption(RSK_SHUFFLE_OPEN_CHEST).Is(RO_OPEN_CHEST_PROGRESSIVE)) {
+                        if (state ? CheckRandoInf(RAND_INF_CAN_OPEN_CHEST)
+                                  : CheckRandoInf(RAND_INF_CAN_OPEN_LARGE_CHEST)) {
+                            SetRandoInf(RAND_INF_CAN_OPEN_LARGE_CHEST, state);
+                        } else {
+                            SetRandoInf(RAND_INF_CAN_OPEN_CHEST, state);
+                        }
+                    } else {
+                        SetRandoInf(RAND_INF_CAN_OPEN_CHEST, state);
+                        SetRandoInf(RAND_INF_CAN_OPEN_LARGE_CHEST, state);
+                    }
                     break;
                 case RG_PROGRESSIVE_HOOKSHOT: {
                     uint8_t i;
@@ -2994,6 +3008,7 @@ void Logic::Reset(bool resetSaveContext /*= true*/) {
 
         if (ctx->GetOption(RSK_SHUFFLE_OPEN_CHEST).Is(false)) {
             SetRandoInf(RAND_INF_CAN_OPEN_CHEST, true);
+            SetRandoInf(RAND_INF_CAN_OPEN_LARGE_CHEST, true);
         }
 
         if (ctx->GetOption(RSK_SHUFFLE_SPEAK).Is(false)) {
