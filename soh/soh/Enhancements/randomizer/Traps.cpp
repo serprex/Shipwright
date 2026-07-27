@@ -1,10 +1,12 @@
 #include "Traps.h"
 #include "soh/Enhancements/randomizer/SeedContext.h"
 #include "soh/Enhancements/randomizer/static_data.h"
-#include "soh/Enhancements/randomizer/3drando/random.hpp"
 #include "soh/ShipUtils.h"
 
 #include "soh/Enhancements/randomizer/rng.h"
+
+#define NOGDI // avoid various windows defines that conflict with things in z64.h
+#include <spdlog/spdlog.h>
 
 #include <vector>
 
