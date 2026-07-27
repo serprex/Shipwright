@@ -1,5 +1,6 @@
 #include "text.h"
 #include "soh/ShipUtils.h"
+#include <functional>
 
 Text::Text() = default;
 

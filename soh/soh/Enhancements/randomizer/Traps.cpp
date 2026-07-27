@@ -1,9 +1,10 @@
 #include "Traps.h"
 #include "soh/Enhancements/randomizer/SeedContext.h"
-#include "soh/Enhancements/randomizer/randomizerTypes.h"
 #include "soh/Enhancements/randomizer/static_data.h"
 #include "soh/Enhancements/randomizer/3drando/random.hpp"
 #include "soh/ShipUtils.h"
+
+#include "soh/Enhancements/randomizer/rng.h"
 
 #include <vector>
 
@@ -661,6 +662,12 @@ static void InitTrickNames() {
         Text{ "Triforce Shard", "Éclat de Triforce", "Triforce-Fragment" }, // "Triforce Shard"
         Text{ "Shiny Rock", "Caillou Brillant", "glänzender Stein" },       // "Shiny Rock"
     };
+    trickNameTable[RG_TRIFORCE] = {
+        // TODO_TRANSLATE
+        Text{ "Cheese Triangle" },
+        Text{ "Triumph Fork" },
+        Text{ "Force Gem" },
+    };
     trickNameTable[RG_ROCS_FEATHER] = {
         Text{ "Chicken Wing", "Chicken Wing", "Chicken Wing" }, // "Chicken Wing"
         Text{ "Roc's Leg", "Roc's Leg", "Roc's Leg" },          // "Roc's Leg"
@@ -1055,7 +1062,7 @@ static void InitTrickNames() {
     trickNameTable[RG_SPEAK_HYLIAN] = {
         // TODO_TRANSLATE
         Text{ "Human Jingle Nut" },
-        Text{ "Sheikah Jabber nut" },
+        Text{ "Sheikah Jabber Nut" },
         Text{ "Lorulean Blabber Nut" },
     };
     trickNameTable[RG_SPEAK_KOKIRI] = {
@@ -1421,8 +1428,9 @@ static void InitTrickNames() {
 /// @brief Gets the "trick name" for an Ice Trap
 /// @param id The RandomizerGet of the item the Ice Trap is disguised as
 /// @param iceTrapNamesOption The current value of the RSK_ICE_TRAP_NAMES setting
+/// @param state The rng state
 /// @return A Text object with the selected trick name
-Text Rando::Traps::GetTrapName(RandomizerGet id, RandoIceTrapNames iceTrapNamesOption) {
+Text Rando::Traps::GetTrapName(RandomizerGet id, RandoIceTrapNames iceTrapNamesOption, uint64_t* state) {
     switch (iceTrapNamesOption) {
         case RO_ICE_TRAP_NAMES_IDENTICAL: {
             return Rando::StaticData::RetrieveItem(id).GetName();
@@ -1442,16 +1450,16 @@ Text Rando::Traps::GetTrapName(RandomizerGet id, RandoIceTrapNames iceTrapNamesO
             }
 
             // Randomly get the easy, medium, or hard name for the given item id
-            return ShipUtils::RandomElement(trickNameTable[id]);
+            return ShipUtils::RandomElement(trickNameTable[id], state);
         }
         case RO_ICE_TRAP_NAMES_MISSPELLED_CHANGED_VOWEL: {
             Text name = Rando::StaticData::RetrieveItem(id).GetName();
-            name.ReplaceRandomVowel(&rando_state);
+            name.ReplaceRandomVowel(state);
             return name;
         }
         case RO_ICE_TRAP_NAMES_MISSPELLED_DUPLICATED_LETTER: {
             Text name = Rando::StaticData::RetrieveItem(id).GetName();
-            name.DuplicateRandomLetter(&rando_state);
+            name.DuplicateRandomLetter(state);
             return name;
         }
         case RO_ICE_TRAP_NAMES_REVEALED: {
@@ -1466,16 +1474,16 @@ Text Rando::Traps::GetTrapName(RandomizerGet id, RandoIceTrapNames iceTrapNamesO
     }
 }
 
-RandomizerGet Rando::Traps::GetTrapTrickModel() {
+RandomizerGet Rando::Traps::GetTrapTrickModel(uint64_t* state) {
     auto ctx = Rando::Context::GetInstance();
-    RandomizerGet trickModel = ShipUtils::RandomElementFromSet(ctx->possibleIceTrapModels);
+    RandomizerGet trickModel = ShipUtils::RandomElementFromSet(ctx->possibleIceTrapModels, state);
 
     if (trickModel == RG_EMPTY_BOTTLE) {
-        trickModel = ShipUtils::RandomElement(Rando::StaticData::normalBottles);
+        trickModel = ShipUtils::RandomElement(Rando::StaticData::normalBottles, state);
     } else if (trickModel == RG_GUARD_HOUSE_KEY) {
-        trickModel = ShipUtils::RandomElement(Rando::StaticData::overworldKeys);
+        trickModel = ShipUtils::RandomElement(Rando::StaticData::overworldKeys, state);
     } else if (trickModel == RG_DEATH_MOUNTAIN_CRATER_BEAN_SOUL) {
-        trickModel = ShipUtils::RandomElement(Rando::StaticData::beanSouls);
+        trickModel = ShipUtils::RandomElement(Rando::StaticData::beanSouls, state);
     }
 
     return trickModel;
@@ -1483,17 +1491,9 @@ RandomizerGet Rando::Traps::GetTrapTrickModel() {
 
 bool Rando::Traps::ShouldJunkItemBeTrap() {
     auto ctx = Rando::Context::GetInstance();
-
-    if (ctx->GetOption(RSK_ICE_TRAP_PERCENT).Is(0)) {
-        return false;
-    }
-
-    if (ctx->GetOption(RSK_ICE_TRAP_PERCENT).Is(100) ||
-        ShipUtils::Random(0, 100) < ctx->GetOption(RSK_ICE_TRAP_PERCENT).Get()) {
-        return true;
-    }
-
-    return false;
+    return ctx->GetOption(RSK_ICE_TRAP_PERCENT).IsNot(0) &&
+           (ctx->GetOption(RSK_ICE_TRAP_PERCENT).Is(100) ||
+            Random(0, 100) < ctx->GetOption(RSK_ICE_TRAP_PERCENT).Get());
 }
 
 static const char* const englishIceTrapMessages[] = {
@@ -1738,7 +1738,7 @@ static const char* const frenchIceTrapMessages[] = {
     "Tu savais que le G de ZFG signifie #Glace#?",
     "Tu as obtenu #L'Âge de Glace (2002)#!",
     "Maintenant, tu peux lancer un #sort# que tu ne connais pas.",
-    "Que dirais-tu d'un héros #sur glace# ?",
+    "Que dirais-tu d'un héros #sur glace#?",
     "Pas de tunique pour #ça#!",
     "Je savais que tu étais #partiellement Metroid#!",
     "Voilà juste la #cerise sur le gâteau#!",
@@ -1759,7 +1759,7 @@ static const char* const frenchIceTrapMessages[] = {
     "#Continue#",
     "QU'EST-CE QU'ELLE VA FAIRE, ME FAIRE UNE #[Glace]#!?",
     "Tu as rencontré un #terrible destin#, n'est-ce pas?",
-    "Alors comme ça, tu aimes Shining ? Voici comment ça #finit#.",
+    "Alors comme ça, tu aimes Shining? Voici comment ça #finit#.",
     "Petite erreur de trajectoire. #Je gagne#.",
     "Prends ce #L#, @.",
     "#Problème de compétence#",
