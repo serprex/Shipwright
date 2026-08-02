@@ -68,6 +68,7 @@ static WidgetInfo silverRupeeTracking;
 static WidgetInfo fishingPoleTracking;
 static WidgetInfo personalNotesWiget;
 static WidgetInfo hookshotIdentWidget;
+static WidgetInfo openChestIdentWidget;
 
 namespace SohGui {
 extern std::shared_ptr<SohMenu> mSohMenu;
@@ -668,9 +669,13 @@ ItemTrackerNumbers GetItemCurrentAndMax(ItemTrackerItem item) {
             case RG_SPIRIT_MQ_SILVER_BIG_WALL:
             case RG_GANONS_CASTLE_MQ_SILVER_WATER:
             case RG_GANONS_CASTLE_MQ_SILVER_SHADOW:
-                result.maxCapacity = Randomizer::SilverTotal(static_cast<RandomizerGet>(item.id));
-                result.currentAmmo =
-                    *Randomizer::SilverFieldFromSaveContext(&gSaveContext, static_cast<RandomizerGet>(item.id));
+                // don't show max and current when we have wallets
+                if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) ==
+                    RO_SHUFFLE_SILVER_ON) {
+                    result.maxCapacity = Randomizer::SilverTotal(static_cast<RandomizerGet>(item.id));
+                    result.currentAmmo =
+                        *Randomizer::SilverFieldFromSaveContext(&gSaveContext, static_cast<RandomizerGet>(item.id));
+                }
                 break;
             default:
                 break;
@@ -710,6 +715,23 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         ImGui::SetWindowFontScale(1.0f); // Reset font scale to the original state
     }
 
+    // progressive open chest: 'S' for small chests only, 'B' once big chests can be opened too
+    if (item.id == RG_OPEN_CHEST && CVarGetInteger(CVAR_TRACKER_ITEM("OpenChestIdentifier"), 0) && IS_RANDO &&
+        RAND_GET_OPTION(RSK_SHUFFLE_OPEN_CHEST).Is(RO_OPEN_CHEST_PROGRESSIVE) &&
+        Flags_GetRandomizerInf(RAND_INF_CAN_OPEN_CHEST)) {
+        const char* ident = Flags_GetRandomizerInf(RAND_INF_CAN_OPEN_LARGE_CHEST) ? "B" : "S";
+
+        ImVec2 textPos = ImVec2(p.x + (iconSize / 2) - (ImGui::CalcTextSize(ident).x * textScalingFactor / 2) +
+                                    8 * textScalingFactor,
+                                p.y - 22 * textScalingFactor);
+
+        ImGui::SetCursorScreenPos(textPos);
+        ImGui::SetWindowFontScale(textScalingFactor);
+
+        ImGui::Text("%s", ident);
+        ImGui::SetWindowFontScale(1.0f);
+    }
+
     ImGui::SetWindowFontScale(textSize / 13.0f);
 
     if (item.kind == ITEM_KIND_ITEM && item.id == ITEM_KEY_SMALL && IsValidSaveFile()) {
@@ -739,7 +761,8 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         ImGui::Text("%s", maxString.c_str());
         ImGui::PopStyleColor();
     } else if (item.kind == ITEM_KIND_RG && IsSilver(static_cast<RandomizerGet>(item.id)) && IsValidSaveFile() &&
-               IS_RANDO && OTRGlobals::Instance->gRandoContext->GetOption(RSK_SHUFFLE_SILVER).Get()) {
+               IS_RANDO &&
+               OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON) {
         std::string maxString = hideMax ? "???" : std::to_string(currentAndMax.maxCapacity);
         std::string str = std::to_string(currentAndMax.currentAmmo) + "/" + maxString;
 
@@ -954,6 +977,7 @@ void DrawItem(ItemTrackerItem item) {
             hasItem = Flags_GetRandomizerInf(static_cast<RandomizerInf>(
                 Rando::StaticData::RandoGetToRandInf.at(static_cast<RandomizerGet>(item.id))));
         }
+        auto test = OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER);
         switch (item.id) {
             case RG_TRIFORCE_PIECE:
                 hasItem = IS_RANDO &&
@@ -1170,7 +1194,9 @@ void DrawItem(ItemTrackerItem item) {
             case RG_GANONS_CASTLE_MQ_SILVER_SHADOW:
                 hideMax =
                     !CheckTracker::IsAreaSpoiled(Rando::StaticData::silverToArea[static_cast<RandomizerGet>(item.id)]);
-                hasItem = IsSilverCleared(static_cast<RandomizerGet>(item.id)) && !hideMax;
+                hasItem = IsSilverCleared(static_cast<RandomizerGet>(item.id)) &&
+                          (!hideMax || OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) !=
+                                           RO_SHUFFLE_SILVER_ON);
                 itemName = Rando::StaticData::RetrieveItem(static_cast<RandomizerGet>(actualItemId))
                                .GetName()
                                .GetForLanguage(CVarGetInteger(CVAR_SETTING("Languages"), LANGUAGE_ENG));
@@ -2162,6 +2188,7 @@ void ItemTrackerSettingsWindow::DrawElement() {
 
         SohGui::mSohMenu->MenuDrawItem(personalNotesWiget, 250, THEME_COLOR);
         SohGui::mSohMenu->MenuDrawItem(hookshotIdentWidget, 250, THEME_COLOR);
+        SohGui::mSohMenu->MenuDrawItem(openChestIdentWidget, 250, THEME_COLOR);
 
         ImGui::PopStyleVar(1);
         ImGui::EndTable();
@@ -2379,6 +2406,14 @@ void RegisterItemTrackerWidgets() {
                      .Color(THEME_COLOR)
                      .Tooltip("Shows an 'H' or an 'L' to more easily distinguish between Hookshot and Longshot."));
     SohGui::mSohMenu->AddSearchWidget({ hookshotIdentWidget, "Randomizer", "Item Tracker", "General Settings" });
+
+    openChestIdentWidget = { .name = "Show Open Chest Identifiers", .type = WidgetType::WIDGET_CVAR_CHECKBOX };
+    openChestIdentWidget.CVar(CVAR_TRACKER_ITEM("OpenChestIdentifier"))
+        .Options(CheckboxOptions()
+                     .Color(THEME_COLOR)
+                     .Tooltip("With progressive Shuffle Open Chest, shows an 'S' when only small chests can be "
+                              "opened and a 'B' once big chests can be opened too."));
+    SohGui::mSohMenu->AddSearchWidget({ openChestIdentWidget, "Randomizer", "Item Tracker", "General Settings" });
 }
 
 void RegisterItemTracker() {

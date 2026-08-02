@@ -19,6 +19,7 @@
 #include "soh/ObjectExtension/ObjectExtension.h"
 #include "overlays/actors/ovl_En_GirlA/z_en_girla.h"
 
+#include <array>
 #include <string>
 #include <sstream>
 #include <vector>
@@ -74,6 +75,7 @@ bool showKokiriSword;
 bool showMasterSword;
 bool showHyruleLoach;
 bool showWeirdEgg;
+bool showZeldasLetter;
 bool showGerudoCard;
 bool showOverworldPots;
 bool showDungeonPots;
@@ -315,7 +317,7 @@ bool IsCheckHidden(RandomizerCheck rc) {
     bool available = itemLocation->IsAvailable();
     bool skipped = itemLocation->GetIsSkipped();
     bool obtained = itemLocation->HasObtained();
-    bool seen = status == RCSHOW_SEEN || status == RCSHOW_IDENTIFIED;
+    bool seen = status == RCSHOW_SEEN_OR_HINTED || status == RCSHOW_IDENTIFIED;
     bool scummed = status == RCSHOW_SCUMMED;
     bool unchecked = status == RCSHOW_UNCHECKED;
 
@@ -359,7 +361,9 @@ std::map<RandomizerGet, RandomizerCheckArea> MapRGtoRandomizerCheckArea = {
     { RG_ICE_CAVERN_MAP, RCAREA_ICE_CAVERN }
 };
 
-// RANDOTODO do we want keyrings and keys beyond lower total to spoil area too?
+// In the case that we get an excess key or silver rupee, it spoils the MQ status
+// because it is not turned into a blue rupee as excess.
+// For keyrings, we can count the keys on the viewmodel
 void SpoilAreaFromCheck(RandomizerCheck rc) {
     Rando::Location* loc = Rando::StaticData::GetLocation(rc);
     Rando::ItemLocation* itemLoc = Rando::Context::GetInstance()->GetItemLocation(rc);
@@ -373,10 +377,170 @@ void SpoilAreaFromCheck(RandomizerCheck rc) {
         if (!Rando::StaticData::constantSilvers.contains(itemLoc->GetPlacedRandomizerGet()) &&
             !IsAreaSpoiled(Rando::StaticData::silverToArea[itemLoc->GetPlacedRandomizerGet()])) {
             SetAreaSpoiled(Rando::StaticData::silverToArea[itemLoc->GetPlacedRandomizerGet()]);
+        } else if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) ==
+                   RO_SHUFFLE_SILVER_ON) {
+            switch (itemLoc->GetPlacedRandomizerGet()) {
+                case RG_SHADOW_SILVER_SPIKES:
+                    if (*Randomizer::SilverFieldFromSaveContext(&gSaveContext, itemLoc->GetPlacedRandomizerGet()) >=
+                        6) {
+                        SetAreaSpoiled(RCAREA_SHADOW_TEMPLE);
+                    }
+                    break;
+                case RG_GTG_SILVER_LAVA:
+                    if (*Randomizer::SilverFieldFromSaveContext(&gSaveContext, itemLoc->GetPlacedRandomizerGet()) >=
+                        6) {
+                        SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
+                    }
+                    break;
+                case RG_GTG_SILVER_WATER:
+                    if (*Randomizer::SilverFieldFromSaveContext(&gSaveContext, itemLoc->GetPlacedRandomizerGet()) >=
+                        4) {
+                        SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
+                    }
+                    break;
+                default:
+                    break;
+            }
+        }
+    } else if (itemLoc->GetPlacedItem().GetItemType() == ItemType::ITEMTYPE_SMALLKEY) {
+        switch (itemLoc->GetPlacedRandomizerGet()) {
+            case RG_FOREST_TEMPLE_SMALL_KEY:
+                if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FOREST_TEMPLE)
+                        ->GetTotalSmallKeys(&gSaveContext) >= 6) {
+                    SetAreaSpoiled(RCAREA_FOREST_TEMPLE);
+                }
+                break;
+            case RG_FIRE_TEMPLE_SMALL_KEY:
+                if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FIRE_TEMPLE)
+                        ->GetTotalSmallKeys(&gSaveContext) >= 6) {
+                    SetAreaSpoiled(RCAREA_FIRE_TEMPLE);
+                }
+                break;
+            case RG_WATER_TEMPLE_SMALL_KEY:
+                if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::WATER_TEMPLE)
+                        ->GetTotalSmallKeys(&gSaveContext) >= 3) {
+                    SetAreaSpoiled(RCAREA_WATER_TEMPLE);
+                }
+                break;
+            case RG_SPIRIT_TEMPLE_SMALL_KEY:
+                if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SPIRIT_TEMPLE)
+                        ->GetTotalSmallKeys(&gSaveContext) >= 6) {
+                    SetAreaSpoiled(RCAREA_SPIRIT_TEMPLE);
+                }
+                break;
+            case RG_SHADOW_TEMPLE_SMALL_KEY:
+                if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SHADOW_TEMPLE)
+                        ->GetTotalSmallKeys(&gSaveContext) >= 6) {
+                    SetAreaSpoiled(RCAREA_SHADOW_TEMPLE);
+                }
+                break;
+            case RG_BOTTOM_OF_THE_WELL_SMALL_KEY:
+                if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::BOTTOM_OF_THE_WELL)
+                        ->GetTotalSmallKeys(&gSaveContext) >= 3) {
+                    SetAreaSpoiled(RCAREA_BOTTOM_OF_THE_WELL);
+                }
+                break;
+            case RG_GERUDO_TRAINING_GROUND_SMALL_KEY:
+                if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::GERUDO_TRAINING_GROUND)
+                        ->GetTotalSmallKeys(&gSaveContext) >= 4) {
+                    SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
+                }
+                break;
+            case RG_FOREST_TEMPLE_KEY_RING:
+                SetAreaSpoiled(RCAREA_FOREST_TEMPLE);
+                break;
+            case RG_FIRE_TEMPLE_KEY_RING:
+                SetAreaSpoiled(RCAREA_FIRE_TEMPLE);
+                break;
+            case RG_WATER_TEMPLE_KEY_RING:
+                SetAreaSpoiled(RCAREA_WATER_TEMPLE);
+                break;
+            case RG_SPIRIT_TEMPLE_KEY_RING:
+                SetAreaSpoiled(RCAREA_SPIRIT_TEMPLE);
+                break;
+            case RG_SHADOW_TEMPLE_KEY_RING:
+                SetAreaSpoiled(RCAREA_SHADOW_TEMPLE);
+                break;
+            case RG_BOTTOM_OF_THE_WELL_KEY_RING:
+                SetAreaSpoiled(RCAREA_BOTTOM_OF_THE_WELL);
+                break;
+            case RG_GERUDO_TRAINING_GROUND_KEY_RING:
+                SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
+                break;
+            default:
+                break;
         }
     }
     if (!IsAreaSpoiled(loc->GetArea())) {
         SetAreaSpoiled(loc->GetArea());
+    }
+}
+
+void SpoilAreaFromCantObtain(RandomizerGet rg) {
+    // only spoil if it wouldn't transform anyway, in case someone manages to glitch this value
+    switch (rg) {
+        case RG_FOREST_TEMPLE_SMALL_KEY:
+            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FOREST_TEMPLE)
+                    ->GetTotalSmallKeys(&gSaveContext) < 6) {
+                SetAreaSpoiled(RCAREA_FOREST_TEMPLE);
+            }
+            break;
+        case RG_FIRE_TEMPLE_SMALL_KEY:
+            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FIRE_TEMPLE)->GetTotalSmallKeys(&gSaveContext) <
+                8) {
+                SetAreaSpoiled(RCAREA_FIRE_TEMPLE);
+            }
+            break;
+        case RG_WATER_TEMPLE_SMALL_KEY:
+            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::WATER_TEMPLE)->GetTotalSmallKeys(&gSaveContext) <
+                6) {
+                SetAreaSpoiled(RCAREA_WATER_TEMPLE);
+            }
+            break;
+        case RG_SPIRIT_TEMPLE_SMALL_KEY:
+            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SPIRIT_TEMPLE)
+                    ->GetTotalSmallKeys(&gSaveContext) < 7) {
+                SetAreaSpoiled(RCAREA_SPIRIT_TEMPLE);
+            }
+            break;
+        case RG_SHADOW_TEMPLE_SMALL_KEY:
+            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SHADOW_TEMPLE)
+                    ->GetTotalSmallKeys(&gSaveContext) < 6) {
+                SetAreaSpoiled(RCAREA_SHADOW_TEMPLE);
+            }
+            break;
+        case RG_BOTTOM_OF_THE_WELL_SMALL_KEY:
+            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::BOTTOM_OF_THE_WELL)
+                    ->GetTotalSmallKeys(&gSaveContext) < 3) {
+                SetAreaSpoiled(RCAREA_BOTTOM_OF_THE_WELL);
+            }
+            break;
+        case RG_GERUDO_TRAINING_GROUND_SMALL_KEY:
+            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::GERUDO_TRAINING_GROUND)
+                    ->GetTotalSmallKeys(&gSaveContext) < 9) {
+                SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
+            }
+            break;
+        case RG_SHADOW_SILVER_SPIKES:
+            if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON &&
+                *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) < 10) {
+                SetAreaSpoiled(RCAREA_SHADOW_TEMPLE);
+            }
+            break;
+        case RG_GTG_SILVER_LAVA:
+            if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON &&
+                *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) < 6) {
+                SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
+            }
+            break;
+        case RG_GTG_SILVER_WATER:
+            if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON &&
+                *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) < 5) {
+                SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
+            }
+            break;
+        default:
+            return;
     }
 }
 
@@ -519,11 +683,77 @@ void SetShopSeen(uint32_t sceneNum, bool prices) {
     bool statusChanged = false;
     for (int i = start; i < start + 8; i++) {
         if (OTRGlobals::Instance->gRandoContext->GetItemLocation(i)->GetCheckStatus() == RCSHOW_UNCHECKED) {
-            OTRGlobals::Instance->gRandoContext->GetItemLocation(i)->SetCheckStatus(RCSHOW_SEEN);
+            OTRGlobals::Instance->gRandoContext->GetItemLocation(i)->SetCheckStatus(RCSHOW_SEEN_OR_HINTED);
             statusChanged = true;
         }
     }
     if (statusChanged) {
+        SaveManager::Instance->SaveSection(gSaveContext.fileNum, sectionId, true);
+    }
+}
+
+// Items share hint text keys: all six jabber nuts are "the ability to speak".
+// Counted once on first use.
+static bool HintNamesItemUniquely(RandomizerGet rg) {
+    static const auto keyUses = [] {
+        std::array<uint16_t, RHT_MAX> uses{};
+        for (const auto& item : Rando::StaticData::GetItemTable()) {
+            uses[item.GetHintKey()]++;
+        }
+        return uses;
+    }();
+    return keyUses[Rando::StaticData::RetrieveItem(rg).GetHintKey()] == 1;
+}
+
+// Only HINT_TYPE_ITEM hints name a check's item outright; other types stay
+// ambiguous. Marks Seen, not Identified, since hints never state a price.
+static bool ApplyItemHintToChecks(RandomizerHint hintKey) {
+    // Ambiguous/obscure hints reuse the same phrase across items (all four swords are
+    // just "a sword"), so only clear hints are safe to mark - skip anything else
+    if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_HINT_CLARITY) != RO_HINT_CLARITY_CLEAR) {
+        return false;
+    }
+
+    if (hintKey == RH_NONE) {
+        return false;
+    }
+
+    // The hint-revealed hook can fire for hints the seed has disabled.
+    auto hint = OTRGlobals::Instance->gRandoContext->GetHint(hintKey);
+    if (!hint->IsEnabled() || hint->GetHintType() != HINT_TYPE_ITEM) {
+        return false;
+    }
+
+    // Loop over hinted locations, apply the ones which are unambiguous
+    bool changed = false;
+    for (RandomizerCheck rc : hint->GetHintedLocations()) {
+        if (rc == RC_UNKNOWN_CHECK) {
+            continue;
+        }
+        auto loc = OTRGlobals::Instance->gRandoContext->GetItemLocation(rc);
+        // Ice traps hint, and display, as their disguise.
+        RandomizerGet named = loc->GetPlacedRandomizerGet();
+        auto& overrides = OTRGlobals::Instance->gRandoContext->overrides;
+        if (named == RG_ICE_TRAP && overrides.contains(rc)) {
+            named = overrides[rc].LooksLike();
+        }
+        if (!HintNamesItemUniquely(named)) {
+            // The hint could mean several items, no spoilers!
+            continue;
+        }
+        if (loc->GetCheckStatus() == RCSHOW_UNCHECKED) {
+            loc->SetCheckStatus(RCSHOW_SEEN_OR_HINTED);
+            changed = true;
+        }
+    }
+    return changed;
+}
+
+void CheckTrackerHintRevealed(RandomizerHint hintKey) {
+    if (!GameInteractor::IsSaveLoaded() || !IS_RANDO) {
+        return;
+    }
+    if (ApplyItemHintToChecks(hintKey)) {
         SaveManager::Instance->SaveSection(gSaveContext.fileNum, sectionId, true);
     }
 }
@@ -636,7 +866,7 @@ void CheckTrackerShopSlotChange(uint8_t cursorSlot, int16_t basePrice) {
         slot = RC_KAK_BAZAAR_ITEM_1 + cursorSlot;
     }
     auto status = OTRGlobals::Instance->gRandoContext->GetItemLocation(slot)->GetCheckStatus();
-    if (status == RCSHOW_SEEN) {
+    if (status == RCSHOW_SEEN_OR_HINTED) {
         OTRGlobals::Instance->gRandoContext->GetItemLocation(slot)->SetCheckStatus(RCSHOW_IDENTIFIED);
         SaveManager::Instance->SaveSection(gSaveContext.fileNum, sectionId, true);
         RecalculateAvailableChecks();
@@ -877,9 +1107,11 @@ void CheckTrackerFlagSet(int16_t flagType, int32_t flag) {
 }
 
 void CheckTrackerDialogMessage() {
+    // These dialogues state the price, so a Seen check upgrades to Identified.
     auto identifyCheck = [](RandomizerCheck rc) {
         auto loc = OTRGlobals::Instance->gRandoContext->GetItemLocation(rc);
-        if (loc->GetCheckStatus() == RCSHOW_UNCHECKED) {
+        RandomizerCheckStatus status = loc->GetCheckStatus();
+        if (status == RCSHOW_UNCHECKED || status == RCSHOW_SEEN_OR_HINTED) {
             loc->SetCheckStatus(RCSHOW_IDENTIFIED);
             RecalculateAvailableChecks();
         }
@@ -1335,13 +1567,14 @@ bool ShouldShowCheck(RandomizerCheck check) {
                           Rando::StaticData::GetLocation(check)->GetName() + " " +
                           RandomizerCheckObjects::GetRCAreaName(Rando::StaticData::GetLocation(check)->GetArea()));
     if (itemLoc->HasObtained() || itemLoc->GetCheckStatus() == RCSHOW_SCUMMED ||
-        (!mystery && (itemLoc->GetCheckStatus() == RCSHOW_IDENTIFIED || itemLoc->GetCheckStatus() == RCSHOW_SEEN) &&
+        (!mystery &&
+         (itemLoc->GetCheckStatus() == RCSHOW_IDENTIFIED || itemLoc->GetCheckStatus() == RCSHOW_SEEN_OR_HINTED) &&
          itemLoc->GetPlacedRandomizerGet() != RG_ICE_TRAP)) {
         search += " " + itemLoc->GetPlacedItemName().GetForLanguage(gSaveContext.language);
     } else if (itemLoc->GetCheckStatus() == RCSHOW_IDENTIFIED && !mystery) {
         search +=
             OTRGlobals::Instance->gRandoContext->overrides[check].GetTrickName().GetForLanguage(gSaveContext.language);
-    } else if (itemLoc->GetCheckStatus() == RCSHOW_SEEN && !mystery) {
+    } else if (itemLoc->GetCheckStatus() == RCSHOW_SEEN_OR_HINTED && !mystery) {
         search += Rando::StaticData::RetrieveItem(OTRGlobals::Instance->gRandoContext->overrides[check].LooksLike())
                       .GetName()
                       .GetForLanguage(gSaveContext.language);
@@ -1390,8 +1623,11 @@ void LoadSettings() {
     showHyruleLoach =
         IS_RANDO ? OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_FISHSANITY) == RO_FISHSANITY_HYRULE_LOACH
                  : false;
-    showWeirdEgg =
-        IS_RANDO ? OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_WEIRD_EGG) == RO_GENERIC_YES
+    showWeirdEgg = IS_RANDO ? OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_WEIRD_EGG) ==
+                                  RO_WEIRD_EGG_SHUFFLED
+                            : true;
+    showZeldasLetter =
+        IS_RANDO ? OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_ZELDAS_LETTER) == RO_GENERIC_YES
                  : true;
     showGerudoCard = IS_RANDO ? OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(
                                     RSK_SHUFFLE_GERUDO_MEMBERSHIP_CARD) == RO_GENERIC_YES
@@ -1684,8 +1920,7 @@ bool IsCheckShuffled(RandomizerCheck rc) {
                (loc->GetRCType() != RCTYPE_STATIC_HINT) &&  // TODO: Don't show hints until tracker supports them
                (loc->GetRCType() != RCTYPE_CHEST_GAME) &&   // don't show non final reward chest game checks until we
                                                             // support shuffling them
-               (rc != RC_HC_ZELDAS_LETTER) &&               // don't show zeldas letter until we support shuffling it
-               (rc != RC_LINKS_POCKET || showLinksPocket) &&
+               (rc != RC_HC_ZELDAS_LETTER || showZeldasLetter) && (rc != RC_LINKS_POCKET || showLinksPocket) &&
                OTRGlobals::Instance->gRandoContext->IsQuestOfLocationActive(rc) &&
                (loc->GetRCType() != RCTYPE_SHOP ||
                 (showShops &&
@@ -1954,7 +2189,7 @@ void DrawLocation(RandomizerCheck rc) {
                 ? Color_Skipped_Extra
                 : Color_Skipped_Main;
         extraColor = Color_Skipped_Extra;
-    } else if (status == RCSHOW_SEEN || status == RCSHOW_IDENTIFIED) {
+    } else if (status == RCSHOW_SEEN_OR_HINTED || status == RCSHOW_IDENTIFIED) {
         if (!showHidden && hideSeen) {
             return;
         }
@@ -1997,7 +2232,7 @@ void DrawLocation(RandomizerCheck rc) {
     // Draw button - for Skipped/Seen/Scummed/Unchecked only
     ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, { 4.0f, 3.0f });
     float sz = ImGui::GetFrameHeight();
-    if (status == RCSHOW_UNCHECKED || status == RCSHOW_SEEN || status == RCSHOW_IDENTIFIED ||
+    if (status == RCSHOW_UNCHECKED || status == RCSHOW_SEEN_OR_HINTED || status == RCSHOW_IDENTIFIED ||
         status == RCSHOW_SCUMMED || skipped) {
         if (UIWidgets::StateButton(std::to_string(rc).c_str(), skipped ? ICON_FA_PLUS : ICON_FA_TIMES, ImVec2(sz, sz),
                                    UIWidgets::ButtonOptions().Color(THEME_COLOR))) {
@@ -2068,7 +2303,7 @@ void DrawLocation(RandomizerCheck rc) {
                 }
                 break;
             case RCSHOW_IDENTIFIED:
-            case RCSHOW_SEEN:
+            case RCSHOW_SEEN_OR_HINTED:
                 if (IS_RANDO) {
                     const auto checkType = loc->GetRCType();
                     const bool hideMerchantName =
@@ -2461,6 +2696,7 @@ void CheckTrackerWindow::InitElement() {
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnSceneFlagSet>(CheckTrackerSceneFlagSet);
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnFlagSet>(CheckTrackerFlagSet);
     GameInteractor::Instance->RegisterGameHook<GameInteractor::OnDialogMessage>(CheckTrackerDialogMessage);
+    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnRandoHintRevealed>(CheckTrackerHintRevealed);
 }
 
 void CheckTrackerWindow::UpdateElement() {

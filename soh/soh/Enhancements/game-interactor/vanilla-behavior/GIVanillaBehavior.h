@@ -369,6 +369,14 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // true
+    // ```
+    // #### `args`
+    // - None
+    VB_AFTER_PROCESS_SCENE_COLLISION,
+
+    // #### `result`
+    // ```c
     // CHECK_BTN_ALL(input->press.button, BTN_START)
     // ```
     // #### `args`
@@ -454,11 +462,27 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // this->hookshotSlotFull != 0
+    // ```
+    // #### `args`
+    // - None
+    VB_DAMPE_AWARD_SECOND_PRIZE,
+
+    // #### `result`
+    // ```c
     // this->actionTimer == 0 && Rand_ZeroOne() < 0.03f
     // ```
     // #### `args`
     // - `*EnPoRelay`
     VB_DAMPE_DROP_FLAME,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*f32` (speed
+    VB_DAMPE_GO_BACKWARDS,
 
     // #### `result`
     // ```c
@@ -689,6 +713,14 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*EnGe1`
+    VB_END_HORSEBACK_ARCHERY,
+
+    // #### `result`
+    // ```c
     // !(this->stateFlags3 & PLAYER_STATE3_PAUSE_ACTION_FUNC)
     // ```
     // #### `args`
@@ -790,6 +822,14 @@ typedef enum {
     // #### `args`
     // - `*EnFr`
     VB_FROGS_GO_TO_IDLE,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - None
+    VB_FROGS_OCARINA_GAME_TIMER_TICK,
 
     // #### `result`
     // ```c
@@ -1522,11 +1562,27 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // gSaveContext.eventInf[0] & 0x40
+    // ```
+    // #### `args`
+    // - None
+    VB_LINK_WIN_EPONA,
+
+    // #### `result`
+    // ```c
     // !Flags_GetSwitch(play, this->dyna.actor.params & 0x3F)
     // ```
     // #### `args`
     // - `*DoorShutter`
     VB_LOCK_BOSS_DOOR,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - None
+    VB_LOST_WOODS_OCARINA_GAME_TIMER_TICK,
 
     // #### `result`
     // ```c
@@ -1575,6 +1631,14 @@ typedef enum {
     // #### `args`
     // - `*EnMd`
     VB_MIDO_SPAWN,
+
+    // #### `result`
+    // ```c
+    // false
+    // ```
+    // #### `args`
+    // - `s32` (note append position)
+    VB_MODIFY_LOST_WOODS_OCARINA_GAME_NOTE_SPEED,
 
     // #### `result`
     // ```c
@@ -1664,7 +1728,7 @@ typedef enum {
     // this->getItemId != GI_NONE
     // ```
     // #### `args`
-    // - `None`
+    // - `*EnBox`
     VB_OPEN_CHEST,
 
     // #### `result`
@@ -1889,6 +1953,14 @@ typedef enum {
     // true
     // ```
     // #### `args`
+    // - `*EnFr`
+    VB_PLAY_FROG_OCARINA_GAME,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
     // - `*EnHeishi2`
     // - `bool` (clearCamera - true if the code clears a sub-camera, false otherwise)
     VB_PLAY_GATE_OPENING_OR_CLOSING_CS,
@@ -1900,6 +1972,14 @@ typedef enum {
     // #### `args`
     // - None
     VB_PLAY_GORON_FREE_CS,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*EnSkj`
+    VB_PLAY_LOST_WOODS_OCARINA_GAME,
 
     // #### `result`
     // ```c
@@ -2017,6 +2097,14 @@ typedef enum {
     // #### `args`
     // - None
     VB_PLAY_SHIEK_BLOCK_MASTER_SWORD_CS,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*EnSyatekiItm`
+    VB_PLAY_SHOOTING_GALLERY,
 
     // #### `result`
     // ```c
@@ -2218,6 +2306,14 @@ typedef enum {
     // true
     // ```
     // #### `args`
+    // - `s32` (entrance index)
+    VB_RACE_INGO,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
     // - `*EnRd`
     VB_REDEAD_GIBDO_FREEZE_LINK,
 
@@ -2337,6 +2433,14 @@ typedef enum {
     // true
     // ```
     // #### `args`
+    // - `None`
+    VB_SET_BOMBCHU_BOWLING_AMMO,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
     // - `int32_t` (button - promoted from `s16`)
     VB_SET_BUTTON_ITEM_FROM_C_BUTTON_SLOT,
 
@@ -2358,7 +2462,41 @@ typedef enum {
 
     // #### `result`
     // ```c
-    // SurfaceType_GetFloorEffect(&play->colCtx, poly, bgId) == 2
+    // true
+    // ```
+    // #### `args`
+    // - `*EnFr`
+    // - `s16` (default time limit)
+    VB_SET_FROG_OCARINA_GAME_TIME_LIMIT,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `s32` (round number, zero-based)
+    // - `*u8` (note end position)
+    VB_SET_LOST_WOODS_OCARINA_GAME_NOTES,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - None
+    VB_SET_LOST_WOODS_OCARINA_GAME_STARTING_NOTES,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*s32` (ammo count)
+    VB_SET_SHOOTING_GALLERY_AMMO,
+
+    // #### `result`
+    // ```c
+    // SurfaceType_GetFloorEffect(&play->colCtx, poly, bgId) == FLOOR_EFFECT_2
     // ```
     // #### `args`
     // - `*int16_t` - original next entrance index (`play->setupExitList[exitIndex - 1]`)
@@ -2381,6 +2519,14 @@ typedef enum {
     // #### `args`
     // - None
     VB_SHIEK_PREPARE_TO_GIVE_SERENADE_OF_WATER,
+
+    // #### `result`
+    // ```c
+    // LINK_IS_ADULT
+    // ```
+    // #### `args`
+    // - None
+    VB_SHOOTING_GALLERY_SHUFFLE_ADULT_RUPEES,
 
     // #### `result`
     // ```c
@@ -2561,6 +2707,14 @@ typedef enum {
     // ##### In `z_boss_va.c`:
     // - `*BossVa`
     VB_SPAWN_BLUE_WARP,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `s32` (Cucco index; 0 = small, 1 = big)
+    VB_SPAWN_BOMBCHU_BOWLING_CUCCOS,
 
     // #### `result`
     // ```c
@@ -2969,7 +3123,17 @@ typedef enum {
     // ```
     // #### `args`
     // - `*DoorShutter`
+    // - `*Vec3f` (relPlayerPos)
+    // - `*f32` (maxDistSides)
     VB_BE_NEAR_DOOR_SHUTTER,
+
+    // #### `result`
+    // ```c
+    // arg3 < fabsf(sp1C.x) || arg4 < fabsf(sp1C.y)
+    // ```
+    // #### `args`
+    // - `*Vec3f` (playerPosRelToDoor)
+    VB_EN_DOOR_OFFER_OPEN,
 
     // #### `result`
     // ```c
@@ -3296,6 +3460,14 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // interruptResult == PLAYER_INTERRUPT_NEW_ACTION
+    // ```
+    // #### `args`
+    // - `*u8 (&player->unk_6AD)`
+    VB_INTERRUPT_LADDER_DISMOUNT,
+
+    // #### `result`
+    // ```c
     // true
     // ```
     // #### `args`
@@ -3319,6 +3491,25 @@ typedef enum {
     VB_PREVENT_HOOKSHOT_PARENT_SOFTLOCK,
 
     // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - none
+    VB_PUTAWAY_BECAUSE_DISABLED_ITEM_BUTTONS,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `s32* i` (button index)
+    // - `Player*`
+    // - `s32* item`
+    VB_OVERRIDE_BUTTON_ITEM_USED,
+
+    // #### `result`
+    // ```c
     // true if Goron Link is talking
     // ```
     // #### `args`
@@ -3403,6 +3594,26 @@ typedef enum {
     // #### `args`
     // - None
     VB_TEMP_B_RESTORE_SWORDLESS,
+
+    // #### `result`
+    // ```c
+    // true
+    // // ```
+    // Hook to override the save menu for a message box allowing you to
+    // Continue, Reset, and Reset to Spawn after saving (only from the pause menu, not the
+    // game over screen).
+    // #### `args`
+    // - `*PlayState`
+    VB_LOAD_SAVE_MENU,
+
+    // #### `result`
+    // ```c
+    // pauseCtx->state == 7
+    // ```
+    // Hook to override the drawing/loading textures for the save menu so that
+    // a textbox can be rendered instead. Pause screen only, Game Over version left
+    // intact.
+    VB_DRAW_SAVE_MENU,
 } GIVanillaBehavior;
 
 #endif

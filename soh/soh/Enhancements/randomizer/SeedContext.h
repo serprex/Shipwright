@@ -120,7 +120,8 @@ class Context {
     void GanonsSoulCondition(RandoOptionCheckTrigger condition);
     void WinCondition(RandoOptionWincon condition);
 
-    GetItemEntry GetFinalGIEntry(RandomizerCheck rc, bool checkObtainability = true, GetItemID ogItemId = GI_NONE);
+    GetItemEntry GetFinalGIEntry(RandomizerCheck rc, bool checkObtainability = true, GetItemID ogItemId = GI_NONE,
+                                 bool spoilAreas = false);
     void ParseSpoiler(const char* spoilerFileName);
     void ParseHashIconIndexesJson(const nlohmann::json& spoilerFileJson);
     void ParseItemLocationsJson(const nlohmann::json& spoilerFileJson);

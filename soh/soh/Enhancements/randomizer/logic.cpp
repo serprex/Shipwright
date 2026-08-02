@@ -123,7 +123,7 @@ bool Logic::HasItem(RandomizerGet itemName) {
                 case RO_MASK_QUEST_VANILLA:
                     return Get(LOGIC_BORROW_SKULL_MASK);
                 case RO_MASK_QUEST_COMPLETED:
-                    return HasItem(RG_ZELDAS_LETTER) && Get(LOGIC_KAKARIKO_GATE_OPEN);
+                    return Get(LOGIC_KAKARIKO_GATE_OPEN);
                 case RO_MASK_QUEST_SHUFFLE:
                     return CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_SKULL);
                 default:
@@ -135,7 +135,7 @@ bool Logic::HasItem(RandomizerGet itemName) {
                 case RO_MASK_QUEST_VANILLA:
                     return Get(LOGIC_BORROW_RIGHT_MASKS);
                 case RO_MASK_QUEST_COMPLETED:
-                    return HasItem(RG_ZELDAS_LETTER) && Get(LOGIC_KAKARIKO_GATE_OPEN);
+                    return Get(LOGIC_KAKARIKO_GATE_OPEN);
                 case RO_MASK_QUEST_SHUFFLE:
                     return CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_TRUTH);
                 default:
@@ -709,6 +709,10 @@ bool Logic::CanMiddairGroundJump(bool hasBombflower) {
 bool Logic::CanOpenUnderwaterChest() {
     return ctx->GetTrickOption(RT_OPEN_UNDERWATER_CHEST) && CanUse(RG_IRON_BOOTS) && CanUse(RG_HOOKSHOT) &&
            HasItem(RG_OPEN_CHEST);
+}
+
+bool Logic::CanOpenLargeChest() {
+    return CheckRandoInf(RAND_INF_CAN_OPEN_LARGE_CHEST);
 }
 
 uint8_t GetDifficultyValueFromString(Rando::Option& glitchOption) {
@@ -2119,7 +2123,17 @@ void Logic::ApplyItemEffect(Item& item, bool state) {
                     SetRandoInf(RAND_INF_CAN_CRAWL, state);
                     break;
                 case RG_OPEN_CHEST:
-                    SetRandoInf(RAND_INF_CAN_OPEN_CHEST, state);
+                    if (ctx->GetOption(RSK_SHUFFLE_OPEN_CHEST).Is(RO_OPEN_CHEST_PROGRESSIVE)) {
+                        if (state ? CheckRandoInf(RAND_INF_CAN_OPEN_CHEST)
+                                  : CheckRandoInf(RAND_INF_CAN_OPEN_LARGE_CHEST)) {
+                            SetRandoInf(RAND_INF_CAN_OPEN_LARGE_CHEST, state);
+                        } else {
+                            SetRandoInf(RAND_INF_CAN_OPEN_CHEST, state);
+                        }
+                    } else {
+                        SetRandoInf(RAND_INF_CAN_OPEN_CHEST, state);
+                        SetRandoInf(RAND_INF_CAN_OPEN_LARGE_CHEST, state);
+                    }
                     break;
                 case RG_PROGRESSIVE_HOOKSHOT: {
                     uint8_t i;
@@ -2644,23 +2658,21 @@ void Logic::InitSaveContext() {
     mSaveContext->worldMapAreaData = 0;
     mSaveContext->scarecrowLongSongSet = 0;
     for (int i = 0; i < ARRAY_COUNT(mSaveContext->scarecrowLongSong); i++) {
-        mSaveContext->scarecrowLongSong[i].noteIdx = 0;
-        mSaveContext->scarecrowLongSong[i].unk_01 = 0;
-        mSaveContext->scarecrowLongSong[i].unk_02 = 0;
+        mSaveContext->scarecrowLongSong[i].pitch = 0;
+        mSaveContext->scarecrowLongSong[i].length = 0;
         mSaveContext->scarecrowLongSong[i].volume = 0;
         mSaveContext->scarecrowLongSong[i].vibrato = 0;
-        mSaveContext->scarecrowLongSong[i].tone = 0;
-        mSaveContext->scarecrowLongSong[i].semitone = 0;
+        mSaveContext->scarecrowLongSong[i].bend = 0;
+        mSaveContext->scarecrowLongSong[i].bFlat4Flag = 0;
     }
     mSaveContext->scarecrowSpawnSongSet = 0;
     for (int i = 0; i < ARRAY_COUNT(mSaveContext->scarecrowSpawnSong); i++) {
-        mSaveContext->scarecrowSpawnSong[i].noteIdx = 0;
-        mSaveContext->scarecrowSpawnSong[i].unk_01 = 0;
-        mSaveContext->scarecrowSpawnSong[i].unk_02 = 0;
+        mSaveContext->scarecrowSpawnSong[i].pitch = 0;
+        mSaveContext->scarecrowSpawnSong[i].length = 0;
         mSaveContext->scarecrowSpawnSong[i].volume = 0;
         mSaveContext->scarecrowSpawnSong[i].vibrato = 0;
-        mSaveContext->scarecrowSpawnSong[i].tone = 0;
-        mSaveContext->scarecrowSpawnSong[i].semitone = 0;
+        mSaveContext->scarecrowSpawnSong[i].bend = 0;
+        mSaveContext->scarecrowSpawnSong[i].bFlat4Flag = 0;
     }
 
     mSaveContext->horseData.scene = SCENE_HYRULE_FIELD;
@@ -2996,6 +3008,7 @@ void Logic::Reset(bool resetSaveContext /*= true*/) {
 
         if (ctx->GetOption(RSK_SHUFFLE_OPEN_CHEST).Is(false)) {
             SetRandoInf(RAND_INF_CAN_OPEN_CHEST, true);
+            SetRandoInf(RAND_INF_CAN_OPEN_LARGE_CHEST, true);
         }
 
         if (ctx->GetOption(RSK_SHUFFLE_SPEAK).Is(false)) {
