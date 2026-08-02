@@ -105,10 +105,6 @@ if (NOT TARGET libultraship)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../libultraship ${CMAKE_BINARY_DIR}/libultraship)
 endif()
 
-if (NOT TARGET ZAPDLib)
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../ZAPDTR/ZAPD ${CMAKE_BINARY_DIR}/ZAPD)
-endif()
-
 set(PROJECT_NAME soh)
 
 ################################################################################
@@ -231,6 +227,12 @@ set(ALL_FILES
 ################################################################################
 add_executable(${PROJECT_NAME} ${ALL_FILES})
 
+if(MSVC)
+    # yaml-cpp, reached through torch's headers, trips the dll-interface warnings, and soh
+    # builds with /WX.
+    set_source_files_properties(soh/Extractor/TorchExtract.cpp PROPERTIES COMPILE_OPTIONS "/wd4251;/wd4275")
+endif()
+
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 use_props(${PROJECT_NAME} "${CMAKE_CONFIGURATION_TYPES}" "${DEFAULT_CXX_PROPS}")
 endif()
@@ -323,7 +325,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE assets
     ${CMAKE_CURRENT_SOURCE_DIR}/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/src/
     ${CMAKE_CURRENT_SOURCE_DIR}/../libultraship/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/../ZAPDTR/ZAPD/resource/type
     ${SDL2-INCLUDE}
     ${SDL2-NET-INCLUDE}
     ${CMAKE_CURRENT_SOURCE_DIR}/assets/
@@ -599,32 +600,22 @@ if (CMAKE_GENERATOR MATCHES "Visual Studio")
     add_custom_command(
     TARGET ${PROJECT_NAME}
     POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different ${CMAKE_SOURCE_DIR}/soh/assets/extractor ${CMAKE_BINARY_DIR}/soh/assets
-    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different ${CMAKE_SOURCE_DIR}/soh/assets/xml ${CMAKE_BINARY_DIR}/soh/assets/xml
+    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different ${CMAKE_SOURCE_DIR}/soh/assets/yml ${CMAKE_BINARY_DIR}/soh/assets
     )
 endif()
-if(NOT CMAKE_SYSTEM_NAME MATCHES "NintendoSwitch|CafeOS")
-    add_custom_command(
-        TARGET ${PROJECT_NAME}
-        POST_BUILD
-        COMMENT "Copying asset xmls..."
-        COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different ${CMAKE_SOURCE_DIR}/soh/assets/extractor $<TARGET_FILE_DIR:soh>/assets
-        COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different ${CMAKE_SOURCE_DIR}/soh/assets/xml $<TARGET_FILE_DIR:soh>/assets/xml
-        COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:soh>/assets/symbols
-    #    COMMAND ${VS_COPY_ASSETS_CMD}
-    )
-endif()
+add_custom_command(
+    TARGET ${PROJECT_NAME}
+    POST_BUILD
+    COMMENT "Copying asset ymls..."
+    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different ${CMAKE_SOURCE_DIR}/soh/assets/yml $<TARGET_FILE_DIR:soh>/assets
+)
 ################################################################################
 # Dependencies
 ################################################################################
 add_dependencies(${PROJECT_NAME}
     libultraship
+    torch
 )
-if(NOT CMAKE_SYSTEM_NAME MATCHES "NintendoSwitch|CafeOS")
-add_dependencies(${PROJECT_NAME}
-    ZAPDLib
-)
-endif()
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     find_package(glfw3 REQUIRED)
@@ -640,7 +631,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     if(SOH_WINDOWS_64BIT)
         set(ADDITIONAL_LIBRARY_DEPENDENCIES
             "libultraship;"
-            "ZAPDLib;"
+            "torch;"
             "glu32;"
             "SDL2::SDL2;"
             "SDL2::SDL2main;"
@@ -660,7 +651,7 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     elseif("${CMAKE_VS_PLATFORM_NAME}" STREQUAL "Win32")
         set(ADDITIONAL_LIBRARY_DEPENDENCIES
             "libultraship;"
-            "ZAPDLib;"
+            "torch;"
             "glu32;"
             "SDL2::SDL2;"
             "SDL2::SDL2main;"
@@ -702,7 +693,7 @@ else()
     find_package(OpusFile REQUIRED)
      set(ADDITIONAL_LIBRARY_DEPENDENCIES
     "libultraship;"
-        "ZAPDLib;"
+        "torch;"
         SDL2::SDL2
         "Ogg::ogg"
         "Vorbis::vorbis"
@@ -715,6 +706,33 @@ else()
         Threads::Threads
     )
 endif()
+
+if(USE_ASAN)
+    target_compile_options(libultraship PRIVATE -fsanitize=address)
+    target_link_options(libultraship PRIVATE -fsanitize=address)
+    target_compile_options(soh PRIVATE -fsanitize=address)
+    target_link_options(soh PRIVATE -fsanitize=address)
+    target_link_options(ZAPD PRIVATE -fsanitize=address)
+    target_link_options(OTRExporter PRIVATE -fsanitize=address)
+    target_compile_options(ZAPD PRIVATE -fsanitize=address)
+    target_compile_options(OTRExporter PRIVATE -fsanitize=address)
+    if (MSVC)
+        target_compile_definitions(ImGui PRIVATE _DISABLE_VECTOR_ANNOTATION)
+        target_compile_definitions(ImGui PRIVATE _DISABLE_STRING_ANNOTATION)
+        target_compile_definitions(libultraship PRIVATE _DISABLE_VECTOR_ANNOTATION)
+        target_compile_definitions(libultraship PRIVATE _DISABLE_STRING_ANNOTATION)
+
+        target_compile_definitions(soh PRIVATE _DISABLE_VECTOR_ANNOTATION)
+        target_compile_definitions(soh PRIVATE _DISABLE_STRING_ANNOTATION)
+        target_compile_options(libultraship PRIVATE $<$<CONFIG:Debug>:/Zi;>)
+        target_compile_options(soh PRIVATE $<$<CONFIG:Debug>:/Zi;>)
+        # The default stack size on Windows is 1MB. ASAN uses a lot more stack so boost it to 16
+        set_target_properties(soh PROPERTIES
+                LINK_FLAGS "/STACK:16777216"
+        )
+    endif()
+endif()
+
 
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Darwin|NintendoSwitch|CafeOS")
 INSTALL(TARGETS soh DESTINATION . COMPONENT ship)

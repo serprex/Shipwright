@@ -462,11 +462,27 @@ typedef enum {
 
     // #### `result`
     // ```c
+    // this->hookshotSlotFull != 0
+    // ```
+    // #### `args`
+    // - None
+    VB_DAMPE_AWARD_SECOND_PRIZE,
+
+    // #### `result`
+    // ```c
     // this->actionTimer == 0 && Rand_ZeroOne() < 0.03f
     // ```
     // #### `args`
     // - `*EnPoRelay`
     VB_DAMPE_DROP_FLAME,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*f32` (speed
+    VB_DAMPE_GO_BACKWARDS,
 
     // #### `result`
     // ```c
@@ -694,6 +710,14 @@ typedef enum {
     // #### `args`
     // - None
     VB_END_GERUDO_MEMBERSHIP_TALK,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*EnGe1`
+    VB_END_HORSEBACK_ARCHERY,
 
     // #### `result`
     // ```c
@@ -2472,7 +2496,7 @@ typedef enum {
 
     // #### `result`
     // ```c
-    // SurfaceType_GetFloorEffect(&play->colCtx, poly, bgId) == 2
+    // SurfaceType_GetFloorEffect(&play->colCtx, poly, bgId) == FLOOR_EFFECT_2
     // ```
     // #### `args`
     // - `*int16_t` - original next entrance index (`play->setupExitList[exitIndex - 1]`)
