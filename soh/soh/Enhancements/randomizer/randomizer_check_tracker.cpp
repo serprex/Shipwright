@@ -361,7 +361,8 @@ std::map<RandomizerGet, RandomizerCheckArea> MapRGtoRandomizerCheckArea = {
 };
 
 // In the case that we get an excess key or silver rupee, it spoils the MQ status
-// because it is turned into a blue rupee as excess.
+// because it is not turned into a blue rupee as excess.
+// For keyrings, we can count the keys on the viewmodel
 void SpoilAreaFromCheck(RandomizerCheck rc) {
     Rando::Location* loc = Rando::StaticData::GetLocation(rc);
     Rando::ItemLocation* itemLoc = Rando::Context::GetInstance()->GetItemLocation(rc);
@@ -381,18 +382,82 @@ void SpoilAreaFromCheck(RandomizerCheck rc) {
                     if (*Randomizer::SilverFieldFromSaveContext(&gSaveContext, itemLoc->GetPlacedRandomizerGet()) >= 6){
                         SetAreaSpoiled(RCAREA_SHADOW_TEMPLE);
                     }
+                    break;
                 case RG_GTG_SILVER_LAVA:
                     if (*Randomizer::SilverFieldFromSaveContext(&gSaveContext, itemLoc->GetPlacedRandomizerGet()) >= 6){
                         SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
                     }
+                    break;
                 case RG_GTG_SILVER_WATER:
                     if (*Randomizer::SilverFieldFromSaveContext(&gSaveContext, itemLoc->GetPlacedRandomizerGet()) >= 4){
                         SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
                     }
+                    break;
                 default:
                     break;
             }
 
+        }
+    } else if (itemLoc->GetPlacedItem().GetItemType() == ItemType::ITEMTYPE_SMALLKEY){
+        switch(itemLoc->GetPlacedRandomizerGet()){
+            case RG_FOREST_TEMPLE_SMALL_KEY:
+                if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FOREST_TEMPLE)->GetTotalSmallKeys(&gSaveContext) >= 6){
+                    SetAreaSpoiled(RCAREA_FOREST_TEMPLE);
+                }
+                break;
+            case RG_FIRE_TEMPLE_SMALL_KEY:
+                if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FIRE_TEMPLE)->GetTotalSmallKeys(&gSaveContext) >= 6){
+                    SetAreaSpoiled(RCAREA_FIRE_TEMPLE);
+                }
+                break;
+            case RG_WATER_TEMPLE_SMALL_KEY:
+                if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::WATER_TEMPLE)->GetTotalSmallKeys(&gSaveContext) >= 3){
+                    SetAreaSpoiled(RCAREA_WATER_TEMPLE);
+                }
+                break;
+            case RG_SPIRIT_TEMPLE_SMALL_KEY:
+                if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SPIRIT_TEMPLE)->GetTotalSmallKeys(&gSaveContext) >= 6){
+                    SetAreaSpoiled(RCAREA_SPIRIT_TEMPLE);
+                }
+                break;
+            case RG_SHADOW_TEMPLE_SMALL_KEY:
+                if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SHADOW_TEMPLE)->GetTotalSmallKeys(&gSaveContext) >= 6){
+                    SetAreaSpoiled(RCAREA_SHADOW_TEMPLE);
+                }
+                break;
+            case RG_BOTTOM_OF_THE_WELL_SMALL_KEY:
+                if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::BOTTOM_OF_THE_WELL)->GetTotalSmallKeys(&gSaveContext) >= 3){
+                    SetAreaSpoiled(RCAREA_BOTTOM_OF_THE_WELL);
+                }
+                break;
+            case RG_GERUDO_TRAINING_GROUND_SMALL_KEY:
+                if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::GERUDO_TRAINING_GROUND)->GetTotalSmallKeys(&gSaveContext) >= 4){
+                    SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
+                }
+                break;
+            case RG_FOREST_TEMPLE_KEY_RING:
+                SetAreaSpoiled(RCAREA_FOREST_TEMPLE);
+                break;
+            case RG_FIRE_TEMPLE_KEY_RING:
+                SetAreaSpoiled(RCAREA_FIRE_TEMPLE);
+                break;
+            case RG_WATER_TEMPLE_KEY_RING:
+                SetAreaSpoiled(RCAREA_WATER_TEMPLE);
+                break;
+            case RG_SPIRIT_TEMPLE_KEY_RING:
+                SetAreaSpoiled(RCAREA_SPIRIT_TEMPLE);
+                break;
+            case RG_SHADOW_TEMPLE_KEY_RING:
+                SetAreaSpoiled(RCAREA_SHADOW_TEMPLE);
+                break;
+            case RG_BOTTOM_OF_THE_WELL_KEY_RING:
+                SetAreaSpoiled(RCAREA_BOTTOM_OF_THE_WELL);
+                break;
+            case RG_GERUDO_TRAINING_GROUND_KEY_RING:
+                SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
+                break;
+            default:
+                break;
         }
     }
     if (!IsAreaSpoiled(loc->GetArea())) {
@@ -401,9 +466,44 @@ void SpoilAreaFromCheck(RandomizerCheck rc) {
 }
 
 void SpoilAreaFromCantObtain(RandomizerGet rg){
+    //only spoil if it wouldn't transform anyway, in case someone manages to glitch this value
     switch (rg){
+        case RG_FOREST_TEMPLE_SMALL_KEY:
+            if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FOREST_TEMPLE)->GetTotalSmallKeys(&gSaveContext) < 6){
+                SetAreaSpoiled(RCAREA_FOREST_TEMPLE);
+            }
+            break;
+        case RG_FIRE_TEMPLE_SMALL_KEY:
+            if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FIRE_TEMPLE)->GetTotalSmallKeys(&gSaveContext) < 8){
+                SetAreaSpoiled(RCAREA_FIRE_TEMPLE);
+            }
+            break;
+        case RG_WATER_TEMPLE_SMALL_KEY:
+            if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::WATER_TEMPLE)->GetTotalSmallKeys(&gSaveContext) < 6){
+                SetAreaSpoiled(RCAREA_WATER_TEMPLE);
+            }
+            break;
+        case RG_SPIRIT_TEMPLE_SMALL_KEY:
+            if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SPIRIT_TEMPLE)->GetTotalSmallKeys(&gSaveContext) < 7){
+                SetAreaSpoiled(RCAREA_SPIRIT_TEMPLE);
+            }
+            break;
+        case RG_SHADOW_TEMPLE_SMALL_KEY:
+            if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SHADOW_TEMPLE)->GetTotalSmallKeys(&gSaveContext) < 6){
+                SetAreaSpoiled(RCAREA_SHADOW_TEMPLE);
+            }
+            break;
+        case RG_BOTTOM_OF_THE_WELL_SMALL_KEY:
+            if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::BOTTOM_OF_THE_WELL)->GetTotalSmallKeys(&gSaveContext) < 3){
+                SetAreaSpoiled(RCAREA_BOTTOM_OF_THE_WELL);
+            }
+            break;
+        case RG_GERUDO_TRAINING_GROUND_SMALL_KEY:
+            if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::GERUDO_TRAINING_GROUND)->GetTotalSmallKeys(&gSaveContext) < 9){
+                SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
+            }
+            break;
         case RG_SHADOW_SILVER_SPIKES:
-            //only spoil if it wouldn't transform anyway, in case someone manages to glitch this value
             if(OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON &&
                *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) < 10){
                 SetAreaSpoiled(RCAREA_SHADOW_TEMPLE);

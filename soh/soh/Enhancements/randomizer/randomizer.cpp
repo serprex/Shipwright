@@ -1490,8 +1490,11 @@ extern "C" u16 Randomizer_Item_Give(PlayState* play, GetItemEntry giEntry) {
             if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) ==
                 RO_SHUFFLE_SILVER_WALLET) {
                 *field = 10;
+                //this spoils MQ in theory, but will not update trackers because it's subtle and there's too many edge cases where this does not apply
+                Rupees_ChangeBy(Randomizer::SilverTotal(item) * 5);
             } else {
                 *field += 1;
+                Rupees_ChangeBy(5);
             }
             break;
         }

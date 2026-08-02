@@ -98,7 +98,6 @@ RandomizerGet SilverFromSwitchFlag(s16 switchFlag) {
                 case 8:
                     return RG_SHADOW_SILVER_SPIKES;
                 case 9:
-                    return RG_SHADOW_SILVER_PIT;
                 case 17:
                     return RG_SHADOW_SILVER_PIT;
             }
@@ -122,6 +121,7 @@ RandomizerGet SilverFromSwitchFlag(s16 switchFlag) {
         case SCENE_ICE_CAVERN:
             switch (switchFlag) {
                 case 8:
+                case 9:
                     return RG_ICE_CAVERN_SILVER_BLOCK;
                 case 31:
                     return RG_ICE_CAVERN_SILVER_BLADES;
@@ -434,7 +434,7 @@ void Rando::StaticData::RegisterSilverLocations() {
     locationTable[RC_GTG_MQ_NEAR_SWITCH_LAVA_SILVER] =                 Location::Collectable(RC_GTG_MQ_NEAR_SWITCH_LAVA_SILVER,                 RCQUEST_MQ,         RCTYPE_SILVER, ACTOR_EN_G_SWITCH, SCENE_GERUDO_TRAINING_GROUND,       TWO_ACTOR_PARAMS(1560, -1861),     "MQ Near Switch Lava Silver",                 RHT_GTG_SILVER,                                          RG_BLUE_RUPEE,        SpoilerCollectionCheck::RandomizerInf(RAND_INF_GTG_MQ_NEAR_SWITCH_LAVA_SILVER));
     locationTable[RC_GTG_MQ_FAR_LAVA_SILVER] =                 Location::Collectable(RC_GTG_MQ_FAR_LAVA_SILVER,                 RCQUEST_MQ,         RCTYPE_SILVER, ACTOR_EN_G_SWITCH, SCENE_GERUDO_TRAINING_GROUND,       TWO_ACTOR_PARAMS(1134, -1841),     "MQ Far Lava Silver",                 RHT_GTG_SILVER,                                          RG_BLUE_RUPEE,        SpoilerCollectionCheck::RandomizerInf(RAND_INF_GTG_MQ_FAR_LAVA_SILVER));
     locationTable[RC_GTG_MQ_MIDDLE_LAVA_SILVER] =                 Location::Collectable(RC_GTG_MQ_MIDDLE_LAVA_SILVER,                 RCQUEST_MQ,         RCTYPE_SILVER, ACTOR_EN_G_SWITCH, SCENE_GERUDO_TRAINING_GROUND,       TWO_ACTOR_PARAMS(1404, -1653),     "MQ Middle Lava Silver",                 RHT_GTG_SILVER,                                          RG_BLUE_RUPEE,        SpoilerCollectionCheck::RandomizerInf(RAND_INF_GTG_MQ_MIDDLE_LAVA_SILVER));
-    locationTable[GTG_MQ_NEAR_BARRED_DOOR_LAVA_SILVER] =                 Location::Collectable(GTG_MQ_NEAR_BARRED_DOOR_LAVA_SILVER,                 RCQUEST_MQ,         RCTYPE_SILVER, ACTOR_EN_G_SWITCH, SCENE_GERUDO_TRAINING_GROUND,       TWO_ACTOR_PARAMS(1560, -1380),     "MQ Near Barred Door Lava Silver",                 RHT_GTG_SILVER,                                          RG_BLUE_RUPEE,        SpoilerCollectionCheck::RandomizerInf(RAND_INF_GTG_MQ_SILVER_LAVA_4));
+    locationTable[RC_GTG_MQ_NEAR_BARRED_DOOR_LAVA_SILVER] =                 Location::Collectable(RC_GTG_MQ_NEAR_BARRED_DOOR_LAVA_SILVER,                 RCQUEST_MQ,         RCTYPE_SILVER, ACTOR_EN_G_SWITCH, SCENE_GERUDO_TRAINING_GROUND,       TWO_ACTOR_PARAMS(1560, -1380),     "MQ Near Barred Door Lava Silver",                 RHT_GTG_SILVER,                                          RG_BLUE_RUPEE,        SpoilerCollectionCheck::RandomizerInf(RAND_INF_GTG_MQ_SILVER_LAVA_4));
     locationTable[RC_GTG_MQ_NEAR_MAZE_LEDGE_LAVA_SILVER] =                 Location::Collectable(RC_GTG_MQ_NEAR_MAZE_LEDGE_LAVA_SILVER,                 RCQUEST_MQ,         RCTYPE_SILVER, ACTOR_EN_G_SWITCH, SCENE_GERUDO_TRAINING_GROUND,       TWO_ACTOR_PARAMS(1083, -1374),     "MQ Near Maze Ledge Lava Silver",                 RHT_GTG_SILVER,                                          RG_BLUE_RUPEE,        SpoilerCollectionCheck::RandomizerInf(RAND_INF_GTG_MQ_NEAR_MAZE_LEDGE_LAVA_SILVER));
     locationTable[RC_GTG_MQ_NEAR_LIT_TORCH_LAVA_SILVER] =                 Location::Collectable(RC_GTG_MQ_NEAR_LIT_TORCH_LAVA_SILVER,                 RCQUEST_MQ,         RCTYPE_SILVER, ACTOR_EN_G_SWITCH, SCENE_GERUDO_TRAINING_GROUND,       TWO_ACTOR_PARAMS(1317, -1243),     "MQ Near Lit Torch Lava Silver",                 RHT_GTG_SILVER,                                          RG_BLUE_RUPEE,        SpoilerCollectionCheck::RandomizerInf(RAND_INF_GTG_MQ_NEAR_LIT_TORCH_LAVA_SILVER));
     locationTable[RC_GTG_MQ_BACK_WATER_SILVER] =                Location::Collectable(RC_GTG_MQ_BACK_WATER_SILVER,                RCQUEST_MQ,         RCTYPE_SILVER, ACTOR_EN_G_SWITCH, SCENE_GERUDO_TRAINING_GROUND,       TWO_ACTOR_PARAMS(2453, -1612),     "MQ Back Water Silver",                RHT_GTG_SILVER,                                          RG_BLUE_RUPEE,        SpoilerCollectionCheck::RandomizerInf(RAND_INF_GTG_MQ_BACK_WATER_SILVER));

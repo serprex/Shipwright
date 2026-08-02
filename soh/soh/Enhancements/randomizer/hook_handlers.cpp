@@ -414,7 +414,7 @@ void RandomizerOnPlayerUpdateForRCQueueHandler() {
     RandomizerGet vanillaRandomizerGet = Rando::StaticData::GetLocation(rc)->GetVanillaItem();
     GetItemID vanillaItem = (GetItemID)Rando::StaticData::RetrieveItem(vanillaRandomizerGet).GetItemID();
     GetItemEntry getItemEntry =
-        Rando::Context::GetInstance()->GetFinalGIEntry(rc, true, (GetItemID)vanillaRandomizerGet);
+        Rando::Context::GetInstance()->GetFinalGIEntry(rc, true, (GetItemID)vanillaRandomizerGet, true);
     GetItemCategory getItemCategory = Randomizer_AdjustItemCategory(getItemEntry);
 
     if (loc->HasObtained()) {
