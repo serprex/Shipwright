@@ -669,8 +669,9 @@ ItemTrackerNumbers GetItemCurrentAndMax(ItemTrackerItem item) {
             case RG_SPIRIT_MQ_SILVER_BIG_WALL:
             case RG_GANONS_CASTLE_MQ_SILVER_WATER:
             case RG_GANONS_CASTLE_MQ_SILVER_SHADOW:
-                //don't show max and current when we have wallets
-                if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON){
+                // don't show max and current when we have wallets
+                if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) ==
+                    RO_SHUFFLE_SILVER_ON) {
                     result.maxCapacity = Randomizer::SilverTotal(static_cast<RandomizerGet>(item.id));
                     result.currentAmmo =
                         *Randomizer::SilverFieldFromSaveContext(&gSaveContext, static_cast<RandomizerGet>(item.id));
@@ -760,7 +761,8 @@ void DrawItemCount(ItemTrackerItem item, bool hideMax) {
         ImGui::Text("%s", maxString.c_str());
         ImGui::PopStyleColor();
     } else if (item.kind == ITEM_KIND_RG && IsSilver(static_cast<RandomizerGet>(item.id)) && IsValidSaveFile() &&
-               IS_RANDO && OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON) {
+               IS_RANDO &&
+               OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON) {
         std::string maxString = hideMax ? "???" : std::to_string(currentAndMax.maxCapacity);
         std::string str = std::to_string(currentAndMax.currentAmmo) + "/" + maxString;
 
@@ -1192,8 +1194,9 @@ void DrawItem(ItemTrackerItem item) {
             case RG_GANONS_CASTLE_MQ_SILVER_SHADOW:
                 hideMax =
                     !CheckTracker::IsAreaSpoiled(Rando::StaticData::silverToArea[static_cast<RandomizerGet>(item.id)]);
-                hasItem = IsSilverCleared(static_cast<RandomizerGet>(item.id)) && 
-                          (!hideMax || OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) != RO_SHUFFLE_SILVER_ON);
+                hasItem = IsSilverCleared(static_cast<RandomizerGet>(item.id)) &&
+                          (!hideMax || OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) !=
+                                           RO_SHUFFLE_SILVER_ON);
                 itemName = Rando::StaticData::RetrieveItem(static_cast<RandomizerGet>(actualItemId))
                                .GetName()
                                .GetForLanguage(CVarGetInteger(CVAR_SETTING("Languages"), LANGUAGE_ENG));

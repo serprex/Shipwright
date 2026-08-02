@@ -377,62 +377,72 @@ void SpoilAreaFromCheck(RandomizerCheck rc) {
         if (!Rando::StaticData::constantSilvers.contains(itemLoc->GetPlacedRandomizerGet()) &&
             !IsAreaSpoiled(Rando::StaticData::silverToArea[itemLoc->GetPlacedRandomizerGet()])) {
             SetAreaSpoiled(Rando::StaticData::silverToArea[itemLoc->GetPlacedRandomizerGet()]);
-        } else if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON){
-            switch(itemLoc->GetPlacedRandomizerGet()){
+        } else if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) ==
+                   RO_SHUFFLE_SILVER_ON) {
+            switch (itemLoc->GetPlacedRandomizerGet()) {
                 case RG_SHADOW_SILVER_SPIKES:
-                    if (*Randomizer::SilverFieldFromSaveContext(&gSaveContext, itemLoc->GetPlacedRandomizerGet()) >= 6){
+                    if (*Randomizer::SilverFieldFromSaveContext(&gSaveContext, itemLoc->GetPlacedRandomizerGet()) >=
+                        6) {
                         SetAreaSpoiled(RCAREA_SHADOW_TEMPLE);
                     }
                     break;
                 case RG_GTG_SILVER_LAVA:
-                    if (*Randomizer::SilverFieldFromSaveContext(&gSaveContext, itemLoc->GetPlacedRandomizerGet()) >= 6){
+                    if (*Randomizer::SilverFieldFromSaveContext(&gSaveContext, itemLoc->GetPlacedRandomizerGet()) >=
+                        6) {
                         SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
                     }
                     break;
                 case RG_GTG_SILVER_WATER:
-                    if (*Randomizer::SilverFieldFromSaveContext(&gSaveContext, itemLoc->GetPlacedRandomizerGet()) >= 4){
+                    if (*Randomizer::SilverFieldFromSaveContext(&gSaveContext, itemLoc->GetPlacedRandomizerGet()) >=
+                        4) {
                         SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
                     }
                     break;
                 default:
                     break;
             }
-
         }
-    } else if (itemLoc->GetPlacedItem().GetItemType() == ItemType::ITEMTYPE_SMALLKEY){
-        switch(itemLoc->GetPlacedRandomizerGet()){
+    } else if (itemLoc->GetPlacedItem().GetItemType() == ItemType::ITEMTYPE_SMALLKEY) {
+        switch (itemLoc->GetPlacedRandomizerGet()) {
             case RG_FOREST_TEMPLE_SMALL_KEY:
-                if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FOREST_TEMPLE)->GetTotalSmallKeys(&gSaveContext) >= 6){
+                if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FOREST_TEMPLE)
+                        ->GetTotalSmallKeys(&gSaveContext) >= 6) {
                     SetAreaSpoiled(RCAREA_FOREST_TEMPLE);
                 }
                 break;
             case RG_FIRE_TEMPLE_SMALL_KEY:
-                if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FIRE_TEMPLE)->GetTotalSmallKeys(&gSaveContext) >= 6){
+                if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FIRE_TEMPLE)
+                        ->GetTotalSmallKeys(&gSaveContext) >= 6) {
                     SetAreaSpoiled(RCAREA_FIRE_TEMPLE);
                 }
                 break;
             case RG_WATER_TEMPLE_SMALL_KEY:
-                if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::WATER_TEMPLE)->GetTotalSmallKeys(&gSaveContext) >= 3){
+                if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::WATER_TEMPLE)
+                        ->GetTotalSmallKeys(&gSaveContext) >= 3) {
                     SetAreaSpoiled(RCAREA_WATER_TEMPLE);
                 }
                 break;
             case RG_SPIRIT_TEMPLE_SMALL_KEY:
-                if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SPIRIT_TEMPLE)->GetTotalSmallKeys(&gSaveContext) >= 6){
+                if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SPIRIT_TEMPLE)
+                        ->GetTotalSmallKeys(&gSaveContext) >= 6) {
                     SetAreaSpoiled(RCAREA_SPIRIT_TEMPLE);
                 }
                 break;
             case RG_SHADOW_TEMPLE_SMALL_KEY:
-                if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SHADOW_TEMPLE)->GetTotalSmallKeys(&gSaveContext) >= 6){
+                if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SHADOW_TEMPLE)
+                        ->GetTotalSmallKeys(&gSaveContext) >= 6) {
                     SetAreaSpoiled(RCAREA_SHADOW_TEMPLE);
                 }
                 break;
             case RG_BOTTOM_OF_THE_WELL_SMALL_KEY:
-                if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::BOTTOM_OF_THE_WELL)->GetTotalSmallKeys(&gSaveContext) >= 3){
+                if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::BOTTOM_OF_THE_WELL)
+                        ->GetTotalSmallKeys(&gSaveContext) >= 3) {
                     SetAreaSpoiled(RCAREA_BOTTOM_OF_THE_WELL);
                 }
                 break;
             case RG_GERUDO_TRAINING_GROUND_SMALL_KEY:
-                if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::GERUDO_TRAINING_GROUND)->GetTotalSmallKeys(&gSaveContext) >= 4){
+                if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::GERUDO_TRAINING_GROUND)
+                        ->GetTotalSmallKeys(&gSaveContext) >= 4) {
                     SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
                 }
                 break;
@@ -466,59 +476,66 @@ void SpoilAreaFromCheck(RandomizerCheck rc) {
     }
 }
 
-void SpoilAreaFromCantObtain(RandomizerGet rg){
-    //only spoil if it wouldn't transform anyway, in case someone manages to glitch this value
-    switch (rg){
+void SpoilAreaFromCantObtain(RandomizerGet rg) {
+    // only spoil if it wouldn't transform anyway, in case someone manages to glitch this value
+    switch (rg) {
         case RG_FOREST_TEMPLE_SMALL_KEY:
-            if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FOREST_TEMPLE)->GetTotalSmallKeys(&gSaveContext) < 6){
+            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FOREST_TEMPLE)
+                    ->GetTotalSmallKeys(&gSaveContext) < 6) {
                 SetAreaSpoiled(RCAREA_FOREST_TEMPLE);
             }
             break;
         case RG_FIRE_TEMPLE_SMALL_KEY:
-            if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FIRE_TEMPLE)->GetTotalSmallKeys(&gSaveContext) < 8){
+            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::FIRE_TEMPLE)->GetTotalSmallKeys(&gSaveContext) <
+                8) {
                 SetAreaSpoiled(RCAREA_FIRE_TEMPLE);
             }
             break;
         case RG_WATER_TEMPLE_SMALL_KEY:
-            if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::WATER_TEMPLE)->GetTotalSmallKeys(&gSaveContext) < 6){
+            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::WATER_TEMPLE)->GetTotalSmallKeys(&gSaveContext) <
+                6) {
                 SetAreaSpoiled(RCAREA_WATER_TEMPLE);
             }
             break;
         case RG_SPIRIT_TEMPLE_SMALL_KEY:
-            if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SPIRIT_TEMPLE)->GetTotalSmallKeys(&gSaveContext) < 7){
+            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SPIRIT_TEMPLE)
+                    ->GetTotalSmallKeys(&gSaveContext) < 7) {
                 SetAreaSpoiled(RCAREA_SPIRIT_TEMPLE);
             }
             break;
         case RG_SHADOW_TEMPLE_SMALL_KEY:
-            if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SHADOW_TEMPLE)->GetTotalSmallKeys(&gSaveContext) < 6){
+            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::SHADOW_TEMPLE)
+                    ->GetTotalSmallKeys(&gSaveContext) < 6) {
                 SetAreaSpoiled(RCAREA_SHADOW_TEMPLE);
             }
             break;
         case RG_BOTTOM_OF_THE_WELL_SMALL_KEY:
-            if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::BOTTOM_OF_THE_WELL)->GetTotalSmallKeys(&gSaveContext) < 3){
+            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::BOTTOM_OF_THE_WELL)
+                    ->GetTotalSmallKeys(&gSaveContext) < 3) {
                 SetAreaSpoiled(RCAREA_BOTTOM_OF_THE_WELL);
             }
             break;
         case RG_GERUDO_TRAINING_GROUND_SMALL_KEY:
-            if(OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::GERUDO_TRAINING_GROUND)->GetTotalSmallKeys(&gSaveContext) < 9){
+            if (OTRGlobals::Instance->gRandoContext->GetDungeon(Rando::GERUDO_TRAINING_GROUND)
+                    ->GetTotalSmallKeys(&gSaveContext) < 9) {
                 SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
             }
             break;
         case RG_SHADOW_SILVER_SPIKES:
-            if(OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON &&
-               *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) < 10){
+            if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON &&
+                *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) < 10) {
                 SetAreaSpoiled(RCAREA_SHADOW_TEMPLE);
             }
             break;
         case RG_GTG_SILVER_LAVA:
-            if(OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON &&
-               *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) < 6){
+            if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON &&
+                *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) < 6) {
                 SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
             }
             break;
         case RG_GTG_SILVER_WATER:
-            if(OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON &&
-               *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) < 5){
+            if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) == RO_SHUFFLE_SILVER_ON &&
+                *Randomizer::SilverFieldFromSaveContext(&gSaveContext, rg) < 5) {
                 SetAreaSpoiled(RCAREA_GERUDO_TRAINING_GROUND);
             }
             break;

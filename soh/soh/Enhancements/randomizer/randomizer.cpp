@@ -658,7 +658,7 @@ ItemObtainability Randomizer::GetItemObtainabilityFromRandomizerGet(RandomizerGe
         case RG_LIGHT_MEDALLION:
             return !CHECK_QUEST_ITEM(QUEST_MEDALLION_LIGHT) ? CAN_OBTAIN : CANT_OBTAIN_ALREADY_HAVE;
 
-        //silver rupees
+        // silver rupees
         case RG_SHADOW_SILVER_BLADES:
         case RG_SHADOW_SILVER_PIT:
         case RG_SHADOW_SILVER_SPIKES:
@@ -684,7 +684,7 @@ ItemObtainability Randomizer::GetItemObtainabilityFromRandomizerGet(RandomizerGe
             return *Randomizer::SilverFieldFromSaveContext(&gSaveContext, randoGet) < Randomizer::SilverTotal(randoGet)
                        ? CAN_OBTAIN
                        : CANT_OBTAIN_ALREADY_HAVE;
-        
+
         case RG_RECOVERY_HEART:
         case RG_GREEN_RUPEE:
         case RG_GREG_RUPEE:
@@ -1490,7 +1490,8 @@ extern "C" u16 Randomizer_Item_Give(PlayState* play, GetItemEntry giEntry) {
             if (OTRGlobals::Instance->gRandomizer->GetRandoSettingValue(RSK_SHUFFLE_SILVER) ==
                 RO_SHUFFLE_SILVER_WALLET) {
                 *field = 10;
-                //this spoils MQ in theory, but will not update trackers because it's subtle and there's too many edge cases where this does not apply
+                // this spoils MQ in theory, but will not update trackers because it's subtle and there's too many edge
+                // cases where this does not apply
                 Rupees_ChangeBy(Randomizer::SilverTotal(item) * 5);
             } else {
                 *field += 1;
