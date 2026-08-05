@@ -1042,7 +1042,7 @@ void Settings::CreateOptions() {
             mOptions[RSK_EARLY_GRANNYS_SHOP].Enable();
         }
     });
-    OPT_U8(RSK_SHUFFLE_CHEST_MINIGAME, "Shuffle Chest Minigame", {"Off", "On (Separate)", "On (Pack)"});
+    OPT_U8(RSK_SHUFFLE_CHEST_MINIGAME, "Shuffle Chest Minigame", {"Off", "On", "Keyring"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleChestMinigame"), mOptionDescriptions[RSK_SHUFFLE_CHEST_MINIGAME], WIDGET_CVAR_COMBOBOX, RO_CHEST_GAME_OFF);
     OPT_BOOL(RSK_SHUFFLE_100_GS_REWARD, "Shuffle 100 GS Reward", CVAR_RANDOMIZER_SETTING("Shuffle100GSReward"), mOptionDescriptions[RSK_SHUFFLE_100_GS_REWARD], IMFLAG_SEPARATOR_BOTTOM, WIDGET_CVAR_CHECKBOX, RO_GENERIC_OFF);
     OPT_CALLBACK(RSK_SHUFFLE_100_GS_REWARD, {
         if (CVarGetInteger(CVAR_RANDOMIZER_SETTING("Shuffle100GSReward"), RO_GENERIC_OFF)) {
@@ -1289,7 +1289,7 @@ void Settings::CreateOptions() {
             mOptions[RSK_WINCON_DUNGEON_COUNT].ChangeOptions(NumOpts(0, 8));
         }
     });
-    OPT_U8(RSK_KEYRINGS, "Key Rings", {"Off", "Random", "Count", "Selection"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRings"), mOptionDescriptions[RSK_KEYRINGS], WIDGET_CVAR_COMBOBOX, RO_KEYRINGS_OFF);
+    OPT_U8(RSK_KEYRINGS, "Keyrings", {"Off", "Random", "Count", "Selection"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRings"), mOptionDescriptions[RSK_KEYRINGS], WIDGET_CVAR_COMBOBOX, RO_KEYRINGS_OFF);
     OPT_CALLBACK(RSK_KEYRINGS, {
         switch (CVarGetInteger(CVAR_RANDOMIZER_SETTING("ShuffleKeyRings"), RO_KEYRINGS_OFF)) {
             case RO_KEYRINGS_COUNT:
@@ -2044,6 +2044,7 @@ void Settings::CreateOptions() {
                                   &mOptions[RSK_SHUFFLE_SIGNS],
                                   &mOptions[RSK_SHUFFLE_FROG_SONG_RUPEES],
                                   &mOptions[RSK_SHUFFLE_ADULT_TRADE],
+                                  &mOptions[RSK_SHUFFLE_CHEST_MINIGAME],
                                   &mOptions[RSK_SHUFFLE_100_GS_REWARD],
                                   &mOptions[RSK_SHUFFLE_FOUNTAIN_FAIRIES],
                                   &mOptions[RSK_SHUFFLE_STONE_FAIRIES],
@@ -2726,10 +2727,6 @@ void Context::FinalizeSettings(const std::set<RandomizerCheck>& excludedLocation
         mOptions[RSK_STARTING_BOTTLE_4].Set(RO_STARTING_BOTTLE_OFF);
     }
 
-    // RANDOTODO implement chest shuffle with keysanity
-    // ShuffleChestMinigame.Set(cvarSettings[RSK_SHUFFLE_CHEST_MINIGAME]);
-    mOptions[RSK_SHUFFLE_CHEST_MINIGAME].Set(RO_CHEST_GAME_OFF);
-
     // TODO: RandomizeAllSettings(true) when implementing the ability to randomize the options themselves.
     std::array<DungeonInfo*, 12> dungeons = this->GetDungeons()->GetDungeonList();
 
@@ -2850,7 +2847,7 @@ void Context::FinalizeSettings(const std::set<RandomizerCheck>& excludedLocation
         }
     }
 
-    // Set key ring for each dungeon
+    // Set keyring for each dungeon
     for (const auto dungeon : dungeons) {
         dungeon->ClearKeyRing();
     }
@@ -2863,7 +2860,7 @@ void Context::FinalizeSettings(const std::set<RandomizerCheck>& excludedLocation
     };
 
     if (mOptions[RSK_KEYRINGS]) {
-        // Random Key Rings
+        // Random Keyrings
         auto keyrings = keyRingOptions;
         if (mOptions[RSK_GERUDO_FORTRESS].Is(RO_GF_CARPENTERS_NORMAL) &&
             mOptions[RSK_GERUDO_KEYS].IsNot(RO_GERUDO_KEYS_VANILLA)) {
