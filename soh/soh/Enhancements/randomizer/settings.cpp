@@ -137,6 +137,32 @@ void Settings::HandleMixedEntrancePoolsUI() {
     }
 }
 
+void Settings::HandleKeyringUI() {
+    const bool fortressKeyring =
+        CVarGetInteger(CVAR_RANDOMIZER_SETTING("FortressCarpenters"), RO_GF_CARPENTERS_NORMAL) ==
+            RO_GF_CARPENTERS_NORMAL &&
+        CVarGetInteger(CVAR_RANDOMIZER_SETTING("GerudoKeys"), RO_GERUDO_KEYS_VANILLA) != RO_GERUDO_KEYS_VANILLA;
+    const bool chestGameKeyring =
+        CVarGetInteger(CVAR_RANDOMIZER_SETTING("ShuffleChestMinigame"), RO_GENERIC_OFF) != RO_GENERIC_OFF;
+    const uint8_t maxKeyringCount = 8 + fortressKeyring + chestGameKeyring;
+    if (mOptions[RSK_KEYRINGS_RANDOM_COUNT].GetOptionCount() != maxKeyringCount + 1) {
+        mOptions[RSK_KEYRINGS_RANDOM_COUNT].ChangeOptions(NumOpts(0, maxKeyringCount));
+    }
+    if (fortressKeyring) {
+        mOptions[RSK_KEYRINGS_GERUDO_FORTRESS].Enable();
+    } else {
+        mOptions[RSK_KEYRINGS_GERUDO_FORTRESS].Disable(
+            "Disabled because the currently selected Gerudo Fortress Carpenters\n"
+            "setting and/or Gerudo Fortress Keys setting is incompatible with\n"
+            "having a Gerudo Fortress Keyring.");
+    }
+    if (chestGameKeyring) {
+        mOptions[RSK_KEYRINGS_CHEST_GAME].Enable();
+    } else {
+        mOptions[RSK_KEYRINGS_CHEST_GAME].Disable("Disabled because Shuffle Chest Minigame is off.");
+    }
+}
+
 void Settings::HandleStartingAgeUI() {
     // Starting Age - Disabled under very specific conditions unless it's No Logic
     if (CVarGetInteger(CVAR_RANDOMIZER_SETTING("LogicRules"), RO_LOGIC_GLITCHLESS) != RO_LOGIC_NO_LOGIC &&
@@ -175,25 +201,7 @@ void Settings::CreateOptions() {
     OPT_BOOL(RSK_LOCK_OVERWORLD_DOORS, "Lock Overworld Doors", CVAR_RANDOMIZER_SETTING("LockOverworldDoors"), mOptionDescriptions[RSK_LOCK_OVERWORLD_DOORS]);
     OPT_U8(RSK_GERUDO_FORTRESS, "Fortress Carpenters", {"Normal", "Fast", "Free"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("FortressCarpenters"), mOptionDescriptions[RSK_GERUDO_FORTRESS]);
     OPT_CALLBACK(RSK_GERUDO_FORTRESS, {
-        const uint8_t maxKeyringCount =
-            (CVarGetInteger(CVAR_RANDOMIZER_SETTING("FortressCarpenters"), RO_GF_CARPENTERS_NORMAL) ==
-                RO_GF_CARPENTERS_NORMAL &&
-            CVarGetInteger(CVAR_RANDOMIZER_SETTING("GerudoKeys"), RO_GERUDO_KEYS_VANILLA) != RO_GERUDO_KEYS_VANILLA)
-                ? 9
-                : 8;
-        if (mOptions[RSK_KEYRINGS_RANDOM_COUNT].GetOptionCount() != maxKeyringCount + 1) {
-            mOptions[RSK_KEYRINGS_RANDOM_COUNT].ChangeOptions(NumOpts(0, maxKeyringCount));
-        }
-        if (CVarGetInteger(CVAR_RANDOMIZER_SETTING("FortressCarpenters"), RO_GF_CARPENTERS_NORMAL) !=
-                RO_GF_CARPENTERS_NORMAL ||
-            CVarGetInteger(CVAR_RANDOMIZER_SETTING("GerudoKeys"), RO_GERUDO_KEYS_VANILLA) == RO_GERUDO_KEYS_VANILLA) {
-            mOptions[RSK_KEYRINGS_GERUDO_FORTRESS].Disable(
-                "Disabled because the currently selected Gerudo Fortress Carpenters\n"
-                "setting and/or Gerudo Fortress Keys setting is incompatible with\n"
-                "having a Gerudo Fortress Keyring.");
-        } else {
-            mOptions[RSK_KEYRINGS_GERUDO_FORTRESS].Enable();
-        }
+        HandleKeyringUI();
     });
     OPT_U8(RSK_RAINBOW_BRIDGE, "Rainbow Bridge", {"Vanilla", "Always open", "Stones", "Medallions", "Dungeon rewards", "Dungeons", "Tokens", "Triforce Pieces", "Greg"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("RainbowBridge"), mOptionDescriptions[RSK_RAINBOW_BRIDGE], WIDGET_CVAR_COMBOBOX, RO_BRIDGE_VANILLA, false, nullptr, IMFLAG_NONE);
     OPT_CALLBACK(RSK_RAINBOW_BRIDGE, {
@@ -1042,7 +1050,10 @@ void Settings::CreateOptions() {
             mOptions[RSK_EARLY_GRANNYS_SHOP].Enable();
         }
     });
-    OPT_U8(RSK_SHUFFLE_CHEST_MINIGAME, "Shuffle Chest Minigame", {"Off", "On", "Keyring"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleChestMinigame"), mOptionDescriptions[RSK_SHUFFLE_CHEST_MINIGAME], WIDGET_CVAR_COMBOBOX, RO_CHEST_GAME_OFF);
+    OPT_BOOL(RSK_SHUFFLE_CHEST_MINIGAME, "Shuffle Chest Minigame", CVAR_RANDOMIZER_SETTING("ShuffleChestMinigame"), mOptionDescriptions[RSK_SHUFFLE_CHEST_MINIGAME]);
+    OPT_CALLBACK(RSK_SHUFFLE_CHEST_MINIGAME, {
+        HandleKeyringUI();
+    });
     OPT_BOOL(RSK_SHUFFLE_100_GS_REWARD, "Shuffle 100 GS Reward", CVAR_RANDOMIZER_SETTING("Shuffle100GSReward"), mOptionDescriptions[RSK_SHUFFLE_100_GS_REWARD], IMFLAG_SEPARATOR_BOTTOM, WIDGET_CVAR_CHECKBOX, RO_GENERIC_OFF);
     OPT_CALLBACK(RSK_SHUFFLE_100_GS_REWARD, {
         if (CVarGetInteger(CVAR_RANDOMIZER_SETTING("Shuffle100GSReward"), RO_GENERIC_OFF)) {
@@ -1103,25 +1114,7 @@ void Settings::CreateOptions() {
     OPT_U8(RSK_KEYSANITY, "Small Key Shuffle", {"Start With", "Vanilla", "Own Dungeon", "Any Dungeon", "Overworld", "Anywhere"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("Keysanity"), mOptionDescriptions[RSK_KEYSANITY], WIDGET_CVAR_COMBOBOX, RO_DUNGEON_ITEM_LOC_OWN_DUNGEON);
     OPT_U8(RSK_GERUDO_KEYS, "Gerudo Fortress Keys", {"Vanilla", "Any Dungeon", "Overworld", "Anywhere"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("GerudoKeys"), mOptionDescriptions[RSK_GERUDO_KEYS], WIDGET_CVAR_COMBOBOX, RO_GERUDO_KEYS_VANILLA);
     OPT_CALLBACK(RSK_GERUDO_KEYS, {
-        const uint8_t maxKeyringCount =
-            (CVarGetInteger(CVAR_RANDOMIZER_SETTING("FortressCarpenters"), RO_GF_CARPENTERS_NORMAL) ==
-                RO_GF_CARPENTERS_NORMAL &&
-            CVarGetInteger(CVAR_RANDOMIZER_SETTING("GerudoKeys"), RO_GERUDO_KEYS_VANILLA) != RO_GERUDO_KEYS_VANILLA)
-                ? 9
-                : 8;
-        if (mOptions[RSK_KEYRINGS_RANDOM_COUNT].GetOptionCount() != maxKeyringCount + 1) {
-            mOptions[RSK_KEYRINGS_RANDOM_COUNT].ChangeOptions(NumOpts(0, maxKeyringCount));
-        }
-        if (CVarGetInteger(CVAR_RANDOMIZER_SETTING("FortressCarpenters"), RO_GF_CARPENTERS_NORMAL) !=
-                RO_GF_CARPENTERS_NORMAL ||
-            CVarGetInteger(CVAR_RANDOMIZER_SETTING("GerudoKeys"), RO_GERUDO_KEYS_VANILLA) == RO_GERUDO_KEYS_VANILLA) {
-            mOptions[RSK_KEYRINGS_GERUDO_FORTRESS].Disable(
-                "Disabled because the currently selected Gerudo Fortress Carpenters\n"
-                "setting and/or Gerudo Fortress Keys setting is incompatible with\n"
-                "having a Gerudo Fortress Keyring.");
-        } else {
-            mOptions[RSK_KEYRINGS_GERUDO_FORTRESS].Enable();
-        }
+        HandleKeyringUI();
     });
     OPT_U8(RSK_BOSS_KEYSANITY, "Boss Key Shuffle", {"Start With", "Vanilla", "Own Dungeon", "Any Dungeon", "Overworld", "Anywhere"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("BossKeysanity"), mOptionDescriptions[RSK_BOSS_KEYSANITY], WIDGET_CVAR_COMBOBOX, RO_DUNGEON_ITEM_LOC_OWN_DUNGEON);
     OPT_U8(RSK_GANONS_BOSS_KEY, "Ganon's Boss Key", {"Vanilla", "Own Dungeon", "Start With", "Any Dungeon", "Overworld", "Anywhere", "Trigger-Stones", "Trigger-Medallions", "Trigger-Rewards", "Trigger-Dungeons", "Trigger-Tokens", "Trigger-Triforce Pieces"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleGanonBossKey"), mOptionDescriptions[RSK_GANONS_BOSS_KEY], WIDGET_CVAR_COMBOBOX, RO_GANON_BOSS_KEY_VANILLA);
@@ -1304,6 +1297,7 @@ void Settings::CreateOptions() {
                 mOptions[RSK_KEYRINGS_BOTTOM_OF_THE_WELL].Hide();
                 mOptions[RSK_KEYRINGS_GTG].Hide();
                 mOptions[RSK_KEYRINGS_GANONS_CASTLE].Hide();
+                mOptions[RSK_KEYRINGS_CHEST_GAME].Hide();
                 break;
             case RO_KEYRINGS_SELECTION:
                 // Show checkboxes for each dungeon with keys.
@@ -1317,6 +1311,7 @@ void Settings::CreateOptions() {
                 mOptions[RSK_KEYRINGS_BOTTOM_OF_THE_WELL].Unhide();
                 mOptions[RSK_KEYRINGS_GTG].Unhide();
                 mOptions[RSK_KEYRINGS_GANONS_CASTLE].Unhide();
+                mOptions[RSK_KEYRINGS_CHEST_GAME].Unhide();
                 break;
             default:
                 mOptions[RSK_KEYRINGS_RANDOM_COUNT].Hide();
@@ -1329,10 +1324,11 @@ void Settings::CreateOptions() {
                 mOptions[RSK_KEYRINGS_BOTTOM_OF_THE_WELL].Hide();
                 mOptions[RSK_KEYRINGS_GTG].Hide();
                 mOptions[RSK_KEYRINGS_GANONS_CASTLE].Hide();
+                mOptions[RSK_KEYRINGS_CHEST_GAME].Hide();
                 break;
         }
     });
-    OPT_U8(RSK_KEYRINGS_RANDOM_COUNT, "Keyring Dungeon Count", {NumOpts(0, 9)}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsRandomCount"), "", WIDGET_CVAR_SLIDER_INT, 8);
+    OPT_U8(RSK_KEYRINGS_RANDOM_COUNT, "Keyring Dungeon Count", {NumOpts(0, 10)}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsRandomCount"), "", WIDGET_CVAR_SLIDER_INT, 8);
     OPT_U8(RSK_KEYRINGS_GERUDO_FORTRESS, "Gerudo Fortress Keyring", {"No", "Random", "Yes"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsGerudoFortress"), "", WIDGET_CVAR_COMBOBOX, 0);
     OPT_U8(RSK_KEYRINGS_FOREST_TEMPLE, "Forest Temple Keyring", {"No", "Random", "Yes"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsForestTemple"), "", WIDGET_CVAR_COMBOBOX, 0);
     OPT_U8(RSK_KEYRINGS_FIRE_TEMPLE, "Fire Temple Keyring", {"No", "Random", "Yes"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsFireTemple"), "", WIDGET_CVAR_COMBOBOX, 0);
@@ -1342,6 +1338,7 @@ void Settings::CreateOptions() {
     OPT_U8(RSK_KEYRINGS_BOTTOM_OF_THE_WELL, "Bottom of the Well Keyring", {"No", "Random", "Yes"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsBottomOfTheWell"), "", WIDGET_CVAR_COMBOBOX, 0);
     OPT_U8(RSK_KEYRINGS_GTG, "Gerudo Training Ground Keyring", {"No", "Random", "Yes"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsGTG"), "", WIDGET_CVAR_COMBOBOX, 0);
     OPT_U8(RSK_KEYRINGS_GANONS_CASTLE, "Ganon's Castle Keyring", {"No", "Random", "Yes"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsGanonsCastle"), "", WIDGET_CVAR_COMBOBOX, 0);
+    OPT_U8(RSK_KEYRINGS_CHEST_GAME, "Chest Minigame Keyring", {"No", "Random", "Yes"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("ShuffleKeyRingsChestGame"), "", WIDGET_CVAR_COMBOBOX, 0);
     //Dummied out due to redundancy with TimeSavers.SkipChildStealth until such a time that logic needs to consider child stealth e.g. because it's freestanding checks are added to freestanding shuffle.
     //To undo this dummying, readd this setting to an OptionGroup so it appears in the UI, then edit the timesaver check hooks to look at this, and the timesaver setting to lock itself as needed.
     OPT_BOOL(RSK_SKIP_CHILD_STEALTH, "Skip Child Stealth", {"Don't Skip", "Skip"}, OptionCategory::Setting, CVAR_RANDOMIZER_SETTING("SkipChildStealth"), mOptionDescriptions[RSK_SKIP_CHILD_STEALTH], WIDGET_CVAR_CHECKBOX, RO_GENERIC_DONT_SKIP);
@@ -1997,14 +1994,15 @@ void Settings::CreateOptions() {
                                                                WidgetContainerType::SECTION);
     mOptionGroups[RSG_MENU_COLUMN_MQ] =
         OptionGroup::SubGroup("", { &mOptionGroups[RSG_MENU_SECTION_MQ] }, WidgetContainerType::COLUMN);
-    mOptionGroups[RSG_MENU_SECTION_KEYRINGS] = OptionGroup::SubGroup(
-        "Keyrings",
-        { &mOptions[RSK_KEYRINGS], &mOptions[RSK_KEYRINGS_RANDOM_COUNT], &mOptions[RSK_KEYRINGS_FOREST_TEMPLE],
-          &mOptions[RSK_KEYRINGS_FIRE_TEMPLE], &mOptions[RSK_KEYRINGS_WATER_TEMPLE],
-          &mOptions[RSK_KEYRINGS_SPIRIT_TEMPLE], &mOptions[RSK_KEYRINGS_SHADOW_TEMPLE],
-          &mOptions[RSK_KEYRINGS_BOTTOM_OF_THE_WELL], &mOptions[RSK_KEYRINGS_GTG],
-          &mOptions[RSK_KEYRINGS_GANONS_CASTLE], &mOptions[RSK_KEYRINGS_GERUDO_FORTRESS] },
-        WidgetContainerType::SECTION);
+    mOptionGroups[RSG_MENU_SECTION_KEYRINGS] =
+        OptionGroup::SubGroup("Keyrings",
+                              { &mOptions[RSK_KEYRINGS], &mOptions[RSK_KEYRINGS_RANDOM_COUNT],
+                                &mOptions[RSK_KEYRINGS_FOREST_TEMPLE], &mOptions[RSK_KEYRINGS_FIRE_TEMPLE],
+                                &mOptions[RSK_KEYRINGS_WATER_TEMPLE], &mOptions[RSK_KEYRINGS_SPIRIT_TEMPLE],
+                                &mOptions[RSK_KEYRINGS_SHADOW_TEMPLE], &mOptions[RSK_KEYRINGS_BOTTOM_OF_THE_WELL],
+                                &mOptions[RSK_KEYRINGS_GTG], &mOptions[RSK_KEYRINGS_GANONS_CASTLE],
+                                &mOptions[RSK_KEYRINGS_GERUDO_FORTRESS], &mOptions[RSK_KEYRINGS_CHEST_GAME] },
+                              WidgetContainerType::SECTION);
     mOptionGroups[RSG_MENU_COLUMN_KEYRINGS] =
         OptionGroup::SubGroup("", { &mOptionGroups[RSG_MENU_SECTION_KEYRINGS] }, WidgetContainerType::COLUMN);
     mOptionGroups[RSG_MENU_SIDEBAR_DUNGEONS] = OptionGroup::SubGroup("Dungeons",
@@ -2357,6 +2355,7 @@ void Settings::CreateOptions() {
                                                  &mOptions[RSK_KEYRINGS_BOTTOM_OF_THE_WELL],
                                                  &mOptions[RSK_KEYRINGS_GTG],
                                                  &mOptions[RSK_KEYRINGS_GANONS_CASTLE],
+                                                 &mOptions[RSK_KEYRINGS_CHEST_GAME],
                                              });
     mOptionGroups[RSG_STARTING_ITEMS] =
         OptionGroup::SubGroup("Items", { &mOptions[RSK_STARTING_OCARINA],        &mOptions[RSK_STARTING_KOKIRI_SWORD],
@@ -2868,6 +2867,11 @@ void Context::FinalizeSettings(const std::set<RandomizerCheck>& excludedLocation
         } else {
             mOptions[RSK_KEYRINGS_GERUDO_FORTRESS].Set(RO_KEYRING_FOR_DUNGEON_OFF);
         }
+        if (mOptions[RSK_SHUFFLE_CHEST_MINIGAME]) {
+            keyrings.push_back(&mOptions[RSK_KEYRINGS_CHEST_GAME]);
+        } else {
+            mOptions[RSK_KEYRINGS_CHEST_GAME].Set(RO_KEYRING_FOR_DUNGEON_OFF);
+        }
         if (mOptions[RSK_KEYRINGS].Is(RO_KEYRINGS_RANDOM) || mOptions[RSK_KEYRINGS].Is(RO_KEYRINGS_COUNT)) {
             const uint32_t keyRingCount = mOptions[RSK_KEYRINGS].Is(RO_KEYRINGS_COUNT)
                                               ? mOptions[RSK_KEYRINGS_RANDOM_COUNT].Get()
@@ -2911,6 +2915,12 @@ void Context::FinalizeSettings(const std::set<RandomizerCheck>& excludedLocation
         if (mOptions[RSK_KEYRINGS_GANONS_CASTLE].Is(RO_KEYRING_FOR_DUNGEON_ON) ||
             (mOptions[RSK_KEYRINGS_GANONS_CASTLE].Is(RO_KEYRING_FOR_DUNGEON_RANDOM) && Random(0, 2) == 0)) {
             this->GetDungeon(GANONS_CASTLE)->SetKeyRing();
+        }
+        // Gerudo Fortress & the chest minigame have no DungeonInfo, so resolve their random rolls into the option
+        for (const auto keyring : { &mOptions[RSK_KEYRINGS_GERUDO_FORTRESS], &mOptions[RSK_KEYRINGS_CHEST_GAME] }) {
+            if (keyring->Is(RO_KEYRING_FOR_DUNGEON_RANDOM)) {
+                keyring->Set(Random(0, 2) == 0 ? RO_KEYRING_FOR_DUNGEON_ON : RO_KEYRING_FOR_DUNGEON_OFF);
+            }
         }
     }
 

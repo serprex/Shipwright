@@ -531,11 +531,8 @@ void Settings::CreateOptionDescriptions() {
         "the host for. Both chests in every room can be opened, and the locked doors are opened "
         "with keys found elsewhere instead of keys won in the game.\n"
         "\n"
-        "Off - The chest game is not shuffled.\n"
-        "\n"
-        "On - Six individual Chest Game Small Keys are added to the pool.\n"
-        "\n"
-        "Keyring - A keyring holding all six keys is added to the pool.";
+        "Six Chest Game Small Keys are added to the pool, or a single keyring holding all six "
+        "if the Chest Minigame Keyring is selected under Keyrings.";
     mOptionDescriptions[RSK_EARLY_GRANNYS_SHOP] =
         "Makes Granny's Potion Shop available from start, rather than requiring Claim Check to be found first.\n"
         "\n"
@@ -624,7 +621,7 @@ void Settings::CreateOptionDescriptions() {
         "\n"
         "Off - No dungeons will have their keys replaced with keyrings.\n"
         "\n"
-        "Random - A random amount of dungeons (0-8 or 9) will have their keys replaced with keyrings.\n"
+        "Random - A random amount of dungeons will have their keys replaced with keyrings.\n"
         "\n"
         "Count - A specified amount of randomly selected dungeons will have their keys replaced with keyrings.\n"
         "\n"
@@ -633,9 +630,9 @@ void Settings::CreateOptionDescriptions() {
         "\n"
         "Selecting keyring for dungeons will have no effect if Small Keys are set to Start With or Vanilla.\n"
         "\n"
-        "If Gerudo Fortress Carpenters is set to Normal, and Gerudo Fortress Keys is set to anything "
-        "other than Vanilla, then the maximum amount of Keyrings that can be selected by Random or "
-        "Count will be 9. Otherwise, the maximum amount of Keyrings will be 8.";
+        "The maximum amount of Keyrings that can be selected by Random or Count is 8, plus one if "
+        "Gerudo Fortress Carpenters is set to Normal and Gerudo Fortress Keys is set to anything "
+        "other than Vanilla, plus one if Shuffle Chest Minigame is on.";
     mOptionDescriptions[RSK_GERUDO_KEYS] = "Vanilla - Thieves' Hideout Keys will appear in their vanilla locations.\n"
                                            "\n"
                                            "Any dungeon - Thieves' Hideout Keys can only appear inside of any dungon.\n"

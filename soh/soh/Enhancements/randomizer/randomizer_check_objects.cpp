@@ -161,7 +161,7 @@ void RandomizerCheckObjects::UpdateImGuiVisibility() {
             (location.GetRCType() != RCTYPE_STATIC_HINT) &&  // don't show static hints
             (location.GetRCType() != RCTYPE_LINKS_POCKET) && // links pocket can be set to nothing if needed
             (location.GetRCType() != RCTYPE_CHEST_GAME ||
-             CVarGetInteger(CVAR_RANDOMIZER_SETTING("ShuffleChestMinigame"), RO_CHEST_GAME_OFF)) &&
+             CVarGetInteger(CVAR_RANDOMIZER_SETTING("ShuffleChestMinigame"), RO_GENERIC_OFF)) &&
             (location.GetRCType() != RCTYPE_SKULL_TOKEN ||
              (CVarGetInteger(CVAR_RANDOMIZER_SETTING("ShuffleTokens"), RO_TOKENSANITY_OFF) == RO_TOKENSANITY_ALL) ||
              ((CVarGetInteger(CVAR_RANDOMIZER_SETTING("ShuffleTokens"), RO_TOKENSANITY_OFF) ==
