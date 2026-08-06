@@ -462,7 +462,7 @@ typedef enum {
 
     // #### `result`
     // ```c
-    // this->hookshotSlotFull != 0
+    // this->hookshotSlotFull
     // ```
     // #### `args`
     // - None
@@ -2867,6 +2867,14 @@ typedef enum {
     // #### `args`
     // - `*Input`
     VB_THROW_OR_PUT_DOWN_HELD_ITEM,
+
+    // #### `result`
+    // ```c
+    // true
+    // ```
+    // #### `args`
+    // - `*Actor`
+    VB_ON_ACTOR_THROW_ONLY_CHECK,
 
     // #### `result`
     // ```c
