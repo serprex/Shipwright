@@ -201,7 +201,9 @@ include(FetchContent)
 # Workaround: torch declares spdlog without OVERRIDE_FIND_PACKAGE and the first declaration
 # wins, which leaves libultraship's find_package(spdlog REQUIRED) with no config to find.
 # Declaring it here first keeps that working. See HarbourMasters/Torch#233.
-find_package(spdlog QUIET)
+# 1.10 is the minimum: that's where spdlog::fmt_lib appeared. Ubuntu 22.04 ships 1.9.2,
+# so there we fall through to the fetched copy.
+find_package(spdlog 1.10 QUIET)
 if(NOT spdlog_FOUND)
     FetchContent_Declare(
         spdlog
