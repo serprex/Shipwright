@@ -4,6 +4,7 @@
   directory: textures/
   external_files:
     - ntsc_1-0/textures/vr_ALVR_pal_static.yml
+    - ntsc_1-0/textures/vr_ALVR_pal_static.yml
 gMarketPotionShop2BgTex:
   type: TEXTURE
   offset: 0x10000
