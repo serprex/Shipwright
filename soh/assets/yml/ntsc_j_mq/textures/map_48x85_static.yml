@@ -2,13 +2,11 @@
   segments:
     - [ 12, 0x00952630 ]
 
-# All these textures are used as ci4 with a dynamically generated palette.
-# Since there is no "real" palette, they are extracted as i4.
 gBottomOfTheWellPauseScreenMapBasement1LeftTex:
   type: TEXTURE
   offset: 0x1DE20
   symbol: gBottomOfTheWellPauseScreenMapBasement1LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -16,7 +14,7 @@ gBottomOfTheWellPauseScreenMapBasement1RightTex:
   type: TEXTURE
   offset: 0x1E618
   symbol: gBottomOfTheWellPauseScreenMapBasement1RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -24,7 +22,7 @@ gBottomOfTheWellPauseScreenMapBasement2LeftTex:
   type: TEXTURE
   offset: 0x1EE10
   symbol: gBottomOfTheWellPauseScreenMapBasement2LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -32,7 +30,7 @@ gBottomOfTheWellPauseScreenMapBasement2RightTex:
   type: TEXTURE
   offset: 0x1F608
   symbol: gBottomOfTheWellPauseScreenMapBasement2RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -40,7 +38,7 @@ gBottomOfTheWellPauseScreenMapBasement3LeftTex:
   type: TEXTURE
   offset: 0x1FE00
   symbol: gBottomOfTheWellPauseScreenMapBasement3LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -48,7 +46,7 @@ gBottomOfTheWellPauseScreenMapBasement3RightTex:
   type: TEXTURE
   offset: 0x205F8
   symbol: gBottomOfTheWellPauseScreenMapBasement3RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -56,7 +54,7 @@ gDekuTreePauseScreenMapBasement1LeftTex:
   type: TEXTURE
   offset: 0x2FD0
   symbol: gDekuTreePauseScreenMapBasement1LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -64,7 +62,7 @@ gDekuTreePauseScreenMapBasement1RightTex:
   type: TEXTURE
   offset: 0x37C8
   symbol: gDekuTreePauseScreenMapBasement1RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -72,7 +70,7 @@ gDekuTreePauseScreenMapBasement2LeftTex:
   type: TEXTURE
   offset: 0x3FC0
   symbol: gDekuTreePauseScreenMapBasement2LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -80,7 +78,7 @@ gDekuTreePauseScreenMapBasement2RightTex:
   type: TEXTURE
   offset: 0x47B8
   symbol: gDekuTreePauseScreenMapBasement2RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -88,7 +86,7 @@ gDekuTreePauseScreenMapFloor1LeftTex:
   type: TEXTURE
   offset: 0x1FE0
   symbol: gDekuTreePauseScreenMapFloor1LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -96,7 +94,7 @@ gDekuTreePauseScreenMapFloor1RightTex:
   type: TEXTURE
   offset: 0x27D8
   symbol: gDekuTreePauseScreenMapFloor1RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -104,7 +102,7 @@ gDekuTreePauseScreenMapFloor2LeftTex:
   type: TEXTURE
   offset: 0x0FF0
   symbol: gDekuTreePauseScreenMapFloor2LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -112,7 +110,7 @@ gDekuTreePauseScreenMapFloor2RightTex:
   type: TEXTURE
   offset: 0x17E8
   symbol: gDekuTreePauseScreenMapFloor2RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -120,7 +118,7 @@ gDekuTreePauseScreenMapFloor3LeftTex:
   type: TEXTURE
   offset: 0x0
   symbol: gDekuTreePauseScreenMapFloor3LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -128,7 +126,7 @@ gDekuTreePauseScreenMapFloor3RightTex:
   type: TEXTURE
   offset: 0x07F8
   symbol: gDekuTreePauseScreenMapFloor3RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -136,7 +134,7 @@ gDodongosCavernPauseScreenMapFloor1LeftTex:
   type: TEXTURE
   offset: 0x5FA0
   symbol: gDodongosCavernPauseScreenMapFloor1LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -144,7 +142,7 @@ gDodongosCavernPauseScreenMapFloor1RightTex:
   type: TEXTURE
   offset: 0x6798
   symbol: gDodongosCavernPauseScreenMapFloor1RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -152,7 +150,7 @@ gDodongosCavernPauseScreenMapFloor2LeftTex:
   type: TEXTURE
   offset: 0x4FB0
   symbol: gDodongosCavernPauseScreenMapFloor2LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -160,7 +158,7 @@ gDodongosCavernPauseScreenMapFloor2RightTex:
   type: TEXTURE
   offset: 0x57A8
   symbol: gDodongosCavernPauseScreenMapFloor2RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -168,7 +166,7 @@ gFireTemplePauseScreenMapFloor1LeftTex:
   type: TEXTURE
   offset: 0x10EF0
   symbol: gFireTemplePauseScreenMapFloor1LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -176,7 +174,7 @@ gFireTemplePauseScreenMapFloor1RightTex:
   type: TEXTURE
   offset: 0x116E8
   symbol: gFireTemplePauseScreenMapFloor1RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -184,7 +182,7 @@ gFireTemplePauseScreenMapFloor2LeftTex:
   type: TEXTURE
   offset: 0xFF00
   symbol: gFireTemplePauseScreenMapFloor2LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -192,7 +190,7 @@ gFireTemplePauseScreenMapFloor2RightTex:
   type: TEXTURE
   offset: 0x106F8
   symbol: gFireTemplePauseScreenMapFloor2RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -200,7 +198,7 @@ gFireTemplePauseScreenMapFloor3LeftTex:
   type: TEXTURE
   offset: 0xEF10
   symbol: gFireTemplePauseScreenMapFloor3LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -208,7 +206,7 @@ gFireTemplePauseScreenMapFloor3RightTex:
   type: TEXTURE
   offset: 0xF708
   symbol: gFireTemplePauseScreenMapFloor3RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -216,7 +214,7 @@ gFireTemplePauseScreenMapFloor4LeftTex:
   type: TEXTURE
   offset: 0xDF20
   symbol: gFireTemplePauseScreenMapFloor4LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -224,7 +222,7 @@ gFireTemplePauseScreenMapFloor4RightTex:
   type: TEXTURE
   offset: 0xE718
   symbol: gFireTemplePauseScreenMapFloor4RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -232,7 +230,7 @@ gFireTemplePauseScreenMapFloor5LeftTex:
   type: TEXTURE
   offset: 0xCF30
   symbol: gFireTemplePauseScreenMapFloor5LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -240,7 +238,7 @@ gFireTemplePauseScreenMapFloor5RightTex:
   type: TEXTURE
   offset: 0xD728
   symbol: gFireTemplePauseScreenMapFloor5RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -248,7 +246,7 @@ gForestTemplePauseScreenMapBasement1LeftTex:
   type: TEXTURE
   offset: 0xAF50
   symbol: gForestTemplePauseScreenMapBasement1LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -256,7 +254,7 @@ gForestTemplePauseScreenMapBasement1RightTex:
   type: TEXTURE
   offset: 0xB748
   symbol: gForestTemplePauseScreenMapBasement1RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -264,7 +262,7 @@ gForestTemplePauseScreenMapBasement2LeftTex:
   type: TEXTURE
   offset: 0xBF40
   symbol: gForestTemplePauseScreenMapBasement2LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -272,7 +270,7 @@ gForestTemplePauseScreenMapBasement2RightTex:
   type: TEXTURE
   offset: 0xC738
   symbol: gForestTemplePauseScreenMapBasement2RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -280,7 +278,7 @@ gForestTemplePauseScreenMapFloor1LeftTex:
   type: TEXTURE
   offset: 0x9F60
   symbol: gForestTemplePauseScreenMapFloor1LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -288,7 +286,7 @@ gForestTemplePauseScreenMapFloor1RightTex:
   type: TEXTURE
   offset: 0xA758
   symbol: gForestTemplePauseScreenMapFloor1RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -296,7 +294,7 @@ gForestTemplePauseScreenMapFloor2LeftTex:
   type: TEXTURE
   offset: 0x8F70
   symbol: gForestTemplePauseScreenMapFloor2LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -304,7 +302,7 @@ gForestTemplePauseScreenMapFloor2RightTex:
   type: TEXTURE
   offset: 0x9768
   symbol: gForestTemplePauseScreenMapFloor2RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -312,7 +310,7 @@ gIceCavernPauseScreenMapFloor1LeftTex:
   type: TEXTURE
   offset: 0x20DF0
   symbol: gIceCavernPauseScreenMapFloor1LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -320,7 +318,7 @@ gIceCavernPauseScreenMapFloor1RightTex:
   type: TEXTURE
   offset: 0x215E8
   symbol: gIceCavernPauseScreenMapFloor1RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -328,7 +326,7 @@ gJabuPauseScreenMapBasement1LeftTex:
   type: TEXTURE
   offset: 0x7F80
   symbol: gJabuPauseScreenMapBasement1LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -336,7 +334,7 @@ gJabuPauseScreenMapBasement1RightTex:
   type: TEXTURE
   offset: 0x8778
   symbol: gJabuPauseScreenMapBasement1RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -344,7 +342,7 @@ gJabuPauseScreenMapFloor1LeftTex:
   type: TEXTURE
   offset: 0x6F90
   symbol: gJabuPauseScreenMapFloor1LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -352,7 +350,7 @@ gJabuPauseScreenMapFloor1RightTex:
   type: TEXTURE
   offset: 0x7788
   symbol: gJabuPauseScreenMapFloor1RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -360,7 +358,7 @@ gShadowTemplePauseScreenMapBasement1LeftTex:
   type: TEXTURE
   offset: 0x19E60
   symbol: gShadowTemplePauseScreenMapBasement1LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -368,7 +366,7 @@ gShadowTemplePauseScreenMapBasement1RightTex:
   type: TEXTURE
   offset: 0x1A658
   symbol: gShadowTemplePauseScreenMapBasement1RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -376,7 +374,7 @@ gShadowTemplePauseScreenMapBasement2LeftTex:
   type: TEXTURE
   offset: 0x1AE50
   symbol: gShadowTemplePauseScreenMapBasement2LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -384,7 +382,7 @@ gShadowTemplePauseScreenMapBasement2RightTex:
   type: TEXTURE
   offset: 0x1B648
   symbol: gShadowTemplePauseScreenMapBasement2RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -392,7 +390,7 @@ gShadowTemplePauseScreenMapBasement3LeftTex:
   type: TEXTURE
   offset: 0x1BE40
   symbol: gShadowTemplePauseScreenMapBasement3LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -400,7 +398,7 @@ gShadowTemplePauseScreenMapBasement3RightTex:
   type: TEXTURE
   offset: 0x1C638
   symbol: gShadowTemplePauseScreenMapBasement3RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -408,7 +406,7 @@ gShadowTemplePauseScreenMapBasement4LeftTex:
   type: TEXTURE
   offset: 0x1CE30
   symbol: gShadowTemplePauseScreenMapBasement4LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -416,7 +414,7 @@ gShadowTemplePauseScreenMapBasement4RightTex:
   type: TEXTURE
   offset: 0x1D628
   symbol: gShadowTemplePauseScreenMapBasement4RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -424,7 +422,7 @@ gSpiritTemplePauseScreenMapFloor1LeftTex:
   type: TEXTURE
   offset: 0x18E70
   symbol: gSpiritTemplePauseScreenMapFloor1LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -432,7 +430,7 @@ gSpiritTemplePauseScreenMapFloor1RightTex:
   type: TEXTURE
   offset: 0x19668
   symbol: gSpiritTemplePauseScreenMapFloor1RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -440,7 +438,7 @@ gSpiritTemplePauseScreenMapFloor2LeftTex:
   type: TEXTURE
   offset: 0x17E80
   symbol: gSpiritTemplePauseScreenMapFloor2LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -448,7 +446,7 @@ gSpiritTemplePauseScreenMapFloor2RightTex:
   type: TEXTURE
   offset: 0x18678
   symbol: gSpiritTemplePauseScreenMapFloor2RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -456,7 +454,7 @@ gSpiritTemplePauseScreenMapFloor3LeftTex:
   type: TEXTURE
   offset: 0x16E90
   symbol: gSpiritTemplePauseScreenMapFloor3LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -464,7 +462,7 @@ gSpiritTemplePauseScreenMapFloor3RightTex:
   type: TEXTURE
   offset: 0x17688
   symbol: gSpiritTemplePauseScreenMapFloor3RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -472,7 +470,7 @@ gSpiritTemplePauseScreenMapFloor4LeftTex:
   type: TEXTURE
   offset: 0x15EA0
   symbol: gSpiritTemplePauseScreenMapFloor4LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -480,7 +478,7 @@ gSpiritTemplePauseScreenMapFloor4RightTex:
   type: TEXTURE
   offset: 0x16698
   symbol: gSpiritTemplePauseScreenMapFloor4RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -488,7 +486,7 @@ gWaterTemplePauseScreenMapBasement1LeftTex:
   type: TEXTURE
   offset: 0x14EB0
   symbol: gWaterTemplePauseScreenMapBasement1LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -496,7 +494,7 @@ gWaterTemplePauseScreenMapBasement1RightTex:
   type: TEXTURE
   offset: 0x156A8
   symbol: gWaterTemplePauseScreenMapBasement1RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -504,7 +502,7 @@ gWaterTemplePauseScreenMapFloor1LeftTex:
   type: TEXTURE
   offset: 0x13EC0
   symbol: gWaterTemplePauseScreenMapFloor1LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -512,7 +510,7 @@ gWaterTemplePauseScreenMapFloor1RightTex:
   type: TEXTURE
   offset: 0x146B8
   symbol: gWaterTemplePauseScreenMapFloor1RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -520,7 +518,7 @@ gWaterTemplePauseScreenMapFloor2LeftTex:
   type: TEXTURE
   offset: 0x12ED0
   symbol: gWaterTemplePauseScreenMapFloor2LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -528,7 +526,7 @@ gWaterTemplePauseScreenMapFloor2RightTex:
   type: TEXTURE
   offset: 0x136C8
   symbol: gWaterTemplePauseScreenMapFloor2RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -536,7 +534,7 @@ gWaterTemplePauseScreenMapFloor3LeftTex:
   type: TEXTURE
   offset: 0x11EE0
   symbol: gWaterTemplePauseScreenMapFloor3LeftTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
@@ -544,7 +542,7 @@ gWaterTemplePauseScreenMapFloor3RightTex:
   type: TEXTURE
   offset: 0x126D8
   symbol: gWaterTemplePauseScreenMapFloor3RightTex
-  format: I4
+  format: CI4
   width: 48
   height: 85
 
