@@ -165,8 +165,9 @@ s16 gSpoilingItemReverts[] = { ITEM_COJIRO, ITEM_PRESCRIPTION, ITEM_PRESCRIPTION
 static Color_RGB8 sMagicBorder = { 255, 255, 255 };
 static Color_RGB8 sMagicBorder_ori = { 255, 255, 255 };
 
-// Indexed by item ID starting at ITEM_STICKS_5. The last two entries cover ITEM_CUSTOM and
-// ITEM_ROCS_FEATHER, which are [SOH] additions that would otherwise read past the table.
+// Indexed by item ID starting at ITEM_STICKS_5. The two entries after the last vanilla one cover
+// the [SOH] additions ITEM_CUSTOM and ITEM_ROCS_FEATHER; the rest pads the table out to ITEM_NONE
+// so that any item ID can be looked up without reading past the end.
 static s16 sExtraItemBases[] = {
     ITEM_STICK, ITEM_STICK,       ITEM_NUT,   ITEM_NUT,     ITEM_BOMB,    ITEM_BOMB,  ITEM_BOMB,  ITEM_BOMB, ITEM_BOW,
     ITEM_BOW,   ITEM_BOW,         ITEM_SEEDS, ITEM_BOMBCHU, ITEM_BOMBCHU, ITEM_STICK, ITEM_STICK, ITEM_NUT,  ITEM_NUT,
@@ -2380,7 +2381,7 @@ u8 Item_Give(PlayState* play, u8 item) {
     }
 
     temp = ITEM_NONE;
-    if (GameInteractor_Should(VB_ITEM_GIVE_USE_INVENTORY_SLOT, true, item, slot)) {
+    if (GameInteractor_Should(VB_ITEM_GIVE_USE_INVENTORY_SLOT, slot != SLOT_NONE, item, slot)) {
         temp = gSaveContext.inventory.items[slot];
         osSyncPrintf("Item_Register(%d)=%d  %d\n", slot, item, temp);
         INV_CONTENT(item) = item;
@@ -2519,7 +2520,7 @@ u8 Item_CheckObtainability(u8 item) {
         return ITEM_NONE;
     }
 
-    return GameInteractor_Should(VB_ITEM_OBTAINABILITY_USE_INVENTORY_SLOT, true, item, slot)
+    return GameInteractor_Should(VB_ITEM_OBTAINABILITY_USE_INVENTORY_SLOT, slot != SLOT_NONE, item, slot)
                ? gSaveContext.inventory.items[slot]
                : ITEM_NONE;
 }

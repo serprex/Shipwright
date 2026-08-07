@@ -3621,11 +3621,11 @@ typedef enum {
 
     // #### `result`
     // ```c
-    // true
+    // slot != SLOT_NONE
     // ```
     // Whether `Item_Give` should store the item in the inventory slot it computed for it. Items
-    // with no inventory slot (quest items, songs, upgrades, ...) resolve to `SLOT_NONE`, which
-    // indexes out of bounds.
+    // with no inventory slot (quest items, songs, upgrades, ...) resolve to `SLOT_NONE` and
+    // default to `false`, as there is no slot to write.
     // #### `args`
     // - `u8` item
     // - `s16` slot
@@ -3633,11 +3633,11 @@ typedef enum {
 
     // #### `result`
     // ```c
-    // true
+    // slot != SLOT_NONE
     // ```
     // Whether `Item_CheckObtainability` should report the contents of the inventory slot it
     // computed for the item. Returning `false` reports `ITEM_NONE` instead, which is what items
-    // with no inventory slot (resolving to `SLOT_NONE`) need.
+    // with no inventory slot (resolving to `SLOT_NONE`) get by default.
     // #### `args`
     // - `u8` item
     // - `s16` slot
