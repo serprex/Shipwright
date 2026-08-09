@@ -72,11 +72,11 @@ void StaticData::HintTable_Init() {
                                                                    /*french*/ "Selon moi, détruire #100 Skulltulas d'or# donne #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                 // /*spanish*/exterminar #100 skulltulas doradas# revela #[[1]]#.
                                                                 {},
-                                                                {CustomMessage("They say that #100 bug badges# rewards #[[1]]#.",
+                                                                {CustomMessage("They say that #100 bug badges# reward #[[1]]#.",
                                                                     /*german*/ "Man erzählt sich, daß die Belohnung für #100 Insektenplaketten# #[[1]]# |sei|seien|.",
                                                                     /*french*/ "Selon moi, #100 écussons# donnent #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                  // /*spanish*/#100 medallas de insectos# otorgan #[[1]]#.
-                                                                 CustomMessage("They say that #100 spider souls# yields #[[1]]#.",
+                                                                 CustomMessage("They say that #100 spider souls# yield #[[1]]#.",
                                                                     /*german*/ "Man erzählt sich, daß #100 Spinnenseelen# #[[1]]# einbrächten.",
                                                                     /*french*/ "Selon moi, #100 âmes d'arachnide# donnent #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                  // /*spanish*/#100 almas de araña# otorgan #[[1]]#.
@@ -175,11 +175,11 @@ void StaticData::HintTable_Init() {
                                                                   /*french*/ "Selon moi, détruire #50 Skulltulas d'or# donne #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                // /*spanish*/exterminar #50 skulltulas doradas# revela #[[1]]#.
                                                                {},
-                                                               {CustomMessage("They say that #50 bug badges# rewards #[[1]]#.",
+                                                               {CustomMessage("They say that #50 bug badges# reward #[[1]]#.",
                                                                    /*german*/ "Man erzählt sich, daß die Belohnung für #50 Insektenplaketten# #[[1]]# |sei|seien|.",
                                                                    /*french*/ "Selon moi, #50 écussons# donnent #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                 // /*spanish*/#50 medallas de insectos# otorgan #[[1]]#.
-                                                                CustomMessage("They say that #50 spider souls# yields #[[1]]#.",
+                                                                CustomMessage("They say that #50 spider souls# yield #[[1]]#.",
                                                                    /*german*/ "Man erzählt sich, daß #50 Spinnenseelen# #[[1]]# einbrächte.",
                                                                    /*french*/ "Selon moi, #50 âmes d'arachnide# donnent #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                 // /*spanish*/#50 almas de araña# otorgan #[[1]]#.
@@ -193,11 +193,11 @@ void StaticData::HintTable_Init() {
                                                                   /*french*/ "Selon moi, détruire #40 Skulltulas d'or# donne #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                // /*spanish*/exterminar #40 skulltulas doradas# revela #[[1]]#.
                                                                {},
-                                                               {CustomMessage("They say that #40 bug badges# rewards #[[1]]#.",
+                                                               {CustomMessage("They say that #40 bug badges# reward #[[1]]#.",
                                                                    /*german*/ "Man erzählt sich, daß die Belohnung für #40 Insektenplaketten# #[[1]]# |sei|seien|.",
                                                                    /*french*/ "Selon moi, #40 écussons# donnent #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                 // /*spanish*/#40 medallas de insectos# otorgan #[[1]]#.
-                                                                CustomMessage("They say that #40 spider souls# yields #[[1]]#.",
+                                                                CustomMessage("They say that #40 spider souls# yield #[[1]]#.",
                                                                    /*german*/ "Man erzählt sich, daß #40 Spinnenseelen# #[[1]]# einbrächte.",
                                                                    /*french*/ "Selon moi, #40 âmes d'arachnide# donnent #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                 // /*spanish*/#40 almas de araña# otorgan #[[1]]#.
@@ -211,11 +211,11 @@ void StaticData::HintTable_Init() {
                                                                   /*french*/ "Selon moi, détruire #30 Skulltulas d'or# donne #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                // /*spanish*/exterminar #30 skulltulas doradas# revela #[[1]]#.
                                                                {},
-                                                               {CustomMessage("They say that #30 bug badges# rewards #[[1]]#.",
+                                                               {CustomMessage("They say that #30 bug badges# reward #[[1]]#.",
                                                                    /*german*/ "Man erzählt sich, daß die Belohnung für #30 Insektenplaketten# #[[1]]# |sei|seien|.",
                                                                    /*french*/ "Selon moi, #30 écussons# donnent #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                 // /*spanish*/#30 medallas de insectos# otorgan #[[1]]#.
-                                                                CustomMessage("They say that #30 spider souls# yields #[[1]]#.",
+                                                                CustomMessage("They say that #30 spider souls# yield #[[1]]#.",
                                                                    /*german*/ "Man erzählt sich, daß #30 Spinnenseelen# #[[1]]# einbrächte.",
                                                                    /*french*/ "Selon moi, #30 âmes d'arachnide# donnent #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                 // /*spanish*/#30 almas de araña# otorgan #[[1]]#.
@@ -229,11 +229,11 @@ void StaticData::HintTable_Init() {
                                                                   /*french*/ "Selon moi, détruire #20 Skulltulas d'or# donne #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                // /*spanish*/exterminar #20 skulltulas doradas# revela #[[1]]#.
                                                                {},
-                                                               {CustomMessage("They say that #20 bug badges# rewards #[[1]]#.",
+                                                               {CustomMessage("They say that #20 bug badges# reward #[[1]]#.",
                                                                    /*german*/ "Man erzählt sich, daß die Belohnung für #20 Insektenplaketten# #[[1]]# |sei|seien|.",
                                                                    /*french*/ "Selon moi, #20 écussons# donnent #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                 // /*spanish*/#20 medallas de insectos# otorgan #[[1]]#.
-                                                                CustomMessage("They say that #20 spider souls# yields #[[1]]#.",
+                                                                CustomMessage("They say that #20 spider souls# yield #[[1]]#.",
                                                                    /*german*/ "Man erzählt sich, daß #20 Spinnenseelen# #[[1]]# einbrächte.",
                                                                    /*french*/ "Selon moi, #20 âmes d'arachnide# donnent #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                 // /*spanish*/#20 almas de araña# otorgan #[[1]]#.
@@ -625,12 +625,12 @@ void StaticData::HintTable_Init() {
                                                                                     /*french*/ "Selon moi, l'araignée sous #une pierre bleue dans une caverne# a #[[1]]#.", {QM_RED, QM_GREEN})});
                                                                                  // /*spanish*/una Skulltula bajo #bloques temporales de una cueva# otorga #[[1]]#.
 
-    hintTextTable[RHT_JABU_JABUS_BELLY_BOOMERANG_CHEST] = HintText(CustomMessage("They say that a school of #stingers swallowed by Jabu-Jabu# guard #[[1]]#.",
+    hintTextTable[RHT_JABU_JABUS_BELLY_BOOMERANG_CHEST] = HintText(CustomMessage("They say that a school of #stingers swallowed by Jabu-Jabu# guards #[[1]]#.",
                                                                       /*german*/ "Man erzählt sich, daß ein #von Jabu-Jabu verschluckter Rochenschwarm# #[[1]]# bewache.",
                                                                       /*french*/ "Selon moi, les #raies dans Jabu-Jabu# protègent #[[1]]#.", {QM_RED, QM_GREEN}),
                                                                    // /*spanish*/unos #stingers engullidos por Jabu-Jabu# guardan #[[1]]#.
                                                                    {},
-                                                                   {CustomMessage("They say that a school of #stingers swallowed by a deity# guard #[[1]]#.",
+                                                                   {CustomMessage("They say that a school of #stingers swallowed by a deity# guards #[[1]]#.",
                                                                        /*german*/ "Man erzählt sich, daß ein #von einer Gottheit verschluckter Rochenschwarm# #[[1]]# bewache.",
                                                                        /*french*/ "Selon moi, les #raies dans un gardien# protègent #[[1]]#.", {QM_RED, QM_GREEN})});
                                                                     // /*spanish*/unos de #stingers engullidos por cierta deidad# guardan #[[1]]#.
@@ -1660,7 +1660,7 @@ void StaticData::HintTable_Init() {
                                             /*german*/ "Man erzählt sich, daß Basil nicht besonders gut darin ist vorauszuplanen.",
                                             /*french*/ "Selon moi, Ingo ne fait pas un très bon geôlier."));
 
-    hintTextTable[RHT_JUNK50] = HintText(CustomMessage("You found a spiritual Stone! By which I mean, I worship Nayru.",
+    hintTextTable[RHT_JUNK50] = HintText(CustomMessage("You found a Spiritual Stone! By which I mean, I worship Nayru.",
                                             /*german*/ "Du hast einen Heiligen Stein gefunden!^Also... eigentlich heißt das nur, daß ich Nayru verehre.",
                                             /*french*/ "Vous avez trouvé une Pierre Ancestrale! En effet, je vénère la déesse Hylia."));
 
@@ -1680,7 +1680,7 @@ void StaticData::HintTable_Init() {
                                             /*german*/ "Man erzählt sich, daß die \"Nightly Builds\" instabil sein könnten.",
                                             /*french*/ "Selon moi, les \"nightly builds\" peuvent être instables."));
 
-    hintTextTable[RHT_JUNK55] = HintText(CustomMessage("You're playing a Randomizer. I'm randomized!^Here's a random number:  #4#.&Enjoy your Randomizer!",
+    hintTextTable[RHT_JUNK55] = HintText(CustomMessage("You're playing a Randomizer. I'm randomized!^Here's a random number: #4#.&Enjoy your Randomizer!",
                                             /*german*/ "Du spielst einen Randomizer. Ich wurde zufällig generiert!^Hier ist eine zufällige Zahl:  #4#.&Viel Spaß mit dem Randomizer!",
                                             /*french*/ "Tu joues à un randomizer. Je suis aléatoire!^Voici un nombre aléatoire: #4#.&Bonne partie!"));
 
@@ -2208,7 +2208,7 @@ void StaticData::HintTable_Init() {
                                                /*french*/ "Selon moi, #[[1]]# a été dissipée par Sheik.", {QM_YELLOW}));
                                             // /*spanish*/Según dicen, #[[1]]# se disipó gracias a Sheik.
 
-    hintTextTable[RHT_TRIAL_ON] = HintText(CustomMessage("They say that #[[1]]# protects Ganons Tower.",
+    hintTextTable[RHT_TRIAL_ON] = HintText(CustomMessage("They say that #[[1]]# protects Ganon's Tower.",
                                               /*german*/ "Man erzählt sich, daß #[[1]]# den Teufelsturm schütze.",
                                               /*french*/ "Selon moi, #[[1]]# protège la Tour de Ganon.", {QM_PINK}));
                                            // /*spanish*/Según dicen, #[[1]]# protege la torre de Ganon
@@ -2427,7 +2427,7 @@ void StaticData::HintTable_Init() {
                                                                         "Si tu bats mon temps, je te donnerai ma vache préférée, Elsie, ainsi que son jouet, #[[1]]#!",
                                                                         {QM_RED, QM_BLUE, QM_GREEN}));
 
-    hintTextTable[RHT_CHICKENS_HINT] = HintText(CustomMessage("You! Please!&Bring my Cucco's back to my pen!&I'll give you #[[1]]#!",
+    hintTextTable[RHT_CHICKENS_HINT] = HintText(CustomMessage("You! Please!&Bring my Cuccos back to my pen!&I'll give you #[[1]]#!",
                                                    /*german*/ "Was soll ich nur tun?! Bitte!&Hilf mir, die Hühner wieder einzusammeln!^Ich gebe Dir auch #[[1]]#, wenn du mir hilfst!",
                                                    /*french*/ "Mes Cocottes sont perdues!&Dépose toutes les cocottes dans cet enclos!&Je te donnerai #[[1]]#!",
                                                               {QM_GREEN}));
