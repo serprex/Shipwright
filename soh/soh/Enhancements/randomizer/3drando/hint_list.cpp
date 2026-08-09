@@ -2342,7 +2342,7 @@ void StaticData::HintTable_Init() {
                                                /*french*/ "Pfeuuh! Tu n'trouveras jamais l'#Epée Kokiri# que j'ai cachée dans #[[1]]#!",
                                                           {QM_GREEN, QM_RED}));
 
-    hintTextTable[RHT_LOACH_HINT] = HintText(CustomMessage("What?^You wanna know about the&%rHyrule Loach%w?^It's a big fish, but it's so rare that I'll give my %g[[1]]%w to anyone who catches it. Seriously!",
+    hintTextTable[RHT_LOACH_HINT] = HintText(CustomMessage("What?^You wanna know about the&%rHyrule Loach%w?^It's a big fish, but it's so rare that I'll give %g[[1]]%w to anyone who catches it. Seriously!",
 	                                            /*german*/ "Was?^Du willst etwas über die&%rhylianische Forelle%w wissen?&Es ist ein riesiger Fisch,&der unfassbar selten ist!^Wenn Du mir eine bringst, |springt|springen| für Dich&%g[[1]]%w dabei raus.&Ganz im Ernst!",
                                                 /*french*/ "Quoi?&Tu veux en savoir plus sur le&%rBrochet d'Hyrule%w?^C'est un gros poisson, mais il&est si rare que je donne&%g[[1]]%w&à celui qui l'attrape.^Ouais, j'suis sérieux!",
                                                            {QM_RED}));
@@ -2371,7 +2371,7 @@ void StaticData::HintTable_Init() {
                                                               {QM_RED, QM_GREEN, QM_GREEN, QM_GREEN}, {}, TEXTBOX_TYPE_WOODEN));
 
     hintTextTable[RHT_HBA_HINT_NOT_ON_HORSE] = HintText(CustomMessage("Hey, rookie!&Come back on your #horse# and take on the #Horseback Archery# challenge!^"
-                                                                      "Impress me with a high score of 1000 to win a #[[1]]# or score 1500 for #[[2]]#!",
+                                                                      "Impress me with a high score of 1000 to win #[[1]]# or score 1500 for #[[2]]#!",
                                                            /*german*/ "Hey, Kleiner! Das ist die %rArena für Bogenschießen zu Pferde%w.^"
                                                                       "Wenn Du reiten kannst, beeindrucke mich mit #1.000 Punkten# und gewinne #[[1]]#!^Knackst Du #1.500 Punkte# gibt es #[[2]]#!",
                                                            /*french*/ "Hé, l'nouveau!&Reviens avec ton #cheval# et essaie notre #Terrain d'Archerie Montée#^"
@@ -2379,7 +2379,7 @@ void StaticData::HintTable_Init() {
                                                                       {QM_RED, QM_RED, QM_GREEN, QM_GREEN}));
 
     hintTextTable[RHT_HBA_HINT_INITIAL] = HintText(CustomMessage("Hey, rookie!&Want to take on the #Horseback Archery# challenge?^"
-                                                                 "Impress me with a high score of 1000 to win a #[[1]]# or score 1500 for #[[2]]#!\x0B",
+                                                                 "Impress me with a high score of 1000 to win #[[1]]# or score 1500 for #[[2]]#!\x0B",
                                                       /*german*/ "Hey, Kleiner! Wie wäre es mit einer Runde %rBogenschießen zu Pferde%w!?^"
                                                                  "Wenn Du mich mit #1.000 Punkten# beeindruckst, erhältst Du #[[1]]#!^Knackst Du #1.500 Punkte# gibt es #[[2]]#!\x0B",
                                                       /*french*/ "Hé, l'nouveau!&Tu veux essayer notre #Terrain d'Archerie Montée#^"
@@ -2395,52 +2395,52 @@ void StaticData::HintTable_Init() {
                                                                    {QM_RED, QM_GREEN}));
 
     hintTextTable[RHT_MALON_HINT_HOW_IS_EPONA] = HintText(CustomMessage("@! You should come back with Epona and try to beat my time on the #Obstacle Course#!^"
-                                                                        "If you beat my time, I'll give you my favourite #cow# Elsie and her toy #[[1]]#!",
+                                                                        "If you beat my time, I'll give you my favorite #cow# Elsie and her toy, #[[1]]#!",
                                                              /*german*/ "@! Warum kommst Du nicht mit Epona zurück und versuchst Dich an dem #Hindernisparcours#?^"
                                                                         "Gelingt es Dir den Rekord zu brechen, bekommst Du meine #Lieblingskuh# Elsie^und ihr Lieblingsspielzeug, #[[1]]#!",
                                                              /*french*/ "@! Tu devrais revenir avec Epona et essayer de battre mon temps sur le #Parcours d'Obstacles#!^"
-                                                                        "Si tu bats mon temps, je te donnerai ma vache préférée, Elsie, ainsi que son jouet #[[1]]#!",
+                                                                        "Si tu bats mon temps, je te donnerai ma vache préférée, Elsie, ainsi que son jouet, #[[1]]#!",
                                                                         {QM_RED, QM_BLUE, QM_GREEN}));
 
-    hintTextTable[RHT_MALON_HINT_OBSTICLE_COURSE] = HintText(CustomMessage("How about trying the #Obstacle Course?# If you beat my time I'll let you keep my favourite #cow# Elsie and her toy #[[1]]#!^"
+    hintTextTable[RHT_MALON_HINT_OBSTICLE_COURSE] = HintText(CustomMessage("How about trying the #Obstacle Course?# If you beat my time I'll let you keep my favorite #cow# Elsie and her toy, #[[1]]#!^"
                                                                            "Challenge the #Obstacle Course?#\x1B#Let's go&No thanks#",
                                                                 /*german*/ "Warum versuchst Du Dich nicht mit Epona an dem #Hindernisparcours#?^"
                                                                            "Gelingt es Dir den Rekord zu brechen, bekommst Du meine #Lieblingskuh# Elsie^und ihr Lieblingsspielzeug, #[[1]]#!^"
                                                                            "Wie sieht's aus?&Möchtest Du es versuchen?\x1B#Ja!&Nein!#",
-                                                                /*french*/ "Que dirais-tu d'essayer le #Parcours d'Obstacles#? Si tu bats mon temps, je te donnerai ma vache préférée, Elsie, et son jouet #[[1]]#!^"
+                                                                /*french*/ "Que dirais-tu d'essayer le #Parcours d'Obstacles#? Si tu bats mon temps, je te donnerai ma vache préférée, Elsie, et son jouet, #[[1]]#!^"
                                                                            "Tenter le #Parcours d'Obstacles#?\x1B#Allons-y&Non merci#",
                                                                            {QM_RED, QM_BLUE, QM_GREEN, QM_RED, QM_GREEN}));
 
     hintTextTable[RHT_MALON_HINT_TURNING_EVIL] = HintText(CustomMessage("@? Is that you? ^If I ran the ranch, I'd build an #Obstacle Course#, and whoever gets the best time would win a #cow#!^"
-                                                                        "Elsie loves sharing her #[[1]]# with new people, It'll be fun!^...But Ingo won't let me...",
+                                                                        "Elsie loves sharing #[[1]]# with new people, it'll be fun!^...But Ingo won't let me...",
                                                              /*german*/ "@? Bist Du das?^Wenn ich die Farm leiten würde, würde ich einen #Hindernisparcours# bauen, und wer die beste Zeit schafft, gewinnt eine #Kuh#!^"
                                                                         "Elsie würde es lieben, #[[1]]# mit neuen Leuten zu teilen, es würde Spaß machen!^...Aber Basil läßt mich nicht...",
                                                              /*french*/ "@? C'est toi?^Si je dirigeais le ranch, je construirais un #Parcours d'Obstacles#, et celui qui obtiendrait le meilleur temps gagnerait une #vache#!^"
-                                                                        "Elsie adore partager son #[[1]]# avec de nouvelles personnes, ce serait amusant!^... Mais Ingo ne me laisse pas faire...",
+                                                                        "Elsie adore partager #[[1]]# avec de nouvelles personnes, ce serait amusant!^... Mais Ingo ne me laisse pas faire...",
                                                                         {QM_RED, QM_BLUE, QM_GREEN}));
 
     hintTextTable[RHT_MALON_HINT_INGO_TEMPTED] = HintText(CustomMessage("@! You should come back in the morning and try to beat my time on the #Obstacle Course#!^"
-                                                                        "If you beat my time, I'll give you my favourite #cow# Elsie and her toy #[[1]]#!",
+                                                                        "If you beat my time, I'll give you my favorite #cow# Elsie and her toy, #[[1]]#!",
                                                              /*german*/ "@! Warum kommst Du nicht morgens wieder und versuchst Dich an dem #Hindernisparcours#?^"
                                                                         "Gelingt es Dir den Rekord zu brechen, bekommst Du meine #Lieblingskuh# Elsie^und ihr Lieblingsspielzeug, #[[1]]#!",
                                                              /*french*/ "@! Tu devrais revenir le matin et essayer de battre mon temps sur le #Parcours d'Obstacles#!^"
-                                                                        "Si tu bats mon temps, je te donnerai ma vache préférée, Elsie, ainsi que son jouet #[[1]]#!",
+                                                                        "Si tu bats mon temps, je te donnerai ma vache préférée, Elsie, ainsi que son jouet, #[[1]]#!",
                                                                         {QM_RED, QM_BLUE, QM_GREEN}));
 
-    hintTextTable[RHT_CHICKENS_HINT] = HintText(CustomMessage("You! Please!&Bring my Cucco's back to my pen!&I'll give you my #[[1]]#!",
+    hintTextTable[RHT_CHICKENS_HINT] = HintText(CustomMessage("You! Please!&Bring my Cucco's back to my pen!&I'll give you #[[1]]#!",
                                                    /*german*/ "Was soll ich nur tun?! Bitte!&Hilf mir, die Hühner wieder einzusammeln!^Ich gebe Dir auch #[[1]]#, wenn du mir hilfst!",
                                                    /*french*/ "Mes Cocottes sont perdues!&Dépose toutes les cocottes dans cet enclos!&Je te donnerai #[[1]]#!",
                                                               {QM_GREEN}));
 
-    hintTextTable[RHT_BIG_POES_HINT] = HintText(CustomMessage("You have #\x1E\x01 Poe Points#! Reach 1000 and you'll get a #[[1]]#!",
+    hintTextTable[RHT_BIG_POES_HINT] = HintText(CustomMessage("You have #\x1E\x01 Poe Points#! Reach 1000 and you'll get #[[1]]#!",
                                                    /*german*/ "Du hast nun #\x1E\x01 Punkte# auf dem Nachtschwärmer-Konto gut!^"
                                                               "Hast Du %y1.000 Punkte%w gesammelt dann |wartet|warten| #[[1]]# auf Dich! Hehehe...",
                                                    /*french*/ "Tu as #\x1E\x01 Points d'Âme#! Atteins 1000 et tu recevras #[[1]]#!",
                                                               {QM_YELLOW, QM_GREEN}));
 
-    hintTextTable[RHT_BIGGORON_HINT] = HintText(CustomMessage("Arrrrrre you here to claim my finest #[[1]]#? Shoooooow me your #Claim Check#.",
+    hintTextTable[RHT_BIGGORON_HINT] = HintText(CustomMessage("Arrrrrre you here to claim my finest work, #[[1]]#? Shoooooow me your #Claim Check#.",
                                                    /*german*/ "Arrrrr, bist Du hier, um etwas von mir schmieden zu lassen? Zeig mir das #Zertifikat# und #[[1]]# |gehört|gehören| Dir!",
-                                                   /*french*/ "Eeeeeees-tu ici pour réclaaaaaamer mon plus beau #[[1]]#? Moooooontre-moi ton #Certificat#.",
+                                                   /*french*/ "Eeeeeees-tu ici pour réclaaaaaamer ma meilleure oeuvre, #[[1]]#? Moooooontre-moi ton #Certificat#.",
                                                               {QM_GREEN, QM_RED}));
 
     hintTextTable[RHT_FROGS_HINT] = HintText(CustomMessage("Some frogs holding #[[1]]# are looking at you from underwater...",
