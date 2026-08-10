@@ -6,6 +6,7 @@
 #include "location_access.h"
 
 #include <nlohmann/json.hpp>
+#include <unordered_map>
 
 #define ENTRANCE_SHUFFLE_SUCCESS 0
 #define ENTRANCE_SHUFFLE_FAILURE 1
@@ -148,7 +149,7 @@ class EntranceShuffler {
     void SetNoRandomEntrances(bool noRandomEntrances);
     int ShuffleAllEntrances();
     void CreateEntranceOverrides();
-    const Door* MapDoor(s16 scene, s8 srcRoom, s8 dstRoom, s16 linkX, s16 linkY, s16 linkZ);
+    const Door* MapDoor(s16 scene, s8 transitionIdx, s8 frontRoom);
     void UnshuffleAllEntrances();
     void ParseJson(const nlohmann::json& spoilerFileJson);
     void ApplyEntranceOverrides();
@@ -173,6 +174,8 @@ class EntranceShuffler {
     int mCurNumRandomizedEntrances = 0;
     bool mEntranceShuffleFailure = false;
     std::vector<int16_t> mDoorTable;
+    // (scene, transition actor index) -> index of the first of the door's two DoorsList entries
+    std::unordered_map<int32_t, int16_t> mDoorLookup;
 };
 } // namespace Rando
 

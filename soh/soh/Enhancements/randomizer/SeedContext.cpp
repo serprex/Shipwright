@@ -75,8 +75,8 @@ std::shared_ptr<Context> Context::GetInstance() {
     return mContext.lock();
 }
 
-const Door* Context::MapDoor(s16 scene, s8 srcRoom, s8 dstRoom, s16 linkX, s16 linkY, s16 linkZ) {
-    return GetEntranceShuffler()->MapDoor(scene, srcRoom, dstRoom, linkX, linkY, linkZ);
+const Door* Context::MapDoor(s16 scene, s8 transitionIdx, s8 frontRoom) {
+    return GetEntranceShuffler()->MapDoor(scene, transitionIdx, frontRoom);
 }
 
 Hint* Context::GetHint(const RandomizerHint hintKey) {

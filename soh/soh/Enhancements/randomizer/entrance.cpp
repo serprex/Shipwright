@@ -22,599 +22,599 @@ extern "C" {
 
 const std::vector<Door> DoorsList = {
     // lobby to scrub hall
-    { SCENE_DEKU_TREE, 0, 1, -410, 400, 416, 24576 },
-    { SCENE_DEKU_TREE, 1, 0, -490, 400, 496, -8192 },
+    { SCENE_DEKU_TREE, 0, 1, 0, -413, 400, 413, 24576 },
+    { SCENE_DEKU_TREE, 1, 0, 0, -493, 400, 493, -8192 },
     // scrub hall to falling block
-    { SCENE_DEKU_TREE, 1, 2, -897, 400, 895, 24576 },
-    { SCENE_DEKU_TREE, 2, 1, -977, 400, 975, -8192 },
+    { SCENE_DEKU_TREE, 1, 2, 5, -896, 400, 896, 24576 },
+    { SCENE_DEKU_TREE, 2, 1, 5, -976, 400, 976, -8192 },
     // lobby to raising platforms
-    { SCENE_DEKU_TREE, 0, 10, -500, 800, 0, 16384 },
-    { SCENE_DEKU_TREE, 10, 0, -620, 800, 0, -16384 },
+    { SCENE_DEKU_TREE, 0, 10, 6, -500, 800, 0, 16384 },
+    { SCENE_DEKU_TREE, 10, 0, 6, -620, 800, 0, -16384 },
     // basement to scrub
-    { SCENE_DEKU_TREE, 3, 4, -75, -880, 520, -32768 },
-    { SCENE_DEKU_TREE, 4, 3, -75, -880, 640, 0 },
+    { SCENE_DEKU_TREE, 3, 4, 2, -75, -880, 520, -32768 },
+    { SCENE_DEKU_TREE, 4, 3, 2, -75, -880, 640, 0 },
     // scrub to spiked log
-    { SCENE_DEKU_TREE, 4, 5, -275, -880, 960, 16384 },
-    { SCENE_DEKU_TREE, 5, 4, -395, -880, 960, -16384 },
+    { SCENE_DEKU_TREE, 4, 5, 8, -275, -880, 960, 16384 },
+    { SCENE_DEKU_TREE, 5, 4, 8, -395, -880, 960, -16384 },
     // spiked log to two torches
-    { SCENE_DEKU_TREE, 5, 6, -1475, -760, 1072, 16384 },
-    { SCENE_DEKU_TREE, 6, 5, -1595, -760, 1072, -16384 },
+    { SCENE_DEKU_TREE, 5, 6, 1, -1475, -760, 1070, 16384 },
+    { SCENE_DEKU_TREE, 6, 5, 1, -1595, -760, 1070, -16384 },
     // two torches to back room
-    { SCENE_DEKU_TREE, 6, 7, -1854, -760, 860, 0 },
-    { SCENE_DEKU_TREE, 7, 6, -1854, -760, 680, -32768 },
+    { SCENE_DEKU_TREE, 6, 7, 7, -1855, -760, 860, 0 },
+    { SCENE_DEKU_TREE, 7, 6, 7, -1855, -760, 680, -32768 },
     // back room to petrified room
-    { SCENE_DEKU_TREE, 7, 8, -2380, -760, -410, 8192 },
-    { SCENE_DEKU_TREE, 8, 7, -2460, -760, -490, -24576 },
+    { SCENE_DEKU_TREE, 7, 8, 3, -2378, -760, -412, 8192 },
+    { SCENE_DEKU_TREE, 8, 7, 3, -2458, -760, -492, -24576 },
     // lobby to inside mouth
-    { SCENE_DODONGOS_CAVERN, 0, 7, 0, 76, -1910, 0 },
-    { SCENE_DODONGOS_CAVERN, 7, 0, 0, 76, -2030, -32768 },
+    { SCENE_DODONGOS_CAVERN, 0, 7, 7, 0, 76, -1910, 0 },
+    { SCENE_DODONGOS_CAVERN, 7, 0, 7, 0, 76, -2030, -32768 },
     // loop to back room
-    { SCENE_DODONGOS_CAVERN, 8, 14, 1472, 76, -4170, 0 },
-    { SCENE_DODONGOS_CAVERN, 14, 8, 1472, 76, -4290, -32768 },
+    { SCENE_DODONGOS_CAVERN, 8, 14, 13, 1473, 76, -4170, 0 },
+    { SCENE_DODONGOS_CAVERN, 14, 8, 13, 1473, 76, -4290, -32768 },
     // lobby to blue cave
-    { SCENE_DODONGOS_CAVERN, 0, 4, 1400, 80, -920, -16384 },
-    { SCENE_DODONGOS_CAVERN, 4, 0, 1520, 80, -920, 16384 },
+    { SCENE_DODONGOS_CAVERN, 0, 4, 22, 1400, 80, -920, -16384 },
+    { SCENE_DODONGOS_CAVERN, 4, 0, 22, 1520, 80, -920, 16384 },
     // blue cave to scrub
-    { SCENE_DODONGOS_CAVERN, 4, 13, 2432, 100, -2835, 0 },
-    { SCENE_DODONGOS_CAVERN, 13, 4, 2432, 100, -2955, -32768 },
+    { SCENE_DODONGOS_CAVERN, 4, 13, 14, 2433, 100, -2835, 0 },
+    { SCENE_DODONGOS_CAVERN, 13, 4, 14, 2433, 100, -2955, -32768 },
     // lower lizalfos to blue cave
-    { SCENE_DODONGOS_CAVERN, 3, 4, 2830, 100, -2395, 10901 },
-    { SCENE_DODONGOS_CAVERN, 4, 3, 2740, 100, -2470, -21867 },
+    { SCENE_DODONGOS_CAVERN, 3, 4, 8, 2835, 100, -2404, 10923 },
+    { SCENE_DODONGOS_CAVERN, 4, 3, 8, 2735, 100, -2462, -21845 },
     // lower lizalfos to keese hall
-    { SCENE_DODONGOS_CAVERN, 3, 1, 3560, 100, -1335, -32768 },
-    { SCENE_DODONGOS_CAVERN, 1, 3, 3560, 100, -1215, 0 },
+    { SCENE_DODONGOS_CAVERN, 3, 1, 9, 3560, 100, -1335, -32768 },
+    { SCENE_DODONGOS_CAVERN, 1, 3, 9, 3560, 100, -1215, 0 },
     // baby dodongos to skulltula room
-    { SCENE_DODONGOS_CAVERN, 1, 11, 2560, 0, 60, -32768 },
-    { SCENE_DODONGOS_CAVERN, 11, 1, 2560, 0, 180, 0 },
+    { SCENE_DODONGOS_CAVERN, 1, 11, 12, 2560, 0, 60, -32768 },
+    { SCENE_DODONGOS_CAVERN, 11, 1, 12, 2560, 0, 180, 0 },
     // lobby to stairs
-    { SCENE_DODONGOS_CAVERN, 0, 2, -780, 0, -1520, 16384 },
-    { SCENE_DODONGOS_CAVERN, 2, 0, -900, 0, -1520, -16384 },
+    { SCENE_DODONGOS_CAVERN, 0, 2, 21, -780, 0, -1520, 16384 },
+    { SCENE_DODONGOS_CAVERN, 2, 0, 21, -900, 0, -1520, -16384 },
     // stairs to compass
-    { SCENE_DODONGOS_CAVERN, 2, 15, -1960, 0, -800, -32768 },
-    { SCENE_DODONGOS_CAVERN, 15, 2, -1960, 0, -680, 0 },
+    { SCENE_DODONGOS_CAVERN, 2, 15, 15, -1960, 0, -800, -32768 },
+    { SCENE_DODONGOS_CAVERN, 15, 2, 15, -1960, 0, -680, 0 },
     // stairs to armos
-    { SCENE_DODONGOS_CAVERN, 2, 5, -1957, 531, -790, -32768 },
-    { SCENE_DODONGOS_CAVERN, 5, 2, -1957, 531, -670, 0 },
+    { SCENE_DODONGOS_CAVERN, 2, 5, 17, -1960, 531, -790, -32768 },
+    { SCENE_DODONGOS_CAVERN, 5, 2, 17, -1960, 531, -670, 0 },
     // armos to bridge
-    { SCENE_DODONGOS_CAVERN, 5, 0, -1605, 531, -320, -16384 },
-    { SCENE_DODONGOS_CAVERN, 0, 5, -1485, 531, -320, 16384 },
+    { SCENE_DODONGOS_CAVERN, 5, 0, 18, -1605, 531, -320, -16384 },
+    { SCENE_DODONGOS_CAVERN, 0, 5, 18, -1485, 531, -320, 16384 },
     // spikes to scrubs
-    { SCENE_DODONGOS_CAVERN, 9, 6, 1840, 411, -1420, 0 },
-    { SCENE_DODONGOS_CAVERN, 6, 9, 1840, 411, -1540, -32768 },
+    { SCENE_DODONGOS_CAVERN, 9, 6, 16, 1840, 411, -1420, 0 },
+    { SCENE_DODONGOS_CAVERN, 6, 9, 16, 1840, 411, -1540, -32768 },
     // spikes to upper lizalfos
-    { SCENE_DODONGOS_CAVERN, 3, 10, 4340, 531, -660, -32768 },
-    { SCENE_DODONGOS_CAVERN, 10, 3, 4340, 531, -540, 0 },
+    { SCENE_DODONGOS_CAVERN, 3, 10, 10, 4339, 531, -660, -32768 },
+    { SCENE_DODONGOS_CAVERN, 10, 3, 10, 4339, 531, -540, 0 },
     // upper lizalfos to two flames
-    { SCENE_DODONGOS_CAVERN, 3, 12, 3840, 531, -920, 16384 },
-    { SCENE_DODONGOS_CAVERN, 12, 3, 3720, 531, -920, -16384 },
+    { SCENE_DODONGOS_CAVERN, 3, 12, 11, 3840, 531, -920, 16384 },
+    { SCENE_DODONGOS_CAVERN, 12, 3, 11, 3720, 531, -920, -16384 },
     // entrance to floating platform
-    { SCENE_JABU_JABU, 0, 1, 0, -320, -1103, 0 },
-    { SCENE_JABU_JABU, 1, 0, 0, -320, -1151, -32768 },
+    { SCENE_JABU_JABU, 0, 1, 1, 0, -320, -1103, 0 },
+    { SCENE_JABU_JABU, 1, 0, 1, 0, -320, -1151, -32768 },
     // floating platform to holes
-    { SCENE_JABU_JABU, 1, 2, 0, -340, -2419, 0 },
-    { SCENE_JABU_JABU, 2, 1, 0, -340, -2467, -32768 },
+    { SCENE_JABU_JABU, 1, 2, 2, 0, -340, -2419, 0 },
+    { SCENE_JABU_JABU, 2, 1, 2, 0, -340, -2467, -32768 },
     // basement to kiddy pool
-    { SCENE_JABU_JABU, 3, 13, -540, -1113, -2780, 23789 },
-    { SCENE_JABU_JABU, 13, 3, -620, -1113, -2700, -8979 },
+    { SCENE_JABU_JABU, 3, 13, 13, -539, -1113, -2779, 23848 },
+    { SCENE_JABU_JABU, 13, 3, 13, -624, -1113, -2705, -8920 },
     // basement to water switch
-    { SCENE_JABU_JABU, 3, 14, 400, -1113, -3224, -16384 },
-    { SCENE_JABU_JABU, 14, 3, 520, -1113, -3224, 16384 },
+    { SCENE_JABU_JABU, 3, 14, 12, 400, -1113, -3223, -16384 },
+    { SCENE_JABU_JABU, 14, 3, 12, 520, -1113, -3223, 16384 },
     // water switch to floating platform
-    { SCENE_JABU_JABU, 14, 1, 370, -1233, -1703, 16384 },
-    { SCENE_JABU_JABU, 1, 14, 250, -1233, -1703, -16384 },
+    { SCENE_JABU_JABU, 14, 1, 14, 370, -1233, -1703, 16384 },
+    { SCENE_JABU_JABU, 1, 14, 14, 250, -1233, -1703, -16384 },
     // holes to fork
-    { SCENE_JABU_JABU, 2, 7, 0, -340, -3930, 0 },
-    { SCENE_JABU_JABU, 7, 2, 0, -340, -4050, -32768 },
+    { SCENE_JABU_JABU, 2, 7, 4, 0, -340, -3930, 0 },
+    { SCENE_JABU_JABU, 7, 2, 4, 0, -340, -4050, -32768 },
     // fork to red tentacle
-    { SCENE_JABU_JABU, 7, 10, -1000, -340, -4680, 16384 },
-    { SCENE_JABU_JABU, 10, 7, -1120, -340, -4680, -16384 },
+    { SCENE_JABU_JABU, 7, 10, 10, -1000, -340, -4683, 16384 },
+    { SCENE_JABU_JABU, 10, 7, 10, -1120, -340, -4683, -16384 },
     // fork to bubbles
-    { SCENE_JABU_JABU, 7, 12, -660, -340, -5120, 0 },
-    { SCENE_JABU_JABU, 12, 7, -660, -340, -5240, -32768 },
+    { SCENE_JABU_JABU, 7, 12, 5, -660, -340, -5120, 0 },
+    { SCENE_JABU_JABU, 12, 7, 5, -660, -340, -5240, -32768 },
     // fork to stingers
-    { SCENE_JABU_JABU, 7, 9, 1000, -340, -4680, -16384 },
-    { SCENE_JABU_JABU, 9, 7, 1120, -340, -4680, 16384 },
+    { SCENE_JABU_JABU, 7, 9, 11, 1000, -340, -4683, -16384 },
+    { SCENE_JABU_JABU, 9, 7, 11, 1120, -340, -4683, 16384 },
     // fork to purple tentacle
-    { SCENE_JABU_JABU, 7, 11, 661, -340, -5125, 0 },
-    { SCENE_JABU_JABU, 11, 7, 661, -340, -5245, -32768 },
+    { SCENE_JABU_JABU, 7, 11, 7, 660, -340, -5125, 0 },
+    { SCENE_JABU_JABU, 11, 7, 7, 660, -340, -5245, -32768 },
     // fork to green tentacle
-    { SCENE_JABU_JABU, 7, 8, 0, -340, -5240, 0 },
-    { SCENE_JABU_JABU, 8, 7, 0, -340, -5360, -32768 },
+    { SCENE_JABU_JABU, 7, 8, 6, 0, -340, -5240, 0 },
+    { SCENE_JABU_JABU, 8, 7, 6, 0, -340, -5360, -32768 },
     // basement to big octo
-    { SCENE_JABU_JABU, 3, 6, -940, -1015, -3344, 16384 },
-    { SCENE_JABU_JABU, 6, 3, -1060, -1015, -3344, -16384 },
+    { SCENE_JABU_JABU, 3, 6, 21, -940, -1015, -3343, 16384 },
+    { SCENE_JABU_JABU, 6, 3, 21, -1060, -1015, -3343, -16384 },
     // above octo to red tentacles
-    { SCENE_JABU_JABU, 6, 4, -1359, 80, -2345, -32768 },
-    { SCENE_JABU_JABU, 4, 6, -1359, 80, -2225, 0 },
+    { SCENE_JABU_JABU, 6, 4, 3, -1360, 80, -2345, -32768 },
+    { SCENE_JABU_JABU, 4, 6, 3, -1360, 80, -2225, 0 },
     // red tentacles to floating platform
-    { SCENE_JABU_JABU, 4, 1, -680, 80, -1700, -16384 },
-    { SCENE_JABU_JABU, 1, 4, -560, 80, -1700, 16384 },
+    { SCENE_JABU_JABU, 4, 1, 8, -680, 80, -1703, -16384 },
+    { SCENE_JABU_JABU, 1, 4, 8, -560, 80, -1703, 16384 },
     // floating platform to boss door
-    { SCENE_JABU_JABU, 1, 5, 560, -320, -1703, -16384 },
-    { SCENE_JABU_JABU, 5, 1, 680, -320, -1703, 16384 },
+    { SCENE_JABU_JABU, 1, 5, 9, 560, -320, -1703, -16384 },
+    { SCENE_JABU_JABU, 5, 1, 9, 680, -320, -1703, 16384 },
     // entrance to entrance hall
-    { SCENE_FOREST_TEMPLE, 0, 1, 119, 359, 82, 0 },
-    { SCENE_FOREST_TEMPLE, 1, 0, 119, 359, 38, -32768 },
+    { SCENE_FOREST_TEMPLE, 0, 1, 0, 119, 359, 82, 0 },
+    { SCENE_FOREST_TEMPLE, 1, 0, 0, 119, 359, 38, -32768 },
     // entrance hall to lobby
-    { SCENE_FOREST_TEMPLE, 1, 2, 119, 383, -558, 0 },
-    { SCENE_FOREST_TEMPLE, 2, 1, 119, 383, -602, -32768 },
+    { SCENE_FOREST_TEMPLE, 1, 2, 23, 119, 383, -558, 0 },
+    { SCENE_FOREST_TEMPLE, 2, 1, 23, 119, 383, -602, -32768 },
     // lobby to puzzle hall
-    { SCENE_FOREST_TEMPLE, 2, 5, -739, 383, -1440, 16384 },
-    { SCENE_FOREST_TEMPLE, 5, 2, -783, 383, -1440, -16384 },
+    { SCENE_FOREST_TEMPLE, 2, 5, 14, -739, 383, -1440, 16384 },
+    { SCENE_FOREST_TEMPLE, 5, 2, 14, -783, 383, -1440, -16384 },
     // puzzle hall to puzzle
-    { SCENE_FOREST_TEMPLE, 5, 11, -1345, 383, -1440, 16384 },
-    { SCENE_FOREST_TEMPLE, 11, 5, -1389, 383, -1440, -16384 },
+    { SCENE_FOREST_TEMPLE, 5, 11, 2, -1345, 383, -1440, 16384 },
+    { SCENE_FOREST_TEMPLE, 11, 5, 2, -1389, 383, -1440, -16384 },
     // puzzle to courtyard
-    { SCENE_FOREST_TEMPLE, 8, 11, -1502, 523, -1886, -32768 },
-    { SCENE_FOREST_TEMPLE, 11, 8, -1502, 523, -1842, 0 },
+    { SCENE_FOREST_TEMPLE, 8, 11, 4, -1502, 523, -1886, -32768 },
+    { SCENE_FOREST_TEMPLE, 11, 8, 4, -1502, 523, -1842, 0 },
     // courtyard to floormaster
-    { SCENE_FOREST_TEMPLE, 8, 18, -1717, 523, -2035, 16384 },
-    { SCENE_FOREST_TEMPLE, 18, 8, -1773, 523, -2035, -16384 },
+    { SCENE_FOREST_TEMPLE, 8, 18, 12, -1717, 523, -2046, 16384 },
+    { SCENE_FOREST_TEMPLE, 18, 8, 12, -1773, 523, -2046, -16384 },
     // courtyard to below boss key chest
-    { SCENE_FOREST_TEMPLE, 8, 21, -1640, 523, -2766, 0 },
-    { SCENE_FOREST_TEMPLE, 21, 8, -1640, 523, -2822, -32768 },
+    { SCENE_FOREST_TEMPLE, 8, 21, 11, -1643, 523, -2766, 0 },
+    { SCENE_FOREST_TEMPLE, 21, 8, 11, -1643, 523, -2822, -32768 },
     // courtyard to map hall
-    { SCENE_FOREST_TEMPLE, 8, 10, -149, 800, -2800, -16384 },
-    { SCENE_FOREST_TEMPLE, 10, 8, -93, 800, -2800, 16384 },
+    { SCENE_FOREST_TEMPLE, 8, 10, 9, -149, 800, -2810, -16384 },
+    { SCENE_FOREST_TEMPLE, 10, 8, 9, -93, 800, -2810, 16384 },
     // map hall to island
-    { SCENE_FOREST_TEMPLE, 10, 7, 331, 800, -2800, -16384 },
-    { SCENE_FOREST_TEMPLE, 7, 10, 387, 800, -2800, 16384 },
+    { SCENE_FOREST_TEMPLE, 10, 7, 10, 331, 800, -2810, -16384 },
+    { SCENE_FOREST_TEMPLE, 7, 10, 10, 387, 800, -2810, 16384 },
     // courtyard to lobby
-    { SCENE_FOREST_TEMPLE, 8, 2, -684, 243, -2243, -24576 },
-    { SCENE_FOREST_TEMPLE, 2, 8, -653, 243, -2212, 8192 },
+    { SCENE_FOREST_TEMPLE, 8, 2, 15, -684, 243, -2243, -24576 },
+    { SCENE_FOREST_TEMPLE, 2, 8, 15, -653, 243, -2212, 8192 },
     // island to falling floor
-    { SCENE_FOREST_TEMPLE, 7, 15, 1663, 523, -2854, 0 },
-    { SCENE_FOREST_TEMPLE, 15, 7, 1663, 523, -2898, -32768 },
+    { SCENE_FOREST_TEMPLE, 7, 15, 3, 1663, 523, -2854, 0 },
+    { SCENE_FOREST_TEMPLE, 15, 7, 3, 1663, 523, -2898, -32768 },
     // island to lobby
-    { SCENE_FOREST_TEMPLE, 7, 2, 929, 243, -2244, -8192 },
-    { SCENE_FOREST_TEMPLE, 2, 7, 888, 243, -2207, 24576 },
+    { SCENE_FOREST_TEMPLE, 7, 2, 16, 926, 243, -2247, 24758 },
+    { SCENE_FOREST_TEMPLE, 2, 7, 16, 887, 243, -2208, -8010 },
     // falling floor to green poe
-    { SCENE_FOREST_TEMPLE, 15, 16, 1984, 403, -1848, -32768 },
-    { SCENE_FOREST_TEMPLE, 16, 15, 1984, 403, -1792, 0 },
+    { SCENE_FOREST_TEMPLE, 15, 16, 24, 1991, 403, -1848, -32768 },
+    { SCENE_FOREST_TEMPLE, 16, 15, 24, 1991, 403, -1792, 0 },
     // green poe to green hall
-    { SCENE_FOREST_TEMPLE, 16, 3, 1633, 463, -1440, 16384 },
-    { SCENE_FOREST_TEMPLE, 3, 16, 1577, 463, -1440, -16384 },
+    { SCENE_FOREST_TEMPLE, 16, 3, 13, 1633, 463, -1440, 16384 },
+    { SCENE_FOREST_TEMPLE, 3, 16, 13, 1577, 463, -1440, -16384 },
     // green hall to lobby
-    { SCENE_FOREST_TEMPLE, 3, 2, 1021, 463, -1440, 16384 },
-    { SCENE_FOREST_TEMPLE, 2, 3, 977, 463, -1440, -16384 },
+    { SCENE_FOREST_TEMPLE, 3, 2, 17, 1021, 463, -1440, 16384 },
+    { SCENE_FOREST_TEMPLE, 2, 3, 17, 977, 463, -1440, -16384 },
     // lobby to northern hall
-    { SCENE_FOREST_TEMPLE, 2, 4, 119, 467, -2494, 0 },
-    { SCENE_FOREST_TEMPLE, 4, 2, 119, 467, -2538, -32768 },
+    { SCENE_FOREST_TEMPLE, 2, 4, 1, 119, 467, -2494, 0 },
+    { SCENE_FOREST_TEMPLE, 4, 2, 1, 119, 467, -2538, -32768 },
     // northern hall to northern room
-    { SCENE_FOREST_TEMPLE, 4, 6, 119, 467, -2982, 0 },
-    { SCENE_FOREST_TEMPLE, 6, 4, 119, 467, -3038, -32768 },
+    { SCENE_FOREST_TEMPLE, 4, 6, 8, 119, 467, -2982, 0 },
+    { SCENE_FOREST_TEMPLE, 6, 4, 8, 119, 467, -3038, -32768 },
     // puzzle to twisted hall
-    { SCENE_FOREST_TEMPLE, 11, 19, -1765, 1228, -1792, 0 },
-    { SCENE_FOREST_TEMPLE, 19, 11, -1765, 1232, -1848, -32768 },
+    { SCENE_FOREST_TEMPLE, 11, 19, 25, -1761, 1228, -1792, 0 },
+    { SCENE_FOREST_TEMPLE, 19, 11, 25, -1761, 1232, -1848, -32768 },
     // twisted hall to red poe
-    { SCENE_FOREST_TEMPLE, 19, 12, -1444, 1228, -3322, -16384 },
-    { SCENE_FOREST_TEMPLE, 12, 19, -1388, 1228, -3322, 16384 },
+    { SCENE_FOREST_TEMPLE, 19, 12, 26, -1444, 1228, -3320, -16384 },
+    { SCENE_FOREST_TEMPLE, 12, 19, 26, -1388, 1228, -3320, 16384 },
     // red poe to bow chest
-    { SCENE_FOREST_TEMPLE, 12, 6, -409, 827, -3314, -16384 },
-    { SCENE_FOREST_TEMPLE, 6, 12, -353, 827, -3314, 16384 },
+    { SCENE_FOREST_TEMPLE, 12, 6, 7, -409, 827, -3320, -16384 },
+    { SCENE_FOREST_TEMPLE, 6, 12, 7, -353, 827, -3320, 16384 },
     // bow chest to blue poe
-    { SCENE_FOREST_TEMPLE, 6, 13, 471, 827, -3320, -16384 },
-    { SCENE_FOREST_TEMPLE, 13, 6, 527, 827, -3320, 16384 },
+    { SCENE_FOREST_TEMPLE, 6, 13, 6, 471, 827, -3320, -16384 },
+    { SCENE_FOREST_TEMPLE, 13, 6, 6, 527, 827, -3320, 16384 },
     // blue poe to twisted room
-    { SCENE_FOREST_TEMPLE, 13, 20, 1626, 1228, -3322, -16384 },
-    { SCENE_FOREST_TEMPLE, 20, 13, 1682, 1228, -3322, 16384 },
+    { SCENE_FOREST_TEMPLE, 13, 20, 5, 1626, 1228, -3320, -16384 },
+    { SCENE_FOREST_TEMPLE, 20, 13, 5, 1682, 1228, -3320, 16384 },
     // twisted room to frozen eye
-    { SCENE_FOREST_TEMPLE, 20, 14, 2000, 1228, -1848, -32768 },
-    { SCENE_FOREST_TEMPLE, 14, 20, 2000, 1228, -1792, 0 },
+    { SCENE_FOREST_TEMPLE, 20, 14, 27, 1999, 1228, -1848, -32768 },
+    { SCENE_FOREST_TEMPLE, 14, 20, 27, 1999, 1228, -1792, 0 },
     // lobby to boss door
-    { SCENE_FIRE_TEMPLE, 0, 2, -398, 200, 0, 16384 },
-    { SCENE_FIRE_TEMPLE, 2, 0, -442, 200, 0, -16384 },
+    { SCENE_FIRE_TEMPLE, 0, 2, 16, -398, 200, 0, 16384 },
+    { SCENE_FIRE_TEMPLE, 2, 0, 16, -442, 200, 0, -16384 },
     // lobby to boss key
-    { SCENE_FIRE_TEMPLE, 0, 17, -280, 0, 162, 0 },
-    { SCENE_FIRE_TEMPLE, 17, 0, -280, 0, 118, -32768 },
+    { SCENE_FIRE_TEMPLE, 0, 17, 17, -280, 0, 162, 0 },
+    { SCENE_FIRE_TEMPLE, 17, 0, 17, -280, 0, 118, -32768 },
     // hammer locked door
-    { SCENE_FIRE_TEMPLE, 0, 15, 280, 0, 222, 0 },
-    { SCENE_FIRE_TEMPLE, 15, 0, 280, 0, 58, -32768 },
+    { SCENE_FIRE_TEMPLE, 0, 15, 34, 280, 0, 222, 0 },
+    { SCENE_FIRE_TEMPLE, 15, 0, 34, 280, 0, 58, -32768 },
     // clear enemies to tile room
-    { SCENE_FIRE_TEMPLE, 15, 18, 241, 0, -850, 0 },
-    { SCENE_FIRE_TEMPLE, 18, 15, 241, 0, -907, -32768 },
+    { SCENE_FIRE_TEMPLE, 15, 18, 32, 238, 0, -850, 0 },
+    { SCENE_FIRE_TEMPLE, 18, 15, 32, 238, 0, -907, -32768 },
     // tile room to flare dancer
-    { SCENE_FIRE_TEMPLE, 18, 3, 21, 0, -1245, 16384 },
-    { SCENE_FIRE_TEMPLE, 3, 18, -47, 0, -1245, -16384 },
+    { SCENE_FIRE_TEMPLE, 18, 3, 29, 21, 0, -1240, 16384 },
+    { SCENE_FIRE_TEMPLE, 3, 18, 29, -47, 0, -1240, -16384 },
     // flare dancer to boss key
-    { SCENE_FIRE_TEMPLE, 3, 17, -288, 0, -926, -32768 },
-    { SCENE_FIRE_TEMPLE, 17, 3, -288, 0, -864, 0 },
+    { SCENE_FIRE_TEMPLE, 3, 17, 25, -280, 0, -926, -32768 },
+    { SCENE_FIRE_TEMPLE, 17, 3, 25, -280, 0, -864, 0 },
     // lobby to bridge
-    { SCENE_FIRE_TEMPLE, 0, 1, 398, 200, 0, 16384 },
-    { SCENE_FIRE_TEMPLE, 1, 0, 442, 200, 0, -16384 },
+    { SCENE_FIRE_TEMPLE, 0, 1, 36, 398, 200, 0, -16384 },
+    { SCENE_FIRE_TEMPLE, 1, 0, 36, 442, 200, 0, 16384 },
     // bridge to goron on left
-    { SCENE_FIRE_TEMPLE, 1, 20, 1560, 100, -1538, 0 },
-    { SCENE_FIRE_TEMPLE, 20, 1, 1560, 100, -1582, -32768 },
+    { SCENE_FIRE_TEMPLE, 1, 20, 13, 1560, 100, -1538, 0 },
+    { SCENE_FIRE_TEMPLE, 20, 1, 13, 1560, 100, -1582, -32768 },
     // bridge to tile room
-    { SCENE_FIRE_TEMPLE, 1, 19, 1560, 240, -1498, 0 },
-    { SCENE_FIRE_TEMPLE, 19, 1, 1560, 240, -1542, -32768 },
+    { SCENE_FIRE_TEMPLE, 1, 19, 12, 1560, 240, -1498, 0 },
+    { SCENE_FIRE_TEMPLE, 19, 1, 12, 1560, 240, -1542, -32768 },
     // bridge to goron on right
-    { SCENE_FIRE_TEMPLE, 1, 22, 1560, 200, 1558, -32768 },
-    { SCENE_FIRE_TEMPLE, 22, 1, 1560, 200, 1602, 0 },
+    { SCENE_FIRE_TEMPLE, 1, 22, 15, 1560, 200, 1558, -32768 },
+    { SCENE_FIRE_TEMPLE, 22, 1, 15, 1560, 200, 1602, 0 },
     // bridge to fire geyser
-    { SCENE_FIRE_TEMPLE, 1, 21, 2678, 200, 0, -16384 },
-    { SCENE_FIRE_TEMPLE, 21, 1, 2722, 200, 0, 16384 },
+    { SCENE_FIRE_TEMPLE, 1, 21, 14, 2678, 200, 0, -16384 },
+    { SCENE_FIRE_TEMPLE, 21, 1, 14, 2722, 200, 0, 16384 },
     // fire geyser to block
-    { SCENE_FIRE_TEMPLE, 21, 4, 3092, 2060, 0, 16384 },
-    { SCENE_FIRE_TEMPLE, 4, 21, 3048, 2060, 0, -16384 },
+    { SCENE_FIRE_TEMPLE, 21, 4, 6, 3092, 2060, 0, 16384 },
+    { SCENE_FIRE_TEMPLE, 4, 21, 6, 3048, 2060, 0, -16384 },
     // block to maze
-    { SCENE_FIRE_TEMPLE, 4, 5, 2558, 2800, 0, -16384 },
-    { SCENE_FIRE_TEMPLE, 5, 4, 2602, 2800, 0, 16384 },
+    { SCENE_FIRE_TEMPLE, 4, 5, 27, 2558, 2800, 0, -16384 },
+    { SCENE_FIRE_TEMPLE, 5, 4, 27, 2602, 2800, 0, 16384 },
     // maze to passage above maze
-    { SCENE_FIRE_TEMPLE, 5, 7, 1580, 4000, -612, -32768 },
-    { SCENE_FIRE_TEMPLE, 7, 5, 1580, 4000, -568, 0 },
+    { SCENE_FIRE_TEMPLE, 5, 7, 22, 1580, 4000, -612, -32768 },
+    { SCENE_FIRE_TEMPLE, 7, 5, 22, 1580, 4000, -568, 0 },
     // passage above maze to above maze
-    { SCENE_FIRE_TEMPLE, 7, 8, 1580, 4400, -612, -32768 },
-    { SCENE_FIRE_TEMPLE, 8, 7, 1580, 4400, -568, 0 },
+    { SCENE_FIRE_TEMPLE, 7, 8, 23, 1580, 4400, -612, -32768 },
+    { SCENE_FIRE_TEMPLE, 8, 7, 23, 1580, 4400, -568, 0 },
     // maze to bridge above bridge
-    { SCENE_FIRE_TEMPLE, 5, 6, 1550, 2800, -352, -32768 },
-    { SCENE_FIRE_TEMPLE, 6, 5, 1550, 2800, -308, 0 },
+    { SCENE_FIRE_TEMPLE, 5, 6, 21, 1550, 2800, -352, -32768 },
+    { SCENE_FIRE_TEMPLE, 6, 5, 21, 1550, 2800, -308, 0 },
     // maze to goron
-    { SCENE_FIRE_TEMPLE, 5, 23, 1780, 2800, -1478, 0 },
-    { SCENE_FIRE_TEMPLE, 23, 5, 1780, 2800, -1522, -32768 },
+    { SCENE_FIRE_TEMPLE, 5, 23, 18, 1780, 2800, -1478, 0 },
+    { SCENE_FIRE_TEMPLE, 23, 5, 18, 1780, 2800, -1522, -32768 },
     // maze to fire chase
-    { SCENE_FIRE_TEMPLE, 5, 16, 1482, 2940, -630, 16384 },
-    { SCENE_FIRE_TEMPLE, 16, 5, 1438, 2940, -630, -16384 },
+    { SCENE_FIRE_TEMPLE, 5, 16, 28, 1482, 2940, -630, 16384 },
+    { SCENE_FIRE_TEMPLE, 16, 5, 28, 1438, 2940, -630, -16384 },
     // fire chase cage to bridge above bridge
-    { SCENE_FIRE_TEMPLE, 16, 6, 1209, 2800, 60, -16384 },
-    { SCENE_FIRE_TEMPLE, 6, 16, 1267, 2800, 60, 16384 },
+    { SCENE_FIRE_TEMPLE, 16, 6, 20, 1209, 2800, 60, -16384 },
+    { SCENE_FIRE_TEMPLE, 6, 16, 20, 1267, 2800, 60, 16384 },
     // fire chase to bridge above bridge
-    { SCENE_FIRE_TEMPLE, 16, 6, 1580, 2800, 352, 0 },
-    { SCENE_FIRE_TEMPLE, 6, 16, 1580, 2800, 308, -32768 },
+    { SCENE_FIRE_TEMPLE, 16, 6, 19, 1580, 2800, 352, 0 },
+    { SCENE_FIRE_TEMPLE, 6, 16, 19, 1580, 2800, 308, -32768 },
     // fire chase to passage
-    { SCENE_FIRE_TEMPLE, 16, 9, 362, 2940, 190, 16384 },
-    { SCENE_FIRE_TEMPLE, 9, 16, 318, 2940, 190, -16384 },
+    { SCENE_FIRE_TEMPLE, 16, 9, 5, 362, 2940, 190, 16384 },
+    { SCENE_FIRE_TEMPLE, 9, 16, 5, 318, 2940, 190, -16384 },
     // passage to maze
-    { SCENE_FIRE_TEMPLE, 9, 10, -538, 2940, 190, 16384 },
-    { SCENE_FIRE_TEMPLE, 10, 9, -582, 2940, 190, -16384 },
+    { SCENE_FIRE_TEMPLE, 9, 10, 7, -538, 2940, 190, 16384 },
+    { SCENE_FIRE_TEMPLE, 10, 9, 7, -582, 2940, 190, -16384 },
     // maze to above cage
-    { SCENE_FIRE_TEMPLE, 10, 11, -1404, 2980, 0, 16384 },
-    { SCENE_FIRE_TEMPLE, 11, 10, -1484, 2980, 0, -16384 },
+    { SCENE_FIRE_TEMPLE, 10, 11, 24, -1404, 2980, 0, 16384 },
+    { SCENE_FIRE_TEMPLE, 11, 10, 24, -1484, 2980, 0, -16384 },
     // maze to compass
-    { SCENE_FIRE_TEMPLE, 10, 25, -1073, 2800, -890, 24576 },
-    { SCENE_FIRE_TEMPLE, 25, 10, -1042, 2800, -921, -8192 },
+    { SCENE_FIRE_TEMPLE, 10, 25, 33, -1074, 2800, -890, -8192 },
+    { SCENE_FIRE_TEMPLE, 25, 10, 33, -1042, 2800, -922, 24576 },
     // maze to cage by dancer
-    { SCENE_FIRE_TEMPLE, 10, 11, -1780, 2800, -352, -32768 },
-    { SCENE_FIRE_TEMPLE, 11, 10, -1780, 2800, -308, 0 },
+    { SCENE_FIRE_TEMPLE, 10, 11, 8, -1780, 2800, -352, -32768 },
+    { SCENE_FIRE_TEMPLE, 11, 10, 8, -1780, 2800, -308, 0 },
     // maze to cage (locked)
-    { SCENE_FIRE_TEMPLE, 10, 11, -1780, 2800, 352, 0 },
-    { SCENE_FIRE_TEMPLE, 11, 10, -1780, 2800, 308, -32678 },
+    { SCENE_FIRE_TEMPLE, 10, 11, 9, -1780, 2800, 352, 0 },
+    { SCENE_FIRE_TEMPLE, 11, 10, 9, -1780, 2800, 308, -32768 },
     // maze to flare dancer
-    { SCENE_FIRE_TEMPLE, 10, 24, -2652, 2840, -163, 24576 },
-    { SCENE_FIRE_TEMPLE, 24, 10, -2680, 2840, -127, -8192 },
+    { SCENE_FIRE_TEMPLE, 10, 24, 26, -2654, 2840, -166, 24576 },
+    { SCENE_FIRE_TEMPLE, 24, 10, 26, -2686, 2840, -134, -8192 },
     // flare dancer to passage to hammer
-    { SCENE_FIRE_TEMPLE, 24, 12, -2720, 4000, 159, -16384 },
-    { SCENE_FIRE_TEMPLE, 12, 24, -2676, 4000, 159, 16384 },
+    { SCENE_FIRE_TEMPLE, 24, 12, 11, -2720, 4000, 159, -16384 },
+    { SCENE_FIRE_TEMPLE, 12, 24, 11, -2676, 4000, 159, 16384 },
     // passage to hammer to hammer
-    { SCENE_FIRE_TEMPLE, 12, 13, -2392, 4400, 20, -16384 },
-    { SCENE_FIRE_TEMPLE, 13, 12, -2348, 4400, 20, 16384 },
+    { SCENE_FIRE_TEMPLE, 12, 13, 10, -2392, 4400, 20, -16384 },
+    { SCENE_FIRE_TEMPLE, 13, 12, 10, -2348, 4400, 20, 16384 },
     // hammer to hammer stairs
-    { SCENE_FIRE_TEMPLE, 13, 14, -2377, 4180, -709, -8192 },
-    { SCENE_FIRE_TEMPLE, 14, 13, -2266, 4180, -820, 24576 },
+    { SCENE_FIRE_TEMPLE, 13, 14, 31, -2378, 4180, -710, -8192 },
+    { SCENE_FIRE_TEMPLE, 14, 13, 31, -2266, 4180, -820, 24576 },
     // hammer stairs to maze
-    { SCENE_FIRE_TEMPLE, 14, 10, -1192, 3680, -221, -24576 },
-    { SCENE_FIRE_TEMPLE, 10, 14, -1161, 3680, -185, 8192 },
+    { SCENE_FIRE_TEMPLE, 14, 10, 30, -1202, 3680, -211, -24394 },
+    { SCENE_FIRE_TEMPLE, 10, 14, 30, -1168, 3680, -178, 8374 },
     // lobby to boss door
-    { SCENE_WATER_TEMPLE, 0, 11, -180, 820, -1218, 0 },
-    { SCENE_WATER_TEMPLE, 11, 0, -180, 820, -1262, -32768 },
+    { SCENE_WATER_TEMPLE, 0, 11, 16, -180, 820, -1218, 0 },
+    { SCENE_WATER_TEMPLE, 11, 0, 16, -180, 820, -1262, -32768 },
     // lobby to waterfall
-    { SCENE_WATER_TEMPLE, 0, 5, -818, 780, -180, 16384 },
-    { SCENE_WATER_TEMPLE, 5, 0, -862, 780, -180, -16384 },
+    { SCENE_WATER_TEMPLE, 0, 5, 8, -818, 780, -180, 16384 },
+    { SCENE_WATER_TEMPLE, 5, 0, 8, -862, 780, -180, -16384 },
     // waterfall to red crystal
-    { SCENE_WATER_TEMPLE, 5, 6, -2778, 760, -180, 16384 },
-    { SCENE_WATER_TEMPLE, 6, 5, -2822, 760, -180, -16384 },
+    { SCENE_WATER_TEMPLE, 5, 6, 10, -2778, 760, -180, 16384 },
+    { SCENE_WATER_TEMPLE, 6, 5, 10, -2822, 760, -180, -16384 },
     // red crystal to dark link
-    { SCENE_WATER_TEMPLE, 6, 13, -3125, 1060, -1632, 0 },
-    { SCENE_WATER_TEMPLE, 13, 6, -3125, 1060, -1688, -32768 },
+    { SCENE_WATER_TEMPLE, 6, 13, 18, -3120, 1060, -1632, 0 },
+    { SCENE_WATER_TEMPLE, 13, 6, 18, -3120, 1060, -1688, -32768 },
     // dark link to tunnel
-    { SCENE_WATER_TEMPLE, 13, 7, -3125, 1060, -3672, 0 },
-    { SCENE_WATER_TEMPLE, 7, 13, -3125, 1060, -3728, -32768 },
+    { SCENE_WATER_TEMPLE, 13, 7, 19, -3120, 1060, -3672, 0 },
+    { SCENE_WATER_TEMPLE, 7, 13, 19, -3120, 1060, -3728, -32768 },
     // whirlpool to lobby
-    { SCENE_WATER_TEMPLE, 8, 9, -1140, 60, -1752, -32768 },
-    { SCENE_WATER_TEMPLE, 9, 8, -1140, 60, -1708, 0 },
+    { SCENE_WATER_TEMPLE, 8, 9, 20, -1140, 60, -1752, -32768 },
+    { SCENE_WATER_TEMPLE, 9, 8, 20, -1140, 60, -1708, 0 },
     // lobby to back rooms
-    { SCENE_WATER_TEMPLE, 0, 12, -180, 0, -1768, 0 },
-    { SCENE_WATER_TEMPLE, 12, 0, -180, 0, -1812, -32768 },
+    { SCENE_WATER_TEMPLE, 0, 12, 9, -180, 0, -1768, 0 },
+    { SCENE_WATER_TEMPLE, 12, 0, 9, -180, 0, -1812, -32768 },
     // back rooms to boss key
-    { SCENE_WATER_TEMPLE, 12, 6, -1280, 108, -2668, 16384 },
-    { SCENE_WATER_TEMPLE, 16, 12, -1280, 108, -2712, -16384 },
+    { SCENE_WATER_TEMPLE, 12, 16, 21, -1280, 108, -2668, 0 },
+    { SCENE_WATER_TEMPLE, 16, 12, 21, -1280, 108, -2712, -32768 },
     // back rooms to back block
-    { SCENE_WATER_TEMPLE, 12, 14, -180, 0, -3148, 0 },
-    { SCENE_WATER_TEMPLE, 14, 12, -180, 0, -3192, -32768 },
+    { SCENE_WATER_TEMPLE, 12, 14, 11, -180, 0, -3148, 0 },
+    { SCENE_WATER_TEMPLE, 14, 12, 11, -180, 0, -3192, -32768 },
     // back block to geyser room
-    { SCENE_WATER_TEMPLE, 14, 15, -652, 120, -3668, 16384 },
-    { SCENE_WATER_TEMPLE, 15, 14, -708, 120, -3668, -16384 },
+    { SCENE_WATER_TEMPLE, 14, 15, 12, -652, 120, -3670, 16384 },
+    { SCENE_WATER_TEMPLE, 15, 14, 12, -708, 120, -3670, -16384 },
     // geyser room to back rooms
-    { SCENE_WATER_TEMPLE, 15, 12, -880, 120, -2718, -32768 },
-    { SCENE_WATER_TEMPLE, 12, 15, -880, 120, -2662, 0 },
+    { SCENE_WATER_TEMPLE, 15, 12, 22, -880, 120, -2718, -32768 },
+    { SCENE_WATER_TEMPLE, 12, 15, 22, -880, 120, -2662, 0 },
     // top of drain to map
-    { SCENE_WATER_TEMPLE, 17, 19, 1142, 780, 178, -16384 },
-    { SCENE_WATER_TEMPLE, 19, 17, 1198, 780, 178, 16384 },
+    { SCENE_WATER_TEMPLE, 17, 19, 13, 1142, 780, 180, -16384 },
+    { SCENE_WATER_TEMPLE, 19, 17, 13, 1198, 780, 180, 16384 },
     // bottom of drain to bottom room
-    { SCENE_WATER_TEMPLE, 17, 18, 1142, 0, 181, -16384 },
-    { SCENE_WATER_TEMPLE, 18, 17, 1198, 0, 181, 16384 },
+    { SCENE_WATER_TEMPLE, 17, 18, 23, 1142, 0, 180, -16384 },
+    { SCENE_WATER_TEMPLE, 18, 17, 23, 1198, 0, 180, 16384 },
     // lobby to bottom of tower
-    { SCENE_WATER_TEMPLE, 0, 1, -180, 80, 42, 0 },
-    { SCENE_WATER_TEMPLE, 1, 0, -180, 80, -2, -32768 },
+    { SCENE_WATER_TEMPLE, 0, 1, 14, -180, 80, 42, 0 },
+    { SCENE_WATER_TEMPLE, 1, 0, 14, -180, 80, -2, -32768 },
     // lobby to top of tower
-    { SCENE_WATER_TEMPLE, 0, 1, -180, 460, -408, -32768 },
-    { SCENE_WATER_TEMPLE, 1, 0, -180, 460, -352, 0 },
+    { SCENE_WATER_TEMPLE, 0, 1, 15, -180, 460, -408, -32768 },
+    { SCENE_WATER_TEMPLE, 1, 0, 15, -180, 460, -352, 0 },
     // lobby to lift
-    { SCENE_WATER_TEMPLE, 0, 10, -818, 460, -180, 16384 },
-    { SCENE_WATER_TEMPLE, 10, 0, -862, 460, -180, -16384 },
+    { SCENE_WATER_TEMPLE, 0, 10, 17, -818, 460, -180, 16384 },
+    { SCENE_WATER_TEMPLE, 10, 0, 17, -862, 460, -180, -16384 },
     // lift to top ledge
     // TODO one way door, need to figure out coordinates for this
     // DOOR 10 0 (-878,860,287)
     // lobby to catacombs
-    { SCENE_SHADOW_TEMPLE, 2, 0, -72, -63, -185, 16384 },
-    { SCENE_SHADOW_TEMPLE, 0, 2, -116, -63, -185, -16384 },
+    { SCENE_SHADOW_TEMPLE, 2, 0, 2, -72, -63, -185, 16384 },
+    { SCENE_SHADOW_TEMPLE, 0, 2, 2, -116, -63, -185, -16384 },
     // catacombs to map
-    { SCENE_SHADOW_TEMPLE, 0, 1, -794, -63, -657, 0 },
-    { SCENE_SHADOW_TEMPLE, 1, 0, -794, -63, -713, -32768 },
+    { SCENE_SHADOW_TEMPLE, 0, 1, 1, -794, -63, -657, 0 },
+    { SCENE_SHADOW_TEMPLE, 1, 0, 1, -794, -63, -713, -32768 },
     // catacombs to dead hand
-    { SCENE_SHADOW_TEMPLE, 0, 4, -2026, -63, -406, 16384 },
-    { SCENE_SHADOW_TEMPLE, 4, 0, -2082, -63, -406, -16384 },
+    { SCENE_SHADOW_TEMPLE, 0, 4, 0, -2026, -63, -405, 16384 },
+    { SCENE_SHADOW_TEMPLE, 4, 0, 0, -2082, -63, -405, -16384 },
     // lobby to compass
-    { SCENE_SHADOW_TEMPLE, 5, 7, 3358, -543, 508, -32768 },
-    { SCENE_SHADOW_TEMPLE, 7, 5, 3358, -543, 564, 0 },
+    { SCENE_SHADOW_TEMPLE, 5, 7, 6, 3358, -543, 508, -32768 },
+    { SCENE_SHADOW_TEMPLE, 7, 5, 6, 3358, -543, 564, 0 },
     // lobby to spinning blades
-    { SCENE_SHADOW_TEMPLE, 5, 6, 3358, -543, -404, 0 },
-    { SCENE_SHADOW_TEMPLE, 6, 5, 3358, -543, -448, -32768 },
+    { SCENE_SHADOW_TEMPLE, 5, 6, 5, 3358, -543, -404, 0 },
+    { SCENE_SHADOW_TEMPLE, 6, 5, 5, 3358, -543, -448, -32768 },
     // lobby to depths
-    { SCENE_SHADOW_TEMPLE, 5, 8, 3817, -543, 55, -16384 },
-    { SCENE_SHADOW_TEMPLE, 8, 5, 3861, -543, 55, 16384 },
+    { SCENE_SHADOW_TEMPLE, 5, 8, 4, 3817, -543, 55, -16384 },
+    { SCENE_SHADOW_TEMPLE, 8, 5, 4, 3861, -543, 55, 16384 },
     // depths to invisible blades
-    { SCENE_SHADOW_TEMPLE, 9, 16, 4678, -1143, 2577, 0 },
-    { SCENE_SHADOW_TEMPLE, 16, 9, 4678, -1143, 2533, -32768 },
+    { SCENE_SHADOW_TEMPLE, 9, 16, 7, 4678, -1143, 2577, 0 },
+    { SCENE_SHADOW_TEMPLE, 16, 9, 7, 4678, -1143, 2533, -32768 },
     // depths to silver room
-    { SCENE_SHADOW_TEMPLE, 9, 11, 2478, -1343, 1496, 0 },
-    { SCENE_SHADOW_TEMPLE, 11, 9, 2478, -1343, 1452, -32768 },
+    { SCENE_SHADOW_TEMPLE, 9, 11, 8, 2478, -1343, 1496, 0 },
+    { SCENE_SHADOW_TEMPLE, 11, 9, 8, 2478, -1343, 1452, -32768 },
     // silver room to blue skull
-    { SCENE_SHADOW_TEMPLE, 11, 14, 2006, -1343, 1082, 16384 },
-    { SCENE_SHADOW_TEMPLE, 14, 11, 1950, -1343, 1082, -16384 },
+    { SCENE_SHADOW_TEMPLE, 11, 14, 10, 2006, -1343, 1084, 16384 },
+    { SCENE_SHADOW_TEMPLE, 14, 11, 10, 1950, -1343, 1084, -16384 },
     // silver room to wind tunnel
-    { SCENE_SHADOW_TEMPLE, 11, 18, 2478, -1203, 816, 0 },
-    { SCENE_SHADOW_TEMPLE, 18, 11, 2478, -1203, 772, -32768 },
+    { SCENE_SHADOW_TEMPLE, 11, 18, 9, 2478, -1203, 816, 0 },
+    { SCENE_SHADOW_TEMPLE, 18, 11, 9, 2478, -1203, 772, -32768 },
     // wind tunnel to hint
-    { SCENE_SHADOW_TEMPLE, 18, 19, 4700, -1363, -125, -16384 },
-    { SCENE_SHADOW_TEMPLE, 19, 18, 4756, -1363, -125, 16384 },
+    { SCENE_SHADOW_TEMPLE, 18, 19, 16, 4700, -1363, -126, -16384 },
+    { SCENE_SHADOW_TEMPLE, 19, 18, 16, 4756, -1363, -126, 16384 },
     // wind tunnel to double gibdo
-    { SCENE_SHADOW_TEMPLE, 18, 20, 4388, -1363, -617, 0 },
-    { SCENE_SHADOW_TEMPLE, 20, 18, 4388, -1363, -674, -32768 },
+    { SCENE_SHADOW_TEMPLE, 18, 20, 15, 4388, -1363, -617, 0 },
+    { SCENE_SHADOW_TEMPLE, 20, 18, 15, 4388, -1363, -674, -32768 },
     // double gibdo to boat
-    { SCENE_SHADOW_TEMPLE, 20, 21, 4388, -1363, -1384, 0 },
-    { SCENE_SHADOW_TEMPLE, 21, 20, 4388, -1363, -1428, -32768 },
+    { SCENE_SHADOW_TEMPLE, 20, 21, 17, 4388, -1363, -1384, 0 },
+    { SCENE_SHADOW_TEMPLE, 21, 20, 17, 4388, -1363, -1428, -32768 },
     // boat to boss door
-    { SCENE_SHADOW_TEMPLE, 21, 3, -2742, -1363, -258, -32768 },
-    { SCENE_SHADOW_TEMPLE, 3, 21, -2742, -1363, -214, 0 },
+    { SCENE_SHADOW_TEMPLE, 21, 3, 3, -2742, -1363, -258, -32768 },
+    { SCENE_SHADOW_TEMPLE, 3, 21, 3, -2742, -1363, -214, 0 },
     // boat to maze
-    { SCENE_SHADOW_TEMPLE, 21, 15, -3560, -1363, -1586, 16384 },
-    { SCENE_SHADOW_TEMPLE, 15, 21, -3604, -1363, -1586, -16384 },
+    { SCENE_SHADOW_TEMPLE, 21, 15, 14, -3560, -1363, -1586, 16384 },
+    { SCENE_SHADOW_TEMPLE, 15, 21, 14, -3604, -1363, -1586, -16384 },
     // maze to x-cross
-    { SCENE_SHADOW_TEMPLE, 15, 17, -4300, -1363, -890, -16384 },
-    { SCENE_SHADOW_TEMPLE, 17, 15, -4300, -1363, -834, 16384 },
+    { SCENE_SHADOW_TEMPLE, 15, 17, 13, -4306, -1363, -890, -32768 },
+    { SCENE_SHADOW_TEMPLE, 17, 15, 13, -4306, -1363, -834, 0 },
     // maze to spinning skulls
-    { SCENE_SHADOW_TEMPLE, 15, 12, -5009, -1363, -1586, 16384 },
-    { SCENE_SHADOW_TEMPLE, 12, 15, -5053, -1363, -1586, -16384 },
+    { SCENE_SHADOW_TEMPLE, 15, 12, 11, -5009, -1363, -1586, 16384 },
+    { SCENE_SHADOW_TEMPLE, 12, 15, 11, -5053, -1363, -1586, -16384 },
     // maze to wooden spikes
-    { SCENE_SHADOW_TEMPLE, 15, 13, -4306, -1363, -2289, 0 },
-    { SCENE_SHADOW_TEMPLE, 13, 15, -4306, -1363, -2333, -32768 },
+    { SCENE_SHADOW_TEMPLE, 15, 13, 12, -4306, -1363, -2289, 0 },
+    { SCENE_SHADOW_TEMPLE, 13, 15, 12, -4306, -1363, -2333, -32768 },
     // lobby to compass
-    { SCENE_SPIRIT_TEMPLE, 0, 14, 776, 30, -552, 10924 },
-    { SCENE_SPIRIT_TEMPLE, 14, 0, 719, 30, -564, -21844 },
+    { SCENE_SPIRIT_TEMPLE, 0, 14, 5, 772, 30, -545, 10923 },
+    { SCENE_SPIRIT_TEMPLE, 14, 0, 5, 724, 30, -573, -21845 },
     // lobby to boulders
-    { SCENE_SPIRIT_TEMPLE, 0, 13, 1340, 30, -555, -10924 },
-    { SCENE_SPIRIT_TEMPLE, 13, 0, 1395, 30, -573, 21844 },
+    { SCENE_SPIRIT_TEMPLE, 0, 13, 4, 1346, 30, -544, -10923 },
+    { SCENE_SPIRIT_TEMPLE, 13, 0, 4, 1395, 30, -572, 21845 },
     // boulders to chest
-    { SCENE_SPIRIT_TEMPLE, 13, 12, 1570, -130, -1575, 0 },
-    { SCENE_SPIRIT_TEMPLE, 12, 13, 1570, -130, -1631, -32768 },
+    { SCENE_SPIRIT_TEMPLE, 13, 12, 28, 1569, -130, -1575, 0 },
+    { SCENE_SPIRIT_TEMPLE, 12, 13, 28, 1569, -130, -1631, -32768 },
     // lobby to climb
-    { SCENE_SPIRIT_TEMPLE, 0, 15, 1058, 0, -558, 0 },
-    { SCENE_SPIRIT_TEMPLE, 15, 0, 1058, 0, -614, -32768 },
+    { SCENE_SPIRIT_TEMPLE, 0, 15, 3, 1060, 0, -558, 0 },
+    { SCENE_SPIRIT_TEMPLE, 15, 0, 3, 1060, 0, -614, -32768 },
     // climb to statue
-    { SCENE_SPIRIT_TEMPLE, 15, 5, 808, 480, -850, 16384 },
-    { SCENE_SPIRIT_TEMPLE, 5, 15, 752, 480, -850, -16384 },
+    { SCENE_SPIRIT_TEMPLE, 15, 5, 2, 808, 480, -850, 16384 },
+    { SCENE_SPIRIT_TEMPLE, 5, 15, 2, 752, 480, -850, -16384 },
     // statue to beamos passage
-    { SCENE_SPIRIT_TEMPLE, 5, 16, 700, 813, -598, -32768 },
-    { SCENE_SPIRIT_TEMPLE, 16, 5, 700, 813, -542, 0 },
+    { SCENE_SPIRIT_TEMPLE, 5, 16, 20, 700, 813, -598, -32768 },
+    { SCENE_SPIRIT_TEMPLE, 16, 5, 20, 700, 813, -542, 0 },
     // beamos statue to triple anubis
-    { SCENE_SPIRIT_TEMPLE, 16, 17, 1032, 843, -210, -16384 },
-    { SCENE_SPIRIT_TEMPLE, 17, 16, 1088, 843, -210, 16384 },
+    { SCENE_SPIRIT_TEMPLE, 16, 17, 19, 1032, 843, -210, -16384 },
+    { SCENE_SPIRIT_TEMPLE, 17, 16, 19, 1088, 843, -210, 16384 },
     // triple anubis to sliding walls
-    { SCENE_SPIRIT_TEMPLE, 17, 23, 1088, 843, 150, 16384 },
-    { SCENE_SPIRIT_TEMPLE, 23, 17, 1032, 843, 150, -16384 },
+    { SCENE_SPIRIT_TEMPLE, 17, 23, 14, 1088, 843, 150, 16384 },
+    { SCENE_SPIRIT_TEMPLE, 23, 17, 14, 1032, 843, 150, -16384 },
     // triple anubis to armos puzzle
-    { SCENE_SPIRIT_TEMPLE, 17, 18, 1672, 843, 150, -16384 },
-    { SCENE_SPIRIT_TEMPLE, 18, 17, 1728, 843, 150, 16384 },
+    { SCENE_SPIRIT_TEMPLE, 17, 18, 18, 1672, 843, 150, -16384 },
+    { SCENE_SPIRIT_TEMPLE, 18, 17, 18, 1728, 843, 150, 16384 },
     // armos puzzle to mirror chest
-    { SCENE_SPIRIT_TEMPLE, 18, 21, 1890, 843, -382, 0 },
-    { SCENE_SPIRIT_TEMPLE, 21, 18, 1890, 843, -438, -32768 },
+    { SCENE_SPIRIT_TEMPLE, 18, 21, 15, 1890, 843, -382, 0 },
+    { SCENE_SPIRIT_TEMPLE, 21, 18, 15, 1890, 843, -438, -32768 },
     // armos puzzle to stairs
-    { SCENE_SPIRIT_TEMPLE, 18, 19, 1960, 843, 442, -32768 },
-    { SCENE_SPIRIT_TEMPLE, 19, 18, 1960, 843, 498, 0 },
+    { SCENE_SPIRIT_TEMPLE, 18, 19, 17, 1960, 843, 442, -32768 },
+    { SCENE_SPIRIT_TEMPLE, 19, 18, 17, 1960, 843, 498, 0 },
     // stairs to iron knuckle
-    { SCENE_SPIRIT_TEMPLE, 20, 19, 1960, 1003, 1202, 0 },
-    { SCENE_SPIRIT_TEMPLE, 19, 20, 1960, 1003, 1146, -32768 },
+    { SCENE_SPIRIT_TEMPLE, 20, 19, 16, 1960, 1003, 1202, 0 },
+    { SCENE_SPIRIT_TEMPLE, 19, 20, 16, 1960, 1003, 1146, -32768 },
     // iron knuckle to mirror shield
-    { SCENE_SPIRIT_TEMPLE, 20, 11, 1348, 1003, 1470, 16384 },
-    { SCENE_SPIRIT_TEMPLE, 11, 20, 1292, 1003, 1470, -16384 },
+    { SCENE_SPIRIT_TEMPLE, 20, 11, 6, 1348, 1003, 1474, 16384 },
+    { SCENE_SPIRIT_TEMPLE, 11, 20, 6, 1292, 1003, 1474, -16384 },
     // sliding walls to lullaby door
-    { SCENE_SPIRIT_TEMPLE, 23, 24, 680, 1543, -419, 0 },
-    { SCENE_SPIRIT_TEMPLE, 24, 23, 680, 1543, -475, -32768 },
+    { SCENE_SPIRIT_TEMPLE, 23, 24, 13, 680, 1543, -419, 0 },
+    { SCENE_SPIRIT_TEMPLE, 24, 23, 13, 680, 1543, -475, -32768 },
     // lullaby door to boss key
-    { SCENE_SPIRIT_TEMPLE, 24, 22, 680, 1633, -882, 0 },
-    { SCENE_SPIRIT_TEMPLE, 22, 24, 680, 1633, -938, -32768 },
+    { SCENE_SPIRIT_TEMPLE, 24, 22, 12, 680, 1633, -882, 0 },
+    { SCENE_SPIRIT_TEMPLE, 22, 24, 12, 680, 1633, -938, -32768 },
     // lullaby door to light puzzle
-    { SCENE_SPIRIT_TEMPLE, 24, 25, 348, 1733, -830, 16384 },
-    { SCENE_SPIRIT_TEMPLE, 25, 24, 292, 1733, -830, -16384 },
+    { SCENE_SPIRIT_TEMPLE, 24, 25, 0, 348, 1733, -830, 16384 },
+    { SCENE_SPIRIT_TEMPLE, 25, 24, 0, 292, 1733, -830, -16384 },
     // light puzzle to light puzzle
-    { SCENE_SPIRIT_TEMPLE, 25, 26, -172, 1733, -830, 16384 },
-    { SCENE_SPIRIT_TEMPLE, 26, 25, -228, 1733, -830, -16384 },
+    { SCENE_SPIRIT_TEMPLE, 25, 26, 1, -172, 1733, -830, 16384 },
+    { SCENE_SPIRIT_TEMPLE, 26, 25, 1, -228, 1733, -830, -16384 },
     // child to child left
-    { SCENE_SPIRIT_TEMPLE, 1, 3, -1345, 30, -540, 10924 },
-    { SCENE_SPIRIT_TEMPLE, 3, 1, -1400, 30, -570, -21844 },
+    { SCENE_SPIRIT_TEMPLE, 1, 3, 10, -1344, 30, -543, 10923 },
+    { SCENE_SPIRIT_TEMPLE, 3, 1, 10, -1398, 30, -574, -21845 },
     // child to child anubis
-    { SCENE_SPIRIT_TEMPLE, 3, 27, -1450, 30, -1309, -8192 },
-    { SCENE_SPIRIT_TEMPLE, 27, 3, -1421, 30, -1347, 24576 },
+    { SCENE_SPIRIT_TEMPLE, 3, 27, 26, -1452, 30, -1310, -8192 },
+    { SCENE_SPIRIT_TEMPLE, 27, 3, 26, -1418, 30, -1344, 24576 },
     // child anubis to child right
-    { SCENE_SPIRIT_TEMPLE, 27, 2, -839, 30, -1475, -24576 },
-    { SCENE_SPIRIT_TEMPLE, 2, 27, -801, 30, -1446, 8192 },
+    { SCENE_SPIRIT_TEMPLE, 27, 2, 27, -835, 30, -1479, -24758 },
+    { SCENE_SPIRIT_TEMPLE, 2, 27, 27, -802, 30, -1445, 8010 },
     // child right to child
-    { SCENE_SPIRIT_TEMPLE, 2, 1, -720, 30, -570, 21844 },
-    { SCENE_SPIRIT_TEMPLE, 1, 2, -775, 30, -540, -10924 },
+    { SCENE_SPIRIT_TEMPLE, 2, 1, 11, -722, 30, -574, 21845 },
+    { SCENE_SPIRIT_TEMPLE, 1, 2, 11, -776, 30, -543, -10923 },
     // child to child climb
-    { SCENE_SPIRIT_TEMPLE, 1, 4, -1058, 40, -1083, 0 },
-    { SCENE_SPIRIT_TEMPLE, 4, 1, -1058, 40, -1134, -32768 },
+    { SCENE_SPIRIT_TEMPLE, 1, 4, 9, -1060, 40, -1083, 0 },
+    { SCENE_SPIRIT_TEMPLE, 4, 1, 9, -1060, 40, -1134, -32768 },
     // child climb to statue
-    { SCENE_SPIRIT_TEMPLE, 4, 5, -684, 480, -850, -16384 },
-    { SCENE_SPIRIT_TEMPLE, 5, 4, -636, 480, -850, 16384 },
+    { SCENE_SPIRIT_TEMPLE, 4, 5, 24, -684, 480, -850, -16384 },
+    { SCENE_SPIRIT_TEMPLE, 5, 4, 24, -636, 480, -850, 16384 },
     // statue to child stairs
-    { SCENE_SPIRIT_TEMPLE, 5, 7, -580, 813, -598, -32768 },
-    { SCENE_SPIRIT_TEMPLE, 7, 5, -580, 813, -542, 0 },
+    { SCENE_SPIRIT_TEMPLE, 5, 7, 25, -580, 813, -598, -32768 },
+    { SCENE_SPIRIT_TEMPLE, 7, 5, 25, -580, 813, -542, 0 },
     // child round stairs to child silver
-    { SCENE_SPIRIT_TEMPLE, 7, 8, -912, 843, -210, 16384 },
-    { SCENE_SPIRIT_TEMPLE, 8, 7, -968, 843, -210, -16384 },
+    { SCENE_SPIRIT_TEMPLE, 7, 8, 22, -912, 843, -210, 16384 },
+    { SCENE_SPIRIT_TEMPLE, 8, 7, 22, -968, 843, -210, -16384 },
     // child silver to child straight stairs
-    { SCENE_SPIRIT_TEMPLE, 8, 9, -1700, 843, 442, -16384 },
-    { SCENE_SPIRIT_TEMPLE, 9, 8, -1700, 843, 498, 16384 },
+    { SCENE_SPIRIT_TEMPLE, 8, 9, 8, -1700, 843, 442, -32768 },
+    { SCENE_SPIRIT_TEMPLE, 9, 8, 8, -1700, 843, 498, 0 },
     // child straight stairs to iron knuckle
-    { SCENE_SPIRIT_TEMPLE, 9, 10, -1700, 1003, 1146, -16384 },
-    { SCENE_SPIRIT_TEMPLE, 10, 9, -1700, 1003, 1202, 16384 },
+    { SCENE_SPIRIT_TEMPLE, 9, 10, 21, -1700, 1003, 1146, -32768 },
+    { SCENE_SPIRIT_TEMPLE, 10, 9, 21, -1700, 1003, 1202, 0 },
     // iron knuckle to silver gauntlets
-    { SCENE_SPIRIT_TEMPLE, 10, 11, -1088, 1003, 1472, -16384 },
-    { SCENE_SPIRIT_TEMPLE, 11, 10, -1032, 1003, 1472, 16384 },
+    { SCENE_SPIRIT_TEMPLE, 10, 11, 7, -1088, 1003, 1474, -16384 },
+    { SCENE_SPIRIT_TEMPLE, 11, 10, 7, -1032, 1003, 1474, 16384 },
     // statue to shortcut
-    { SCENE_SPIRIT_TEMPLE, 5, 6, 60, 413, -678, -32768 },
-    { SCENE_SPIRIT_TEMPLE, 6, 5, 60, 413, -622, 0 },
+    { SCENE_SPIRIT_TEMPLE, 5, 6, 23, 60, 413, -678, -32768 },
+    { SCENE_SPIRIT_TEMPLE, 6, 5, 23, 60, 413, -622, 0 },
     // x-cross to eastern room
-    { SCENE_BOTTOM_OF_THE_WELL, 0, 5, 450, 0, -878, 0 },
-    { SCENE_BOTTOM_OF_THE_WELL, 5, 0, 450, 0, -922, -32768 },
+    { SCENE_BOTTOM_OF_THE_WELL, 0, 5, 3, 450, 0, -878, 0 },
+    { SCENE_BOTTOM_OF_THE_WELL, 5, 0, 3, 450, 0, -922, -32768 },
     // x-cross to western room
-    { SCENE_BOTTOM_OF_THE_WELL, 0, 6, -410, 0, -878, 0 },
-    { SCENE_BOTTOM_OF_THE_WELL, 6, 0, -410, 0, -922, -32768 },
+    { SCENE_BOTTOM_OF_THE_WELL, 0, 6, 4, -410, 0, -878, 0 },
+    { SCENE_BOTTOM_OF_THE_WELL, 6, 0, 4, -410, 0, -922, -32768 },
     // perimeter to coffins
-    { SCENE_BOTTOM_OF_THE_WELL, 0, 2, -1548, 0, -740, 0 },
-    { SCENE_BOTTOM_OF_THE_WELL, 2, 0, -1592, 0, -740, -32768 },
+    { SCENE_BOTTOM_OF_THE_WELL, 0, 2, 5, -1548, 0, -740, 16384 },
+    { SCENE_BOTTOM_OF_THE_WELL, 2, 0, 5, -1592, 0, -740, -16384 },
     // bottom to perimeter TODO one way door
     // DOOR 1 0 (-890,0,-124)
     // lower crawlspace to deadhand
-    { SCENE_BOTTOM_OF_THE_WELL, 0, 4, 876, -20, 209, -16384 },
-    { SCENE_BOTTOM_OF_THE_WELL, 4, 0, 924, -20, 209, 16384 },
+    { SCENE_BOTTOM_OF_THE_WELL, 0, 4, 6, 876, -20, 210, -16384 },
+    { SCENE_BOTTOM_OF_THE_WELL, 4, 0, 6, 924, -20, 210, 16384 },
     // crawlspace to four pits
-    { SCENE_BOTTOM_OF_THE_WELL, 0, 3, 1140, 0, -1442, -32768 },
-    { SCENE_BOTTOM_OF_THE_WELL, 3, 0, 1140, 0, -1398, 0 },
+    { SCENE_BOTTOM_OF_THE_WELL, 0, 3, 2, 1140, 0, -1442, -32768 },
+    { SCENE_BOTTOM_OF_THE_WELL, 3, 0, 2, 1140, 0, -1398, 0 },
     // four pits to like like cage
-    { SCENE_BOTTOM_OF_THE_WELL, 3, 0, 870, 0, -882, -32768 },
-    { SCENE_BOTTOM_OF_THE_WELL, 0, 3, 870, 0, -838, 0 },
-    { SCENE_ICE_CAVERN, 6, 7, -1360, 280, 709, -24576 },
-    { SCENE_ICE_CAVERN, 7, 6, -1317, 279, 746, 8192 },
-    { SCENE_ICE_CAVERN, 7, 10, -884, 80, 1194, -24576 },
-    { SCENE_ICE_CAVERN, 10, 7, -846, 80, 1235, 8192 },
+    { SCENE_BOTTOM_OF_THE_WELL, 3, 0, 1, 870, 0, -882, -32768 },
+    { SCENE_BOTTOM_OF_THE_WELL, 0, 3, 1, 870, 0, -838, 0 },
+    { SCENE_ICE_CAVERN, 6, 7, 11, -1360, 280, 709, -24576 },
+    { SCENE_ICE_CAVERN, 7, 6, 11, -1320, 279, 749, 8192 },
+    { SCENE_ICE_CAVERN, 7, 10, 10, -886, 80, 1196, -24394 },
+    { SCENE_ICE_CAVERN, 10, 7, 10, -846, 80, 1235, 8374 },
     // lobby to door maze
-    { SCENE_GERUDO_TRAINING_GROUND, 0, 8, -70, -80, -1072, 0 },
-    { SCENE_GERUDO_TRAINING_GROUND, 8, 0, -70, -80, -1128, -32768 },
+    { SCENE_GERUDO_TRAINING_GROUND, 0, 8, 4, -60, -80, -1072, 0 },
+    { SCENE_GERUDO_TRAINING_GROUND, 8, 0, 4, -60, -80, -1128, -32768 },
     // lobby to sand
-    { SCENE_GERUDO_TRAINING_GROUND, 0, 1, -952, -80, -178, 16384 },
-    { SCENE_GERUDO_TRAINING_GROUND, 1, 0, -1008, -80, -178, -16384 },
+    { SCENE_GERUDO_TRAINING_GROUND, 0, 1, 6, -952, -80, -180, 16384 },
+    { SCENE_GERUDO_TRAINING_GROUND, 1, 0, 6, -1008, -80, -180, -16384 },
     // sand to fire maze
-    { SCENE_GERUDO_TRAINING_GROUND, 1, 2, -1580, -80, -592, 0 },
-    { SCENE_GERUDO_TRAINING_GROUND, 2, 1, -1580, -80, -648, -32768 },
+    { SCENE_GERUDO_TRAINING_GROUND, 1, 2, 1, -1580, -80, -592, 0 },
+    { SCENE_GERUDO_TRAINING_GROUND, 2, 1, 1, -1580, -80, -648, -32768 },
     // fire maze to big block
-    { SCENE_GERUDO_TRAINING_GROUND, 2, 3, -1580, 160, -2139, 0 },
-    { SCENE_GERUDO_TRAINING_GROUND, 3, 2, -1580, 160, -2195, -32768 },
+    { SCENE_GERUDO_TRAINING_GROUND, 2, 3, 2, -1579, 160, -2139, 0 },
+    { SCENE_GERUDO_TRAINING_GROUND, 3, 2, 2, -1579, 160, -2195, -32768 },
     // big block to pits
-    { SCENE_GERUDO_TRAINING_GROUND, 3, 10, -1580, 159, -3469, 0 },
-    { SCENE_GERUDO_TRAINING_GROUND, 10, 3, -1580, 159, -3525, -32768 },
+    { SCENE_GERUDO_TRAINING_GROUND, 3, 10, 3, -1577, 159, -3469, 0 },
+    { SCENE_GERUDO_TRAINING_GROUND, 10, 3, 3, -1577, 159, -3525, -32768 },
     // big block to eyes
-    { SCENE_GERUDO_TRAINING_GROUND, 3, 4, -805, 239, -2745, -16384 },
-    { SCENE_GERUDO_TRAINING_GROUND, 4, 3, -749, 239, -2745, 16384 },
+    { SCENE_GERUDO_TRAINING_GROUND, 3, 4, 7, -805, 239, -2747, -16384 },
+    { SCENE_GERUDO_TRAINING_GROUND, 4, 3, 7, -749, 239, -2747, 16384 },
     // eyes to above maze
-    { SCENE_GERUDO_TRAINING_GROUND, 4, 8, -77, 239, -2088, -32768 },
-    { SCENE_GERUDO_TRAINING_GROUND, 8, 4, -77, 239, -2031, 0 },
+    { SCENE_GERUDO_TRAINING_GROUND, 4, 8, 12, -78, 239, -2088, -32768 },
+    { SCENE_GERUDO_TRAINING_GROUND, 8, 4, 12, -78, 239, -2031, 0 },
     // eyes to hammer room
-    { SCENE_GERUDO_TRAINING_GROUND, 4, 5, 795, -81, -2748, -16384 },
-    { SCENE_GERUDO_TRAINING_GROUND, 5, 4, 851, -81, -2748, 16384 },
+    { SCENE_GERUDO_TRAINING_GROUND, 4, 5, 8, 795, -81, -2748, -16384 },
+    { SCENE_GERUDO_TRAINING_GROUND, 5, 4, 8, 851, -81, -2748, 16384 },
     // hammer room to lava
-    { SCENE_GERUDO_TRAINING_GROUND, 5, 6, 1443, -81, -2436, -32768 },
-    { SCENE_GERUDO_TRAINING_GROUND, 6, 5, 1443, -81, -2380, 0 },
+    { SCENE_GERUDO_TRAINING_GROUND, 5, 6, 9, 1443, -81, -2436, -32768 },
+    { SCENE_GERUDO_TRAINING_GROUND, 6, 5, 9, 1443, -81, -2380, 0 },
     // lava to water
-    { SCENE_GERUDO_TRAINING_GROUND, 6, 9, 1894, -240, -1463, -16384 },
-    { SCENE_GERUDO_TRAINING_GROUND, 9, 6, 1950, -240, -1463, 16384 },
+    { SCENE_GERUDO_TRAINING_GROUND, 6, 9, 10, 1894, -240, -1464, -16384 },
+    { SCENE_GERUDO_TRAINING_GROUND, 9, 6, 10, 1950, -240, -1464, 16384 },
     // lava to ring of fire
-    { SCENE_GERUDO_TRAINING_GROUND, 6, 7, 1480, -79, -628, -32768 },
-    { SCENE_GERUDO_TRAINING_GROUND, 7, 6, 1480, -80, -572, 0 },
+    { SCENE_GERUDO_TRAINING_GROUND, 6, 7, 11, 1480, -79, -628, -32768 },
+    { SCENE_GERUDO_TRAINING_GROUND, 7, 6, 11, 1480, -80, -572, 0 },
     // ring of fire to lobby
-    { SCENE_GERUDO_TRAINING_GROUND, 7, 0, 888, -80, -178, 16384 },
-    { SCENE_GERUDO_TRAINING_GROUND, 0, 7, 832, -80, -178, -16384 },
+    { SCENE_GERUDO_TRAINING_GROUND, 7, 0, 5, 888, -80, -180, 16384 },
+    { SCENE_GERUDO_TRAINING_GROUND, 0, 7, 5, 832, -80, -180, -16384 },
     // entrance to lobby
-    { SCENE_INSIDE_GANONS_CASTLE, 0, 1, 0, 150, 621, 0 },
-    { SCENE_INSIDE_GANONS_CASTLE, 1, 0, 0, 150, 565, -32768 },
+    { SCENE_INSIDE_GANONS_CASTLE, 0, 1, 2, 0, 150, 621, 0 },
+    { SCENE_INSIDE_GANONS_CASTLE, 1, 0, 2, 0, 150, 565, -32768 },
     // lobby to spirit
-    { SCENE_INSIDE_GANONS_CASTLE, 1, 17, -600, 150, 204, 27308 },
-    { SCENE_INSIDE_GANONS_CASTLE, 17, 1, -628, 150, 252, -5460 },
+    { SCENE_INSIDE_GANONS_CASTLE, 1, 17, 16, -602, 150, 203, 27307 },
+    { SCENE_INSIDE_GANONS_CASTLE, 17, 1, 16, -630, 150, 251, -5461 },
     // spirit to spirit slug
-    { SCENE_INSIDE_GANONS_CASTLE, 17, 18, -1221, 150, 712, 10924 },
-    { SCENE_INSIDE_GANONS_CASTLE, 18, 17, -1276, 150, 675, -21844 },
+    { SCENE_INSIDE_GANONS_CASTLE, 17, 18, 17, -1220, 150, 710, 10923 },
+    { SCENE_INSIDE_GANONS_CASTLE, 18, 17, 17, -1277, 150, 677, -21845 },
     // spirit slug to spirit core
-    { SCENE_INSIDE_GANONS_CASTLE, 18, 19, -1282, 150, 1379, 27308 },
-    { SCENE_INSIDE_GANONS_CASTLE, 19, 18, -1312, 150, 1428, -5460 },
+    { SCENE_INSIDE_GANONS_CASTLE, 18, 19, 18, -1281, 150, 1379, 27307 },
+    { SCENE_INSIDE_GANONS_CASTLE, 19, 18, 18, -1310, 150, 1429, -5461 },
     // lobby to light
-    { SCENE_INSIDE_GANONS_CASTLE, 1, 9, -1291, -240, -840, 16384 },
-    { SCENE_INSIDE_GANONS_CASTLE, 9, 1, -1347, -240, -840, -16384 },
+    { SCENE_INSIDE_GANONS_CASTLE, 1, 9, 10, -1291, -240, -840, 16384 },
+    { SCENE_INSIDE_GANONS_CASTLE, 9, 1, 10, -1347, -240, -840, -16384 },
     // light to light boulders
-    { SCENE_INSIDE_GANONS_CASTLE, 9, 8, -2229, -240, -840, 16384 },
-    { SCENE_INSIDE_GANONS_CASTLE, 8, 9, -2285, -240, -840, -16384 },
+    { SCENE_INSIDE_GANONS_CASTLE, 9, 8, 19, -2229, -240, -840, 16384 },
+    { SCENE_INSIDE_GANONS_CASTLE, 8, 9, 19, -2285, -240, -840, -16384 },
     // light boulders to light core
-    { SCENE_INSIDE_GANONS_CASTLE, 8, 10, -2891, -246, -840, 16384 },
-    { SCENE_INSIDE_GANONS_CASTLE, 10, 8, -2947, -240, -840, -16384 },
+    { SCENE_INSIDE_GANONS_CASTLE, 8, 10, 5, -2891, -246, -840, 16384 },
+    { SCENE_INSIDE_GANONS_CASTLE, 10, 8, 5, -2947, -240, -840, -16384 },
     // lobby to fire
-    { SCENE_INSIDE_GANONS_CASTLE, 1, 14, -604, 150, -1881, 5460 },
-    { SCENE_INSIDE_GANONS_CASTLE, 14, 1, -628, 150, -1932, -27308 },
+    { SCENE_INSIDE_GANONS_CASTLE, 1, 14, 11, -602, 150, -1882, 5461 },
+    { SCENE_INSIDE_GANONS_CASTLE, 14, 1, 11, -630, 150, -1931, -27307 },
     // fire to fire core
-    { SCENE_INSIDE_GANONS_CASTLE, 14, 15, -1939, 153, -3836, 5460 },
-    { SCENE_INSIDE_GANONS_CASTLE, 15, 14, -1966, 153, -3884, -27308 },
+    { SCENE_INSIDE_GANONS_CASTLE, 14, 15, 15, -1938, 153, -3837, 5461 },
+    { SCENE_INSIDE_GANONS_CASTLE, 15, 14, 15, -1965, 153, -3884, -27307 },
     // lobby to shadow
-    { SCENE_INSIDE_GANONS_CASTLE, 12, 1, 631, 150, -1930, -5460 },
-    { SCENE_INSIDE_GANONS_CASTLE, 1, 12, 602, 150, -1883, 27308 },
+    { SCENE_INSIDE_GANONS_CASTLE, 12, 1, 12, 630, 150, -1931, 27307 },
+    { SCENE_INSIDE_GANONS_CASTLE, 1, 12, 12, 602, 150, -1883, -5461 },
     // shadow to shadow core
-    { SCENE_INSIDE_GANONS_CASTLE, 12, 13, 2100, 210, -4482, -5460 },
-    { SCENE_INSIDE_GANONS_CASTLE, 13, 12, 2131, 210, -4528, 27308 },
+    { SCENE_INSIDE_GANONS_CASTLE, 12, 13, 14, 2102, 210, -4481, -5461 },
+    { SCENE_INSIDE_GANONS_CASTLE, 13, 12, 14, 2130, 210, -4529, 27307 },
     // lobby to water
-    { SCENE_INSIDE_GANONS_CASTLE, 1, 2, 1204, -240, -840, -16384 },
-    { SCENE_INSIDE_GANONS_CASTLE, 2, 1, 1260, -240, -840, 16384 },
+    { SCENE_INSIDE_GANONS_CASTLE, 1, 2, 9, 1204, -240, -840, -16384 },
+    { SCENE_INSIDE_GANONS_CASTLE, 2, 1, 9, 1260, -240, -840, 16384 },
     // water to water puzzle
-    { SCENE_INSIDE_GANONS_CASTLE, 2, 3, 2324, -248, -840, -16384 },
-    { SCENE_INSIDE_GANONS_CASTLE, 3, 2, 2380, -250, -840, 16384 },
+    { SCENE_INSIDE_GANONS_CASTLE, 2, 3, 4, 2324, -248, -840, -16384 },
+    { SCENE_INSIDE_GANONS_CASTLE, 3, 2, 4, 2380, -250, -840, 16384 },
     // water puzzle to water core
-    { SCENE_INSIDE_GANONS_CASTLE, 3, 4, 3464, -240, -840, -16384 },
-    { SCENE_INSIDE_GANONS_CASTLE, 4, 3, 3520, -240, -830, 16384 },
+    { SCENE_INSIDE_GANONS_CASTLE, 3, 4, 13, 3464, -240, -840, -16384 },
+    { SCENE_INSIDE_GANONS_CASTLE, 4, 3, 13, 3520, -240, -840, 16384 },
     // lobby to forest
-    { SCENE_INSIDE_GANONS_CASTLE, 1, 5, 603, 150, 202, -27308 },
-    { SCENE_INSIDE_GANONS_CASTLE, 5, 1, 629, 150, 252, 5460 },
+    { SCENE_INSIDE_GANONS_CASTLE, 1, 5, 8, 602, 150, 203, -27307 },
+    { SCENE_INSIDE_GANONS_CASTLE, 5, 1, 8, 630, 150, 251, 5461 },
     // forest to forest wind
-    { SCENE_INSIDE_GANONS_CASTLE, 5, 6, 1150, 110, 1139, -27308 },
-    { SCENE_INSIDE_GANONS_CASTLE, 6, 5, 1176, 110, 1187, 5460 },
+    { SCENE_INSIDE_GANONS_CASTLE, 5, 6, 6, 1145, 110, 1142, -27307 },
+    { SCENE_INSIDE_GANONS_CASTLE, 6, 5, 6, 1172, 110, 1189, 5461 },
     // forest wind to forest core
-    { SCENE_INSIDE_GANONS_CASTLE, 6, 7, 1766, 110, 2216, -27308 },
-    { SCENE_INSIDE_GANONS_CASTLE, 7, 6, 1790, 110, 2266, 5460 },
+    { SCENE_INSIDE_GANONS_CASTLE, 6, 7, 7, 1765, 110, 2217, -27307 },
+    { SCENE_INSIDE_GANONS_CASTLE, 7, 6, 7, 1793, 110, 2265, 5461 },
     // first floor to second floor
-    { SCENE_GANONS_TOWER, 7, 0, -428, 0, 0, -16384 },
-    { SCENE_GANONS_TOWER, 0, 7, -372, 0, 0, 16384 },
+    { SCENE_GANONS_TOWER, 7, 0, 3, -428, 0, 0, -16384 },
+    { SCENE_GANONS_TOWER, 0, 7, 3, -372, 0, 0, 16384 },
     // second floor to second floor stairs
-    { SCENE_GANONS_TOWER, 0, 1, 477, 40, 0, -16384 },
-    { SCENE_GANONS_TOWER, 1, 0, 534, 40, 0, 16384 },
+    { SCENE_GANONS_TOWER, 0, 1, 2, 477, 40, 0, -16384 },
+    { SCENE_GANONS_TOWER, 1, 0, 2, 534, 40, 0, 16384 },
     // second floor stairs to third floor
-    { SCENE_GANONS_TOWER, 1, 2, 0, 260, -428, -32768 },
-    { SCENE_GANONS_TOWER, 2, 1, 0, 260, -372, 0 },
+    { SCENE_GANONS_TOWER, 1, 2, 4, 0, 260, -428, -32768 },
+    { SCENE_GANONS_TOWER, 2, 1, 4, 0, 260, -372, 0 },
     // third floor to third floor stairs
-    { SCENE_GANONS_TOWER, 2, 3, 0, 300, 478, -32768 },
-    { SCENE_GANONS_TOWER, 3, 2, 0, 300, 534, 0 },
+    { SCENE_GANONS_TOWER, 2, 3, 0, 0, 300, 478, -32768 },
+    { SCENE_GANONS_TOWER, 3, 2, 0, 0, 300, 534, 0 },
     // third floor stairs to fourth floor
-    { SCENE_GANONS_TOWER, 3, 4, 428, 520, 0, 16384 },
-    { SCENE_GANONS_TOWER, 4, 3, 372, 520, 0, -16384 },
+    { SCENE_GANONS_TOWER, 3, 4, 5, 428, 520, 0, 16384 },
+    { SCENE_GANONS_TOWER, 4, 3, 5, 372, 520, 0, -16384 },
     // fourth floor to fourth floor stairs
-    { SCENE_GANONS_TOWER, 4, 5, -478, 560, 0, 16384 },
-    { SCENE_GANONS_TOWER, 5, 4, -534, 560, 0, -16384 },
+    { SCENE_GANONS_TOWER, 4, 5, 1, -478, 560, 0, 16384 },
+    { SCENE_GANONS_TOWER, 5, 4, 1, -534, 560, 0, -16384 },
     // fourth floor stairs to pots
     // TODO can't go back in vanilla, get other coords in rando
     // DOOR 5 8 (-1,800,528)
@@ -3951,35 +3951,37 @@ void EntranceShuffler::CreateEntranceOverrides() {
     }
 }
 
-const Door* EntranceShuffler::MapDoor(s16 scene, s8 srcRoom, s8 dstRoom, s16 linkX, s16 linkY, s16 linkZ) {
-    size_t doorIndex = -1;
-    size_t minDist = 18432;
-    for (size_t i = 0; i < DoorsList.size(); i++) {
-        auto door = &DoorsList[i];
-        size_t linkDist = SQ(door->linkX - linkX) + SQ(door->linkZ - linkZ) + SQ(door->linkY - linkY);
-        if (door->scene == scene && door->srcRoom == srcRoom && door->dstRoom == dstRoom && linkDist < minDist) {
-            doorIndex = i;
-            minDist = linkDist;
+// scene & transition actor index identify a door, frontRoom picks which way we're walking through it
+const Door* EntranceShuffler::MapDoor(s16 scene, s8 transitionIdx, s8 frontRoom) {
+    if (mDoorTable.size() == 0) {
+        mDoorTable.reserve(DoorsList.size());
+        for (size_t i = 0; i < DoorsList.size(); i++) {
+            mDoorTable.push_back((int16_t)i ^ 1);
+            // both entries of a door share a key, the even one wins
+            mDoorLookup.emplace(DOOR_KEY(DoorsList[i].scene, DoorsList[i].transitionIdx), (int16_t)(i & ~1));
+        }
+        for (int i = 0; i < ENTRANCE_OVERRIDES_MAX_COUNT; i++) {
+            if (entranceOverrides[i].type >= (uint16_t)EntranceType::DoorDekuTree &&
+                entranceOverrides[i].type <= (uint16_t)EntranceType::DoorGanonsTower) {
+                mDoorTable[entranceOverrides[i].index - ENTRANCE_DOOR_START] =
+                    (entranceOverrides[i].override ^ 1) - ENTRANCE_DOOR_START;
+            }
         }
     }
 
-    if (doorIndex != (size_t)-1) {
-        if (mDoorTable.size() == 0) {
-            mDoorTable.reserve(DoorsList.size());
-            for (size_t i = 0; i < DoorsList.size(); i++) {
-                mDoorTable.push_back((int16_t)i ^ 1);
-            }
-            for (int i = 0; i < ENTRANCE_OVERRIDES_MAX_COUNT; i++) {
-                if (entranceOverrides[i].type >= (uint16_t)EntranceType::DoorDekuTree &&
-                    entranceOverrides[i].type <= (uint16_t)EntranceType::DoorGanonsTower) {
-                    mDoorTable[entranceOverrides[i].index - ENTRANCE_DOOR_START] =
-                        (entranceOverrides[i].override ^ 1) - ENTRANCE_DOOR_START;
-                }
-            }
-        }
-        return &DoorsList[mDoorTable[doorIndex]];
+    auto entry = mDoorLookup.find(DOOR_KEY(scene, transitionIdx));
+    if (entry == mDoorLookup.end()) {
+        return NULL;
     }
-    return NULL;
+
+    int16_t doorIndex = entry->second;
+    if (DoorsList[doorIndex].dstRoom != frontRoom) {
+        doorIndex ^= 1;
+        if (DoorsList[doorIndex].dstRoom != frontRoom) {
+            return NULL;
+        }
+    }
+    return &DoorsList[mDoorTable[doorIndex]];
 }
 
 /// @brief set all the entrances to be 0 to indicate an unshuffled entrance
