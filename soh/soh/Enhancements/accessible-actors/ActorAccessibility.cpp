@@ -536,7 +536,7 @@ void ActorAccessibility_GeneralHelper(PlayState* play) {
     } else {
         if (!compassOn) {
             OSContPad* trackerButtonsPressed =
-                std::dynamic_pointer_cast<LUS::ControlDeck>(Ship::Context::GetInstance()->GetControlDeck())->GetPads();
+                std::dynamic_pointer_cast<LUS::ControlDeck>(Ship::Context::GetRawInstance()->GetControlDeck())->GetPads();
             compassOn = trackerButtonsPressed != nullptr && (trackerButtonsPressed[0].button & BTN_DDOWN) &&
                         (trackerButtonsPressed[0].button & BTN_L);
         }
@@ -592,7 +592,7 @@ void ActorAccessibility_AudioGlossary(PlayState* play) {
     }
 
     OSContPad* trackerButtonsPressed =
-        std::dynamic_pointer_cast<LUS::ControlDeck>(Ship::Context::GetInstance()->GetControlDeck())->GetPads();
+        std::dynamic_pointer_cast<LUS::ControlDeck>(Ship::Context::GetRawInstance()->GetControlDeck())->GetPads();
     bool comboStartGlossary = trackerButtonsPressed != nullptr && trackerButtonsPressed[0].button & BTN_DUP &&
                               trackerButtonsPressed[0].button & BTN_L;
     if (comboStartGlossary) {
@@ -678,8 +678,8 @@ void ActorAccessibility_InterpretCurrentScene(PlayState* play) {
     for (int i = 0; i < play->colCtx.colHeader->numPolygons; i++) {
         CollisionPoly* poly = &play->colCtx.colHeader->polyList[i];
         // checks if climable
-        if ((func_80041DB8(&play->colCtx, poly, BGCHECK_SCENE) == 8 ||
-             func_80041DB8(&play->colCtx, poly, BGCHECK_SCENE) == 3)) {
+        if ((SurfaceType_GetWallFlags(&play->colCtx, poly, BGCHECK_SCENE) == 8 ||
+             SurfaceType_GetWallFlags(&play->colCtx, poly, BGCHECK_SCENE) == 3)) {
             ActorAccessibility_PolyToVirtualActor(play, poly, VA_CLIMB, list);
         } else if (SurfaceType_GetSceneExitIndex(&play->colCtx, poly, BGCHECK_SCENE) != 0) {
             ActorAccessibility_PolyToVirtualActor(play, poly, VA_AREA_CHANGE, list);
@@ -820,7 +820,7 @@ const char* ActorAccessibility_MapSfxToExternalAudio(s16 sfxId) {
     if (it == aa->sfxMap.end()) {
         SfxRecord tempRecord;
         std::string fullPath = SfxExtractor::getExternalFileName(sfxId);
-        auto res = Ship::Context::GetInstance()->GetResourceManager()->GetArchiveManager()->LoadFile(fullPath);
+        auto res = Ship::Context::GetRawInstance()->GetResourceManager()->GetArchiveManager()->LoadFile(fullPath);
 
         if (res == nullptr)
             return NULL; // Resource doesn't exist, user's gotta run the extractor.

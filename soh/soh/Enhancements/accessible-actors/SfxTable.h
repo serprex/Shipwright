@@ -1,4 +1,7 @@
 #pragma once
+#include "z64.h"
+#include "sfx.h"
+
 // A big nasty array containing every SFX ID in the game.
 // All of the "DUMMY's" and "YOBI's" have been removed as they produce duplicate sounds at best, and cause errors or
 // even crashes at worst.

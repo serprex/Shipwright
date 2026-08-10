@@ -543,7 +543,7 @@ class TerrainCueDirection final {
         s16 temp3;
         PlayState* play = actor->play;
 
-        if (SurfaceType_GetSlope(&play->colCtx, floorPoly, floorBgId) == 1) {
+        if (SurfaceType_GetFloorEffect(&play->colCtx, floorPoly, floorBgId) == 1) {
             sp4A = Math_Atan2S(velocity.z, velocity.x);
             Player_GetSlopeDirection(floorPoly, &sp3C, &sp3A);
             temp3 = sp3A - sp4A;
@@ -810,7 +810,7 @@ class TerrainCueDirection final {
         if (floorpoly == NULL) {
             return 0;
         }
-        s8 floorparam = func_80041D4C(colCtx, floorpoly, BG_ACTOR_MAX);
+        s8 floorparam = SurfaceType_GetFloorType(colCtx, floorpoly, BG_ACTOR_MAX);
         return floorparam == 2 || floorparam == 3;
     }
 
@@ -992,8 +992,8 @@ class TerrainCueDirection final {
 
                 if (wallPoly != NULL) {
 
-                    if ((moveMethod == 2) && (func_80041DB8(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 8 &&
-                                              func_80041DB8(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 3)) {
+                    if ((moveMethod == 2) && (SurfaceType_GetWallFlags(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 8 &&
+                                              SurfaceType_GetWallFlags(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 3)) {
 
                         if (fabs(pos.y - player->actor.world.pos.y) < 100) {
                             discoverLedge(pos, false);
@@ -1024,8 +1024,8 @@ class TerrainCueDirection final {
                         i += 1;
                     }
                     if (wallPoly != NULL) {
-                        if ((func_80041DB8(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 8 &&
-                             func_80041DB8(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 3)) {
+                        if ((SurfaceType_GetWallFlags(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 8 &&
+                             SurfaceType_GetWallFlags(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 3)) {
                             if (checkPerpendicularWall(pos, ogRot)) {
                                 discoverWall(pos);
                                 break;
@@ -1055,8 +1055,8 @@ class TerrainCueDirection final {
                         wallPoly = checkWall(pos, prevPos, wallPos);
                     }
                     if (wallPoly != NULL) {
-                        if ((func_80041DB8(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 8 &&
-                             func_80041DB8(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 3)) {
+                        if ((SurfaceType_GetWallFlags(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 8 &&
+                             SurfaceType_GetWallFlags(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 3)) {
                             discoverLedge(pos, false);
 
                             break;
@@ -1072,8 +1072,8 @@ class TerrainCueDirection final {
                     rot = ogRot;
                     wallPoly = checkWall(backPos, forwardPos, wallPos);
                     if (wallPoly != NULL) {
-                        if ((func_80041DB8(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 8 &&
-                             func_80041DB8(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 3)) {
+                        if ((SurfaceType_GetWallFlags(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 8 &&
+                             SurfaceType_GetWallFlags(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 3)) {
                             discoverLedge(pos, false);
 
                             break;

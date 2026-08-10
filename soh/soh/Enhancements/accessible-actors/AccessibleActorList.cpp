@@ -37,7 +37,7 @@ void EnEiyer_Die(EnEiyer*, PlayState*);
 void EnEiyer_Dead(EnEiyer*, PlayState*);
 void EnGSwitch_SilverRupeeIdle(EnGSwitch*, PlayState*);
 
-extern u8 sBgPoEventPuzzleState;
+u8 Ship_BgPoEvent_GetPuzzleState(void);
 }
 
 #define MOVEBG_TYPE(params) (((u16)(params) >> 0xC) & 0xF)
@@ -859,7 +859,7 @@ void ActorAccessibility_InitActors() {
             if ((actor->frameCount & 31) == 0) {
                 ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EV_TRAP_BOUND);
             }
-        } else if (po->index == sBgPoEventPuzzleState) {
+        } else if (po->index == Ship_BgPoEvent_GetPuzzleState()) {
             actor->policy.aimAssist.isProvider = AIM_BOW;
             if ((actor->frameCount & 63) == 0) {
                 ActorAccessibility_PlaySoundForActor(actor, 0, NA_SE_EN_PO_CRY);
