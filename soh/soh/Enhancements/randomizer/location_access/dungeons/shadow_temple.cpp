@@ -90,7 +90,7 @@ void RegionTable_Init_ShadowTemple() {
         LOCATION(RC_SHADOW_TEMPLE_BEAMOS_STORM_FAIRY, logic->CanUse(RG_SONG_OF_STORMS)),
     }, {
         //Exits
-        ENTRANCE(RR_SHADOW_TEMPLE_BEGINNING,            ctx->GetTrickOption(RT_VISIBLE_COLLISION) && (logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_HOOKSHOT))),
+        ENTRANCE(RR_SHADOW_TEMPLE_BEGINNING,            ctx->GetTrickOption(RT_VISIBLE_COLLISION) && (logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_HOOKSHOT) || (logic->IsAdult && logic->BunnyHood()))),
         ENTRANCE(RR_SHADOW_TEMPLE_COMPASS_ROOM,         true),
         ENTRANCE(RR_SHADOW_TEMPLE_SPINNING_BLADES,      true),
         ENTRANCE(RR_SHADOW_TEMPLE_B2_TO_B3_CORRIDOR_B2, logic->HasExplosives() && logic->SmallKeys(SCENE_SHADOW_TEMPLE, 1)),
@@ -511,7 +511,7 @@ void RegionTable_Init_ShadowTemple() {
         LOCATION(RC_SHADOW_TEMPLE_MQ_BEAMOS_STORM_FAIRY, logic->CanUse(RG_SONG_OF_STORMS)),
     }, {
         //Exits
-        ENTRANCE(RR_SHADOW_TEMPLE_MQ_SPINNER_ROOM,           ctx->GetTrickOption(RT_VISIBLE_COLLISION) && (logic->CanUse(RG_HOVER_BOOTS) || logic->HasFireSource())),
+        ENTRANCE(RR_SHADOW_TEMPLE_MQ_SPINNER_ROOM,           ctx->GetTrickOption(RT_VISIBLE_COLLISION) && (logic->CanUse(RG_HOVER_BOOTS) || logic->HasFireSource() || (logic->IsAdult && logic->BunnyHood()))),
         ENTRANCE(RR_SHADOW_TEMPLE_MQ_B2_GIBDO_ROOM,          true),
         ENTRANCE(RR_SHADOW_TEMPLE_MQ_B2_TO_B3_CORRIDOR_B2,   logic->HasExplosives() && logic->SmallKeys(SCENE_SHADOW_TEMPLE, 2)),
         ENTRANCE(RR_SHADOW_TEMPLE_MQ_B2_SPINNING_BLADE_ROOM, true),
