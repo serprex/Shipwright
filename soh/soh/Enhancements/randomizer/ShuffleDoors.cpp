@@ -1,6 +1,7 @@
 #include "soh/Enhancements/game-interactor/GameInteractor_Hooks.h"
 #include "soh/ShipInit.hpp"
 #include "soh/Enhancements/randomizer/SeedContext.h"
+#include "soh/Enhancements/randomizer/dungeon.h"
 
 extern "C" {
 #include <z64.h>
@@ -10,6 +11,70 @@ extern "C" {
 #include "src/overlays/actors/ovl_Door_Shutter/z_door_shutter.h"
 extern PlayState* gPlayState;
 void func_8083C0E8(Player* player, PlayState* play); // prevents cutscene softlock
+}
+
+// Carrying Ruto from room to room stops working once Jabu's doors lead somewhere else, so put a copy
+// of her in every vanilla Jabu room the logic expects to use her in.
+static const struct JabuRuto {
+    s8 room;
+    s16 x, y, z, rotY;
+} sJabuRutoRooms[] = {
+    // big octo room
+    { 6, -1160, -1015, -3343, 0x4000 },
+    // forked corridor
+    { 7, 0, -340, -4686, 0 },
+    // stinger room
+    { 9, 1250, -340, -4683, -0x4000 },
+    // water switch room
+    { 14, 620, -1113, -3223, -0x4000 },
+};
+
+static void SpawnJabuRuto() {
+    if (gPlayState->sceneNum != SCENE_JABU_JABU ||
+        Rando::Context::GetInstance()->GetDungeonFromScene(SCENE_JABU_JABU)->IsMQ()) {
+        return;
+    }
+
+    const JabuRuto* spawn = NULL;
+    for (const JabuRuto& room : sJabuRutoRooms) {
+        if (room.room == gPlayState->roomCtx.curRoom.num) {
+            spawn = &room;
+            break;
+        }
+    }
+    if (spawn == NULL) {
+        return;
+    }
+
+    // Once the platform has carried her off the big octo room has to stay Ruto-less
+    if (spawn->room == 6 && Flags_GetInfTable(INFTABLE_146)) {
+        return;
+    }
+
+    for (Actor* actor = gPlayState->actorCtx.actorLists[ACTORCAT_NPC].head; actor != NULL; actor = actor->next) {
+        if (actor->id == ACTOR_EN_RU1 && actor->update != NULL) {
+            return;
+        }
+    }
+
+    // Her init only leaves her waiting to be picked up for one combination of flags
+    bool met = Flags_GetInfTable(INFTABLE_RUTO_IN_JJ_MEET_RUTO);
+    bool onSwitch = Flags_GetInfTable(INFTABLE_140);
+    bool broughtUp = Flags_GetInfTable(INFTABLE_147);
+    Flags_SetInfTable(INFTABLE_RUTO_IN_JJ_MEET_RUTO);
+    Flags_UnsetInfTable(INFTABLE_140);
+    Flags_UnsetInfTable(INFTABLE_147);
+    Actor_Spawn(&gPlayState->actorCtx, gPlayState, ACTOR_EN_RU1, spawn->x, spawn->y, spawn->z, 0, spawn->rotY, 0,
+                0x0203);
+    if (!met) {
+        Flags_UnsetInfTable(INFTABLE_RUTO_IN_JJ_MEET_RUTO);
+    }
+    if (onSwitch) {
+        Flags_SetInfTable(INFTABLE_140);
+    }
+    if (broughtUp) {
+        Flags_SetInfTable(INFTABLE_147);
+    }
 }
 
 // Drop the player at the shuffled door's other side. Returns true when that side is in another
@@ -104,7 +169,7 @@ void RegisterShuffleDoors() {
         Actor* doorActor = va_arg(args, Actor*);
         s32 doorDirection = va_arg(args, s32);
 
-        uint8_t mapIndex = gSaveContext.mapIndex;
+        uint16_t mapIndex = gSaveContext.mapIndex;
         if (doorActor->id == ACTOR_EN_DOOR) {
             EnDoor* enDoor = reinterpret_cast<EnDoor*>(doorActor);
             if (enDoor->lockTimer != 0) {
@@ -151,6 +216,8 @@ void RegisterShuffleDoors() {
         player->doorActor = NULL;
         *should = false;
     });
+
+    COND_HOOK(OnSceneSpawnActors, shouldRegister, SpawnJabuRuto);
 }
 
 static RegisterShipInitFunc initFunc(RegisterShuffleDoors, { "IS_RANDO" });
