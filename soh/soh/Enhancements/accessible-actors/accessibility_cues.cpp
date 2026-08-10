@@ -225,7 +225,7 @@ class Wall : protected TerrainCueSound {
         if (restFrames == 20) {
             restFrames = 0;
             play(NA_SE_IT_SWORD_CHARGE);
-            ActorAccessibility_SeekSound(this, 0, 44100 * 2);
+            ActorAccessibility_SeekSound(this, 0, 88000);
         }
         f32 pitchModifier = 0.0;
 
@@ -992,8 +992,9 @@ class TerrainCueDirection final {
 
                 if (wallPoly != NULL) {
 
-                    if ((moveMethod == 2) && (SurfaceType_GetWallFlags(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 8 &&
-                                              SurfaceType_GetWallFlags(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 3)) {
+                    if ((moveMethod == 2) &&
+                        (SurfaceType_GetWallFlags(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 8 &&
+                         SurfaceType_GetWallFlags(&actor->play->colCtx, wallPoly, BGCHECK_SCENE) != 3)) {
 
                         if (fabs(pos.y - player->actor.world.pos.y) < 100) {
                             discoverLedge(pos, false);

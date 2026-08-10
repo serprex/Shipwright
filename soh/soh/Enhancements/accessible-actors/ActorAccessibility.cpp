@@ -10,6 +10,10 @@
 #include <variables.h>
 #include <macros.h>
 #include "SfxExtractor.h"
+#include "AccessibleSfxCodec.h"
+
+#include <atomic>
+#include <memory>
 
 #include <libultraship/controller/controldeck/ControlDeck.h>
 #include "ship/resource/File.h"
@@ -53,9 +57,19 @@ typedef std::map<s32, VAList_t> VAZones_t; // Maps room/scene indices to their c
 // re-creation of terrain VAs every time the player reloads a scene.
 typedef std::unordered_set<s16> SceneList_t;
 
+enum SfxDecodeState {
+    SFX_DECODE_PENDING,
+    SFX_DECODE_READY,
+    SFX_DECODE_FAILED,
+};
+
 struct SfxRecord {
     std::string path;
     std::shared_ptr<Ship::File> resource;
+    // Decoded by the worker thread; handed to the audio engine by the game thread once ready.
+    std::vector<int16_t> pcm;
+    std::atomic<int> state{ SFX_DECODE_PENDING };
+    bool registered = false;
 };
 
 struct A11yID {
@@ -84,8 +98,10 @@ class ActorAccessibility {
     SceneList_t sceneList;
     AccessibleAudioEngine* audioEngine;
     SfxExtractor sfxExtractor;
-    // Maps internal sfx to external (prerendered) resources
-    std::unordered_map<s16, SfxRecord> sfxMap;
+    AccessibleSfxDecoder* sfxDecoder = nullptr;
+    // Maps internal sfx to external (prerendered) resources. Held by pointer so the decoded
+    // buffer the audio engine points at never moves.
+    std::unordered_map<s16, std::unique_ptr<SfxRecord>> sfxMap;
     s16 currentScene = -1;
     s8 currentRoom = -1;
     bool currentRoomClear = false;
@@ -135,7 +151,15 @@ void ActorAccessibility_Init() {
     aa->isOn = CVarGetInteger(CVAR_SETTING("A11yAudioInteraction"), 0);
     if (!aa->isOn)
         return;
-    aa->extractSfx = !std::filesystem::exists(Ship::Context::GetPathRelativeToAppBundle("accessibility.o2r"));
+    // An archive from an older build holds raw PCM under .wav names, which nothing can read now.
+    // Treat it as missing so the extractor runs and tells the user to delete it.
+    auto formatFile =
+        Ship::Context::GetRawInstance()->GetResourceManager()->GetArchiveManager()->LoadFile(A11Y_SFX_FORMAT_PATH);
+    std::string format;
+    if (formatFile != nullptr) {
+        format.assign(formatFile->Buffer->begin(), formatFile->Buffer->end());
+    }
+    aa->extractSfx = format != A11Y_SFX_FORMAT_VERSION;
     if (aa->extractSfx)
         freezeGame = true;
     ActorAccessibility_InitAudio();
@@ -536,7 +560,8 @@ void ActorAccessibility_GeneralHelper(PlayState* play) {
     } else {
         if (!compassOn) {
             OSContPad* trackerButtonsPressed =
-                std::dynamic_pointer_cast<LUS::ControlDeck>(Ship::Context::GetRawInstance()->GetControlDeck())->GetPads();
+                std::dynamic_pointer_cast<LUS::ControlDeck>(Ship::Context::GetRawInstance()->GetControlDeck())
+                    ->GetPads();
             compassOn = trackerButtonsPressed != nullptr && (trackerButtonsPressed[0].button & BTN_DDOWN) &&
                         (trackerButtonsPressed[0].button & BTN_L);
         }
@@ -789,8 +814,11 @@ AimAssistProps ActorAccessibility_ProvideAimAssistForActor(AccessibleActor* acto
 bool ActorAccessibility_InitAudio() {
     try {
         aa->audioEngine = new AccessibleAudioEngine();
+        aa->sfxDecoder = new AccessibleSfxDecoder();
     } catch (...) {
+        delete aa->audioEngine;
         aa->audioEngine = NULL;
+        aa->sfxDecoder = NULL;
         return false;
     }
     return true;
@@ -798,10 +826,18 @@ bool ActorAccessibility_InitAudio() {
 
 void ActorAccessibility_ShutdownAudio() {
     if (aa->isOn) {
-        delete aa->audioEngine;
+        // Terrain cues stop their sounds as they're destroyed, so they have to go before the engine.
         if (aa->terrainCues) {
             DeleteTerrainCueState(aa->terrainCues);
+            aa->terrainCues = NULL;
         }
+        // Join the decoder next; its jobs write into records the map owns.
+        delete aa->sfxDecoder;
+        aa->sfxDecoder = NULL;
+        delete aa->audioEngine;
+        aa->audioEngine = NULL;
+        // The engine's resource manager went with it, so the registrations are gone too.
+        aa->sfxMap.clear();
         aa->isOn = false;
     }
 }
@@ -815,26 +851,49 @@ void ActorAccessibility_MixAccessibleAudioWithGameAudio(int16_t* ogBuffer, uint3
 // Map one of the game's sfx to a path which as understood by the external audio engine. The returned token is a
 // short hex string that can be passed directly to the audio engine.
 const char* ActorAccessibility_MapSfxToExternalAudio(s16 sfxId) {
+    if (aa->sfxDecoder == NULL)
+        return NULL; // Audio init failed.
+
     SfxRecord* record;
     auto it = aa->sfxMap.find(sfxId);
     if (it == aa->sfxMap.end()) {
-        SfxRecord tempRecord;
         std::string fullPath = SfxExtractor::getExternalFileName(sfxId);
         auto res = Ship::Context::GetRawInstance()->GetResourceManager()->GetArchiveManager()->LoadFile(fullPath);
 
         if (res == nullptr)
             return NULL; // Resource doesn't exist, user's gotta run the extractor.
-        tempRecord.resource = res;
+
+        auto newRecord = std::make_unique<SfxRecord>();
+        newRecord->resource = res;
         std::stringstream ss;
         ss << std::setw(4) << std::setfill('0') << std::hex << sfxId;
-        tempRecord.path = ss.str();
-        auto pair = aa->sfxMap.insert({ sfxId, tempRecord });
-        record = &pair.first->second;
+        newRecord->path = ss.str();
+        record = newRecord.get();
+        aa->sfxMap.insert({ sfxId, std::move(newRecord) });
+
+        // Vorbis decoding is too slow to do inline, so the sound stays silent until it lands.
+        aa->sfxDecoder->enqueue([record] {
+            bool ok = AccessibleSfx_DecodeVorbis(reinterpret_cast<const uint8_t*>(record->resource->Buffer->data()),
+                                                 record->resource->Buffer->size(), record->pcm);
+            // The encoded copy is dead weight once decoded.
+            record->resource = nullptr;
+            record->state.store(ok ? SFX_DECODE_READY : SFX_DECODE_FAILED, std::memory_order_release);
+        });
+        return NULL;
+    }
+
+    record = it->second.get();
+    if (!record->registered) {
+        if (record->state.load(std::memory_order_acquire) != SFX_DECODE_READY) {
+            return NULL; // Still decoding, or it failed and never will be.
+        }
+        // Registration has to happen on the thread that drives the engine; miniaudio is built
+        // here with MA_NO_THREADING, so its internal locks are no-ops.
+        // Matching the engine's rate keeps miniaudio from inserting a resampler.
         ma_resource_manager_register_decoded_data(&aa->audioEngine->resourceManager, record->path.c_str(),
-                                                  record->resource->Buffer->data(),
-                                                  record->resource->Buffer->size() / 2, ma_format_s16, 1, 44100);
-    } else {
-        record = &it->second;
+                                                  record->pcm.data(), record->pcm.size(), ma_format_s16, 1,
+                                                  AAE_SAMPLE_RATE);
+        record->registered = true;
     }
 
     return record->path.c_str();

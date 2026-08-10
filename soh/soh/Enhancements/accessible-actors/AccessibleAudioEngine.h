@@ -12,6 +12,12 @@
 
 #define AAE_SOUND_ACTION_BATCH_SIZE 64
 #define AAE_SLOTS_PER_HANDLE 8
+#define AAE_CHANNELS 2
+// Must match the game's output rate (OTRGlobals InitAudio). mix() blends this engine's output
+// into the game's buffer frame for frame, so the engine's frames are played at the game's rate
+// whatever we call them here. Registered sources use this same rate to keep resampling out of
+// the signal path.
+#define AAE_SAMPLE_RATE 32000
 
 struct SoundAction {
     uintptr_t handle; // This handle is user-defined and uniquely identifies a sound source. It can be anything, but the

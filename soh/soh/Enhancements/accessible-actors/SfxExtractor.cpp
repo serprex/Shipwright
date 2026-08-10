@@ -1,4 +1,5 @@
 #include "SfxExtractor.h"
+#include "AccessibleSfxCodec.h"
 #include "soh/Enhancements/audio/miniaudio.h"
 #include "soh/Enhancements/speechsynthesizer/SpeechSynthesizer.h"
 #include "soh/OTRGlobals.h"
@@ -52,7 +53,8 @@ bool SfxExtractor::renderOutput(size_t endOfInput) {
     if (ma_channel_converter_init(&config, NULL, &converter) != MA_SUCCESS) {
         return false;
     }
-    std::vector<uint8_t> fileData;
+    std::vector<int16_t> mono;
+    mono.reserve((endOfInput - startOfInput) / 2);
     std::string fileName = getExternalFileName(currentSfx);
     int16_t chunk[64];
     int16_t* mark = tempBuffer + startOfInput;
@@ -62,8 +64,13 @@ bool SfxExtractor::renderOutput(size_t endOfInput) {
         if (converter_result != MA_SUCCESS) {
             return false;
         }
-        fileData.insert(fileData.end(), (uint8_t*)chunk, (uint8_t*)(chunk + chunkSize));
+        mono.insert(mono.end(), chunk, chunk + chunkSize);
         mark += chunkSize * 2;
+    }
+
+    std::vector<uint8_t> fileData;
+    if (!AccessibleSfx_EncodeVorbis(mono.data(), mono.size(), fileData)) {
+        return false;
     }
     return archive->WriteFile(fileName.c_str(), fileData);
 }
@@ -118,8 +125,16 @@ void SfxExtractor::ripNextSfx() {
 }
 void SfxExtractor::finished() {
     OTRAudio_UninstallSfxCaptureThread(); // Returns to normal audio opperation.
-    archive->Close();
-    archive = nullptr;
+    // setup() bails out before opening the archive on some errors, so it may not exist.
+    if (archive != nullptr) {
+        if (currentStep < STEP_ERROR) {
+            // Stamp the format last, so a run that died partway through isn't mistaken for a complete archive.
+            std::string version = A11Y_SFX_FORMAT_VERSION;
+            archive->WriteFile(A11Y_SFX_FORMAT_PATH, std::vector<uint8_t>(version.begin(), version.end()));
+        }
+        archive->Close();
+        archive = nullptr;
+    }
     freezeGame = false;
 
     Audio_QueueSeqCmd(NA_BGM_TITLE);
@@ -211,6 +226,6 @@ void SfxExtractor::captureCallback() {
 
 std::string SfxExtractor::getExternalFileName(int16_t sfxId) {
     std::stringstream ss;
-    ss << "accessibility/audio/" << std::hex << std::setw(4) << std::setfill('0') << sfxId << ".wav";
+    ss << "accessibility/audio/" << std::hex << std::setw(4) << std::setfill('0') << sfxId << ".ogg";
     return ss.str();
 }
