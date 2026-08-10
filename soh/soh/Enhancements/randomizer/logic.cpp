@@ -1,4 +1,5 @@
 #include "logic.h"
+#include "bean_patches.h"
 #include "../debugger/performanceTimer.h"
 
 #include <vector>
@@ -13,6 +14,8 @@
 #include <spdlog/spdlog.h>
 #include <ship/utils/StringHelper.h>
 #include "location_access.h"
+
+extern "C" PlayState* gPlayState;
 
 namespace Rando {
 
@@ -1313,65 +1316,21 @@ bool Logic::BeanPlanted(LogicVal beanEvent) {
         return true;
     }
 
-    // swchFlag found using the Actor Viewer to get the Obj_Bean parameters & 0x3F
-    // not tested with multiple OTRs, but can be automated similarly to GetDungeonSmallKeyDoors
-    SceneID sceneID;
-    uint8_t swchFlag;
-    switch (beanEvent) {
-        case LOGIC_PLANT_ZORAS_RIVER_BEAN:
-            sceneID = SceneID::SCENE_ZORAS_RIVER;
-            swchFlag = 3;
-            break;
-        case LOGIC_PLANT_GRAVEYARD_BEAN:
-            sceneID = SceneID::SCENE_GRAVEYARD;
-            swchFlag = 3;
-            break;
-        case LOGIC_PLANT_KOKIRI_FOREST_BEAN:
-            sceneID = SceneID::SCENE_KOKIRI_FOREST;
-            swchFlag = 9;
-            break;
-        case LOGIC_PLANT_LOST_WOODS_BRIDGE_BEAN:
-            sceneID = SceneID::SCENE_LOST_WOODS;
-            swchFlag = 4;
-            break;
-        case LOGIC_PLANT_LOST_WOODS_THEATER_BEAN:
-            sceneID = SceneID::SCENE_LOST_WOODS;
-            swchFlag = 18;
-            break;
-        case LOGIC_PLANT_DEATH_MOUNTAIN_TRAIL_BEAN:
-            sceneID = SceneID::SCENE_DEATH_MOUNTAIN_TRAIL;
-            swchFlag = 6;
-            break;
-        case LOGIC_PLANT_LAKE_HYLIA_BEAN:
-            sceneID = SceneID::SCENE_LAKE_HYLIA;
-            swchFlag = 1;
-            break;
-        case LOGIC_PLANT_GERUDO_VALLEY_BEAN:
-            sceneID = SceneID::SCENE_GERUDO_VALLEY;
-            swchFlag = 3;
-            break;
-        case LOGIC_PLANT_DEATH_MOUNTAIN_CRATER_BEAN:
-            sceneID = SceneID::SCENE_DEATH_MOUNTAIN_CRATER;
-            swchFlag = 3;
-            break;
-        case LOGIC_PLANT_DESERT_COLOSSUS_BEAN:
-            sceneID = SceneID::SCENE_DESERT_COLOSSUS;
-            swchFlag = 24;
-            break;
-        default:
-            assert(false);
-            return false;
+    const BeanPatch* patch = FindBeanPatch(beanEvent);
+    if (patch == nullptr) {
+        assert(false);
+        return false;
     }
 
     // Get the swch value for the scene
     uint32_t swch;
-    if (gPlayState != nullptr && gPlayState->sceneNum == sceneID) {
+    if (gPlayState != nullptr && gPlayState->sceneNum == patch->scene) {
         swch = gPlayState->actorCtx.flags.swch;
     } else {
-        swch = GetSaveContext()->sceneFlags[sceneID].swch;
+        swch = GetSaveContext()->sceneFlags[patch->scene].swch;
     }
 
-    return swch >> swchFlag & 1;
+    return swch >> patch->swchFlag & 1;
 }
 
 bool Logic::CanHammerRecoilHover(bool needShield) {
@@ -3127,16 +3086,9 @@ void Logic::Reset(bool resetSaveContext /*= true*/) {
         }
 
         if (ctx->GetOption(RSK_SHUFFLE_BEAN_SOULS).Is(false)) {
-            SetRandoInf(RAND_INF_DEATH_MOUNTAIN_CRATER_BEAN_SOUL, true);
-            SetRandoInf(RAND_INF_DEATH_MOUNTAIN_TRAIL_BEAN_SOUL, true);
-            SetRandoInf(RAND_INF_DESERT_COLOSSUS_BEAN_SOUL, true);
-            SetRandoInf(RAND_INF_GERUDO_VALLEY_BEAN_SOUL, true);
-            SetRandoInf(RAND_INF_GRAVEYARD_BEAN_SOUL, true);
-            SetRandoInf(RAND_INF_KOKIRI_FOREST_BEAN_SOUL, true);
-            SetRandoInf(RAND_INF_LAKE_HYLIA_BEAN_SOUL, true);
-            SetRandoInf(RAND_INF_LOST_WOODS_BRIDGE_BEAN_SOUL, true);
-            SetRandoInf(RAND_INF_LOST_WOODS_BEAN_SOUL, true);
-            SetRandoInf(RAND_INF_ZORAS_RIVER_BEAN_SOUL, true);
+            for (const BeanPatch& patch : beanPatches) {
+                SetRandoInf(patch.soulRandInf, true);
+            }
         }
 
         // If not keysanity, start with 1 logical key to account for automatically unlocking the basement door in
