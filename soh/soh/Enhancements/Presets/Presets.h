@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <utility>
 #include <vector>
 
 enum PresetSection {
@@ -16,3 +17,7 @@ enum PresetSection {
 
 void DrawPresetSelector(std::vector<PresetSection> includeSections, std::string currentIndex, bool disabled);
 void applyPreset(std::string presetName, std::vector<PresetSection> includeSections = {});
+
+// {display name, preset name} of every preset whose file is named "Speedrun - <display name>", which are the only
+// presets speedrun mode offers.
+std::vector<std::pair<std::string, std::string>> GetSpeedrunPresets();

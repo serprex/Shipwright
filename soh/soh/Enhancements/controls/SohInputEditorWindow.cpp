@@ -8,6 +8,7 @@
 #include "soh/SohGui/SohGui.hpp"
 #include "z64.h"
 #include "soh/cvar_prefixes.h"
+#include "soh/Enhancements/speedrun/Speedrun.h"
 #ifndef __WIIU__
 #include <ship/controller/controldevice/controller/mapping/sdl/SDLAxisDirectionToButtonMapping.h>
 #endif
@@ -1182,6 +1183,12 @@ void SohInputEditorWindow::DrawAddGyroMappingButton(uint8_t port) {
 }
 
 void SohInputEditorWindow::DrawGyroSection(uint8_t port) {
+    if (Speedrun_IsActive()) {
+        ImGui::PushStyleColor(ImGuiCol_Text, ColorValues.at(UIWidgets::Colors::Orange));
+        ImGui::TextWrapped("Gyro aiming does nothing while a speedrun file is loaded.");
+        ImGui::PopStyleColor();
+    }
+
     auto mapping =
         Ship::Context::GetRawInstance()->GetControlDeck()->GetControllerByPort(port)->GetGyro()->GetGyroMapping();
     if (mapping != nullptr) {

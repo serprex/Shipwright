@@ -1,0 +1,381 @@
+#include "Speedrun.h"
+
+#include "soh/Enhancements/Presets/Presets.h"
+#include "soh/Enhancements/game-interactor/GameInteractor.h"
+#include "soh/Notification/Notification.h"
+#include "soh/OTRGlobals.h"
+#include "soh/SaveManager.h"
+#include "soh/ShipInit.hpp"
+#include "soh_assets.h"
+
+#include <ship/Context.h>
+#include <ship/config/Config.h>
+#include <nlohmann/json.hpp>
+#include <spdlog/spdlog.h>
+
+#include <array>
+#include <filesystem>
+#include <fstream>
+#include <string>
+#include <utility>
+#include <vector>
+
+extern "C" {
+#include "functions.h"
+#include "macros.h"
+#include "variables.h"
+#include "src/overlays/gamestates/ovl_file_choose/file_choose.h"
+#include "objects/gameplay_keep/gameplay_keep.h"
+
+void FileChoose_UpdateStickDirectionPromptAnim(GameState* thisx);
+void FileChoose_DrawTextRec(GraphicsContext* gfxCtx, s32 r, s32 g, s32 b, s32 a, f32 x, f32 y, f32 z, s32 s, s32 t,
+                            f32 dx, f32 dy);
+}
+
+namespace fs = std::filesystem;
+
+/**
+ * The cvar blocks a speedrun file owns. They are snapshotted onto the file when it is created and put back every time
+ * it is loaded, so a run always plays with the settings it was started with. Everything else (controls, resolution,
+ * audio, cosmetics) stays with the player and is not part of the file or its hash.
+ */
+static const std::array<const char*, 3> sOwnedBlocks = {
+    CVAR_PREFIX_ENHANCEMENT,
+    CVAR_PREFIX_RANDOMIZER_ENHANCEMENT,
+    CVAR_PREFIX_CHEAT,
+};
+
+#define SPEEDRUN_PRESET_NONE "None"
+
+// Settings replaced when a speedrun file was loaded are kept here so they survive a crash mid-run.
+static const char* sBackupFileName = "speedrun_settings_backup.json";
+
+// {display name, preset name}, the first entry being "None" with no preset behind it.
+static std::vector<std::pair<std::string, std::string>> sPresetChoices;
+static nlohmann::json sSettings = nlohmann::json::object();
+static std::string sPresetName = SPEEDRUN_PRESET_NONE;
+static std::string sPresetKey;
+static uint32_t sSettingsHash = 0;
+static bool sLockedSettings = false;
+static int32_t sPreviousDisableChanges = 0;
+
+static std::string GetBackupPath() {
+    return Ship::Context::GetPathRelativeToAppDirectory(sBackupFileName);
+}
+
+static nlohmann::json GetOwnedBlocks() {
+    auto config = Ship::Context::GetRawInstance()->GetConfig()->GetNestedJson();
+    nlohmann::json blocks = nlohmann::json::object();
+
+    for (const char* block : sOwnedBlocks) {
+        if (config.contains("CVars") && config["CVars"].contains(block)) {
+            blocks[block] = config["CVars"][block];
+        } else {
+            blocks[block] = nlohmann::json::object();
+        }
+    }
+
+    return blocks;
+}
+
+static void SetOwnedBlocks(const nlohmann::json& blocks) {
+    auto config = Ship::Context::GetRawInstance()->GetConfig();
+
+    for (auto& item : blocks.items()) {
+        config->SetBlock(spdlog::fmt_lib::format("{}.{}", "CVars", item.key()), item.value());
+    }
+
+    // SetBlock writes the config out, so this picks the replaced blocks back up and drops anything they no longer hold.
+    Ship::Context::GetRawInstance()->GetConsoleVariables()->Load();
+    ShipInit::InitAll();
+}
+
+/**
+ * Writes the player's own settings aside before a speedrun file takes over. Does nothing if a backup is already
+ * waiting to be restored, which means the previous run never got put back (game closed or crashed mid-run).
+ */
+static void BackupSettings() {
+    if (fs::exists(GetBackupPath())) {
+        return;
+    }
+
+    std::ofstream file(GetBackupPath());
+    if (!file.is_open()) {
+        SPDLOG_ERROR("Speedrun: could not write settings backup");
+        return;
+    }
+
+    file << GetOwnedBlocks().dump(4);
+}
+
+void Speedrun_RestoreSettings() {
+    bool wasLocked = sLockedSettings;
+    sLockedSettings = false;
+
+    if (fs::exists(GetBackupPath())) {
+        try {
+            std::ifstream file(GetBackupPath());
+            nlohmann::json blocks = nlohmann::json::parse(file);
+            file.close();
+            SetOwnedBlocks(blocks);
+        } catch (const std::exception& e) { SPDLOG_ERROR("Speedrun: could not read settings backup: {}", e.what()); }
+
+        fs::remove(GetBackupPath());
+    }
+
+    // Unlocking has to come after the blocks are put back, because that reloads every cvar from the config file.
+    if (wasLocked) {
+        CVarSetInteger(CVAR_SETTING("DisableChanges"), sPreviousDisableChanges);
+        CVarSave();
+    }
+}
+
+bool Speedrun_IsActive() {
+    return IS_SPEEDRUN;
+}
+
+extern "C" f32 Ship_FilterGyro(f32 gyroAxis) {
+    return IS_SPEEDRUN ? 0.0f : gyroAxis;
+}
+
+static void LockSettings() {
+    if (sLockedSettings) {
+        return;
+    }
+
+    sPreviousDisableChanges = CVarGetInteger(CVAR_SETTING("DisableChanges"), 0);
+    CVarSetInteger(CVAR_SETTING("DisableChanges"), 1);
+    sLockedSettings = true;
+}
+
+/**
+ * FNV-1a over the build version and the file's settings. Two files that show the same hash were played on the same
+ * build with the same settings. nlohmann sorts object keys, so the dump is stable.
+ */
+static uint32_t HashSettings() {
+    std::string data = std::string((const char*)gBuildVersion) + sSettings.dump();
+    uint32_t hash = 0x811C9DC5;
+
+    for (char c : data) {
+        hash ^= (uint8_t)c;
+        hash *= 0x01000193;
+    }
+
+    return hash;
+}
+
+static void EmitHashNotification() {
+    Notification::Emit({
+        .prefix = "Speedrun",
+        .message = sPresetName,
+        .suffix = spdlog::fmt_lib::format("{:08X}", sSettingsHash),
+        .remainingTime = 15.0f,
+    });
+}
+
+/**
+ * Rebuilds the list shown in the file select menu. "None" keeps whatever the player has configured, every other entry
+ * is a preset marked as a speedrun preset.
+ */
+static void RefreshPresetChoices() {
+    sPresetChoices.clear();
+    sPresetChoices.emplace_back(SPEEDRUN_PRESET_NONE, "");
+
+    for (auto& preset : GetSpeedrunPresets()) {
+        sPresetChoices.push_back(preset);
+    }
+}
+
+extern "C" void FileChoose_UpdateSpeedrunMenu(GameState* gameState) {
+    FileChoose_UpdateStickDirectionPromptAnim(gameState);
+    FileChooseContext* fileChooseContext = (FileChooseContext*)gameState;
+    Input* input = &fileChooseContext->state.input[0];
+    bool dpad = CVarGetInteger(CVAR_SETTING("DpadInText"), 0);
+
+    RefreshPresetChoices();
+    if (fileChooseContext->speedrunIndex >= sPresetChoices.size()) {
+        fileChooseContext->speedrunIndex = 0;
+        fileChooseContext->speedrunOffset = 0;
+    }
+
+    // Fade in elements after opening the speedrun menu
+    fileChooseContext->speedrunUIAlpha += 25;
+    if (fileChooseContext->speedrunUIAlpha > 255) {
+        fileChooseContext->speedrunUIAlpha = 255;
+    }
+
+    // Animate up/down arrows.
+    fileChooseContext->speedrunArrowOffset += 1;
+    if (fileChooseContext->speedrunArrowOffset >= 30) {
+        fileChooseContext->speedrunArrowOffset = 0;
+    }
+
+    uint8_t lastIndex = (uint8_t)(sPresetChoices.size() - 1);
+
+    // Move menu selection up or down.
+    if (ABS(fileChooseContext->stickRelY) > 30 || (dpad && CHECK_BTN_ANY(input->press.button, BTN_DDOWN | BTN_DUP))) {
+        // Move down
+        if (fileChooseContext->stickRelY < -30 || (dpad && CHECK_BTN_ANY(input->press.button, BTN_DDOWN))) {
+            // When selecting past the last option, cycle back to the first option.
+            if (fileChooseContext->speedrunIndex == lastIndex) {
+                fileChooseContext->speedrunIndex = 0;
+                fileChooseContext->speedrunOffset = 0;
+            } else {
+                fileChooseContext->speedrunIndex++;
+                // When last visible option is selected when moving down, offset the list down by one.
+                if (fileChooseContext->speedrunIndex - fileChooseContext->speedrunOffset >
+                    SPEEDRUN_MAX_OPTIONS_ON_SCREEN - 1) {
+                    fileChooseContext->speedrunOffset++;
+                }
+            }
+        } else if (fileChooseContext->stickRelY > 30 || (dpad && CHECK_BTN_ANY(input->press.button, BTN_DUP))) {
+            // When selecting past the first option, cycle back to the last option and offset the list to view it
+            // properly.
+            if (fileChooseContext->speedrunIndex == 0) {
+                fileChooseContext->speedrunIndex = lastIndex;
+                fileChooseContext->speedrunOffset =
+                    lastIndex >= SPEEDRUN_MAX_OPTIONS_ON_SCREEN ? lastIndex - SPEEDRUN_MAX_OPTIONS_ON_SCREEN + 1 : 0;
+            } else {
+                // When first visible option is selected when moving up, offset the list up by one.
+                if (fileChooseContext->speedrunIndex == fileChooseContext->speedrunOffset) {
+                    fileChooseContext->speedrunOffset--;
+                }
+                fileChooseContext->speedrunIndex--;
+            }
+        }
+
+        Audio_PlaySfxGeneral(NA_SE_SY_FSEL_CURSOR, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                             &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+    }
+
+    if (CHECK_BTN_ALL(input->press.button, BTN_B)) {
+        fileChooseContext->configMode = CM_SPEEDRUN_TO_QUEST;
+        return;
+    }
+
+    // Name the file, which is where the preset gets applied and the settings get written onto it.
+    if (CHECK_BTN_ALL(input->press.button, BTN_A) || CHECK_BTN_ALL(input->press.button, BTN_START)) {
+        Audio_PlaySfxGeneral(NA_SE_SY_FSEL_DECIDE_L, &gSfxDefaultPos, 4, &gSfxDefaultFreqAndVolScale,
+                             &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
+        sPresetName = sPresetChoices[fileChooseContext->speedrunIndex].first;
+        sPresetKey = sPresetChoices[fileChooseContext->speedrunIndex].second;
+        FileChoose_StartNameEntryFromMenu(fileChooseContext);
+    }
+}
+
+extern "C" void FileChoose_DrawSpeedrunMenuWindowContents(FileChooseContext* fileChooseContext) {
+    OPEN_DISPS(fileChooseContext->state.gfxCtx);
+
+    uint8_t listOffset = fileChooseContext->speedrunOffset;
+    int16_t textAlpha = fileChooseContext->speedrunUIAlpha;
+    uint8_t optionCount = (uint8_t)sPresetChoices.size();
+
+    // Draw arrows to indicate that the list can scroll up or down.
+    // Arrow up
+    if (listOffset > 0) {
+        uint16_t arrowUpX = 140;
+        uint16_t arrowUpY = 76 - (fileChooseContext->speedrunArrowOffset / 10);
+        gDPLoadTextureBlock(POLY_OPA_DISP++, gArrowUpTex, G_IM_FMT_IA, G_IM_SIZ_16b, 16, 16, 0,
+                            G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
+                            G_TX_NOLOD);
+        gSPWideTextureRectangle(POLY_OPA_DISP++, arrowUpX << 2, arrowUpY << 2, (arrowUpX + 8) << 2, (arrowUpY + 8) << 2,
+                                G_TX_RENDERTILE, 0, 0, (1 << 11), (1 << 11));
+    }
+    // Arrow down
+    if (optionCount - listOffset > SPEEDRUN_MAX_OPTIONS_ON_SCREEN) {
+        uint16_t arrowDownX = 140;
+        uint16_t arrowDownY = 181 + (fileChooseContext->speedrunArrowOffset / 10);
+        gDPLoadTextureBlock(POLY_OPA_DISP++, gArrowDownTex, G_IM_FMT_IA, G_IM_SIZ_16b, 16, 16, 0,
+                            G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK, G_TX_NOLOD,
+                            G_TX_NOLOD);
+        gSPWideTextureRectangle(POLY_OPA_DISP++, arrowDownX << 2, arrowDownY << 2, (arrowDownX + 8) << 2,
+                                (arrowDownY + 8) << 2, G_TX_RENDERTILE, 0, 0, (1 << 11), (1 << 11));
+    }
+
+    for (uint8_t i = listOffset; i < optionCount && i - listOffset < SPEEDRUN_MAX_OPTIONS_ON_SCREEN; i++) {
+        uint16_t textYOffset = (i - listOffset) * 16;
+        bool selected = fileChooseContext->speedrunIndex == i;
+
+        uint16_t finalKerning =
+            Interface_DrawTextLine(fileChooseContext->state.gfxCtx, (char*)sPresetChoices[i].first.c_str(), 75,
+                                   (87 + textYOffset), 255, 255, selected ? 80 : 255, textAlpha, 0.8f, true);
+
+        // Draw arrows around selected option.
+        if (selected) {
+            Gfx_SetupDL_39Opa(fileChooseContext->state.gfxCtx);
+            gDPSetCombineMode(POLY_OPA_DISP++, G_CC_MODULATEIA_PRIM, G_CC_MODULATEIA_PRIM);
+            gDPLoadTextureBlock(POLY_OPA_DISP++, gArrowCursorTex, G_IM_FMT_IA, G_IM_SIZ_8b, 16, 24, 0,
+                                G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, 4, G_TX_NOMASK, G_TX_NOLOD,
+                                G_TX_NOLOD);
+            FileChoose_DrawTextRec(fileChooseContext->state.gfxCtx, fileChooseContext->stickLeftPrompt.arrowColorR,
+                                   fileChooseContext->stickLeftPrompt.arrowColorG,
+                                   fileChooseContext->stickLeftPrompt.arrowColorB, textAlpha, 70.0f,
+                                   static_cast<f32>(92 + textYOffset), 0.42f, 0, 0, -1.0f, 1.0f);
+            FileChoose_DrawTextRec(fileChooseContext->state.gfxCtx, fileChooseContext->stickRightPrompt.arrowColorR,
+                                   fileChooseContext->stickRightPrompt.arrowColorG,
+                                   fileChooseContext->stickRightPrompt.arrowColorB, textAlpha,
+                                   static_cast<f32>(81 + finalKerning), static_cast<f32>(92 + textYOffset), 0.42f, 0, 0,
+                                   1.0f, 1.0f);
+        }
+    }
+
+    CLOSE_DISPS(fileChooseContext->state.gfxCtx);
+}
+
+extern "C" void Speedrun_InitSaveFile(void) {
+    BackupSettings();
+
+    if (!sPresetKey.empty()) {
+        // Only the enhancement blocks are taken from the preset. Anything else it carries (controls, resolution,
+        // volume) belongs to the player, not to the run.
+        applyPreset(sPresetKey, { PRESET_SECTION_ENHANCEMENTS });
+    }
+
+    sSettings = GetOwnedBlocks();
+    sSettingsHash = HashSettings();
+
+    LockSettings();
+    EmitHashNotification();
+}
+
+void Speedrun_SaveSaveSection(SaveContext* saveContext, int sectionID, bool fullSave) {
+    if (saveContext->ship.quest.id != QUEST_SPEEDRUN && saveContext->ship.quest.id != QUEST_SPEEDRUN_MASTER) {
+        return;
+    }
+
+    SaveManager::Instance->SaveData("presetName", sPresetName);
+    SaveManager::Instance->SaveData("settingsHash", sSettingsHash);
+    SaveManager::Instance->SaveData("settings", sSettings);
+}
+
+void Speedrun_LoadSaveSection() {
+    if (!IS_SPEEDRUN) {
+        return;
+    }
+
+    SaveManager::Instance->LoadData("presetName", sPresetName);
+    SaveManager::Instance->LoadData("settings", sSettings);
+
+    if (!sSettings.is_object()) {
+        SPDLOG_ERROR("Speedrun: file has no settings to load");
+        return;
+    }
+
+    BackupSettings();
+    SetOwnedBlocks(sSettings);
+    sSettingsHash = HashSettings();
+
+    LockSettings();
+    EmitHashNotification();
+}
+
+void Speedrun_Register() {
+    SaveManager::Instance->AddLoadFunction("speedrun", 1, Speedrun_LoadSaveSection);
+    SaveManager::Instance->AddSaveFunction("speedrun", 1, Speedrun_SaveSaveSection, true, SECTION_PARENT_NONE);
+
+    GameInteractor::Instance->RegisterGameHook<GameInteractor::OnExitGame>(
+        [](uint32_t fileNum) { Speedrun_RestoreSettings(); });
+
+    // A backup left over from a previous session means the game went down mid run without putting settings back.
+    Speedrun_RestoreSettings();
+}

@@ -158,6 +158,19 @@ void applyPreset(std::string presetName, std::vector<PresetSection> includeSecti
     OTRGlobals::Instance->ScaleImGui();
 }
 
+std::vector<std::pair<std::string, std::string>> GetSpeedrunPresets() {
+    static const std::string prefix = "Speedrun - ";
+    std::vector<std::pair<std::string, std::string>> found;
+
+    for (auto& [name, info] : presets) {
+        if (info.fileName.rfind(prefix, 0) == 0) {
+            found.emplace_back(info.fileName.substr(prefix.size()), name);
+        }
+    }
+
+    return found;
+}
+
 void DrawPresetSelector(std::vector<PresetSection> includeSections, std::string presetLoc, bool disabled) {
     std::vector<std::string> includedPresets;
     for (auto& [name, info] : presets) {
