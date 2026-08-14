@@ -7,6 +7,7 @@
 #include "soh/Enhancements/randomizer/savefile.h"
 #include "soh/OTRGlobals.h"
 #include "soh/SaveManager.h"
+#include "soh/Enhancements/speedrun/Speedrun.h"
 #include "soh/ResourceManagerHelpers.h"
 
 #define NUM_DUNGEONS 8
@@ -263,6 +264,10 @@ void Sram_InitSave(FileChooseContext* fileChooseCtx) {
         Randomizer_InitSaveFile();
     } else {
         gSaveContext.ship.quest.id = currentQuest;
+    }
+
+    if (currentQuest == QUEST_SPEEDRUN || currentQuest == QUEST_SPEEDRUN_MASTER) {
+        Speedrun_InitSaveFile();
     }
 
     Save_SaveFile();
