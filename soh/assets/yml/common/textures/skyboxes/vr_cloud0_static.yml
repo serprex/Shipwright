@@ -1,0 +1,51 @@
+:config:
+  segments:
+    - [1, vr_cloud0_static]
+  directory: textures/skyboxes/
+  external_files:
+    vr_cloud0_pal_static.yml
+gSunriseOvercastSkybox1Tex:
+  type: TEXTURE
+  offset: 0x0
+  symbol: gSunriseOvercastSkybox1Tex
+  format: CI8
+  width: 128
+  height: 64
+  external_tlut: common/textures/skyboxes/vr_cloud0_pal_static
+  external_tlut_offset: 0x0
+gSunriseOvercastSkybox2Tex:
+  type: TEXTURE
+  offset: 0x2000
+  symbol: gSunriseOvercastSkybox2Tex
+  format: CI8
+  width: 128
+  height: 64
+  external_tlut: common/textures/skyboxes/vr_cloud0_pal_static
+  external_tlut_offset: 0x0
+gSunriseOvercastSkybox3Tex:
+  type: TEXTURE
+  offset: 0x4000
+  symbol: gSunriseOvercastSkybox3Tex
+  format: CI8
+  width: 128
+  height: 64
+  external_tlut: common/textures/skyboxes/vr_cloud0_pal_static
+  external_tlut_offset: 0x0
+gSunriseOvercastSkybox4Tex:
+  type: TEXTURE
+  offset: 0x6000
+  symbol: gSunriseOvercastSkybox4Tex
+  format: CI8
+  width: 128
+  height: 64
+  external_tlut: common/textures/skyboxes/vr_cloud0_pal_static
+  external_tlut_offset: 0x0
+gSunriseOvercastSkybox5Tex:
+  type: TEXTURE
+  offset: 0x8000
+  symbol: gSunriseOvercastSkybox5Tex
+  format: CI8
+  width: 128
+  height: 128
+  external_tlut: common/textures/skyboxes/vr_cloud0_pal_static
+  external_tlut_offset: 0x0

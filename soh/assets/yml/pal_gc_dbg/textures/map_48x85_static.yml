@@ -1,6 +1,7 @@
 :config:
   segments:
     - [ 12, 0x00983000 ]
+  createatlas: false
 
 gBottomOfTheWellPauseScreenMapBasement1LeftTex:
   type: TEXTURE

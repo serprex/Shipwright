@@ -226,6 +226,7 @@ fa5f5942b27480d60243c2d52c0e93e26b9e6b86:
 41b3bdc48d98c48529219919015a1af22f5057c2:
   name: Legend of Zelda, The - Ocarina of Time (USA) (Rev 2)
   path: ntsc_1-2
+  filelist: "filelists/ntsc_12_oot.yml"
   config:
     gbi: F3DEX2_OoT
     sort: OFFSET
