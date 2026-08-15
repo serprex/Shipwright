@@ -3,7 +3,7 @@
     - [1, vr_TTVR_static]
   directory: textures/backgrounds/
   external_files:
-    vr_TTVR_pal_static.yml
+     - ${VER}/textures/backgrounds/vr_TTVR_pal_static.yml
 gCarpentersTent2BgTex:
   type: TEXTURE
   offset: 0x10000

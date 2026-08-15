@@ -3,7 +3,7 @@
     - [1, vr_DGVR_static]
   directory: textures/backgrounds/
   external_files:
-    vr_DGVR_pal_static.yml
+     - ${VER}/textures/backgrounds/vr_DGVR_pal_static.yml
 gKakPotionShop2BgTex:
   type: TEXTURE
   offset: 0x10000
@@ -11,8 +11,7 @@ gKakPotionShop2BgTex:
   format: CI8
   width: 256
   height: 256
-  external_tlut: common/textures/backgrounds/vr_DGVR_pal_static
-  external_tlut_offset: 0x200
+  tlut_symbol: gKakPotionShopBg2TLUT
 gKakPotionShopBgTex:
   type: TEXTURE
   offset: 0x0
@@ -20,5 +19,4 @@ gKakPotionShopBgTex:
   format: CI8
   width: 256
   height: 256
-  external_tlut: common/textures/backgrounds/vr_DGVR_pal_static
-  external_tlut_offset: 0x0
+  tlut_symbol: gKakPotionShopBg2TLUT

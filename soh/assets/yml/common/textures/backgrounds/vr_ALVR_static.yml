@@ -1,10 +1,9 @@
 :config:
   segments:
     - [1, vr_ALVR_static]
-  directory: textures/skyboxes/
+  directory: textures/backgrounds/
   external_files:
-    vr_ALVR_pal_static.yml
-    vr_ALVR_pal_static.yml
+     - ${VER}/textures/backgrounds/vr_ALVR_pal_static.yml
 gMarketPotionShop2BgTex:
   type: TEXTURE
   offset: 0x10000
@@ -12,8 +11,7 @@ gMarketPotionShop2BgTex:
   format: CI8
   width: 256
   height: 256
-  external_tlut: common/textures/backgrounds/vr_ALVR_pal_static
-  external_tlut_offset: 0x200
+  tlut_symbol: gMarketPotionShopBg2TLUT
 gMarketPotionShopBgTex:
   type: TEXTURE
   offset: 0x0
@@ -21,5 +19,4 @@ gMarketPotionShopBgTex:
   format: CI8
   width: 256
   height: 256
-  external_tlut: common/textures/backgrounds/vr_ALVR_pal_static
-  external_tlut_offset: 0x0
+  tlut_symbol: gMarketPotionShopBgTLUT

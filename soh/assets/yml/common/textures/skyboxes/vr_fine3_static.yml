@@ -3,7 +3,7 @@
     - [1, vr_fine3_static]
   directory: textures/skyboxes/
   external_files:
-    vr_fine3_pal_static.yml
+    - ${VER}/textures/skyboxes/vr_fine3_pal_static.yml
 gNightSkybox1Tex:
   type: TEXTURE
   offset: 0x0
@@ -11,8 +11,7 @@ gNightSkybox1Tex:
   format: CI8
   width: 128
   height: 64
-  external_tlut: common/textures/skyboxes/vr_fine3_pal_static
-  external_tlut_offset: 0x0
+  tlut_symbol: gNightSkyboxTLUT
 gNightSkybox2Tex:
   type: TEXTURE
   offset: 0x2000
@@ -20,8 +19,7 @@ gNightSkybox2Tex:
   format: CI8
   width: 128
   height: 64
-  external_tlut: common/textures/skyboxes/vr_fine3_pal_static
-  external_tlut_offset: 0x0
+  tlut_symbol: gNightSkyboxTLUT
 gNightSkybox3Tex:
   type: TEXTURE
   offset: 0x4000
@@ -29,8 +27,7 @@ gNightSkybox3Tex:
   format: CI8
   width: 128
   height: 64
-  external_tlut: common/textures/skyboxes/vr_fine3_pal_static
-  external_tlut_offset: 0x0
+  tlut_symbol: gNightSkyboxTLUT
 gNightSkybox4Tex:
   type: TEXTURE
   offset: 0x6000
@@ -38,8 +35,7 @@ gNightSkybox4Tex:
   format: CI8
   width: 128
   height: 64
-  external_tlut: common/textures/skyboxes/vr_fine3_pal_static
-  external_tlut_offset: 0x0
+  tlut_symbol: gNightSkyboxTLUT
 gNightSkybox5Tex:
   type: TEXTURE
   offset: 0x8000
@@ -47,5 +43,4 @@ gNightSkybox5Tex:
   format: CI8
   width: 128
   height: 128
-  external_tlut: common/textures/skyboxes/vr_fine3_pal_static
-  external_tlut_offset: 0x0
+  tlut_symbol: gNightSkyboxTLUT

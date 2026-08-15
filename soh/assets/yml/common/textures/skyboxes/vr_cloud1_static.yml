@@ -3,7 +3,7 @@
     - [1, vr_cloud1_static]
   directory: textures/skyboxes/
   external_files:
-    vr_cloud1_pal_static.yml
+    - ${VER}/textures/skyboxes/vr_cloud1_pal_static.yml
 gDayOvercastSkybox1Tex:
   type: TEXTURE
   offset: 0x0
@@ -11,8 +11,7 @@ gDayOvercastSkybox1Tex:
   format: CI8
   width: 128
   height: 64
-  external_tlut: common/textures/skyboxes/vr_cloud1_pal_static
-  external_tlut_offset: 0x0
+  tlut_symbol: gDayOvercastSkyboxTLUT
 gDayOvercastSkybox2Tex:
   type: TEXTURE
   offset: 0x2000
@@ -20,8 +19,7 @@ gDayOvercastSkybox2Tex:
   format: CI8
   width: 128
   height: 64
-  external_tlut: common/textures/skyboxes/vr_cloud1_pal_static
-  external_tlut_offset: 0x0
+  tlut_symbol: gDayOvercastSkyboxTLUT
 gDayOvercastSkybox3Tex:
   type: TEXTURE
   offset: 0x4000
@@ -29,8 +27,7 @@ gDayOvercastSkybox3Tex:
   format: CI8
   width: 128
   height: 64
-  external_tlut: common/textures/skyboxes/vr_cloud1_pal_static
-  external_tlut_offset: 0x0
+  tlut_symbol: gDayOvercastSkyboxTLUT
 gDayOvercastSkybox4Tex:
   type: TEXTURE
   offset: 0x6000
@@ -38,8 +35,7 @@ gDayOvercastSkybox4Tex:
   format: CI8
   width: 128
   height: 64
-  external_tlut: common/textures/skyboxes/vr_cloud1_pal_static
-  external_tlut_offset: 0x0
+  tlut_symbol: gDayOvercastSkyboxTLUT
 gDayOvercastSkybox5Tex:
   type: TEXTURE
   offset: 0x8000
@@ -47,5 +43,4 @@ gDayOvercastSkybox5Tex:
   format: CI8
   width: 128
   height: 128
-  external_tlut: common/textures/skyboxes/vr_cloud1_pal_static
-  external_tlut_offset: 0x0
+  tlut_symbol: gDayOvercastSkyboxTLUT

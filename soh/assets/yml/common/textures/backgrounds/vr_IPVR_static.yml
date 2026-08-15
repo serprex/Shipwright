@@ -3,7 +3,7 @@
     - [1, vr_IPVR_static]
   directory: textures/backgrounds/
   external_files:
-    vr_IPVR_pal_static.yml
+     - ${VER}/textures/backgrounds/vr_IPVR_pal_static.yml
 gRichardsHouse2BgTex:
   type: TEXTURE
   offset: 0x10000
@@ -11,8 +11,7 @@ gRichardsHouse2BgTex:
   format: CI8
   width: 256
   height: 256
-  external_tlut: common/textures/backgrounds/vr_IPVR_pal_static
-  external_tlut_offset: 0x200
+  tlut_symbol: gRichardsHouseBg2TLUT
 gRichardsHouse3BgTex:
   type: TEXTURE
   offset: 0x20000
@@ -20,8 +19,7 @@ gRichardsHouse3BgTex:
   format: CI8
   width: 256
   height: 256
-  external_tlut: common/textures/backgrounds/vr_IPVR_pal_static
-  external_tlut_offset: 0x400
+  tlut_symbol: gRichardsHouseBg3TLUT
 gRichardsHouse4BgTex:
   type: TEXTURE
   offset: 0x30000
@@ -29,8 +27,7 @@ gRichardsHouse4BgTex:
   format: CI8
   width: 256
   height: 256
-  external_tlut: common/textures/backgrounds/vr_IPVR_pal_static
-  external_tlut_offset: 0x600
+  tlut_symbol: gRichardsHouseBg4TLUT
 gRichardsHouseBgTex:
   type: TEXTURE
   offset: 0x0
@@ -38,5 +35,4 @@ gRichardsHouseBgTex:
   format: CI8
   width: 256
   height: 256
-  external_tlut: common/textures/backgrounds/vr_IPVR_pal_static
-  external_tlut_offset: 0x0
+  tlut_symbol: gRichardsHouseBgTLUT

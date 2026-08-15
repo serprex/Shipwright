@@ -113,6 +113,7 @@ f46239439f59a2a594ef83cf68ef65043b1bffe2:
 cee6bc3c2a634b41728f2af8da54d9bf8cc14099:
   name: Legend of Zelda, The - Ocarina of Time (Europe) (Debug) (GameCube)
   path: pal_gc_dbg
+  filelist: "filelists/dbg.yml"
   config:
     gbi: F3DEX2_OoT
     sort: OFFSET

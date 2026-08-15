@@ -3,7 +3,7 @@
     - [1, vr_K5VR_static]
   directory: textures/backgrounds/
   external_files:
-    vr_K5VR_pal_static.yml
+     - ${VER}/textures/backgrounds/vr_K5VR_pal_static.yml
 gSariasHouse2BgTex:
   type: TEXTURE
   offset: 0x10000
@@ -11,8 +11,7 @@ gSariasHouse2BgTex:
   format: CI8
   width: 256
   height: 256
-  external_tlut: common/textures/skyboxes/vr_K5VR_pal_static
-  external_tlut_offset: 0x200
+  tlut_symbol: gSariasHouseBg2TLUT
 gSariasHouse3BgTex:
   type: TEXTURE
   offset: 0x20000
@@ -20,8 +19,7 @@ gSariasHouse3BgTex:
   format: CI8
   width: 256
   height: 256
-  external_tlut: common/textures/skyboxes/vr_K5VR_pal_static
-  external_tlut_offset: 0x400
+  tlut_symbol: gSariasHouseBg3TLUT
 gSariasHouseBgTex:
   type: TEXTURE
   offset: 0x0
@@ -29,5 +27,4 @@ gSariasHouseBgTex:
   format: CI8
   width: 256
   height: 256
-  external_tlut: common/textures/skyboxes/vr_K5VR_pal_static
-  external_tlut_offset: 0x0
+  tlut_symbol: gSariasHouseBgTLUT
