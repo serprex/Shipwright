@@ -80,6 +80,7 @@ set_property(DIRECTORY ${CMAKE_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT soh)
 add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
 add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/utf-8>)
 add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/Zc:preprocessor>)
+add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/external:W0>)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     if(NOT CMAKE_VS_PLATFORM_NAME)
@@ -241,7 +242,7 @@ foreach(_torch_game SM64 MK64 SF64 PM64 FZERO BK64 MARIO_ARTIST)
     set(BUILD_${_torch_game} OFF CACHE BOOL "" FORCE)
 endforeach()
 
-add_subdirectory(torch)
+add_subdirectory(torch SYSTEM)
 
 # Build-time ROM extraction. soh links torch as a static library, which compiles out torch's
 # own CLI, so this supplies an entry point around the same code the game runs.
@@ -318,7 +319,7 @@ endif()
 ################################################################################
 # Sub-projects
 ################################################################################
-add_subdirectory(libultraship ${CMAKE_BINARY_DIR}/libultraship)
+add_subdirectory(libultraship ${CMAKE_BINARY_DIR}/libultraship SYSTEM)
 target_compile_options(libultraship PRIVATE "${WARNING_OVERRIDE}")
 target_compile_definitions(libultraship PUBLIC INCLUDE_MPQ_SUPPORT)
 add_subdirectory(soh)
