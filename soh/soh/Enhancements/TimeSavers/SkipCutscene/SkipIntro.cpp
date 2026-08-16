@@ -27,6 +27,9 @@ static void SkipIntro_OnSceneSpawnActors() {
         player->actor.prevPos = sIntroEndPos;
         player->actor.home.pos = sIntroEndPos;
         gPlayState->unk_1242B = 1; // VIEWPOINT_LOCKED
+        // Watching the intro leaves this visit on the cutscene layer, which stops func_80083108
+        // from running & dimming the buttons. Zeroing cutsceneIndex loses that, so put it back
+        gSaveContext.sceneLayer = SCENE_LAYER_CUTSCENE_FIRST + 1;
     }
 }
 
