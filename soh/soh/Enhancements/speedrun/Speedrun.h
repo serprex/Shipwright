@@ -30,8 +30,18 @@ bool Speedrun_IsActive();
 void Speedrun_SaveSaveSection(SaveContext* saveContext, int sectionID, bool fullSave);
 void Speedrun_LoadSaveSection();
 
-// Puts back the settings that were replaced by a speedrun file. Safe to call when nothing was replaced.
+// Unlocks the menu and puts back the settings that were replaced by a speedrun file. Safe to call when nothing was
+// replaced.
 void Speedrun_RestoreSettings();
+
+namespace Ship {
+class GuiWindow;
+}
+
+// Called by the menu every frame, before the other windows draw. While a speedrun file is loaded it keeps every window
+// a run may not show hidden, and turns opening the menu into toggling the run info windows. True while locked, meaning
+// the menu must not draw.
+bool Speedrun_EnforceGuiLockdown(Ship::GuiWindow& menu);
 #endif
 
 #define SPEEDRUN_MAX_OPTIONS_ON_SCREEN 6

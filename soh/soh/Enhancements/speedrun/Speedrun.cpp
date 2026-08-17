@@ -6,16 +6,21 @@
 #include "soh/OTRGlobals.h"
 #include "soh/SaveManager.h"
 #include "soh/ShipInit.hpp"
+#include "soh/SohGui/SohGui.hpp"
 #include "soh_assets.h"
 
 #include <ship/Context.h>
 #include <ship/config/Config.h>
+#include <ship/window/Window.h>
+#include <ship/window/gui/Gui.h>
 #include <nlohmann/json.hpp>
 #include <spdlog/spdlog.h>
 
+#include <algorithm>
 #include <array>
 #include <filesystem>
 #include <fstream>
+#include <memory>
 #include <string>
 #include <utility>
 #include <vector>
@@ -56,8 +61,20 @@ static nlohmann::json sSettings = nlohmann::json::object();
 static std::string sPresetName = SPEEDRUN_PRESET_NONE;
 static std::string sPresetKey;
 static uint32_t sSettingsHash = 0;
-static bool sLockedSettings = false;
-static int32_t sPreviousDisableChanges = 0;
+static bool sMenuLocked = false;
+
+// The only windows left on screen while a speedrun file is loaded. Everything else, the menu included, is hidden so a
+// run can't touch settings from the UI. Run info displays, plus the modal window so popups aren't held back.
+static const std::vector<std::string> sAllowedWindows = {
+    "Time Splits", "Gameplay Stats", "Additional Timers", "Input Viewer", "Notifications Window", "Modal Window",
+};
+
+// What opening the menu toggles instead during a run.
+static const std::vector<std::string> sRunToggleWindows = { "Time Splits", "Gameplay Stats" };
+
+// Windows kept hidden while the menu is locked, and the subset that was open and gets reopened on unlock.
+static std::vector<std::shared_ptr<Ship::GuiWindow>> sHiddenWindows;
+static std::vector<std::shared_ptr<Ship::GuiWindow>> sReopenWindows;
 
 static std::string GetBackupPath() {
     return Ship::Context::GetPathRelativeToAppDirectory(sBackupFileName);
@@ -108,9 +125,78 @@ static void BackupSettings() {
     file << GetOwnedBlocks().dump(4);
 }
 
+static void LockMenu() {
+    if (sMenuLocked) {
+        return;
+    }
+
+    auto gui = Ship::Context::GetRawInstance()->GetWindow()->GetGui();
+    if (auto menu = gui->GetMenu()) {
+        menu->Hide();
+    }
+
+    for (auto& window : SohGui::GetAllGuiWindows()) {
+        if (window == nullptr ||
+            std::find(sAllowedWindows.begin(), sAllowedWindows.end(), window->GetName()) != sAllowedWindows.end()) {
+            continue;
+        }
+        if (window->IsVisible()) {
+            sReopenWindows.push_back(window);
+            window->Hide();
+        }
+        sHiddenWindows.push_back(window);
+    }
+
+    sMenuLocked = true;
+}
+
+static void UnlockMenu() {
+    if (!sMenuLocked) {
+        return;
+    }
+
+    sMenuLocked = false;
+    for (auto& window : sReopenWindows) {
+        window->Show();
+    }
+    sReopenWindows.clear();
+    sHiddenWindows.clear();
+}
+
+bool Speedrun_EnforceGuiLockdown(Ship::GuiWindow& menu) {
+    if (!sMenuLocked) {
+        return false;
+    }
+
+    // Esc lands here: trying to open the menu toggles the run info windows instead.
+    if (menu.IsVisible()) {
+        menu.Hide();
+
+        auto gui = Ship::Context::GetRawInstance()->GetWindow()->GetGui();
+        bool anyVisible = false;
+        for (auto& name : sRunToggleWindows) {
+            auto window = gui->GetGuiWindow(name);
+            anyVisible |= window != nullptr && window->IsVisible();
+        }
+        for (auto& name : sRunToggleWindows) {
+            if (auto window = gui->GetGuiWindow(name)) {
+                anyVisible ? window->Hide() : window->Show();
+            }
+        }
+    }
+
+    // Keep everything else hidden even if game code shows it.
+    for (auto& window : sHiddenWindows) {
+        if (window->IsVisible()) {
+            window->Hide();
+        }
+    }
+
+    return true;
+}
+
 void Speedrun_RestoreSettings() {
-    bool wasLocked = sLockedSettings;
-    sLockedSettings = false;
+    UnlockMenu();
 
     if (fs::exists(GetBackupPath())) {
         try {
@@ -122,12 +208,6 @@ void Speedrun_RestoreSettings() {
 
         fs::remove(GetBackupPath());
     }
-
-    // Unlocking has to come after the blocks are put back, because that reloads every cvar from the config file.
-    if (wasLocked) {
-        CVarSetInteger(CVAR_SETTING("DisableChanges"), sPreviousDisableChanges);
-        CVarSave();
-    }
 }
 
 bool Speedrun_IsActive() {
@@ -136,16 +216,6 @@ bool Speedrun_IsActive() {
 
 extern "C" f32 Ship_FilterGyro(f32 gyroAxis) {
     return IS_SPEEDRUN ? 0.0f : gyroAxis;
-}
-
-static void LockSettings() {
-    if (sLockedSettings) {
-        return;
-    }
-
-    sPreviousDisableChanges = CVarGetInteger(CVAR_SETTING("DisableChanges"), 0);
-    CVarSetInteger(CVAR_SETTING("DisableChanges"), 1);
-    sLockedSettings = true;
 }
 
 /**
@@ -334,7 +404,6 @@ extern "C" void Speedrun_InitSaveFile(void) {
     sSettings = GetOwnedBlocks();
     sSettingsHash = HashSettings();
 
-    LockSettings();
     EmitHashNotification();
 }
 
@@ -353,6 +422,9 @@ void Speedrun_LoadSaveSection() {
         return;
     }
 
+    // Locked even if the settings below fail to load: it's still a speedrun file.
+    LockMenu();
+
     SaveManager::Instance->LoadData("presetName", sPresetName);
     SaveManager::Instance->LoadData("settings", sSettings);
 
@@ -365,7 +437,6 @@ void Speedrun_LoadSaveSection() {
     SetOwnedBlocks(sSettings);
     sSettingsHash = HashSettings();
 
-    LockSettings();
     EmitHashNotification();
 }
 
