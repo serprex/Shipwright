@@ -315,10 +315,11 @@ void DrawSeedHashSprites(FileChooseContext* this) {
     // Draw icons on the main menu, when a rando file is selected, and on name entry when quest selection is set to
     // rando
     if (this->configMode == CM_MAIN_MENU &&
-        (this->selectMode != SM_CONFIRM_FILE || Save_GetSaveMetaInfo(this->selectedFileIndex)->randoSave == 1)) {
+        (this->selectMode != SM_CONFIRM_FILE ||
+         Save_GetSaveMetaInfo(this->selectedFileIndex)->quest == QUEST_RANDOMIZER)) {
 
         if (this->fileInfoAlpha[this->selectedFileIndex] > 0 &&
-            Save_GetSaveMetaInfo(this->selectedFileIndex)->randoSave) {
+            Save_GetSaveMetaInfo(this->selectedFileIndex)->quest == QUEST_RANDOMIZER) {
             // Use file info alpha to match fading
             gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, 0xFF, 0xFF, 0xFF, this->fileInfoAlpha[this->selectedFileIndex]);
 
@@ -2019,7 +2020,7 @@ void FileChoose_DrawWindowContents(GameState* thisx) {
             }
 
             // draw rando label
-            if (Save_GetSaveMetaInfo(i)->randoSave) {
+            if (Save_GetSaveMetaInfo(i)->quest == QUEST_RANDOMIZER) {
                 if (!FileChoose_IsSaveCompatible(Save_GetSaveMetaInfo(i))) {
                     gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, sWindowContentColors[1][0], sWindowContentColors[1][1],
                                     sWindowContentColors[1][2], this->nameBoxAlpha[i]);
@@ -2033,9 +2034,25 @@ void FileChoose_DrawWindowContents(GameState* thisx) {
                                     G_TX_NOLOD, G_TX_NOLOD);
                 gSP1Quadrangle(POLY_OPA_DISP++, 8, 10, 11, 9, 0);
             }
-            // Draw MQ label
-            if (Save_GetSaveMetaInfo(i)->requiresMasterQuest && !Save_GetSaveMetaInfo(i)->randoSave &&
+            // draw speedrun label
+            if ((Save_GetSaveMetaInfo(i)->quest == QUEST_SPEEDRUN ||
+                 Save_GetSaveMetaInfo(i)->quest == QUEST_SPEEDRUN_MASTER) &&
                 Save_GetSaveMetaInfo(i)->valid) {
+                if (!FileChoose_IsSaveCompatible(Save_GetSaveMetaInfo(i))) {
+                    gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, sWindowContentColors[1][0], sWindowContentColors[1][1],
+                                    sWindowContentColors[1][2], this->nameBoxAlpha[i]);
+                } else {
+                    gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, sWindowContentColors[isActive][0],
+                                    sWindowContentColors[isActive][1], sWindowContentColors[isActive][2],
+                                    this->nameAlpha[i]);
+                }
+                gDPLoadTextureBlock(POLY_OPA_DISP++, gFileSelRUNButtonTex, G_IM_FMT_IA, G_IM_SIZ_16b, 44, 16, 0,
+                                    G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMIRROR | G_TX_WRAP, G_TX_NOMASK, G_TX_NOMASK,
+                                    G_TX_NOLOD, G_TX_NOLOD);
+                gSP1Quadrangle(POLY_OPA_DISP++, 8, 10, 11, 9, 0);
+            }
+            // Draw MQ label
+            if (Save_GetSaveMetaInfo(i)->quest == QUEST_MASTER && Save_GetSaveMetaInfo(i)->valid) {
                 if (!FileChoose_IsSaveCompatible(Save_GetSaveMetaInfo(i))) {
                     gDPSetPrimColor(POLY_OPA_DISP++, 0, 0, sWindowContentColors[1][0], sWindowContentColors[1][1],
                                     sWindowContentColors[1][2], this->nameBoxAlpha[i]);
@@ -2064,7 +2081,7 @@ void FileChoose_DrawWindowContents(GameState* thisx) {
                                 G_TX_NOLOD, G_TX_NOLOD);
             gSP1Quadrangle(POLY_OPA_DISP++, 12, 14, 15, 13, 0);
 
-            if (this->n64ddFlags[i] || Save_GetSaveMetaInfo(i)->randoSave ||
+            if (this->n64ddFlags[i] || Save_GetSaveMetaInfo(i)->quest != QUEST_NORMAL ||
                 Save_GetSaveMetaInfo(i)->requiresMasterQuest) {
                 gSP1Quadrangle(POLY_OPA_DISP++, 16, 18, 19, 17, 0);
             }
@@ -2748,7 +2765,7 @@ void FileChoose_DrawRandoSaveVersionWarning(GameState* thisx) {
 
     // Draw rando seed warning when build version doesn't match for Major or Minor number
     for (int fileIndex = 0; fileIndex < 3; fileIndex++) {
-        if (Save_GetSaveMetaInfo(fileIndex)->randoSave == 1 && this->menuMode == FS_MENU_MODE_SELECT &&
+        if (Save_GetSaveMetaInfo(fileIndex)->quest == QUEST_RANDOMIZER && this->menuMode == FS_MENU_MODE_SELECT &&
             (gBuildVersionMajor != Save_GetSaveMetaInfo(fileIndex)->buildVersionMajor ||
              gBuildVersionMinor != Save_GetSaveMetaInfo(fileIndex)->buildVersionMinor)) {
 

@@ -143,7 +143,7 @@ SaveManager::SaveManager() {
             info.seedHash[i] = 0;
         }
 
-        info.randoSave = 0;
+        info.quest = QUEST_NORMAL;
         info.requiresMasterQuest = 0;
         info.requiresOriginal = 0;
 
@@ -629,7 +629,14 @@ void SaveManager::StartupCheckAndInitMeta(int fileNum) {
     fileMetaInfo[fileNum].requiresOriginal = !baseBlock["isMasterQuest"];
     fileMetaInfo[fileNum].requiresMasterQuest = baseBlock["isMasterQuest"];
 
-    fileMetaInfo[fileNum].randoSave = isRando;
+    bool isMasterQuest = baseBlock["isMasterQuest"];
+    if (isRando) {
+        fileMetaInfo[fileNum].quest = QUEST_RANDOMIZER;
+    } else if (metaSaveBlock["fileType"] == FILE_TYPE_SAVE_SPEEDRUN) {
+        fileMetaInfo[fileNum].quest = isMasterQuest ? QUEST_SPEEDRUN_MASTER : QUEST_SPEEDRUN;
+    } else {
+        fileMetaInfo[fileNum].quest = isMasterQuest ? QUEST_MASTER : QUEST_NORMAL;
+    }
     if (isRando) {
         nlohmann::json& randoBlock = metaSaveBlock["sections"]["randomizer"]["data"];
 
@@ -697,7 +704,7 @@ void SaveManager::InitMeta(int fileNum) {
         fileMetaInfo[fileNum].seedHash[i] = randoContext->hashIconIndexes[i];
     }
 
-    fileMetaInfo[fileNum].randoSave = IS_RANDO;
+    fileMetaInfo[fileNum].quest = gSaveContext.ship.quest.id;
     // If the file is marked as a Master Quest file or if we're randomized and have at least one master quest dungeon,
     // we need the mq otr.
     fileMetaInfo[fileNum].requiresMasterQuest =
@@ -2495,7 +2502,7 @@ void SaveManager::DeleteZeldaFile(int fileNum) {
         std::filesystem::remove(GetFileName(fileNum));
     }
     fileMetaInfo[fileNum].valid = false;
-    fileMetaInfo[fileNum].randoSave = false;
+    fileMetaInfo[fileNum].quest = QUEST_NORMAL;
     fileMetaInfo[fileNum].requiresMasterQuest = false;
     fileMetaInfo[fileNum].requiresOriginal = false;
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnDeleteFile>(fileNum);
