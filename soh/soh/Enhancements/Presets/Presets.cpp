@@ -1,5 +1,9 @@
 #include "Presets.h"
+#include <algorithm>
+#include <cctype>
+#include <climits>
 #include <string>
+#include <tuple>
 #include <fstream>
 #include <spdlog/common.h>
 #include <ship/config/Config.h>
@@ -160,15 +164,31 @@ void applyPreset(std::string presetName, std::vector<PresetSection> includeSecti
 
 std::vector<std::pair<std::string, std::string>> GetSpeedrunPresets() {
     static const std::string prefix = "Speedrun - ";
-    std::vector<std::pair<std::string, std::string>> found;
+    // {order, display name, preset name}
+    std::vector<std::tuple<int, std::string, std::string>> found;
 
     for (auto& [name, info] : presets) {
         if (info.fileName.rfind(prefix, 0) == 0) {
-            found.emplace_back(info.fileName.substr(prefix.size()), name);
+            std::string display = info.fileName.substr(prefix.size());
+            // A leading digit orders the list and is hidden, so "Speedrun - 1 Base" shows as "Base". Presets without
+            // a digit sort last, by name.
+            int order = INT_MAX;
+            if (!display.empty() && isdigit((unsigned char)display[0])) {
+                order = display[0] - '0';
+                display.erase(0, 2);
+            }
+            found.emplace_back(order, display, name);
         }
     }
 
-    return found;
+    std::sort(found.begin(), found.end());
+
+    std::vector<std::pair<std::string, std::string>> result;
+    for (auto& [order, display, name] : found) {
+        result.emplace_back(display, name);
+    }
+
+    return result;
 }
 
 void DrawPresetSelector(std::vector<PresetSection> includeSections, std::string presetLoc, bool disabled) {

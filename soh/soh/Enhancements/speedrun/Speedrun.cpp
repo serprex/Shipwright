@@ -41,8 +41,8 @@ namespace fs = std::filesystem;
 
 /**
  * The cvar blocks a speedrun file owns. They are snapshotted onto the file when it is created and put back every time
- * it is loaded, so a run always plays with the settings it was started with. Everything else (controls, resolution,
- * audio, cosmetics) stays with the player and is not part of the file or its hash.
+ * it is loaded, so a run always plays with the settings it was started with, exempt settings aside. Everything else
+ * (controls, resolution, audio, cosmetics) stays with the player and is not part of the file or its hash.
  */
 static const std::array<const char*, 3> sOwnedBlocks = {
     CVAR_PREFIX_ENHANCEMENT,
@@ -52,10 +52,24 @@ static const std::array<const char*, 3> sOwnedBlocks = {
 
 #define SPEEDRUN_PRESET_NONE "None"
 
+/**
+ * Settings that stay player preference even under a preset. When a file is created or loaded, the player's own values
+ * for these are layered back over the preset, and they are left out of the settings hash so two files that differ only
+ * here still show the same hash. A player who never touched one keeps the preset's value.
+ */
+static const std::array<nlohmann::json::json_pointer, 6> sExemptSettings = {
+    nlohmann::json::json_pointer("/gEnhancements/DrawLineupTick"),
+    nlohmann::json::json_pointer("/gEnhancements/FastBottles"),
+    nlohmann::json::json_pointer("/gEnhancements/FasterPauseMenu"),
+    nlohmann::json::json_pointer("/gEnhancements/GraveHoles"),
+    nlohmann::json::json_pointer("/gEnhancements/IncludeHeldInputsBufferWindow"),
+    nlohmann::json::json_pointer("/gEnhancements/PauseBufferWindow"),
+};
+
 // Settings replaced when a speedrun file was loaded are kept here so they survive a crash mid-run.
 static const char* sBackupFileName = "speedrun_settings_backup.json";
 
-// {display name, preset name}, the first entry being "None" with no preset behind it.
+// {display name, preset name}, the last entry being "None" with no preset behind it.
 static std::vector<std::pair<std::string, std::string>> sPresetChoices;
 static nlohmann::json sSettings = nlohmann::json::object();
 static std::string sPresetName = SPEEDRUN_PRESET_NONE;
@@ -105,6 +119,16 @@ static void SetOwnedBlocks(const nlohmann::json& blocks) {
     // SetBlock writes the config out, so this picks the replaced blocks back up and drops anything they no longer hold.
     Ship::Context::GetRawInstance()->GetConsoleVariables()->Load();
     ShipInit::InitAll();
+}
+
+// Copies the player's values for the exempt settings from custom onto blocks. Settings the player never set are left
+// alone, so the preset's value holds for them.
+static void OverlayExemptSettings(nlohmann::json& blocks, const nlohmann::json& custom) {
+    for (const auto& path : sExemptSettings) {
+        if (custom.contains(path)) {
+            blocks[path] = custom[path];
+        }
+    }
 }
 
 /**
@@ -220,10 +244,17 @@ extern "C" f32 Ship_FilterGyro(f32 gyroAxis) {
 
 /**
  * FNV-1a over the build version and the file's settings. Two files that show the same hash were played on the same
- * build with the same settings. nlohmann sorts object keys, so the dump is stable.
+ * build with the same settings, exempt settings aside. nlohmann sorts object keys, so the dump is stable.
  */
 static uint32_t HashSettings() {
-    std::string data = std::string((const char*)gBuildVersion) + sSettings.dump();
+    nlohmann::json stripped = sSettings;
+    for (const auto& path : sExemptSettings) {
+        if (stripped.contains(path)) {
+            stripped[path.parent_pointer()].erase(path.back());
+        }
+    }
+
+    std::string data = std::string((const char*)gBuildVersion) + stripped.dump();
     uint32_t hash = 0x811C9DC5;
 
     for (char c : data) {
@@ -244,16 +275,13 @@ static void EmitHashNotification() {
 }
 
 /**
- * Rebuilds the list shown in the file select menu. "None" keeps whatever the player has configured, every other entry
- * is a preset marked as a speedrun preset.
+ * Rebuilds the list shown in the file select menu. Every entry is a preset marked as a speedrun preset, except the
+ * final "None", which keeps whatever the player has configured. The standard preset sits first so it is also the
+ * default choice.
  */
 static void RefreshPresetChoices() {
-    sPresetChoices.clear();
+    sPresetChoices = GetSpeedrunPresets();
     sPresetChoices.emplace_back(SPEEDRUN_PRESET_NONE, "");
-
-    for (auto& preset : GetSpeedrunPresets()) {
-        sPresetChoices.push_back(preset);
-    }
 }
 
 extern "C" void FileChoose_UpdateSpeedrunMenu(GameState* gameState) {
@@ -396,9 +424,16 @@ extern "C" void Speedrun_InitSaveFile(void) {
     BackupSettings();
 
     if (!sPresetKey.empty()) {
+        nlohmann::json custom = GetOwnedBlocks();
+
         // Only the enhancement blocks are taken from the preset. Anything else it carries (controls, resolution,
         // volume) belongs to the player, not to the run.
         applyPreset(sPresetKey, { PRESET_SECTION_ENHANCEMENTS });
+
+        // Put the player's exempt settings back over the preset.
+        nlohmann::json blocks = GetOwnedBlocks();
+        OverlayExemptSettings(blocks, custom);
+        SetOwnedBlocks(blocks);
     }
 
     sSettings = GetOwnedBlocks();
@@ -433,8 +468,12 @@ void Speedrun_LoadSaveSection() {
         return;
     }
 
+    // The file's settings, with the player's current exempt settings layered over them.
+    nlohmann::json blocks = sSettings;
+    OverlayExemptSettings(blocks, GetOwnedBlocks());
+
     BackupSettings();
-    SetOwnedBlocks(sSettings);
+    SetOwnedBlocks(blocks);
     sSettingsHash = HashSettings();
 
     EmitHashNotification();
