@@ -83,7 +83,7 @@
                 "SlowTextSpeed": 1,
                 "StaticExplosionRadius": 0,
                 "StrengthDisabled": 0,
-                "SwordToggle": 2,
+                "SwordToggle": 0,
                 "TextSpeed": 1,
                 "TimeFlowFileSelect": 0,
                 "TimeSavers": {
