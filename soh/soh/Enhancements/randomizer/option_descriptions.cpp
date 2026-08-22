@@ -713,7 +713,7 @@ void Settings::CreateOptionDescriptions() {
         "How masks are acquired.\n"
         "Vanilla - Mask trade quest.\n"
         "\n"
-        "Completed - Once the Happy Mask Shop is opened, all masks will be available to be borrowed.\n"
+        "Completed - Start with every mask, no need to trade for them.\n"
         "\n"
         "Shuffle - Happy Mask Shop never opens, masks are shuffled with the rest of the items.";
     mOptionDescriptions[RSK_SKIP_SCARECROWS_SONG] =
