@@ -713,8 +713,6 @@ void Settings::CreateOptionDescriptions() {
         "How masks are acquired.\n"
         "Vanilla - Mask trade quest.\n"
         "\n"
-        "Completed - Start with every mask, no need to trade for them.\n"
-        "\n"
         "Shuffle - Happy Mask Shop never opens, masks are shuffled with the rest of the items.";
     mOptionDescriptions[RSK_SKIP_SCARECROWS_SONG] =
         "Start with the ability to summon Pierre the Scarecrow. Pulling out an Ocarina in the usual locations will "

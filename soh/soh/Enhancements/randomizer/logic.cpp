@@ -125,29 +125,11 @@ bool Logic::HasItem(RandomizerGet itemName) {
             return GetSaveContext()->isDoubleDefenseAcquired;
             // Masks
         case RG_SKULL_MASK:
-            switch (ctx->GetOption(RSK_MASK_QUEST).Get()) {
-                case RO_MASK_QUEST_VANILLA:
-                    return Get(LOGIC_BORROW_SKULL_MASK);
-                case RO_MASK_QUEST_COMPLETED:
-                    return true;
-                case RO_MASK_QUEST_SHUFFLE:
-                    return CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_SKULL);
-                default:
-                    assert(false);
-                    return false;
-            }
+            return CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_SKULL) ||
+                   (ctx->GetOption(RSK_MASK_QUEST).Is(RO_MASK_QUEST_VANILLA) && Get(LOGIC_BORROW_SKULL_MASK));
         case RG_MASK_OF_TRUTH:
-            switch (ctx->GetOption(RSK_MASK_QUEST).Get()) {
-                case RO_MASK_QUEST_VANILLA:
-                    return Get(LOGIC_BORROW_RIGHT_MASKS);
-                case RO_MASK_QUEST_COMPLETED:
-                    return true;
-                case RO_MASK_QUEST_SHUFFLE:
-                    return CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_TRUTH);
-                default:
-                    assert(false);
-                    return false;
-            }
+            return CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_TRUTH) ||
+                   (ctx->GetOption(RSK_MASK_QUEST).Is(RO_MASK_QUEST_VANILLA) && Get(LOGIC_BORROW_RIGHT_MASKS));
         case RG_POWER_BRACELET:
         case RG_CHILD_WALLET:
         case RG_FISHING_POLE:

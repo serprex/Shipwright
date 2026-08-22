@@ -1016,8 +1016,7 @@ void SohMenu::AddMenuEnhancements() {
         .PreFunc([](WidgetInfo& info) {
             info.options->disabled =
                 OTRGlobals::Instance->gRandoContext->GetOption(RSK_MASK_QUEST).IsNot(RO_MASK_QUEST_VANILLA);
-            info.options->disabledTooltip =
-                "This setting is forcefully enabled when Mask Quest is Completed from the start or Shuffled.";
+            info.options->disabledTooltip = "This setting is forcefully enabled when Mask Quest is Shuffled.";
         })
         .Options(CheckboxOptions().Tooltip(
             "After completing the mask trading sub-quest, press A and any direction on the mask "
