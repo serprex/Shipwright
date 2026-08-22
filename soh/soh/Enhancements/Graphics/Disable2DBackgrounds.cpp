@@ -23,25 +23,6 @@ std::set<SceneID> fogControlList = {
     SCENE_TEMPLE_OF_TIME_EXTERIOR_DAY,
     SCENE_TEMPLE_OF_TIME_EXTERIOR_NIGHT,
     SCENE_TEMPLE_OF_TIME_EXTERIOR_RUINS,
-    SCENE_KNOW_IT_ALL_BROS_HOUSE,
-    SCENE_TWINS_HOUSE,
-    SCENE_MIDOS_HOUSE,
-    SCENE_SARIAS_HOUSE,
-    SCENE_BACK_ALLEY_HOUSE,
-    SCENE_BAZAAR,
-    SCENE_KOKIRI_SHOP,
-    SCENE_GORON_SHOP,
-    SCENE_ZORA_SHOP,
-    SCENE_POTION_SHOP_KAKARIKO,
-    SCENE_POTION_SHOP_MARKET,
-    SCENE_BOMBCHU_SHOP,
-    SCENE_HAPPY_MASK_SHOP,
-    SCENE_LINKS_HOUSE,
-    SCENE_DOG_LADY_HOUSE,
-    SCENE_STABLE,
-    SCENE_IMPAS_HOUSE,
-    SCENE_CARPENTERS_TENT,
-    SCENE_GRAVEKEEPERS_HUT,
 };
 
 std::set<SceneID> skyboxSceneControlList = {
@@ -84,6 +65,20 @@ std::set<SkyboxId> skyboxIdControlList = {
     SKYBOX_HOUSE_ALLEY,
 };
 
+static void SyncSkyboxTimeToCurrentTime() {
+    gSaveContext.skyboxTime = gSaveContext.dayTime;
+
+    if ((gSaveContext.skyboxTime >= 0x2AAC) && (gSaveContext.skyboxTime < 0x4555)) {
+        gSaveContext.skyboxTime = 0x3556;
+    } else if ((gSaveContext.skyboxTime >= 0x4555) && (gSaveContext.skyboxTime < 0x5556)) {
+        gSaveContext.skyboxTime = 0x5556;
+    } else if ((gSaveContext.skyboxTime >= 0xAAAB) && (gSaveContext.skyboxTime < 0xB556)) {
+        gSaveContext.skyboxTime = 0xB556;
+    } else if ((gSaveContext.skyboxTime >= 0xC001) && (gSaveContext.skyboxTime < 0xCAAC)) {
+        gSaveContext.skyboxTime = 0xCAAC;
+    }
+}
+
 void Register3DPreRenderedScenes() {
     // Runs after the scene commands have set play->skyboxId, but before Play_InitEnvironment builds the
     // skybox. Overriding the id here means Skybox_Setup loads a real sky; overriding it any later would
@@ -98,11 +93,13 @@ void Register3DPreRenderedScenes() {
         gPlayState->envCtx.skyboxDisabled = false;
 
         // Replace skybox with normal sky
+        SyncSkyboxTimeToCurrentTime();
         gPlayState->skyboxId = SKYBOX_NORMAL_SKY;
         // Apply the always cloudy skybox as an adult for Temple of Time and the Market
         if (sceneNum == SCENE_TEMPLE_OF_TIME_EXTERIOR_RUINS || sceneNum == SCENE_MARKET_RUINS ||
             sceneNum == SCENE_MARKET_ENTRANCE_RUINS) {
             gWeatherMode = 3;
+            gSaveContext.retainWeatherMode = 1;
         }
     });
 
@@ -114,12 +111,8 @@ void Register3DPreRenderedScenes() {
         if ((HREG(80) != 10) || (HREG(82) != 0)) {
             // Furthest possible fog and zFar
             gPlayState->view.zFar = 12800;
-            gPlayState->lightCtx.fogNear = 996; // Set to 1000 to complete disable fog entirely
+            gPlayState->lightCtx.fogNear = 1000;
             gPlayState->lightCtx.fogFar = 12800;
-            // General gray fog color
-            gPlayState->lightCtx.fogColor[0] = 100;
-            gPlayState->lightCtx.fogColor[1] = 100;
-            gPlayState->lightCtx.fogColor[2] = 100;
         }
     });
 
