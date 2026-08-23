@@ -421,22 +421,18 @@ extern "C" void FileChoose_DrawSpeedrunMenuWindowContents(FileChooseContext* fil
 }
 
 extern "C" void Speedrun_InitSaveFile(void) {
-    BackupSettings();
+    nlohmann::json custom = GetOwnedBlocks();
+    sSettings = custom;
 
     if (!sPresetKey.empty()) {
-        nlohmann::json custom = GetOwnedBlocks();
-
-        // Only the enhancement blocks are taken from the preset. Anything else it carries (controls, resolution,
-        // volume) belongs to the player, not to the run.
-        applyPreset(sPresetKey, { PRESET_SECTION_ENHANCEMENTS });
+        // The preset lands on the file's settings only, never on the player's config. Only the enhancement blocks are
+        // taken from it; anything else it carries (controls, resolution, volume) belongs to the player, not the run.
+        sSettings = applyPresetToBlocks(sPresetKey, sSettings, { PRESET_SECTION_ENHANCEMENTS });
 
         // Put the player's exempt settings back over the preset.
-        nlohmann::json blocks = GetOwnedBlocks();
-        OverlayExemptSettings(blocks, custom);
-        SetOwnedBlocks(blocks);
+        OverlayExemptSettings(sSettings, custom);
     }
 
-    sSettings = GetOwnedBlocks();
     sSettingsHash = HashSettings();
 
     EmitHashNotification();

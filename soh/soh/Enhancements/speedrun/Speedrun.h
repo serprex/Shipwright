@@ -11,7 +11,8 @@ struct FileChooseContext;
 void FileChoose_UpdateSpeedrunMenu(struct GameState* gameState);
 void FileChoose_DrawSpeedrunMenuWindowContents(struct FileChooseContext* fileChooseContext);
 
-// Applies the preset picked in the file select menu and snapshots the resulting settings onto the new file.
+// Snapshots the settings the new file plays with: the player's current ones, with the preset picked in the file select
+// menu laid over them. Only the file gets them, the player's own settings are untouched until the file is loaded.
 void Speedrun_InitSaveFile(void);
 
 // Gyro aiming is not allowed in a speedrun, so this reads back as 0 there and unchanged everywhere else.

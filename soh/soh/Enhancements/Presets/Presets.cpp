@@ -162,6 +162,46 @@ void applyPreset(std::string presetName, std::vector<PresetSection> includeSecti
     OTRGlobals::Instance->ScaleImGui();
 }
 
+nlohmann::json applyPresetToBlocks(std::string presetName, nlohmann::json blocks,
+                                   std::vector<PresetSection> includeSections) {
+    auto entry = presets.find(presetName);
+    if (entry == presets.end()) {
+        return blocks;
+    }
+    auto& info = entry->second;
+
+    for (int i = PRESET_SECTION_SETTINGS; i < PRESET_SECTION_MAX; i++) {
+        if (!info.apply[i] || !info.presetValues["blocks"].contains(blockInfo[i].names[1])) {
+            continue;
+        }
+        if (!includeSections.empty() && !SohUtils::Contains(i, includeSections)) {
+            continue;
+        }
+
+        auto section = info.presetValues["blocks"][blockInfo[i].names[1]];
+        std::string sectionStrategy = "overwrite";
+        if (info.presetValues.contains("blockStrategy") &&
+            info.presetValues["blockStrategy"].contains(blockInfo[i].names[1])) {
+            sectionStrategy = info.presetValues["blockStrategy"][blockInfo[i].names[1]];
+        }
+
+        for (auto& item : section.items()) {
+            if (!blocks.contains(item.key())) {
+                continue;
+            }
+            if (item.value().is_null()) {
+                blocks[item.key()] = nlohmann::json::object();
+            } else if (sectionStrategy == "merge") {
+                blocks[item.key()].update(item.value(), true);
+            } else {
+                blocks[item.key()] = item.value();
+            }
+        }
+    }
+
+    return blocks;
+}
+
 std::vector<std::pair<std::string, std::string>> GetSpeedrunPresets() {
     static const std::string prefix = "Speedrun - ";
     // {order, display name, preset name}
