@@ -12,8 +12,8 @@ void RegionTable_Init_DeathMountainTrail() {
     }, {
         //Locations
         LOCATION(RC_DMT_CHEST,                    	  (logic->BlastOrSmash() || (ctx->GetTrickOption(RT_DMT_BOMBABLE) && logic->IsChild && logic->HasItem(RG_GORONS_BRACELET))) && logic->HasItem(RG_OPEN_CHEST)),
-        LOCATION(RC_DMT_FREESTANDING_POH,         	  logic->TakeDamage() || logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && logic->BeanPlanted(LOGIC_PLANT_DEATH_MOUNTAIN_TRAIL_BEAN) && (logic->HasExplosives() || logic->HasItem(RG_GORONS_BRACELET)))),
-        LOCATION(RC_DMT_GS_BEAN_PATCH,            	  logic->CanSpawnSoilSkull(RG_DEATH_MOUNTAIN_TRAIL_BEAN_SOUL) && (logic->HasExplosives() || logic->HasItem(RG_GORONS_BRACELET) || (ctx->GetTrickOption(RT_DMT_SOIL_GS) && (logic->TakeDamage() || logic->CanUse(RG_HOVER_BOOTS)) && logic->CanUse(RG_BOOMERANG)))),
+        LOCATION_ROUTES(RC_DMT_FREESTANDING_POH, ROUTE(logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && logic->BeanPlanted(LOGIC_PLANT_DEATH_MOUNTAIN_TRAIL_BEAN) && (logic->HasExplosives() || logic->HasItem(RG_GORONS_BRACELET)))), ROUTE(true, logic->HitCost())),
+        LOCATION_ROUTES(RC_DMT_GS_BEAN_PATCH, ROUTE(logic->CanSpawnSoilSkull(RG_DEATH_MOUNTAIN_TRAIL_BEAN_SOUL) && (logic->HasExplosives() || logic->HasItem(RG_GORONS_BRACELET) || (ctx->GetTrickOption(RT_DMT_SOIL_GS) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_BOOMERANG)))), ROUTE(logic->CanSpawnSoilSkull(RG_DEATH_MOUNTAIN_TRAIL_BEAN_SOUL) && ctx->GetTrickOption(RT_DMT_SOIL_GS) && logic->CanUse(RG_BOOMERANG), logic->HitCost())),
         LOCATION(RC_DMT_GS_NEAR_KAK,              	  logic->BlastOrSmash() && (logic->HasItem(RG_CLIMB) || logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_BOOMERANG))),
         LOCATION(RC_DMT_GS_ABOVE_DODONGOS_CAVERN, 	  logic->IsAdult && logic->CanGetNightTimeGS() && 
 							        					  ((logic->CanUse(RG_MEGATON_HAMMER) || (ctx->GetTrickOption(RT_ITEM_EXTENSION) && logic->CanUse(RG_HOOKSHOT)) || (ctx->GetTrickOption(RT_BOULDER_COLLISION) && logic->CanUse(RG_LONGSHOT)) || (ctx->GetTrickOption(RT_DMT_JS_LOWER_GS) && logic->CanJumpslash())) || 

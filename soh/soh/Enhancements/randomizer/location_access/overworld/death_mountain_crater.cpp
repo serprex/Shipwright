@@ -17,12 +17,12 @@ void RegionTable_Init_DeathMountainCrater() {
     // The ledge you arrive on from the summit, and the top of the ladder down into the crater
     areaTable[RR_DMC_UPPER] = Region("DMC Upper", SCENE_DEATH_MOUNTAIN_CRATER, {}, {}, {
         //Exits
-        TIMED_ENTRANCE(RR_DMC_CRATE,        0,  true),
-        TIMED_ENTRANCE(RR_DMC_ROCK_GROTTO,  8,  true),
-        TIMED_ENTRANCE(RR_DMC_CRACKED_WALL, 16, true),
-        TIMED_ENTRANCE(RR_DMC_SCRUB,        16, true),
+        ENTRANCE_ROUTES(RR_DMC_CRATE,        ROUTE(true, Cost().Heat(0))),
+        ENTRANCE_ROUTES(RR_DMC_ROCK_GROTTO,  ROUTE(true, Cost().Heat(8))),
+        ENTRANCE_ROUTES(RR_DMC_CRACKED_WALL, ROUTE(true, Cost().Heat(16))),
+        ENTRANCE_ROUTES(RR_DMC_SCRUB,        ROUTE(true, Cost().Heat(16))),
         //Over the crater to the warp pad with the distant scarecrow
-        TIMED_ENTRANCE(RR_DMC_PAD,          32, logic->IsAdult && logic->TakeDamage() && ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS) && logic->ReachDistantScarecrow()),
+        ENTRANCE_ROUTES(RR_DMC_PAD,          ROUTE(logic->IsAdult && ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS) && logic->ReachDistantScarecrow(), logic->HitCost().Heat(32))),
     });
 
     areaTable[RR_DMC_CRATE] = Region("DMC Crate", SCENE_DEATH_MOUNTAIN_CRATER, {}, {
@@ -32,32 +32,32 @@ void RegionTable_Init_DeathMountainCrater() {
     }, {
         //Exits
         ENTRANCE(RR_DEATH_MOUNTAIN_SUMMIT, true),
-        TIMED_ENTRANCE(RR_DMC_UPPER, 0, true),
+        ENTRANCE_ROUTES(RR_DMC_UPPER, ROUTE(true, Cost().Heat(0))),
     });
 
     areaTable[RR_DMC_ROCK_GROTTO] = Region("DMC Rock Grotto", SCENE_DEATH_MOUNTAIN_CRATER, {}, {
         //Locations
         //You can also walk off the edge at a shallow angle to not grab the wall, then drift to land in the alcove.
-        TIMED_LOCATION(RC_DMC_WALL_FREESTANDING_POH, 8, logic->HasItem(RG_CLIMB) || (ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS) && logic->CanJumpslash())),
-        TIMED_LOCATION(RC_DMC_CIRCLE_ROCK_1, 8, logic->CanBreakRocks()),
-        TIMED_LOCATION(RC_DMC_CIRCLE_ROCK_2, 8, logic->CanBreakRocks()),
-        TIMED_LOCATION(RC_DMC_CIRCLE_ROCK_3, 8, logic->CanBreakRocks()),
-        TIMED_LOCATION(RC_DMC_CIRCLE_ROCK_4, 8, logic->CanBreakRocks()),
-        TIMED_LOCATION(RC_DMC_CIRCLE_ROCK_5, 8, logic->CanBreakRocks()),
-        TIMED_LOCATION(RC_DMC_CIRCLE_ROCK_6, 8, logic->CanBreakRocks()),
-        TIMED_LOCATION(RC_DMC_CIRCLE_ROCK_7, 8, logic->CanBreakRocks()),
-        TIMED_LOCATION(RC_DMC_CIRCLE_ROCK_8, 8, logic->CanBreakRocks()),
+        LOCATION_ROUTES(RC_DMC_WALL_FREESTANDING_POH, ROUTE(logic->HasItem(RG_CLIMB) || (ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS) && logic->CanJumpslash()), Cost().Heat(8))),
+        LOCATION_ROUTES(RC_DMC_CIRCLE_ROCK_1, ROUTE(logic->CanBreakRocks(), Cost().Heat(8))),
+        LOCATION_ROUTES(RC_DMC_CIRCLE_ROCK_2, ROUTE(logic->CanBreakRocks(), Cost().Heat(8))),
+        LOCATION_ROUTES(RC_DMC_CIRCLE_ROCK_3, ROUTE(logic->CanBreakRocks(), Cost().Heat(8))),
+        LOCATION_ROUTES(RC_DMC_CIRCLE_ROCK_4, ROUTE(logic->CanBreakRocks(), Cost().Heat(8))),
+        LOCATION_ROUTES(RC_DMC_CIRCLE_ROCK_5, ROUTE(logic->CanBreakRocks(), Cost().Heat(8))),
+        LOCATION_ROUTES(RC_DMC_CIRCLE_ROCK_6, ROUTE(logic->CanBreakRocks(), Cost().Heat(8))),
+        LOCATION_ROUTES(RC_DMC_CIRCLE_ROCK_7, ROUTE(logic->CanBreakRocks(), Cost().Heat(8))),
+        LOCATION_ROUTES(RC_DMC_CIRCLE_ROCK_8, ROUTE(logic->CanBreakRocks(), Cost().Heat(8))),
         //Boulders 1 and 2 are a bit separate, but are in 8 seconds from upper entry and closer or the same distance
         //from all ways to reach upper grotto otherwise, so it works
-        TIMED_LOCATION(RC_DMC_BOULDER_1,     8, logic->BlastOrSmash()),
-        TIMED_LOCATION(RC_DMC_BOULDER_2,     8, logic->BlastOrSmash()),
-        TIMED_LOCATION(RC_DMC_BOULDER_3,     8, logic->BlastOrSmash()),
+        LOCATION_ROUTES(RC_DMC_BOULDER_1,     ROUTE(logic->BlastOrSmash(), Cost().Heat(8))),
+        LOCATION_ROUTES(RC_DMC_BOULDER_2,     ROUTE(logic->BlastOrSmash(), Cost().Heat(8))),
+        LOCATION_ROUTES(RC_DMC_BOULDER_3,     ROUTE(logic->BlastOrSmash(), Cost().Heat(8))),
     }, {
         //Exits
-        TIMED_ENTRANCE(RR_DMC_UPPER,        8,  true),
-        TIMED_ENTRANCE(RR_DMC_UPPER_GROTTO, 8,  AnyAgeTime([]{return logic->BlastOrSmash();})),
+        ENTRANCE_ROUTES(RR_DMC_UPPER,        ROUTE(true, Cost().Heat(8))),
+        ENTRANCE_ROUTES(RR_DMC_UPPER_GROTTO, ROUTE(AnyAgeTime([]{return logic->BlastOrSmash();}), Cost().Heat(8))),
         //Jumping down onto the distant platform, which is a one way trip
-        TIMED_ENTRANCE(RR_DMC_FAR_PLATFORM, 16, logic->TakeDamage() && ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS)),
+        ENTRANCE_ROUTES(RR_DMC_FAR_PLATFORM, ROUTE(ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS), logic->HitCost().Heat(16))),
     });
 
     areaTable[RR_DMC_CRACKED_WALL] = Region("DMC Cracked Wall", SCENE_DEATH_MOUNTAIN_CRATER, {
@@ -72,7 +72,7 @@ void RegionTable_Init_DeathMountainCrater() {
         LOCATION(RC_DMC_GOSSIP_STONE,           logic->HasExplosives()),
     }, {
         //Exits
-        TIMED_ENTRANCE(RR_DMC_UPPER, 16, true),
+        ENTRANCE_ROUTES(RR_DMC_UPPER, ROUTE(true, Cost().Heat(16))),
     });
 
     areaTable[RR_DMC_SCRUB] = Region("DMC Scrub", SCENE_DEATH_MOUNTAIN_CRATER, {
@@ -83,9 +83,9 @@ void RegionTable_Init_DeathMountainCrater() {
         LOCATION(RC_DMC_DEKU_SCRUB, logic->IsChild && logic->CanStunDeku() && logic->HasItem(RG_SPEAK_DEKU) && GetCheckPrice() <= GetWalletCapacity()),
     }, {
         //Exits
-        TIMED_ENTRANCE(RR_DMC_UPPER,   16, logic->CanClimbLadder()),
+        ENTRANCE_ROUTES(RR_DMC_UPPER,   ROUTE(logic->CanClimbLadder(), Cost().Heat(16))),
         //Past the boulder onto the bridge, implied hookshot use to cross
-        TIMED_ENTRANCE(RR_DMC_BLOCKED, 8,  logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && (logic->Get(LOGIC_DMC_BOULDER) || ctx->GetTrickOption(RT_DMC_BOULDER_SKIP)))),
+        ENTRANCE_ROUTES(RR_DMC_BLOCKED, ROUTE(logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && (logic->Get(LOGIC_DMC_BOULDER) || ctx->GetTrickOption(RT_DMC_BOULDER_SKIP))), Cost().Heat(8))),
     });
 
     areaTable[RR_DMC_BLOCKED] = Region("DMC Blocked Exit", SCENE_DEATH_MOUNTAIN_CRATER, {
@@ -96,8 +96,8 @@ void RegionTable_Init_DeathMountainCrater() {
         //Exits
         ENTRANCE(RR_DMC_GREAT_FAIRY_FOUNTAIN, logic->CanUse(RG_MEGATON_HAMMER)),
         //Dropping back down past the boulder
-        TIMED_ENTRANCE(RR_DMC_SCRUB, 8, true),
-        TIMED_ENTRANCE(RR_DMC_POTS,  8, true),
+        ENTRANCE_ROUTES(RR_DMC_SCRUB, ROUTE(true, Cost().Heat(8))),
+        ENTRANCE_ROUTES(RR_DMC_POTS,  ROUTE(true, Cost().Heat(8))),
     });
 
     areaTable[RR_DMC_POTS] = Region("DMC Pots", SCENE_DEATH_MOUNTAIN_CRATER, {}, {
@@ -112,33 +112,33 @@ void RegionTable_Init_DeathMountainCrater() {
         LOCATION(RC_DMC_BRONZE_BOULDER_SHORTCUT, logic->CanUse(RG_MEGATON_HAMMER)),
         LOCATION(RC_DMC_BRIDGE_EXIT_ARROW_SIGN,  logic->CanRead()),
         //Hovering out over the lava to the two hearts, which needs the longshot to get back up to the wall one
-        TIMED_LOCATION(RC_DMC_VOLCANO_FREESTANDING_POH, 8,  ctx->GetTrickOption(RT_DMC_HOVER_BEAN_POH) && logic->CanUse(RG_HOVER_BOOTS)),
-        TIMED_LOCATION(RC_DMC_WALL_FREESTANDING_POH,    24, ctx->GetTrickOption(RT_DMC_HOVER_BEAN_POH) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_LONGSHOT) &&
-                                                           (logic->HasItem(RG_CLIMB) || (ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS) && logic->CanJumpslash()))),
+        LOCATION_ROUTES(RC_DMC_VOLCANO_FREESTANDING_POH, ROUTE(ctx->GetTrickOption(RT_DMC_HOVER_BEAN_POH) && logic->CanUse(RG_HOVER_BOOTS), Cost().Heat(8))),
+        LOCATION_ROUTES(RC_DMC_WALL_FREESTANDING_POH,    ROUTE(ctx->GetTrickOption(RT_DMC_HOVER_BEAN_POH) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_LONGSHOT) &&
+                                                           (logic->HasItem(RG_CLIMB) || (ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS) && logic->CanJumpslash())), Cost().Heat(24))),
     }, {
         //Exits
         ENTRANCE(RR_GC_DARUNIAS_CHAMBER, true),
         //Hovering out over the lava and pulling up to the rim with the longshot
-        TIMED_ENTRANCE(RR_DMC_ROCK_GROTTO, 24, ctx->GetTrickOption(RT_DMC_HOVER_BEAN_POH) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_LONGSHOT)),
-        TIMED_ENTRANCE(RR_DMC_BLOCKED,    8,  true),
-        TIMED_ENTRANCE(RR_DMC_POT_GROTTO, 8,  true),
-        TIMED_ENTRANCE(RR_DMC_PAD,        16, logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_HOOKSHOT) ||
-                                              (logic->IsAdult && logic->CanShield() && ctx->GetTrickOption(RT_DMC_BOLERO_JUMP) && logic->CanUse(RG_POWER_BRACELET))),
+        ENTRANCE_ROUTES(RR_DMC_ROCK_GROTTO, ROUTE(ctx->GetTrickOption(RT_DMC_HOVER_BEAN_POH) && logic->CanUse(RG_HOVER_BOOTS) && logic->CanUse(RG_LONGSHOT), Cost().Heat(24))),
+        ENTRANCE_ROUTES(RR_DMC_BLOCKED,    ROUTE(true, Cost().Heat(8))),
+        ENTRANCE_ROUTES(RR_DMC_POT_GROTTO, ROUTE(true, Cost().Heat(8))),
+        ENTRANCE_ROUTES(RR_DMC_PAD,        ROUTE(logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_HOOKSHOT) ||
+                                              (logic->IsAdult && logic->CanShield() && ctx->GetTrickOption(RT_DMC_BOLERO_JUMP) && logic->CanUse(RG_POWER_BRACELET)), Cost().Heat(16))),
     });
 
     areaTable[RR_DMC_POT_GROTTO] = Region("DMC Pot Grotto", SCENE_DEATH_MOUNTAIN_CRATER, {}, {}, {
         //Exits
         //Perm flag only as Adult
         ENTRANCE(RR_DMC_SCRUB_GROTTO, logic->CanUse(RG_MEGATON_HAMMER)),
-        TIMED_ENTRANCE(RR_DMC_POTS, 8, true),
+        ENTRANCE_ROUTES(RR_DMC_POTS, ROUTE(true, Cost().Heat(8))),
     });
 
     areaTable[RR_DMC_PAD] = Region("DMC Pad", SCENE_DEATH_MOUNTAIN_CRATER, {}, {}, {
         //Exits
-        TIMED_ENTRANCE(RR_DMC_CENTRAL,      16, true),
-        TIMED_ENTRANCE(RR_DMC_POTS,         16, (logic->CanUse(RG_HOVER_BOOTS) && (logic->IsAdult || logic->HasItem(RG_CLIMB))) || logic->CanUse(RG_HOOKSHOT)),
-        TIMED_ENTRANCE(RR_DMC_TEMPLE,       16, logic->IsAdult || ctx->GetOption(RSK_SHUFFLE_DUNGEON_ENTRANCES).IsNot(RO_DUNGEON_ENTRANCE_SHUFFLE_OFF)),
-        TIMED_ENTRANCE(RR_DMC_FAR_PLATFORM, 16, logic->IsAdult && logic->ReachDistantScarecrow()),
+        ENTRANCE_ROUTES(RR_DMC_CENTRAL,      ROUTE(true, Cost().Heat(16))),
+        ENTRANCE_ROUTES(RR_DMC_POTS,         ROUTE((logic->CanUse(RG_HOVER_BOOTS) && (logic->IsAdult || logic->HasItem(RG_CLIMB))) || logic->CanUse(RG_HOOKSHOT), Cost().Heat(16))),
+        ENTRANCE_ROUTES(RR_DMC_TEMPLE,       ROUTE(logic->IsAdult || ctx->GetOption(RSK_SHUFFLE_DUNGEON_ENTRANCES).IsNot(RO_DUNGEON_ENTRANCE_SHUFFLE_OFF), Cost().Heat(16))),
+        ENTRANCE_ROUTES(RR_DMC_FAR_PLATFORM, ROUTE(logic->IsAdult && logic->ReachDistantScarecrow(), Cost().Heat(16))),
     });
 
     areaTable[RR_DMC_CENTRAL] = Region("DMC Central", SCENE_DEATH_MOUNTAIN_CRATER, {
@@ -168,13 +168,13 @@ void RegionTable_Init_DeathMountainCrater() {
         // RANDOTODO: A number of tricks to reach this: sidehop jumpslash or hookshot + jumpslash from bridge platform, chu+shield damage boost
         LOCATION(RC_DMC_WONDER_BENEATH_BRIDGE_PLATFORM, logic->IsAdult && (logic->CanUse(RG_LONGSHOT) || logic->CanUse(RG_HOVER_BOOTS))),
         //Riding the bean over the crater, dropping off at either heart on the way
-        TIMED_LOCATION(RC_DMC_VOLCANO_FREESTANDING_POH, 8, logic->IsAdult && logic->BeanPlanted(LOGIC_PLANT_DEATH_MOUNTAIN_CRATER_BEAN)),
-        TIMED_LOCATION(RC_DMC_WALL_FREESTANDING_POH,    8, logic->IsAdult && logic->BeanPlanted(LOGIC_PLANT_DEATH_MOUNTAIN_CRATER_BEAN)),
+        LOCATION_ROUTES(RC_DMC_VOLCANO_FREESTANDING_POH, ROUTE(logic->IsAdult && logic->BeanPlanted(LOGIC_PLANT_DEATH_MOUNTAIN_CRATER_BEAN), Cost().Heat(8))),
+        LOCATION_ROUTES(RC_DMC_WALL_FREESTANDING_POH,    ROUTE(logic->IsAdult && logic->BeanPlanted(LOGIC_PLANT_DEATH_MOUNTAIN_CRATER_BEAN), Cost().Heat(8))),
     }, {
         //Exits
-        TIMED_ENTRANCE(RR_DMC_PAD, 16, true),
+        ENTRANCE_ROUTES(RR_DMC_PAD, ROUTE(true, Cost().Heat(16))),
         //The bean ride ends up on the rim by the rock circle
-        TIMED_ENTRANCE(RR_DMC_ROCK_GROTTO, 8, logic->IsAdult && logic->BeanPlanted(LOGIC_PLANT_DEATH_MOUNTAIN_CRATER_BEAN)),
+        ENTRANCE_ROUTES(RR_DMC_ROCK_GROTTO, ROUTE(logic->IsAdult && logic->BeanPlanted(LOGIC_PLANT_DEATH_MOUNTAIN_CRATER_BEAN), Cost().Heat(8))),
     });
 
     areaTable[RR_DMC_FAR_PLATFORM] = Region("DMC Far Platform", SCENE_DEATH_MOUNTAIN_CRATER, {}, {
@@ -192,7 +192,7 @@ void RegionTable_Init_DeathMountainCrater() {
         //Exits
         ENTRANCE(RR_FIRE_TEMPLE_ENTRYWAY, true),
         //Climbing back up to the warp pad
-        TIMED_ENTRANCE(RR_DMC_PAD, 32, logic->HasItem(RG_CLIMB) && (logic->IsAdult || ctx->GetOption(RSK_SHUFFLE_DUNGEON_ENTRANCES).IsNot(RO_DUNGEON_ENTRANCE_SHUFFLE_OFF))),
+        ENTRANCE_ROUTES(RR_DMC_PAD, ROUTE(logic->HasItem(RG_CLIMB) && (logic->IsAdult || ctx->GetOption(RSK_SHUFFLE_DUNGEON_ENTRANCES).IsNot(RO_DUNGEON_ENTRANCE_SHUFFLE_OFF)), Cost().Heat(32))),
     });
 
     areaTable[RR_DMC_GREAT_FAIRY_FOUNTAIN] = Region("DMC Great Fairy Fountain", SCENE_GREAT_FAIRYS_FOUNTAIN_MAGIC, {}, {

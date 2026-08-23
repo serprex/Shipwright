@@ -82,49 +82,65 @@ static void PropagateTimeTravel(GetAccessibleLocationsStruct& gals, RandomizerGe
     }
 }
 
-// Walk one edge on one path: pay the exit's time out of what that path has left, then arrive
-// with that heat if the destination is hot, or with none if it clears the timer.
+// Walk one edge on one path, by every route the exit offers. Each route pays its own price out of
+// what the path has left, then arrives carrying that heat if the destination is hot, or none of it
+// if the destination clears the timer. Whichever arrivals are worth keeping, the set keeps: a
+// route that costs a heart does not shut out the free route beside it, or the other way around.
 static bool WalkOnePath(Entrance* entrance, const Region* connection, const PathCost& cost, bool& access,
                         PathCostSet& costs, bool& age, bool& time) {
-    PathCost arrival;
-    // The walk itself can only add heat, so this is the best the destination could come out at
-    arrival.heat = connection->hot ? cost.heat : 0;
-    arrival.damage = connection->heals ? 0 : cost.damage;
-    // The walk can only spend fairies and a refill can only fill every bottle, so this is the
-    // most the destination could come out with
-    arrival.fairies = connection->fairyRefill ? logic->BottleCount() : cost.fairies;
+    PathCost best;
+    // A walk can only add heat and damage and only ever spends fairies, and a refill can only fill
+    // every bottle, so this is the best the destination could come out at by any route
+    best.heat = connection->hot ? cost.heat : 0;
+    best.damage = connection->heals ? 0 : cost.damage;
+    best.fairies = connection->fairyRefill ? logic->BottleCount() : cost.fairies;
     bool burns = connection->canBurnToOne;
-    if (costs.Covers(arrival) && !burns) {
+    if (costs.Covers(best) && !burns) {
         return false;
     }
 
-    if (!entrance->AffordableOnPath(cost, age, time)) {
-        return false;
-    }
-    if (connection->hot) {
-        arrival.heat = cost.heat + entrance->GetTimeCost();
-    }
-    if (!connection->CanHeal()) {
-        arrival.damage = cost.damage;
-    }
-    arrival.fairies = connection->CanRefillFairies() ? logic->BottleCount() : cost.fairies - entrance->GetFairyCost();
+    // The region's own effects read logic, so put the path in place before asking about them
+    EnterPath(cost, age, time);
+    bool heals = connection->CanHeal();
+    uint8_t refilled = connection->CanRefillFairies() ? logic->BottleCount() : 0;
     burns = burns && logic->CanBurnToOne();
 
-    PathCost burned;
-    burned.heat = arrival.heat;
-    burned.damage = burns ? logic->Health() - 1 : 0;
-    burned.fairies = arrival.fairies;
-    if (costs.Covers(arrival) && (!burns || costs.Covers(burned))) {
-        return false;
-    }
-    if (!entrance->CheckConditionAtAgeTime(age, time)) {
-        return false;
-    }
+    bool changed = false;
+    for (const Route& route : entrance->GetRoutes()) {
+        // Each route's own cost is worked out with logic on the path, so it can be conditional
+        EnterPath(cost, age, time);
+        Cost spend = route.GetCost();
+        if (!Payable(cost, spend)) {
+            continue;
+        }
 
-    bool changed = costs.Insert(arrival);
-    // A fire here is an offer, not a toll, so the path that walks past it stays in the set too
-    if (burns) {
-        changed |= costs.Insert(burned);
+        PathCost arrival = Pay(cost, spend);
+        if (!connection->hot) {
+            arrival.heat = 0;
+        }
+        if (heals) {
+            arrival.damage = 0;
+        }
+        if (refilled > 0) {
+            arrival.fairies = refilled;
+        }
+
+        PathCost burned = arrival;
+        if (burns) {
+            burned.damage = logic->Health() - 1;
+        }
+        if (costs.Covers(arrival) && (!burns || costs.Covers(burned))) {
+            continue;
+        }
+        if (!entrance->RouteOpen(route)) {
+            continue;
+        }
+
+        changed |= costs.Insert(arrival);
+        // A fire here is an offer, not a toll, so the path that walks past it stays in the set too
+        if (burns) {
+            changed |= costs.Insert(burned);
+        }
     }
 
     access = access || changed;
@@ -173,9 +189,7 @@ static bool UpdateToDAccess(Entrance* entrance, Region* connection) {
         RelaxAgeTime(entrance, parent->adultNightCosts, parent->adultNight, connection, connection->adultNight,
                      connection->adultNightCosts, logic->IsAdult, logic->AtNight);
 
-    logic->PathHeat = 0;
-    logic->PathDamage = 0;
-    logic->PathFairies = 0;
+    LeavePath();
     StopPerformanceTimer(PT_TOD_ACCESS);
     return ageTimePropagated;
 }

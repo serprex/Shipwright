@@ -14,14 +14,16 @@
 #define TIME_DOESNT_PASS false
 
 typedef bool (*ConditionFn)();
-typedef uint16_t (*TimeFn)();
-typedef uint8_t (*FairyFn)();
 
 // I hate this but every alternative I can think of right now is worse
 extern Rando::Context* ctx;
 extern std::shared_ptr<Rando::Logic> logic;
 
 class Region;
+
+std::string CleanConditionString(std::string condition);
+
+typedef Cost (*CostFn)();
 
 // What a path spent getting where it is
 struct PathCost {
@@ -41,8 +43,8 @@ struct PathCost {
 // anything else in here, and a non empty set means reachable.
 class PathCostSet {
   public:
-    // Only burning down to one health, or paying a fairy for a shortcut, ever splits a path
-    static constexpr uint8_t MAX_COSTS = 4;
+    // Every route an edge offers can land here, so leave room for a few ways in
+    static constexpr uint8_t MAX_COSTS = 8;
 
     bool Empty() const {
         return count == 0;
@@ -78,43 +80,79 @@ class PathCostSet {
     uint8_t count = 0;
 };
 
-#define EVENT_ACCESS(event, condition) \
-    EventAccess(                       \
-        event, #event, [] { return condition; }, CleanConditionString(#condition))
+// One way of getting somewhere: what it asks for, and what it spends. Something with several
+// routes offers each of them, and the Pareto set keeps whichever ones are worth having, so a free
+// route and a route that costs health both stay open instead of one hiding the other.
+struct Route {
+    ConditionFn condition;
+    std::string condition_str;
+    // Null is free
+    CostFn cost_function;
 
-// An event that costs `time` seconds of hazard exposure to set off
-#define TIMED_EVENT_ACCESS(event, time, condition) \
-    EventAccess(                                   \
-        event, #event, [] { return condition; }, CleanConditionString(#condition), []() -> uint16_t { return time; })
+    Cost GetCost() const {
+        return cost_function == nullptr ? Cost{} : cost_function();
+    }
+};
+
+// ROUTE(condition) is free, ROUTE(condition, cost) is not
+#define ROUTE_PICK(_1, _2, NAME, ...) NAME
+#define ROUTE(...) ROUTE_PICK(__VA_ARGS__, ROUTE_COST, ROUTE_FREE)(__VA_ARGS__)
+#define ROUTE_FREE(condition)                                                             \
+    Route {                                                                               \
+        []() -> bool { return !!(condition); }, CleanConditionString(#condition), nullptr \
+    }
+#define ROUTE_COST(condition, cost)                                                                             \
+    Route {                                                                                                     \
+        []() -> bool { return !!(condition); }, CleanConditionString(#condition), []() -> Cost { return cost; } \
+    }
+
+// Put the logic in one agetime on one path, so routes see the age, the time and what the path
+// is still carrying. The age has to be in place first, as a tunic only counts for the age wearing it.
+void EnterPath(const PathCost& path, bool& age, bool& time);
+
+// Drop the path resources once the walk is done
+void LeavePath();
+
+// Can the path still pay this, and live through it?
+bool Payable(const PathCost& path, const Cost& cost);
+
+// What the path is left carrying once it has paid
+PathCost Pay(const PathCost& path, const Cost& cost);
+
+// Does this route's own condition hold? Only glitchless logic asks
+bool RouteMet(const Route& route);
+
+// Is any route open on this path? For the places that want reachability and not the price of it
+bool AnyRouteMet(const std::vector<Route>& routes, const PathCost& path, bool& age, bool& time);
+
+// The routes joined up the way they read in the logic files, for tooltips and the spoiler log
+std::string RoutesToString(const std::vector<Route>& routes);
+
+#define EVENT_ACCESS(event, condition) EventAccess(event, #event, { ROUTE(condition) })
+
+// An event with more than one way to set it off, each ROUTE with its own price
+#define EVENT_ROUTES(event, ...) EventAccess(event, #event, { __VA_ARGS__ })
 
 // Somewhere the player can bottle a fairy, filling every bottle they have for logic's purposes
-#define FAIRY_REFILL(condition) EventAccess([] { return condition; }, CleanConditionString(#condition))
+#define FAIRY_REFILL(condition) EventAccess({ ROUTE(condition) })
 
 class EventAccess {
   public:
-    explicit EventAccess(LogicVal event_, std::string event_str_, ConditionFn condition_function_,
-                         std::string condition_str_, TimeFn time_function_ = nullptr)
-        : event(event_), event_str(event_str_), condition_function(condition_function_), condition_str(condition_str_),
-          time_function(time_function_) {
+    explicit EventAccess(LogicVal event_, std::string event_str_, std::vector<Route> routes_)
+        : event(event_), event_str(std::move(event_str_)), routes(std::move(routes_)) {
     }
 
     // A fairy refill sets no logic value, the region it sits in refills the path instead
-    explicit EventAccess(ConditionFn condition_function_, std::string condition_str_)
-        : event(LOGIC_NONE), event_str("FAIRY_REFILL"), condition_function(condition_function_),
-          condition_str(condition_str_), fairyRefill(true) {
+    explicit EventAccess(std::vector<Route> routes_)
+        : event(LOGIC_NONE), event_str("FAIRY_REFILL"), routes(std::move(routes_)), fairyRefill(true) {
     }
 
-    uint16_t GetTimeCost() const {
-        return time_function == nullptr ? 0 : time_function();
+    const std::vector<Route>& GetRoutes() const {
+        return routes;
     }
 
-    bool ConditionsMet() const {
-        auto ctx = Rando::Context::GetInstance();
-        if (ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_GLITCHLESS)) {
-            return condition_function();
-        }
-        return true;
-    }
+    // Whether any route holds, ignoring what it costs. A fairy refill is free, so this is all it needs
+    bool ConditionsMet() const;
 
     void EventOccurred() {
         logic->Set(event, true);
@@ -132,78 +170,48 @@ class EventAccess {
         return event_str;
     }
 
-    const std::string& GetConditionStr() const {
-        return condition_str;
+    std::string GetConditionStr() const {
+        return RoutesToString(routes);
     }
 
   private:
     LogicVal event;
     std::string event_str;
-    ConditionFn condition_function;
-    std::string condition_str;
-    // Seconds of hazard exposure setting this event off costs, on top of reaching the region
-    TimeFn time_function = nullptr;
+    std::vector<Route> routes;
     // This is not an event at all, it marks the region as somewhere fairies can be bottled
     bool fairyRefill = false;
 };
 
-std::string CleanConditionString(std::string condition);
+#define LOCATION(check, condition) LocationAccess(check, { ROUTE(condition) })
 
-#define LOCATION(check, condition) \
-    LocationAccess(                \
-        check, [] { return condition; }, CleanConditionString(#condition))
-
-// A check that costs `time` seconds of hazard exposure to reach from the region's arrival point
-#define TIMED_LOCATION(check, time, condition) \
-    LocationAccess(                            \
-        check, [] { return condition; }, CleanConditionString(#condition), []() -> uint16_t { return time; })
+// A check with more than one way to reach it, each ROUTE with its own price
+#define LOCATION_ROUTES(check, ...) LocationAccess(check, { __VA_ARGS__ })
 
 // this class is meant to hold an item location with a boolean function to determine its accessibility from a specific
 // area
 class LocationAccess {
   public:
-    explicit LocationAccess(RandomizerCheck location_, ConditionFn condition_function_)
-        : location(location_), condition_function(condition_function_), condition_str("") {
+    explicit LocationAccess(RandomizerCheck location_, std::vector<Route> routes_)
+        : location(location_), routes(std::move(routes_)) {
     }
 
-    explicit LocationAccess(RandomizerCheck location_, ConditionFn condition_function_, std::string condition_str_,
-                            TimeFn time_function_ = nullptr)
-        : location(location_), condition_function(condition_function_), condition_str(condition_str_),
-          time_function(time_function_) {
+    const std::vector<Route>& GetRoutes() const {
+        return routes;
     }
-
-    bool GetConditionsMet() const {
-        auto ctx = Rando::Context::GetInstance();
-        if (ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_GLITCHLESS)) {
-            return condition_function();
-        }
-        return true;
-    }
-
-    bool CheckConditionAtAgeTime(bool& age, bool& time) const;
 
     bool ConditionsMet(Region* parentRegion, bool calculatingAvailableChecks) const;
-
-    bool CheckOnPath(const PathCost& cost, bool& age, bool& time) const;
-
-    uint16_t GetTimeCost() const {
-        return time_function == nullptr ? 0 : time_function();
-    }
 
     RandomizerCheck GetLocation() const {
         return location;
     }
 
     std::string GetConditionStr() const {
-        return condition_str;
+        return RoutesToString(routes);
     }
 
   protected:
     RandomizerCheck location;
-    ConditionFn condition_function;
-    std::string condition_str;
-    // Seconds of hazard exposure getting to this check costs, on top of reaching the region
-    TimeFn time_function = nullptr;
+    std::vector<Route> routes;
 };
 
 uint16_t GetCheckPrice(RandomizerCheck check = RC_UNKNOWN_CHECK);

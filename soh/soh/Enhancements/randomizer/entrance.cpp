@@ -22,48 +22,28 @@ extern "C" {
 namespace Rando {
 EntranceLinkInfo NO_RETURN_ENTRANCE = { EntranceType::None, RR_NONE, RR_NONE, -1 };
 
-Entrance::Entrance(RandomizerRegion connectedRegion_, ConditionFn condition_function_, std::string condition_str_,
-                   bool spreadsAreasWithPriority_, TimeFn time_function_, FairyFn fairy_function_)
-    : connectedRegion(connectedRegion_), condition_function(condition_function_), condition_str(condition_str_),
-      spreadsAreasWithPriority(spreadsAreasWithPriority_), time_function(time_function_),
-      fairy_function(fairy_function_) {
+Entrance::Entrance(RandomizerRegion connectedRegion_, std::vector<Route> routes_, bool spreadsAreasWithPriority_)
+    : connectedRegion(connectedRegion_), routes(std::move(routes_)),
+      spreadsAreasWithPriority(spreadsAreasWithPriority_) {
     originalConnectedRegion = connectedRegion_;
 }
 
-uint16_t Entrance::GetTimeCost() const {
-    return time_function == nullptr ? 0 : time_function();
+const std::vector<Route>& Entrance::GetRoutes() const {
+    return routes;
 }
 
-uint8_t Entrance::GetFairyCost() const {
-    return fairy_function == nullptr ? 0 : fairy_function();
-}
-
-// Put the logic in one agetime and see whether the path can still pay for this path.
-bool Entrance::AffordableOnPath(const PathCost& cost, bool& age, bool& time) const {
-    logic->IsChild = false;
-    logic->IsAdult = false;
-    logic->AtDay = false;
-    logic->AtNight = false;
-
-    time = true;
-    age = true;
-
-    logic->PathHeat = cost.heat;
-    logic->PathDamage = cost.damage;
-    logic->PathFairies = cost.fairies;
-    return cost.heat + GetTimeCost() <= logic->FireTimer() && cost.fairies >= GetFairyCost();
-}
-
+// Overriding the condition replaces the exit outright, so every other way across it goes with it
 void Entrance::SetCondition(ConditionFn newCondition) {
-    condition_function = newCondition;
+    std::string kept = routes.empty() ? "" : routes.front().condition_str;
+    routes = { Route{ newCondition, std::move(kept), nullptr } };
 }
 
-bool Entrance::GetConditionsMet() const {
-    auto ctx = Rando::Context::GetInstance();
-    if (ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_GLITCHLESS)) {
-        return condition_function();
+// Whether this route is open. The caller has already put the logic on a path at an agetime.
+bool Entrance::RouteOpen(const Route& route, bool passAnyway) const {
+    if (connectedRegion == RR_NONE && !passAnyway) {
+        return false;
     }
-    return true;
+    return RouteMet(route);
 }
 
 std::string Entrance::to_string() const {
@@ -111,8 +91,11 @@ bool Entrance::ConditionsMet(bool allAgeTimes) const {
             return false;
         }
         for (uint8_t i = 0; i < costs.Count(); i++) {
-            if (AffordableOnPath(costs[i], age, time) && CheckConditionAtAgeTime(age, time, allAgeTimes)) {
-                return true;
+            for (const Route& route : routes) {
+                EnterPath(costs[i], age, time);
+                if (Payable(costs[i], route.GetCost()) && RouteOpen(route, allAgeTimes)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -128,15 +111,14 @@ bool Entrance::ConditionsMet(bool allAgeTimes) const {
                     walkableOn(parent->childNight, parent->childNightCosts, logic->IsChild, logic->AtNight) +
                     walkableOn(parent->adultDay, parent->adultDayCosts, logic->IsAdult, logic->AtDay) +
                     walkableOn(parent->adultNight, parent->adultNightCosts, logic->IsAdult, logic->AtNight);
-    logic->PathHeat = 0;
-    logic->PathDamage = 0;
-    logic->PathFairies = 0;
+    LeavePath();
 
     StopPerformanceTimer(PT_ENTRANCE_LOGIC);
     return conditionsMet && (!allAgeTimes || conditionsMet == 4);
 }
 
-// set the logic to be a specific age and time of day and see if the condition still holds
+// set the logic to be a specific age and time of day and see if any route still holds, ignoring
+// what the routes cost, for the callers that only ask whether the exit exists at all
 bool Entrance::CheckConditionAtAgeTime(bool& age, bool& time, bool passAnyway) const {
 
     logic->IsChild = false;
@@ -147,7 +129,12 @@ bool Entrance::CheckConditionAtAgeTime(bool& age, bool& time, bool passAnyway) c
     time = true;
     age = true;
 
-    return GetConditionsMet() && (connectedRegion != RR_NONE || passAnyway);
+    for (const Route& route : routes) {
+        if (RouteOpen(route, passAnyway)) {
+            return true;
+        }
+    }
+    return false;
 }
 
 RandomizerRegion Entrance::GetConnectedRegionKey() const {
@@ -284,8 +271,8 @@ bool Entrance::DoesSpreadAreas() {
     return spreadsAreasWithPriority;
 }
 
-const std::string& Entrance::GetConditionStr() const {
-    return condition_str;
+std::string Entrance::GetConditionStr() const {
+    return RoutesToString(routes);
 }
 
 EntranceShuffler::EntranceShuffler() {

@@ -18,8 +18,7 @@ extern PlayState* gPlayState;
 // generic grotto event list
 std::vector<EventAccess> grottoEvents;
 
-// set the logic to be a specific age and time of day and see if the condition still holds
-bool LocationAccess::CheckConditionAtAgeTime(bool& age, bool& time) const {
+void EnterPath(const PathCost& path, bool& age, bool& time) {
     logic->IsChild = false;
     logic->IsAdult = false;
     logic->AtDay = false;
@@ -28,7 +27,62 @@ bool LocationAccess::CheckConditionAtAgeTime(bool& age, bool& time) const {
     time = true;
     age = true;
 
-    return GetConditionsMet();
+    logic->PathHeat = path.heat;
+    logic->PathDamage = path.damage;
+    logic->PathFairies = path.fairies;
+}
+
+void LeavePath() {
+    logic->PathHeat = 0;
+    logic->PathDamage = 0;
+    logic->PathFairies = 0;
+}
+
+bool Payable(const PathCost& path, const Cost& cost) {
+    // Health has to be left over, as a hit that lands us on nothing kills
+    return cost.payable && path.heat + cost.heat <= logic->FireTimer() && path.fairies >= cost.fairies &&
+           cost.damage < logic->HealthLeft();
+}
+
+PathCost Pay(const PathCost& path, const Cost& cost) {
+    PathCost paid;
+    paid.heat = path.heat + cost.heat;
+    paid.damage = path.damage + cost.damage;
+    paid.fairies = path.fairies - cost.fairies;
+    // A fairy revives and heals, so it puts back every health unit the path spent before it
+    if (cost.fairies > 0) {
+        paid.damage = 0;
+    }
+    return paid;
+}
+
+bool RouteMet(const Route& route) {
+    auto ctx = Rando::Context::GetInstance();
+    if (ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_GLITCHLESS)) {
+        return route.condition();
+    }
+    return true;
+}
+
+bool AnyRouteMet(const std::vector<Route>& routes, const PathCost& path, bool& age, bool& time) {
+    for (const Route& route : routes) {
+        EnterPath(path, age, time);
+        if (Payable(path, route.GetCost()) && RouteMet(route)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+std::string RoutesToString(const std::vector<Route>& routes) {
+    std::string joined;
+    for (const Route& route : routes) {
+        if (!joined.empty()) {
+            joined += " || ";
+        }
+        joined += route.condition_str;
+    }
+    return joined;
 }
 
 bool PathCostSet::Insert(PathCost cost) {
@@ -62,25 +116,17 @@ void SeedPathCost(bool access, PathCostSet& costs) {
     }
 }
 
-// Put logic in one agetime on one path, then pay this check's time out of what that path has left.
-// The age has to be in place beforehand, as a tunic only counts for the age wearing it.
-bool LocationAccess::CheckOnPath(const PathCost& cost, bool& age, bool& time) const {
-    logic->IsChild = false;
-    logic->IsAdult = false;
-    logic->AtDay = false;
-    logic->AtNight = false;
-
-    time = true;
-    age = true;
-
-    logic->PathHeat = cost.heat;
-    logic->PathDamage = cost.damage;
-    logic->PathFairies = cost.fairies;
-    if (cost.heat + GetTimeCost() > logic->FireTimer()) {
-        return false;
+bool EventAccess::ConditionsMet() const {
+    auto ctx = Rando::Context::GetInstance();
+    if (!ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_GLITCHLESS)) {
+        return true;
     }
-
-    return GetConditionsMet();
+    for (const Route& route : routes) {
+        if (route.condition()) {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool LocationAccess::ConditionsMet(Region* parentRegion, bool calculatingAvailableChecks) const {
@@ -94,7 +140,7 @@ bool LocationAccess::ConditionsMet(Region* parentRegion, bool calculatingAvailab
             return false;
         }
         for (uint8_t i = 0; i < costs.Count(); i++) {
-            if (CheckOnPath(costs[i], age, time)) {
+            if (AnyRouteMet(routes, costs[i], age, time)) {
                 return true;
             }
         }
@@ -113,9 +159,7 @@ bool LocationAccess::ConditionsMet(Region* parentRegion, bool calculatingAvailab
         conditionsMet = true;
     }
 
-    logic->PathHeat = 0;
-    logic->PathDamage = 0;
-    logic->PathFairies = 0;
+    LeavePath();
     return conditionsMet;
 }
 
@@ -609,27 +653,12 @@ bool Region::UpdateEvents() {
             continue;
         }
 
-        auto happensOn = [&event](const PathCost& cost, bool& age, bool& time) {
-            logic->IsChild = false;
-            logic->IsAdult = false;
-            logic->AtDay = false;
-            logic->AtNight = false;
-            time = true;
-            age = true;
-            logic->PathHeat = cost.heat;
-            logic->PathDamage = cost.damage;
-            logic->PathFairies = cost.fairies;
-            if (cost.heat + event.GetTimeCost() > logic->FireTimer()) {
-                return false;
-            }
-            return event.ConditionsMet();
-        };
-        auto happensAt = [&happensOn](bool access, const PathCostSet& costs, bool& age, bool& time) {
+        auto happensAt = [&event](bool access, const PathCostSet& costs, bool& age, bool& time) {
             if (!access) {
                 return false;
             }
             for (uint8_t i = 0; i < costs.Count(); i++) {
-                if (happensOn(costs[i], age, time)) {
+                if (AnyRouteMet(event.GetRoutes(), costs[i], age, time)) {
                     return true;
                 }
             }
@@ -648,9 +677,7 @@ bool Region::UpdateEvents() {
             event.EventOccurred();
             eventsUpdated = true;
         }
-        logic->PathHeat = 0;
-        logic->PathDamage = 0;
-        logic->PathFairies = 0;
+        LeavePath();
     }
     StopPerformanceTimer(PT_EVENT_ACCESS);
     return eventsUpdated;
@@ -658,7 +685,7 @@ bool Region::UpdateEvents() {
 
 void Region::AddExit(RandomizerRegion parentKey, RandomizerRegion newExitKey, ConditionFn condition,
                      std::string conditionStr) {
-    Rando::Entrance newExit = Rando::Entrance(newExitKey, condition, conditionStr);
+    Rando::Entrance newExit = Rando::Entrance(newExitKey, { Route{ condition, std::move(conditionStr), nullptr } });
     newExit.SetParentRegion(parentKey);
     exits.push_front(newExit);
 }

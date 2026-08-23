@@ -3,6 +3,40 @@
 #include "SeedContext.h"
 #include <stdint.h>
 
+// What crossing something spends. The setters chain, so a shortcut worth sixteen seconds of heat
+// and a bottled fairy is Cost().Heat(16).Fairies(1). Another resource is a field and a setter
+// here, rather than another macro at every place a cost can be written.
+struct Cost {
+    // Seconds of hazard exposure
+    uint16_t heat = 0;
+    // Health units spent on purpose
+    uint16_t damage = 0;
+    // Bottled fairies drunk, which also puts back the health the path spent before
+    uint8_t fairies = 0;
+    // Nothing the path could be carrying pays for this
+    bool payable = true;
+
+    Cost& Heat(uint16_t seconds) {
+        heat += seconds;
+        return *this;
+    }
+
+    Cost& Damage(uint16_t health) {
+        damage += health;
+        return *this;
+    }
+
+    Cost& Fairies(uint8_t count = 1) {
+        fairies += count;
+        return *this;
+    }
+
+    Cost& Unpayable() {
+        payable = false;
+        return *this;
+    }
+};
+
 namespace Rando {
 
 enum class HasProjectileAge {
@@ -106,6 +140,8 @@ class Logic {
     uint8_t DungeonCount();
     uint16_t FireTimer();
     uint16_t WaterTimer();
+    uint16_t HitDamage();
+    Cost HitCost();
     bool TakeDamage();
     bool CanVoid();
     bool CanBurnToOne();

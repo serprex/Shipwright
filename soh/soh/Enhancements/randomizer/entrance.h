@@ -40,28 +40,17 @@ enum class EntranceType {
     All,
 };
 
-#define ENTRANCE(check, condition, ...) \
-    Entrance(                           \
-        RandomizerRegion::check, [] { return condition; }, CleanConditionString(#condition), ##__VA_ARGS__)
+#define ENTRANCE(check, condition, ...) Entrance(RandomizerRegion::check, { ROUTE(condition) }, ##__VA_ARGS__)
 
-#define TIMED_ENTRANCE(check, time, condition)                                                     \
-    Entrance(                                                                                      \
-        RandomizerRegion::check, [] { return condition; }, CleanConditionString(#condition), true, \
-        []() -> uint16_t { return time; })
-
-// An entrance whose crossing spends `fairies` bottled fairies, such as dying mid hookshot to be
-// launched by the revival. The count is worked out with logic in place, so it can be conditional.
-#define FAIRY_ENTRANCE(check, fairies, condition)                                                           \
-    Entrance(                                                                                               \
-        RandomizerRegion::check, [] { return condition; }, CleanConditionString(#condition), true, nullptr, \
-        []() -> uint8_t { return fairies; })
+// An exit with more than one way across it, each ROUTE with its own price, such as a ledge that is
+// free with the right trick and costs a heart without it
+#define ENTRANCE_ROUTES(check, ...) Entrance(RandomizerRegion::check, { __VA_ARGS__ })
 
 class Entrance {
   public:
-    Entrance(RandomizerRegion connectedRegion_, ConditionFn condition_function_, std::string condition_str_,
-             bool spreadsAreasWithPriority_ = true, TimeFn time_function_ = nullptr, FairyFn fairy_function_ = nullptr);
+    Entrance(RandomizerRegion connectedRegion_, std::vector<Route> routes_, bool spreadsAreasWithPriority_ = true);
     void SetCondition(ConditionFn newCondition);
-    bool GetConditionsMet() const;
+    const std::vector<Route>& GetRoutes() const;
     std::string to_string() const;
     void SetName(std::string name_ = "");
     std::string GetName() const;
@@ -98,16 +87,16 @@ class Entrance {
     Entrance* GetNewTarget();
     Entrance* AssumeReachable();
     bool DoesSpreadAreas();
-    uint16_t GetTimeCost() const;
-    uint8_t GetFairyCost() const;
-    bool AffordableOnPath(const PathCost& cost, bool& age, bool& time) const;
-    const std::string& GetConditionStr() const;
+    // Whether this route is open, once the caller has put the logic on a path at an agetime
+    bool RouteOpen(const Route& route, bool passAnyway = false) const;
+    std::string GetConditionStr() const;
 
   private:
     RandomizerRegion parentRegion;
     RandomizerRegion connectedRegion;
     RandomizerRegion originalConnectedRegion;
-    ConditionFn condition_function;
+    // Every way across this exit, each with what crossing it that way spends
+    std::vector<Route> routes;
 
     EntranceType type = EntranceType::None;
     Entrance* reverse = nullptr;
@@ -119,14 +108,9 @@ class Entrance {
     bool addedToPool = false;
     bool decoupled = false;
     std::string name = "";
-    std::string condition_str = "";
     // If this is false, areas only spread to interiors through this entrance if there is no other choice
     // Set to false for owl drops, the windmill path between dampe's grave and windmill and blue warps
     bool spreadsAreasWithPriority = true;
-    // Seconds of hazard exposure walking this exit costs
-    TimeFn time_function = nullptr;
-    // Bottled fairies crossing this entrance spends, on top of reaching the parent region
-    FairyFn fairy_function = nullptr;
 };
 
 typedef struct {

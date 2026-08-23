@@ -1723,12 +1723,35 @@ uint16_t Logic::WaterTimer() {
     return ctx->GetTrickOption(RT_FEWER_TUNIC_REQUIREMENTS) ? Health() / 2 : 0;
 }
 
-bool Logic::TakeDamage() {
-    // A bottled fairy heals us to full, which would put back health the path spent on purpose
-    if (PathDamage == 0 && CanUse(RG_BOTTLE_WITH_FAIRY)) {
-        return true;
+// What one ordinary hit takes off, in OoT health units. Half a heart at default damage, scaled the
+// same way EffectiveHealth scales the pool it comes out of.
+uint16_t Logic::HitDamage() {
+    uint8_t multiplier = ctx->GetOption(RSK_DAMAGE_MULTIPLIER).Get();
+    // Any damage at all is lethal on OHKO, so no amount of health covers a hit
+    if (multiplier >= RO_DAMAGE_MULTIPLIER_OHKO) {
+        return UINT16_MAX;
     }
-    return EffectiveHealth() > 8 || CanUse(RG_NAYRUS_LOVE);
+    return ((FULL_HEART_HEALTH / 2) << multiplier) >> (1 + HasItem(RG_DOUBLE_DEFENSE));
+}
+
+// What taking one hit costs the path. Nayru's Love eats it outright, otherwise it comes out of
+// health, and when that much health would kill us, out of a bottled fairy, which revives and heals.
+Cost Logic::HitCost() {
+    if (CanUse(RG_NAYRUS_LOVE)) {
+        return Cost();
+    }
+    uint16_t hit = HitDamage();
+    if (hit < HealthLeft()) {
+        return Cost().Damage(hit);
+    }
+    if (PathFairies > 0) {
+        return Cost().Fairies();
+    }
+    return Cost().Unpayable();
+}
+
+bool Logic::TakeDamage() {
+    return HitCost().payable;
 }
 
 // Voiding out, be it swimming too far or falling in a pit, costs a heart.

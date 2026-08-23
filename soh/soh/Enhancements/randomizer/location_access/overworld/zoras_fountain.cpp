@@ -111,7 +111,7 @@ void RegionTable_Init_ZorasFountain() {
     }, {
         //Exits
         //It is possible to avoid fall damage by jumping towards the right and landing in deeper water, but this is basically never relevant
-        ENTRANCE(RR_ZORAS_FOUNTAIN, logic->HasItem(RG_BRONZE_SCALE) || logic->TakeDamage()),
+        ENTRANCE_ROUTES(RR_ZORAS_FOUNTAIN, ROUTE(logic->HasItem(RG_BRONZE_SCALE)), ROUTE(true, logic->HitCost())),
         ENTRANCE(RR_ZF_HIDDEN_CAVE, true),
     });
 

@@ -120,8 +120,7 @@ void RegionTable_Init_CastleGrounds() {
         //Exits
         ENTRANCE(RR_HC_GATE,          true),
         ENTRANCE(RR_HC_STORMS_GROTTO, logic->CanOpenStormsGrotto()),
-        ENTRANCE(RR_HC_DRAIN_LEDGE,   (logic->Get(LOGIC_TALON_RETURNED_FROM_CASTLE) && logic->HasItem(RG_POWER_BRACELET)) ||
-                                      (ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->TakeDamage() && logic->HasExplosives() && logic->CanJumpslash())),
+        ENTRANCE_ROUTES(RR_HC_DRAIN_LEDGE, ROUTE(logic->Get(LOGIC_TALON_RETURNED_FROM_CASTLE) && logic->HasItem(RG_POWER_BRACELET)), ROUTE(ctx->GetTrickOption(RT_DAMAGE_BOOST_SIMPLE) && logic->HasExplosives() && logic->CanJumpslash(), logic->HitCost())),
     });
 
     areaTable[RR_HC_DRAIN_LEDGE] = Region("Hyrule Castle Drain Ledge", SCENE_HYRULE_CASTLE, {}, {}, {
