@@ -1013,6 +1013,13 @@
                     "This trick supersedes \"Gerudo Training Ground MQ Left Side Silver Rupees with Hookshot\"."
                 ]
             },
+            "gtg_mq_lava_room": {
+                "name": "Navigate Gerudo Training Ground MQ without Fire",
+                "description": [
+					"It's possible to use the edges of the platforms, either with well placed jumps or Bover Boots, to cross sections of MQ GTG Lava Room without having fire to switch off the fire rings.\n",
+				    "This allows you to clear the room using a combination of Din's Fire and either Hover Boots or Bunny Hood instead of Bow and allows you to reach the right of the maze using only Hookshot if the upper switch has been hit, among other things."
+				]
+            },
             "lens_ganon": {
                 "name": "Ganon's Castle without Lens of Truth",
                 "description": "Removes the requirements for the Lens of Truth in Ganon's Castle."

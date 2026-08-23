@@ -3027,8 +3027,8 @@ bool Logic::DMCPotsToPad() {
 }
 
 bool Logic::DMCPadToPots() {
-    return (CanUse(RG_HOVER_BOOTS) && (IsAdult || (HasItem(RG_CLIMB) /*&& can roll or bunny*/))) || CanUse(RG_HOOKSHOT) ||
-           (IsAdult && BunnyHood() && HasItem(RG_CLIMB));
+    return (CanUse(RG_HOVER_BOOTS) && (IsAdult || (HasItem(RG_CLIMB) /*&& can roll or bunny*/))) ||
+           CanUse(RG_HOOKSHOT) || (IsAdult && BunnyHood() && HasItem(RG_CLIMB));
 }
 
 // via scarecrow

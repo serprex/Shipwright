@@ -11,7 +11,7 @@ void RegionTable_Init_FireTemple() {
         //Exits
         ENTRANCE(RR_FIRE_TEMPLE_FOYER,          ctx->GetDungeon(FIRE_TEMPLE)->IsVanilla()),
         ENTRANCE(RR_FIRE_TEMPLE_MQ_FOYER_LOWER, ctx->GetDungeon(FIRE_TEMPLE)->IsMQ()),
-        ENTRANCE(RR_DMC_TEMPLE_EXIT,            true),
+        ENTRANCE(RR_DMC_TEMPLE_ENTRY,           true),
     });
 
 #pragma region Vanilla
