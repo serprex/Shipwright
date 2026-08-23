@@ -43,7 +43,7 @@ void RegionTable_Init_GerudoValley() {
     areaTable[RR_GV_UPPER_STREAM] = Region("GV Upper Stream", SCENE_GERUDO_VALLEY, {
         //Events
         EVENT_ACCESS(LOGIC_PLANT_GERUDO_VALLEY_BEAN, CanPlantBean(RG_GERUDO_VALLEY_BEAN_SOUL)),
-        EVENT_ACCESS(LOGIC_FAIRY_ACCESS,             logic->CallGossipFairy() || (logic->IsChild && logic->BeanPlanted(LOGIC_PLANT_GERUDO_VALLEY_BEAN) && logic->CanUse(RG_SONG_OF_STORMS))),
+        FAIRY_REFILL(logic->CallGossipFairy() || (logic->IsChild && logic->BeanPlanted(LOGIC_PLANT_GERUDO_VALLEY_BEAN) && logic->CanUse(RG_SONG_OF_STORMS))),
     }, {
         //Locations
         LOCATION(RC_GV_GS_BEAN_PATCH,          logic->CanSpawnSoilSkull(RG_GERUDO_VALLEY_BEAN_SOUL) && logic->CanAttack()),

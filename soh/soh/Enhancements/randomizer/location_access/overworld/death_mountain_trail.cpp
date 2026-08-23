@@ -8,7 +8,7 @@ void RegionTable_Init_DeathMountainTrail() {
     areaTable[RR_DEATH_MOUNTAIN_TRAIL] = Region("Death Mountain Trail", SCENE_DEATH_MOUNTAIN_TRAIL, {
         //Events
         EVENT_ACCESS(LOGIC_PLANT_DEATH_MOUNTAIN_TRAIL_BEAN, CanPlantBean(RG_DEATH_MOUNTAIN_TRAIL_BEAN_SOUL) && (logic->HasExplosives() || logic->HasItem(RG_GORONS_BRACELET))),
-        EVENT_ACCESS(LOGIC_FAIRY_ACCESS,                    logic->IsChild && logic->BeanPlanted(LOGIC_PLANT_DEATH_MOUNTAIN_TRAIL_BEAN) && logic->CanUse(RG_SONG_OF_STORMS) && (logic->HasExplosives() || logic->HasItem(RG_GORONS_BRACELET))),
+        FAIRY_REFILL(logic->IsChild && logic->BeanPlanted(LOGIC_PLANT_DEATH_MOUNTAIN_TRAIL_BEAN) && logic->CanUse(RG_SONG_OF_STORMS) && (logic->HasExplosives() || logic->HasItem(RG_GORONS_BRACELET))),
     }, {
         //Locations
         LOCATION(RC_DMT_CHEST,                    	  (logic->BlastOrSmash() || (ctx->GetTrickOption(RT_DMT_BOMBABLE) && logic->IsChild && logic->HasItem(RG_GORONS_BRACELET))) && logic->HasItem(RG_OPEN_CHEST)),
@@ -86,7 +86,7 @@ void RegionTable_Init_DeathMountainTrail() {
 
     areaTable[RR_DEATH_MOUNTAIN_SUMMIT] = Region("Death Mountain Summit", SCENE_DEATH_MOUNTAIN_TRAIL, {
         //Events
-        EVENT_ACCESS(LOGIC_FAIRY_ACCESS, logic->CallGossipFairy()),
+        FAIRY_REFILL(logic->CallGossipFairy()),
         EVENT_ACCESS(LOGIC_BUG_ACCESS,   logic->IsChild && logic->HasItem(RG_POWER_BRACELET)),
     }, {
         //Locations
@@ -102,7 +102,7 @@ void RegionTable_Init_DeathMountainTrail() {
     }, {
         //Exits
         ENTRANCE(RR_DEATH_MOUNTAIN_ROCKFALL,  true),
-        ENTRANCE(RR_DMC_UPPER_ENTRY,          true),
+        ENTRANCE(RR_DMC_UPPER,          true),
         ENTRANCE(RR_DMT_OWL_FLIGHT,           logic->IsChild && (logic->HasItem(RG_SPEAK_DEKU) || logic->HasItem(RG_SPEAK_GERUDO) || logic->HasItem(RG_SPEAK_GORON) || logic->HasItem(RG_SPEAK_KOKIRI) || logic->HasItem(RG_SPEAK_HYLIAN) || logic->HasItem(RG_SPEAK_ZORA))),
         ENTRANCE(RR_DMT_GREAT_FAIRY_FOUNTAIN, AnyAgeTime([]{return logic->BlastOrSmash();})),
     });

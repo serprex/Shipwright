@@ -74,7 +74,7 @@ void RegionTable_Init_ForestTemple() {
 
     areaTable[RR_FOREST_TEMPLE_LOWER_STALFOS] = Region("Forest Temple Lower Stalfos", SCENE_FOREST_TEMPLE, {
         //Events
-        EVENT_ACCESS(LOGIC_FAIRY_ACCESS,                         logic->CanBreakPots()),
+        FAIRY_REFILL(logic->CanBreakPots()),
         EVENT_ACCESS(LOGIC_FOREST_CLEAR_BETWEEN_JOELLE_AND_BETH, logic->CanKillEnemy(RE_STALFOS, ED_CLOSE, true, 2)),
     }, {
         //Locations
@@ -475,7 +475,7 @@ void RegionTable_Init_ForestTemple() {
 
     areaTable[RR_FOREST_TEMPLE_MQ_WOLFOS_ROOM] = Region("Forest Temple MQ Wolfos Room", SCENE_FOREST_TEMPLE, {
         //Events
-        EVENT_ACCESS(LOGIC_FAIRY_ACCESS,                         logic->CanBreakPots()),
+        FAIRY_REFILL(logic->CanBreakPots()),
         EVENT_ACCESS(LOGIC_FOREST_CLEAR_BETWEEN_JOELLE_AND_BETH, logic->CanKillEnemy(RE_WOLFOS)),
     }, {
         //Locations

@@ -31,6 +31,14 @@ class Logic {
     RandomizerRegion CurrentRegionKey = RR_NONE;
     RandomizerCheck CurrentCheckKey = RC_UNKNOWN_CHECK;
 
+    // Resources spent on search's current path
+    // Seconds spent in hot regions since the last cool one.
+    uint16_t PathHeat = 0;
+    // Health units spent since the last heal.
+    uint16_t PathDamage = 0;
+    // Bottled fairies the path is still carrying.
+    uint8_t PathFairies = 0;
+
     bool CalculatingAvailableChecks = false;
     bool ACProcessUndiscoveredExits = false;
 
@@ -66,6 +74,7 @@ class Logic {
     bool WaterRisingTargetTo3FCentral();
     bool WaterLevel(RandoWaterLevel level);
     uint8_t BottleCount();
+    bool CanHookshotJump();
     uint8_t OcarinaButtons();
     bool HasBottle();
     bool CanUseSword();
@@ -90,6 +99,7 @@ class Logic {
     bool CallGossipFairy();
     bool CallGossipFairyExceptSuns();
     uint16_t Health();
+    uint16_t HealthLeft();
     uint16_t EffectiveHealth();
     uint8_t StoneCount();
     uint8_t MedallionCount();
@@ -98,6 +108,7 @@ class Logic {
     uint16_t WaterTimer();
     bool TakeDamage();
     bool CanVoid();
+    bool CanBurnToOne();
     bool CanOpenBombGrotto();
     bool CanOpenStormsGrotto();
     bool CanGetNightTimeGS();
@@ -159,10 +170,6 @@ class Logic {
     static std::map<uint32_t, SceneID> RandoGetToDungeonScene;
     static std::map<RandomizerGet, uint32_t> RandoGetToEquipFlag;
     bool IsReverseAccessPossible();
-    bool DMCUpperToPots();
-    bool DMCPotsToPad();
-    bool DMCPadToPots();
-    bool DMCUpperToPad();
     bool SpiritEastToSwitch();
     bool SpiritWestToSkull();
     bool SpiritSunBlockSouthLedge();

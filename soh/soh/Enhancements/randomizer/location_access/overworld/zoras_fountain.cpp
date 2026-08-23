@@ -7,7 +7,7 @@ void RegionTable_Init_ZorasFountain() {
     // clang-format off
     areaTable[RR_ZORAS_FOUNTAIN] = Region("Zoras Fountain", SCENE_ZORAS_FOUNTAIN, {
         //Events
-        EVENT_ACCESS(LOGIC_FAIRY_ACCESS, logic->CallGossipFairyExceptSuns() || (logic->CanUse(RG_STICKS) && logic->AtDay)),
+        FAIRY_REFILL(logic->CallGossipFairyExceptSuns() || (logic->CanUse(RG_STICKS) && logic->AtDay)),
     }, {
         //Locations
         LOCATION(RC_ZF_GS_TREE,                      	  logic->IsChild && logic->CanBonkTrees() && (logic->HasItem(RG_POWER_BRACELET) || logic->CanKillEnemy(RE_GOLD_SKULLTULA))),

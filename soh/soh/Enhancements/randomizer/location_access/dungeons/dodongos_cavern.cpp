@@ -25,7 +25,7 @@ void RegionTable_Init_DodongosCavern() {
 
     areaTable[RR_DODONGOS_CAVERN_LOBBY] = Region("Dodongos Cavern Lobby", SCENE_DODONGOS_CAVERN, {
         //Events
-        EVENT_ACCESS(LOGIC_FAIRY_ACCESS, (AnyAgeTime([]{return logic->CanBreakMudWalls();}) || logic->HasItem(RG_GORONS_BRACELET)) && logic->CallGossipFairy()),
+        FAIRY_REFILL((AnyAgeTime([]{return logic->CanBreakMudWalls();}) || logic->HasItem(RG_GORONS_BRACELET)) && logic->CallGossipFairy()),
         EVENT_ACCESS(LOGIC_DC_EYES_LIT,  ctx->GetTrickOption(RT_DC_EYES_CHU) && logic->CanUse(RG_BOMBCHU_5)),
     }, {
         //Locations
@@ -41,6 +41,8 @@ void RegionTable_Init_DodongosCavern() {
         ENTRANCE(RR_DODONGOS_CAVERN_SE_CORRIDOR,   AnyAgeTime([]{return logic->CanBreakMudWalls() || logic->HasItem(RG_GORONS_BRACELET);})),
         ENTRANCE(RR_DODONGOS_CAVERN_STAIRS_LOWER,  logic->Get(LOGIC_DC_STAIRS_ROOM_DOOR)),
         ENTRANCE(RR_DODONGOS_CAVERN_FAR_BRIDGE,    logic->Get(LOGIC_DC_LIFT_PLATFORM)),
+        //Hookshot jump off the lobby floor reaches the bridge without raising the platform
+        FAIRY_ENTRANCE(RR_DODONGOS_CAVERN_FAR_BRIDGE, 1, logic->CanHookshotJump()),
         ENTRANCE(RR_DODONGOS_CAVERN_BOSS_AREA,     logic->Get(LOGIC_DC_EYES_LIT)),
         ENTRANCE(RR_DODONGOS_CAVERN_BOSS_ENTRYWAY, false),
     });
@@ -254,7 +256,7 @@ void RegionTable_Init_DodongosCavern() {
 
     areaTable[RR_DODONGOS_CAVERN_BOSS_AREA] = Region("Dodongos Cavern Boss Region", SCENE_DODONGOS_CAVERN, {
         //Events
-        EVENT_ACCESS(LOGIC_FAIRY_ACCESS, logic->CanBreakPots()),
+        FAIRY_REFILL(logic->CanBreakPots()),
     }, {
         //Location
         LOCATION(RC_DODONGOS_CAVERN_BEFORE_BOSS_GRASS, logic->CanCutShrubs()),
@@ -303,6 +305,8 @@ void RegionTable_Init_DodongosCavern() {
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_GOSSIP_STONE,      AnyAgeTime([]{return logic->CanBreakMudWalls() || logic->HasItem(RG_GORONS_BRACELET);})),
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_OUTSIDE_POES_ROOM, logic->IsAdult || logic->CanUse(RG_HOOKSHOT) || logic->CanGroundJump(!!ctx->GetTrickOption(RT_GROUND_JUMP_HARD))),
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_MOUTH_SIDE_BRIDGE, AnyAgeTime([]{return logic->BlastOrSmash() || logic->HasItem(RG_GORONS_BRACELET);})),
+        //Same hookshot jump as vanilla, MQ did not move the lobby or the bridge
+        FAIRY_ENTRANCE(RR_DODONGOS_CAVERN_MQ_MOUTH_SIDE_BRIDGE, 1, logic->CanHookshotJump()),
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_STAIRS_LOWER,      AnyAgeTime([]{return logic->BlastOrSmash() || logic->HasItem(RG_GORONS_BRACELET);})),
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_LOWER_RIGHT_SIDE,  AnyAgeTime([]{return logic->CanBreakMudWalls();}) || AnyAgeTime([]{return logic->HasItem(RG_GORONS_BRACELET) && logic->TakeDamage();})), //strength 1 and bunny speed works too
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_BEHIND_MOUTH,      logic->Get(LOGIC_DC_EYES_LIT)),
@@ -310,7 +314,7 @@ void RegionTable_Init_DodongosCavern() {
 
     areaTable[RR_DODONGOS_CAVERN_MQ_GOSSIP_STONE] = Region("Dodongos Cavern MQ Gossip Stone", SCENE_DODONGOS_CAVERN, {
         //Events
-        EVENT_ACCESS(LOGIC_FAIRY_ACCESS, logic->CallGossipFairy()),
+        FAIRY_REFILL(logic->CallGossipFairy()),
     }, {
         //Locations
         LOCATION(RC_DODONGOS_CAVERN_GOSSIP_STONE,              true),
@@ -653,7 +657,7 @@ void RegionTable_Init_DodongosCavern() {
     areaTable[RR_DODONGOS_CAVERN_MQ_BACK_SWITCH_GRAVE] = Region("Dodongos Cavern MQ Back Switch Grave", SCENE_DODONGOS_CAVERN, {
         //Events
         EVENT_ACCESS(LOGIC_DC_MQ_BEHIND_FIRE_SWITCH, logic->HasItem(RG_POWER_BRACELET) || logic->CanHitSwitch() || logic->CanDetonateBombFlowers()),
-        EVENT_ACCESS(LOGIC_FAIRY_ACCESS,             logic->CanBreakPots()),
+        FAIRY_REFILL(logic->CanBreakPots()),
     }, {
         //Locations
         LOCATION(RC_DODONGOS_CAVERN_MQ_GS_BACK_AREA,      logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA) || logic->HasItem(RG_GORONS_BRACELET)),

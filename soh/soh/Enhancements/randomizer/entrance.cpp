@@ -23,10 +23,35 @@ namespace Rando {
 EntranceLinkInfo NO_RETURN_ENTRANCE = { EntranceType::None, RR_NONE, RR_NONE, -1 };
 
 Entrance::Entrance(RandomizerRegion connectedRegion_, ConditionFn condition_function_, std::string condition_str_,
-                   bool spreadsAreasWithPriority_)
+                   bool spreadsAreasWithPriority_, TimeFn time_function_, FairyFn fairy_function_)
     : connectedRegion(connectedRegion_), condition_function(condition_function_), condition_str(condition_str_),
-      spreadsAreasWithPriority(spreadsAreasWithPriority_) {
+      spreadsAreasWithPriority(spreadsAreasWithPriority_), time_function(time_function_),
+      fairy_function(fairy_function_) {
     originalConnectedRegion = connectedRegion_;
+}
+
+uint16_t Entrance::GetTimeCost() const {
+    return time_function == nullptr ? 0 : time_function();
+}
+
+uint8_t Entrance::GetFairyCost() const {
+    return fairy_function == nullptr ? 0 : fairy_function();
+}
+
+// Put the logic in one agetime and see whether the path can still pay for this path.
+bool Entrance::AffordableOnPath(const PathCost& cost, bool& age, bool& time) const {
+    logic->IsChild = false;
+    logic->IsAdult = false;
+    logic->AtDay = false;
+    logic->AtNight = false;
+
+    time = true;
+    age = true;
+
+    logic->PathHeat = cost.heat;
+    logic->PathDamage = cost.damage;
+    logic->PathFairies = cost.fairies;
+    return cost.heat + GetTimeCost() <= logic->FireTimer() && cost.fairies >= GetFairyCost();
 }
 
 void Entrance::SetCondition(ConditionFn newCondition) {
@@ -81,11 +106,31 @@ bool Entrance::ConditionsMet(bool allAgeTimes) const {
         return false;
     }
 
+    auto walkableOn = [this, allAgeTimes](bool access, const PathCostSet& costs, bool& age, bool& time) {
+        if (!access) {
+            return false;
+        }
+        for (uint8_t i = 0; i < costs.Count(); i++) {
+            if (AffordableOnPath(costs[i], age, time) && CheckConditionAtAgeTime(age, time, allAgeTimes)) {
+                return true;
+            }
+        }
+        return false;
+    };
+
+    SeedPathCost(parent->childDay, parent->childDayCosts);
+    SeedPathCost(parent->childNight, parent->childNightCosts);
+    SeedPathCost(parent->adultDay, parent->adultDayCosts);
+    SeedPathCost(parent->adultNight, parent->adultNightCosts);
+
     // check all possible day/night condition combinations
-    conditionsMet = (parent->childDay && CheckConditionAtAgeTime(logic->IsChild, logic->AtDay, allAgeTimes)) +
-                    (parent->childNight && CheckConditionAtAgeTime(logic->IsChild, logic->AtNight, allAgeTimes)) +
-                    (parent->adultDay && CheckConditionAtAgeTime(logic->IsAdult, logic->AtDay, allAgeTimes)) +
-                    (parent->adultNight && CheckConditionAtAgeTime(logic->IsAdult, logic->AtNight, allAgeTimes));
+    conditionsMet = walkableOn(parent->childDay, parent->childDayCosts, logic->IsChild, logic->AtDay) +
+                    walkableOn(parent->childNight, parent->childNightCosts, logic->IsChild, logic->AtNight) +
+                    walkableOn(parent->adultDay, parent->adultDayCosts, logic->IsAdult, logic->AtDay) +
+                    walkableOn(parent->adultNight, parent->adultNightCosts, logic->IsAdult, logic->AtNight);
+    logic->PathHeat = 0;
+    logic->PathDamage = 0;
+    logic->PathFairies = 0;
 
     StopPerformanceTimer(PT_ENTRANCE_LOGIC);
     return conditionsMet && (!allAgeTimes || conditionsMet == 4);
@@ -275,8 +320,8 @@ void SetAllEntrancesData() {
           { EntranceType::Dungeon,      RR_JABU_JABUS_BELLY_ENTRYWAY,        RR_ZORAS_FOUNTAIN,                    ENTR_ZORAS_FOUNTAIN_OUTSIDE_JABU_JABU } },
         { { EntranceType::Dungeon,      RR_SACRED_FOREST_MEADOW,             RR_FOREST_TEMPLE_ENTRYWAY,            ENTR_FOREST_TEMPLE_ENTRANCE },
           { EntranceType::Dungeon,      RR_FOREST_TEMPLE_ENTRYWAY,           RR_SACRED_FOREST_MEADOW,              ENTR_SACRED_FOREST_MEADOW_OUTSIDE_TEMPLE } },
-        { { EntranceType::Dungeon,      RR_DMC_TEMPLE_EXIT,                  RR_FIRE_TEMPLE_ENTRYWAY,              ENTR_FIRE_TEMPLE_ENTRANCE },
-          { EntranceType::Dungeon,      RR_FIRE_TEMPLE_ENTRYWAY,             RR_DMC_TEMPLE_EXIT,                   ENTR_DEATH_MOUNTAIN_CRATER_OUTSIDE_TEMPLE } },
+        { { EntranceType::Dungeon,      RR_DMC_TEMPLE,                       RR_FIRE_TEMPLE_ENTRYWAY,              ENTR_FIRE_TEMPLE_ENTRANCE },
+          { EntranceType::Dungeon,      RR_FIRE_TEMPLE_ENTRYWAY,             RR_DMC_TEMPLE,                        ENTR_DEATH_MOUNTAIN_CRATER_OUTSIDE_TEMPLE } },
         { { EntranceType::Dungeon,      RR_LH_FROM_WATER_TEMPLE,             RR_WATER_TEMPLE_ENTRYWAY,             ENTR_WATER_TEMPLE_ENTRANCE },
           { EntranceType::Dungeon,      RR_WATER_TEMPLE_ENTRYWAY,            RR_LH_FROM_WATER_TEMPLE,              ENTR_LAKE_HYLIA_OUTSIDE_TEMPLE } },
         { { EntranceType::Dungeon,      RR_DESERT_COLOSSUS,                  RR_SPIRIT_TEMPLE_ENTRYWAY,            ENTR_SPIRIT_TEMPLE_ENTRANCE },
@@ -360,8 +405,8 @@ void SetAllEntrancesData() {
         // ENTR_POTION_SHOP_KAKARIKO_1 is an unused entrance index repurposed to differentiate between HC and OGC fairy fountain exits
         // (normally both use ENTR_CASTLE_GROUNDS_GREAT_FAIRY_EXIT)
           { EntranceType::Interior, RR_OGC_GREAT_FAIRY_FOUNTAIN,      RR_CASTLE_GROUNDS_FROM_GREAT_FAIRY, ENTR_POTION_SHOP_KAKARIKO_1 } },
-        { { EntranceType::Interior, RR_DMC_BLOCKED_EXIT,              RR_DMC_GREAT_FAIRY_FOUNTAIN,        ENTR_GREAT_FAIRYS_FOUNTAIN_MAGIC_DMC },
-          { EntranceType::Interior, RR_DMC_GREAT_FAIRY_FOUNTAIN,      RR_DMC_BLOCKED_ENTRY,               ENTR_DEATH_MOUNTAIN_CRATER_GREAT_FAIRY_EXIT } },
+        { { EntranceType::Interior, RR_DMC_BLOCKED,                   RR_DMC_GREAT_FAIRY_FOUNTAIN,        ENTR_GREAT_FAIRYS_FOUNTAIN_MAGIC_DMC },
+          { EntranceType::Interior, RR_DMC_GREAT_FAIRY_FOUNTAIN,      RR_DMC_BLOCKED,                     ENTR_DEATH_MOUNTAIN_CRATER_GREAT_FAIRY_EXIT } },
         { { EntranceType::Interior, RR_DEATH_MOUNTAIN_SUMMIT,         RR_DMT_GREAT_FAIRY_FOUNTAIN,        ENTR_GREAT_FAIRYS_FOUNTAIN_MAGIC_DMT },
           { EntranceType::Interior, RR_DMT_GREAT_FAIRY_FOUNTAIN,      RR_DEATH_MOUNTAIN_SUMMIT,           ENTR_DEATH_MOUNTAIN_TRAIL_GREAT_FAIRY_EXIT } },
         { { EntranceType::Interior, RR_ZORAS_FOUNTAIN,                RR_ZF_GREAT_FAIRY_FOUNTAIN,         ENTR_GREAT_FAIRYS_FOUNTAIN_SPELLS_FARORES_ZF },
@@ -419,10 +464,10 @@ void SetAllEntrancesData() {
           { EntranceType::GrottoGrave, RR_ZR_FAIRY_GROTTO,          RR_ZR_ATOP_LADDER,             ENTRANCE_GROTTO_EXIT(GROTTO_ZR_FAIRY_OFFSET) } },
         { { EntranceType::GrottoGrave, RR_ZR_ATOP_LADDER,           RR_ZR_OPEN_GROTTO,             ENTRANCE_GROTTO_LOAD(GROTTO_ZR_OPEN_OFFSET) },
           { EntranceType::GrottoGrave, RR_ZR_OPEN_GROTTO,           RR_ZR_ATOP_LADDER,             ENTRANCE_GROTTO_EXIT(GROTTO_ZR_OPEN_OFFSET) } },
-        { { EntranceType::GrottoGrave, RR_DMC_POT_GROTTO_EXIT,      RR_DMC_SCRUB_GROTTO,           ENTRANCE_GROTTO_LOAD(GROTTO_DMC_HAMMER_OFFSET) },
-          { EntranceType::GrottoGrave, RR_DMC_SCRUB_GROTTO,         RR_DMC_POT_GROTTO_ENTRY,       ENTRANCE_GROTTO_EXIT(GROTTO_DMC_HAMMER_OFFSET) } },
+        { { EntranceType::GrottoGrave, RR_DMC_POT_GROTTO,           RR_DMC_SCRUB_GROTTO,           ENTRANCE_GROTTO_LOAD(GROTTO_DMC_HAMMER_OFFSET) },
+          { EntranceType::GrottoGrave, RR_DMC_SCRUB_GROTTO,         RR_DMC_POT_GROTTO,             ENTRANCE_GROTTO_EXIT(GROTTO_DMC_HAMMER_OFFSET) } },
         { { EntranceType::GrottoGrave, RR_DMC_ROCK_GROTTO,          RR_DMC_UPPER_GROTTO,           ENTRANCE_GROTTO_LOAD(GROTTO_DMC_UPPER_OFFSET) },
-          { EntranceType::GrottoGrave, RR_DMC_UPPER_GROTTO,         RR_DMC_ROCKS_GROTTO_ENTRY,     ENTRANCE_GROTTO_EXIT(GROTTO_DMC_UPPER_OFFSET) } },
+          { EntranceType::GrottoGrave, RR_DMC_UPPER_GROTTO,         RR_DMC_ROCK_GROTTO,            ENTRANCE_GROTTO_EXIT(GROTTO_DMC_UPPER_OFFSET) } },
         { { EntranceType::GrottoGrave, RR_GC_GROTTO_PLATFORM,       RR_GC_GROTTO,                  ENTRANCE_GROTTO_LOAD(GROTTO_GORON_CITY_OFFSET) },
           { EntranceType::GrottoGrave, RR_GC_GROTTO,                RR_GC_GROTTO_PLATFORM,         ENTRANCE_GROTTO_EXIT(GROTTO_GORON_CITY_OFFSET) } },
         { { EntranceType::GrottoGrave, RR_DEATH_MOUNTAIN_TRAIL,     RR_DMT_STORMS_GROTTO,          ENTRANCE_GROTTO_LOAD(GROTTO_DMT_STORMS_OFFSET) },
@@ -530,9 +575,9 @@ void SetAllEntrancesData() {
           { EntranceType::Overworld, RR_DEATH_MOUNTAIN_TRAIL,    RR_KAK_BEHIND_GATE,         ENTR_KAKARIKO_VILLAGE_GUARD_GATE } },
         { { EntranceType::Overworld, RR_DEATH_MOUNTAIN_TRAIL,    RR_GORON_CITY,              ENTR_GORON_CITY_UPPER_EXIT },
           { EntranceType::Overworld, RR_GORON_CITY,              RR_DEATH_MOUNTAIN_TRAIL,    ENTR_DEATH_MOUNTAIN_TRAIL_GC_EXIT } },
-        { { EntranceType::Overworld, RR_GC_DARUNIAS_CHAMBER,     RR_DMC_POTS_ENTRY,          ENTR_DEATH_MOUNTAIN_CRATER_GC_EXIT },
+        { { EntranceType::Overworld, RR_GC_DARUNIAS_CHAMBER,     RR_DMC_POTS,                ENTR_DEATH_MOUNTAIN_CRATER_GC_EXIT },
           { EntranceType::Overworld, RR_DMC_POTS,                RR_GC_DARUNIAS_CHAMBER,     ENTR_GORON_CITY_DARUNIA_ROOM_EXIT } },
-        { { EntranceType::Overworld, RR_DEATH_MOUNTAIN_SUMMIT,   RR_DMC_UPPER_ENTRY,         ENTR_DEATH_MOUNTAIN_CRATER_UPPER_EXIT },
+        { { EntranceType::Overworld, RR_DEATH_MOUNTAIN_SUMMIT,   RR_DMC_UPPER,               ENTR_DEATH_MOUNTAIN_CRATER_UPPER_EXIT },
           { EntranceType::Overworld, RR_DMC_CRATE,               RR_DEATH_MOUNTAIN_SUMMIT,   ENTR_DEATH_MOUNTAIN_TRAIL_SUMMIT_EXIT } },
         { { EntranceType::Overworld, RR_ZR_BEHIND_WATERFALL,     RR_ZORAS_DOMAIN,            ENTR_ZORAS_DOMAIN_ENTRANCE },
           { EntranceType::Overworld, RR_ZORAS_DOMAIN,            RR_ZR_BEHIND_WATERFALL,     ENTR_ZORAS_RIVER_WATERFALL_EXIT } },
@@ -554,7 +599,7 @@ void SetAllEntrancesData() {
                                 // Adult Spawn and prelude of light (normally they both use 0x5F4)
         { { EntranceType::WarpSong, RR_MINUET_OF_FOREST_WARP,   RR_SACRED_FOREST_MEADOW,      ENTR_SACRED_FOREST_MEADOW_WARP_PAD },
           NO_RETURN_ENTRANCE },
-        { { EntranceType::WarpSong, RR_BOLERO_OF_FIRE_WARP,     RR_DMC_PAD_ENTRY,             ENTR_DEATH_MOUNTAIN_CRATER_WARP_PAD },
+        { { EntranceType::WarpSong, RR_BOLERO_OF_FIRE_WARP,     RR_DMC_PAD,                   ENTR_DEATH_MOUNTAIN_CRATER_WARP_PAD },
           NO_RETURN_ENTRANCE },
         { { EntranceType::WarpSong, RR_SERENADE_OF_WATER_WARP,  RR_LAKE_HYLIA,                ENTR_LAKE_HYLIA_WARP_PAD },
           NO_RETURN_ENTRANCE },
@@ -593,7 +638,7 @@ void SetAllEntrancesData() {
           NO_RETURN_ENTRANCE },
         { { EntranceType::BlueWarp, RR_FOREST_TEMPLE_BOSS_ROOM,    RR_SACRED_FOREST_MEADOW,      ENTR_SACRED_FOREST_MEADOW_FOREST_TEMPLE_BLUE_WARP },
           NO_RETURN_ENTRANCE },
-        { { EntranceType::BlueWarp, RR_FIRE_TEMPLE_BOSS_ROOM,      RR_DMC_PAD_ENTRY,             ENTR_DEATH_MOUNTAIN_CRATER_FIRE_TEMPLE_BLUE_WARP },
+        { { EntranceType::BlueWarp, RR_FIRE_TEMPLE_BOSS_ROOM,      RR_DMC_PAD,                   ENTR_DEATH_MOUNTAIN_CRATER_FIRE_TEMPLE_BLUE_WARP },
           NO_RETURN_ENTRANCE },
         { { EntranceType::BlueWarp, RR_WATER_TEMPLE_BOSS_ROOM,     RR_LAKE_HYLIA,                ENTR_LAKE_HYLIA_WATER_TEMPLE_BLUE_WARP },
           NO_RETURN_ENTRANCE },
@@ -1200,7 +1245,7 @@ int EntranceShuffler::ShuffleAllEntrances() {
     mCurNumRandomizedEntrances = 0;
 
     std::map<std::string, PriorityEntrance> priorityEntranceTable = {
-        { "Bolero", { { RR_DMC_PAD_ENTRY }, { EntranceType::OwlDrop, EntranceType::WarpSong } } },
+        { "Bolero", { { RR_DMC_PAD }, { EntranceType::OwlDrop, EntranceType::WarpSong } } },
         { "Nocturne",
           { { RR_GRAVEYARD_WARP_PAD_REGION },
             { EntranceType::OwlDrop, EntranceType::Spawn, EntranceType::WarpSong } } },
@@ -1532,7 +1577,7 @@ int EntranceShuffler::ShuffleAllEntrances() {
             { EntranceNameByRegions(RR_FOREST_TEMPLE_BOSS_ROOM, RR_FOREST_TEMPLE_BOSS_ENTRYWAY),
               GetEntrance(RR_FOREST_TEMPLE_ENTRYWAY, RR_SACRED_FOREST_MEADOW) },
             { EntranceNameByRegions(RR_FIRE_TEMPLE_BOSS_ROOM, RR_FIRE_TEMPLE_BOSS_ENTRYWAY),
-              GetEntrance(RR_FIRE_TEMPLE_ENTRYWAY, RR_DMC_TEMPLE_EXIT) },
+              GetEntrance(RR_FIRE_TEMPLE_ENTRYWAY, RR_DMC_TEMPLE) },
             { EntranceNameByRegions(RR_WATER_TEMPLE_BOSS_ROOM, RR_WATER_TEMPLE_BOSS_ENTRYWAY),
               GetEntrance(RR_WATER_TEMPLE_ENTRYWAY, RR_LH_FROM_WATER_TEMPLE) },
             { EntranceNameByRegions(RR_SPIRIT_TEMPLE_BOSS_ROOM, RR_SPIRIT_TEMPLE_BOSS_ENTRYWAY),
@@ -1554,8 +1599,8 @@ int EntranceShuffler::ShuffleAllEntrances() {
               GetEntrance(RR_JABU_JABUS_BELLY_BOSS_ROOM, RR_ZORAS_FOUNTAIN) },
             { EntranceNameByRegions(RR_FOREST_TEMPLE_ENTRYWAY, RR_SACRED_FOREST_MEADOW),
               GetEntrance(RR_FOREST_TEMPLE_BOSS_ROOM, RR_SACRED_FOREST_MEADOW) },
-            { EntranceNameByRegions(RR_FIRE_TEMPLE_ENTRYWAY, RR_DMC_TEMPLE_EXIT),
-              GetEntrance(RR_FIRE_TEMPLE_BOSS_ROOM, RR_DMC_PAD_ENTRY) },
+            { EntranceNameByRegions(RR_FIRE_TEMPLE_ENTRYWAY, RR_DMC_TEMPLE),
+              GetEntrance(RR_FIRE_TEMPLE_BOSS_ROOM, RR_DMC_PAD) },
             { EntranceNameByRegions(RR_WATER_TEMPLE_ENTRYWAY, RR_LH_FROM_WATER_TEMPLE),
               GetEntrance(RR_WATER_TEMPLE_BOSS_ROOM, RR_LAKE_HYLIA) },
             { EntranceNameByRegions(RR_SPIRIT_TEMPLE_ENTRYWAY, RR_DESERT_COLOSSUS_OUTSIDE_TEMPLE),
@@ -1576,7 +1621,7 @@ int EntranceShuffler::ShuffleAllEntrances() {
               GetEntrance(RR_JABU_JABUS_BELLY_BOSS_ROOM, RR_JABU_JABUS_BELLY_BOSS_EXIT) },
             { GetEntrance(RR_FOREST_TEMPLE_BOSS_ROOM, RR_SACRED_FOREST_MEADOW),
               GetEntrance(RR_FOREST_TEMPLE_BOSS_ROOM, RR_FOREST_TEMPLE_BOSS_ENTRYWAY) },
-            { GetEntrance(RR_FIRE_TEMPLE_BOSS_ROOM, RR_DMC_PAD_ENTRY),
+            { GetEntrance(RR_FIRE_TEMPLE_BOSS_ROOM, RR_DMC_PAD),
               GetEntrance(RR_FIRE_TEMPLE_BOSS_ROOM, RR_FIRE_TEMPLE_BOSS_ENTRYWAY) },
             { GetEntrance(RR_WATER_TEMPLE_BOSS_ROOM, RR_LAKE_HYLIA),
               GetEntrance(RR_WATER_TEMPLE_BOSS_ROOM, RR_WATER_TEMPLE_BOSS_ENTRYWAY) },

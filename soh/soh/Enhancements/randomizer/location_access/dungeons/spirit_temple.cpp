@@ -655,7 +655,7 @@ void RegionTable_Init_SpiritTemple() {
     areaTable[RR_SPIRIT_TEMPLE_MQ_TURNTABLE] = Region("Spirit Temple MQ Turntable", SCENE_SPIRIT_TEMPLE, {
         //Events
         EVENT_ACCESS(LOGIC_SPIRIT_MQ_TURNTABLE_ENEMY, logic->CanKillEnemy(RE_STALFOS)),
-        EVENT_ACCESS(LOGIC_FAIRY_ACCESS,              logic->Get(LOGIC_SPIRIT_MQ_TURNTABLE_ENEMY)),
+        FAIRY_REFILL(logic->Get(LOGIC_SPIRIT_MQ_TURNTABLE_ENEMY)),
     }, {
         //Locations
         //implies logic->CanBreakPots()
