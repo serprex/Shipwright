@@ -15,7 +15,6 @@
     return map;                  \
     }
 
-
 #undef RANDO_ENUM_BEGIN
 #undef RANDO_ENUM_ITEM
 #undef RANDO_ENUM_END
