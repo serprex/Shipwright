@@ -731,8 +731,8 @@ void RegionTable_Init_GanonsCastle() {
     }, {}, {
         //Exits
         ENTRANCE(RR_GANONS_CASTLE_MQ_MAIN,                        true),
-        ENTRANCE(RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_CHEST_PLATFORM, (logic->Get(LOGIC_SHADOW_TRIAL_FIRST_CHEST) && logic->CanUse(RG_HOOKSHOT)) || (logic->IsAdult && (logic->CanUse(RG_HOVER_BOOTS) || logic->BunnyHood())) || logic->BunnyHovers() || logic->CanRecoilHoverFromTorch(TRECOIL_SHORT)),
-        ENTRANCE(RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_BOMB_FLOWER,    (logic->IsAdult && (logic->CanRecoilHover(RECOIL_HAMMER) || logic->CanRecoilHoverFromTorch(TRECOIL_LONG_AND_SHIELD)))),
+        ENTRANCE(RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_CHEST_PLATFORM, (logic->Get(LOGIC_SHADOW_TRIAL_FIRST_CHEST) && logic->CanUse(RG_HOOKSHOT)) || (logic->IsAdult && (logic->CanUse(RG_HOVER_BOOTS) || logic->BunnyHood())) || logic->BunnyHovers() || logic->CanRecoilHoverFromObject(TRECOIL_SHORT)),
+        ENTRANCE(RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_BOMB_FLOWER,    (logic->IsAdult && (logic->CanRecoilHover(RECOIL_HAMMER) || logic->CanRecoilHoverFromObject(TRECOIL_LONG_AND_SHIELD)))),
         //shortcut route for passage involving the torch
         ENTRANCE(RR_GANONS_CASTLE_MQ_SHADOW_TRIAL_BEAMOS_CHEST,   (ctx->GetTrickOption(RT_LENS_GANON_MQ) || logic->CanUse(RG_LENS_OF_TRUTH)) && ((logic->BunnyHovers() && logic->CanUse(RG_STICKS)) ||
                                                                        (logic->IsAdult && ctx->GetTrickOption(RT_GANON_MQ_SHADOW_TRIAL) && logic->CanUse(RG_FAIRY_BOW) && 

@@ -253,7 +253,7 @@
             },
             "gy_child_dampe_race_poh": {
                 "name": "Second Dampe Race as Child",
-                "description": "It is possible to complete the second dampe race as child in under a minute, but it is a strict time limit."
+                "description": "It is possible to complete the second dampe race as child in under a minute, but it is a strict time limit. This is in default logic with Bunny Hood"
             },
             "gy_shadow_fire_arrows": {
                 "name": "Shadow Temple Entry with Fire Arrows",
@@ -272,7 +272,7 @@
             },
             "dmt_bombable": {
                 "name": "Death Mountain Trail Chest with Strength",
-                "description": "Child Link can blow up the wall using a nearby bomb flower. You must backwalk with the flower and then quickly throw it toward the wall."
+                "description": "Child Link can blow up the wall using a nearby bomb flower. You must backwalk with the flower and then quickly throw it toward the wall. This is not a trick if you have Bunny Hood."
             },
             "dmt_hovers_lower_gs": {
                 "name": "Death Mountain Trail Lower Red Rock GS with Hover Boots",
@@ -313,7 +313,7 @@
             },
             "gc_rolling_strength": {
                 "name": "Rolling Goron (Hot Rodder Goron) as Child with Strength",
-                "description": "Use the Bomb Flower on the stairs or near Medigoron. Timing is tight, especially without backwalking."
+                "description": "Use the Bomb Flower on the stairs or near Medigoron. Timing is tight, especially without backwalking.\nThis is in default logic with Bunny Hood."
             },
             "gc_leftmost": {
                 "name": "Goron City Maze Left Chest with Hover Boots",
@@ -345,7 +345,7 @@
             },
             "zr_lower": {
                 "name": "Zora's River Lower Freestanding PoH as Adult with Nothing",
-                "description": "Adult can reach this PoH with a precise jump, no Hover Boots required."
+                "description": "Adult can reach this PoH and the nearby bush with a precise jump, no Hover Boots or Bunny Hood required."
             },
             "zr_upper": {
                 "name": "Zora's River Upper Freestanding PoH as Adult with Nothing",
@@ -496,7 +496,7 @@
             },
             "dc_slingshot_skip": {
                 "name": "Dodongo's Cavern Child Slingshot Skips",
-                "description": "With precise platforming, child can cross the platforms while the flame circles are there. When enabling this trick, it's recommended that you also enable the Adult variant: \"Dodongo's Cavern Spike Trap Room Jump without Hover Boots\"."
+                "description": "With precise platforming, child can cross the platforms while the flame circles are there. When enabling this trick, it's recommended that you also enable Unintuitive Jumps, which enables Adult to skip this loop in an easier way."
             },
             "dc_scrub_room": {
                 "name": "Dodongo's Cavern Two Scrub Room with Strength",

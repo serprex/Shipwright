@@ -66,7 +66,7 @@ void RegionTable_Init_LostWoods() {
     
     areaTable[RR_LW_UNDER_BRIDGE] = Region("Lost Woods Under the Bridge", SCENE_LOST_WOODS, {
         //Events
-        EVENT_ACCESS(LOGIC_FAIRY_ACCESS,       logic->CallGossipFairyExceptSuns()),
+        EVENT_ACCESS(LOGIC_FAIRY_ACCESS,  logic->CallGossipFairyExceptSuns()),
     }, {
         //Locations
         LOCATION(RC_LW_DEKU_SCRUB_NEAR_BRIDGE, logic->IsChild && logic->CanStunDeku() && logic->HasItem(RG_SPEAK_DEKU) && GetCheckPrice() <= GetWalletCapacity()),

@@ -436,7 +436,7 @@ void RegionTable_Init_GerudoTrainingGround() {
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_UNDERWATER,           logic->HasItem(RG_GTG_SILVER_LAVA)),
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_LEDGE_SIDE_PLATFORMS, logic->HasFireSource() && (logic->CanUse(RG_HOVER_BOOTS) || logic->BunnyHood() || logic->HasItem(RG_GTG_SILVER_LAVA))),
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_TORCH_SIDE_PLATFORMS, logic->HasFireSource()),
-        ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_PLATFORMS_LIT_TORCH,  logic->CanUse(RG_LONGSHOT) || logic->CanRecoilHoverFromTorch(TRECOIL_SHORT) || (logic->IsAdult && logic->BunnyHood() && ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS))),
+        ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_PLATFORMS_LIT_TORCH,  logic->CanUse(RG_LONGSHOT) || logic->CanRecoilHoverFromObject(TRECOIL_SHORT) || (logic->IsAdult && logic->BunnyHood() && ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS))),
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_MAZE_RIGHT,           logic->Get(LOGIC_GTG_MQ_RIGHT_SIDE_SWITCH) && (logic->CanUse(RG_LONGSHOT) || (logic->CanUse(RG_HOOKSHOT) && logic->HasFireSource()))),
     });
 
@@ -462,7 +462,7 @@ void RegionTable_Init_GerudoTrainingGround() {
     areaTable[RR_GERUDO_TRAINING_GROUND_MQ_PLATFORMS_LIT_TORCH] = Region("Gerudo Training Ground MQ Platforms Lit Torch", SCENE_GERUDO_TRAINING_GROUND, {}, {}, {
         //Exits
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_TORCH_SIDE_PLATFORMS,  ((logic->CanUse(RG_FAIRY_BOW) && logic->IsAdult) || logic->CanUse(RG_FIRE_ARROWS))),
-        ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_PLATFORMS_UNLIT_TORCH, logic->CanUse(RG_LONGSHOT) || logic->CanRecoilHoverFromTorch(TRECOIL_SHORT)),
+        ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_PLATFORMS_UNLIT_TORCH, logic->CanUse(RG_LONGSHOT) || logic->CanRecoilHoverFromObject(TRECOIL_SHORT)),
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_MAZE_RIGHT,            logic->Get(LOGIC_GTG_MQ_RIGHT_SIDE_SWITCH) && logic->CanUse(RG_LONGSHOT)),
         ENTRANCE(RR_GERUDO_TRAINING_GROUND_MQ_DINOLFOS_ROOM,         true),
     });

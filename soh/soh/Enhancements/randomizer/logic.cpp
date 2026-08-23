@@ -1399,8 +1399,8 @@ bool Logic::CanRecoilHover(RecoilRequirements req) {
     return can;
 }
 
-// torches seem to normalise recoil distance, so the only thing that can matter is attack range
-bool Logic::CanRecoilHoverFromTorch(TorchRecoilRequirements req) {
+// some actors seem to normalise recoil distance, so the only thing that can matter is attack range
+bool Logic::CanRecoilHoverFromObject(TorchRecoilRequirements req) {
     if (!(CanUse(RG_HOVER_BOOTS) && ctx->GetTrickOption(RT_HOVER_BOOST_SIMPLE))) {
         return false;
     }
@@ -3027,7 +3027,7 @@ bool Logic::DMCPotsToPad() {
 }
 
 bool Logic::DMCPadToPots() {
-    return (CanUse(RG_HOVER_BOOTS) && (IsAdult || (HasItem(RG_CLIMB) /*&& CanUse(RG_ROLL)*/))) || CanUse(RG_HOOKSHOT) ||
+    return (CanUse(RG_HOVER_BOOTS) && (IsAdult || (HasItem(RG_CLIMB) /*&& can roll or bunny*/))) || CanUse(RG_HOOKSHOT) ||
            (IsAdult && BunnyHood() && HasItem(RG_CLIMB));
 }
 

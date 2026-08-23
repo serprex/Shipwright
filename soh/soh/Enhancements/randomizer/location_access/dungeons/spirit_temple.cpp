@@ -234,7 +234,7 @@ void RegionTable_Init_SpiritTemple() {
         ENTRANCE(RR_SPIRIT_TEMPLE_INNER_WEST_HAND,   true),
         ENTRANCE(RR_SPIRIT_TEMPLE_GS_LEDGE,          logic->CanUse(RG_HOVER_BOOTS) || logic->ReachScarecrow()),
         //adult requirement is artificial as a way to prevent child logic leaking
-        ENTRANCE(RR_SPIRIT_TEMPLE_STATUE_ROOM_ADULT, logic->CanRecoilHoverFromTorch(TRECOIL_SHORT) && logic->IsAdult),
+        ENTRANCE(RR_SPIRIT_TEMPLE_STATUE_ROOM_ADULT, logic->CanRecoilHoverFromObject(TRECOIL_SHORT) && logic->IsAdult),
         // RT_SPIRIT_PLATFORM_HOOKSHOT is currently disabled
         ENTRANCE(RR_SPIRIT_TEMPLE_PLATFORM,          logic->Get(LOGIC_SPIRIT_PLATFORM_LOWERED) && 
                                                      (logic->CanUse(RG_LONGSHOT) || (ctx->GetTrickOption(RT_SPIRIT_PLATFORM_HOOKSHOT) && logic->CanUse(RG_HOOKSHOT)))),
@@ -380,7 +380,7 @@ void RegionTable_Init_SpiritTemple() {
         ENTRANCE(RR_SPIRIT_TEMPLE_INNER_LEFT_HAND,   true),
         //(IsAdult && ctx->GetTrickOption(RT_SPIRIT_STATUE_JUMP)) || CanUse(RG_HOVER_BOOTS) || (CanUse(RG_ZELDAS_LULLABY) && CanUse(RG_HOOKSHOT));
         ENTRANCE(RR_SPIRIT_TEMPLE_SHORTCUT_SWITCH,   logic->SpiritEastToSwitch()),
-        ENTRANCE(RR_SPIRIT_TEMPLE_STATUE_ROOM_CHILD, logic->CanRecoilHoverFromTorch(TRECOIL_SHORT)),
+        ENTRANCE(RR_SPIRIT_TEMPLE_STATUE_ROOM_CHILD, logic->CanRecoilHoverFromObject(TRECOIL_SHORT)),
         ENTRANCE(RR_SPIRIT_TEMPLE_POT_STAIRS,        logic->SmallKeys(SCENE_SPIRIT_TEMPLE, 4)),
         //RT_SPIRIT_PLATFORM_HOOKSHOT is currently disabled
         ENTRANCE(RR_SPIRIT_TEMPLE_PLATFORM,          logic->Get(LOGIC_SPIRIT_PLATFORM_LOWERED) && 
