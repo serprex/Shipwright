@@ -1,19 +1,19 @@
+#include <spdlog/spdlog.h>
+
 #include "logic.h"
 #include "bean_patches.h"
 #include "../debugger/performanceTimer.h"
-
-#include <vector>
-
 #include "soh/OTRGlobals.h"
 #include "randomizer.h"
 #include "dungeon.h"
 #include "SeedContext.h"
+#include "randomizer.h"
+#include "location_access.h"
+
+extern "C" {
 #include "macros.h"
 #include "variables.h"
-#include "randomizer.h"
-#include <spdlog/spdlog.h>
-#include <ship/utils/StringHelper.h>
-#include "location_access.h"
+}
 
 extern "C" PlayState* gPlayState;
 
@@ -1428,8 +1428,8 @@ bool Logic::Water3FCentralToHighEmblem() {
     //"Just jumping" to this ledge is complicated, as the nearest part of the ledge is janky
     // Adult without bunny hood can airdrift left to get a clean ledge grab, however if the scarecrow has spawned (which
     // is a perm flag that with skip scarecrow inevitably activates while setting water to high) the usable ledge area
-    // is much smaller. Unlike most jumps like this, Bunny hood does not solve the jump, at least for Adult. For child it
-    // makes this not only possible but much less prone to issues than either Adult jump. Adult can instead aim even
+    // is much smaller. Unlike most jumps like this, Bunny hood does not solve the jump, at least for Adult. For child
+    // it makes this not only possible but much less prone to issues than either Adult jump. Adult can instead aim even
     // further left to get a good ledge climb, but will almost always be blocked by the scarecrow if that exists.
     // otherwise Adult with bunny will result in worse ledge bugging than not using bunny. You can climb up even if you
     // start doing weird ledge things with a well timed jumpslash. Hovers are similarly unintuitive, needing the player
@@ -2570,7 +2570,9 @@ void Logic::ApplyItemEffect(Item& item, bool state) {
                 case RG_BOMBCHU_5:
                 case RG_BOMBCHU_10:
                 case RG_BOMBCHU_20:
-                    SetInventory(ITEM_BOMBCHU, (!state ? ITEM_NONE : ITEM_BOMBCHU));
+                    if (ctx->GetOption(RSK_BOMBCHU_BAG).IsNot(RO_BOMBCHU_BAG_PROGRESSIVE)) {
+                        SetInventory(ITEM_BOMBCHU, (!state ? ITEM_NONE : ITEM_BOMBCHU));
+                    }
                     break;
                 default:
                     break;
@@ -2691,14 +2693,13 @@ void Logic::ApplyItemEffect(Item& item, bool state) {
                     break;
                 case RG_DEKU_STICK_1:
                 case RG_BUY_DEKU_STICK_1:
-                case RG_STICKS:
                     SetInventory(ITEM_STICK, (!state ? ITEM_NONE : ITEM_STICK));
                     break;
-                case RG_BOMBCHU_5:
-                case RG_BOMBCHU_10:
-                case RG_BOMBCHU_20:
-                    SetInventory(ITEM_BOMBCHU, (!state ? ITEM_NONE : ITEM_BOMBCHU));
-                    break;
+                case RG_BUY_BOMBCHUS_10:
+                case RG_BUY_BOMBCHUS_20:
+                    if (ctx->GetOption(RSK_BOMBCHU_BAG).Is(RO_BOMBCHU_BAG_NONE)) {
+                        SetInventory(ITEM_BOMBCHU, (!state ? ITEM_NONE : ITEM_BOMBCHU));
+                    }
                 default:
                     break;
             }
