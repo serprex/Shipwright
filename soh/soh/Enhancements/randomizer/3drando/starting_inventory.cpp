@@ -1,9 +1,6 @@
 #include "starting_inventory.hpp"
-
 #include "../dungeon.h"
 #include "../SeedContext.h"
-#include "../logic.h"
-#include "pool_functions.hpp"
 #include "soh/Enhancements/randomizer/static_data.h"
 #include "soh/util.h"
 
@@ -52,6 +49,12 @@ void GenerateStartingInventory() {
         AddItemToInventory(RG_WATER_TEMPLE_BOSS_KEY);
         AddItemToInventory(RG_SPIRIT_TEMPLE_BOSS_KEY);
         AddItemToInventory(RG_SHADOW_TEMPLE_BOSS_KEY);
+    }
+
+    if (ctx->GetOption(RSK_SHUFFLE_SILVER).Is(RO_SHUFFLE_SILVER_STARTWITH)) {
+        for (int rg = (int)RG_SHADOW_SILVER_BLADES; rg <= (int)RG_GANONS_CASTLE_MQ_SILVER_SHADOW; rg++) {
+            AddItemToInventory((RandomizerGet)rg);
+        }
     }
 
     if (ctx->GetOption(RSK_GANONS_BOSS_KEY).Is(RO_GANON_BOSS_KEY_STARTWITH)) {

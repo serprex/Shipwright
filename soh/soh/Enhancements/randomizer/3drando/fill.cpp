@@ -403,8 +403,8 @@ bool AddCheckToLogic(LocationAccess& locPair, GetAccessibleLocationsStruct& gals
     RandomizerGet locItem = location->GetPlacedRandomizerGet();
     RandomizerCheckQuest quest = Rando::StaticData::GetLocation(loc)->GetQuest();
     assert(ctx->GetOption(RSK_LOGIC_RULES).Is(RO_LOGIC_NO_LOGIC) || quest == RCQUEST_BOTH ||
-           (quest == RCQUEST_VANILLA && ctx->GetDungeons()->GetDungeonFromScene(parentRegion->scene)->IsVanilla()) ||
-           (quest == RCQUEST_MQ && ctx->GetDungeons()->GetDungeonFromScene(parentRegion->scene)->IsMQ()));
+           (quest == RCQUEST_VANILLA && ctx->GetDungeonFromScene(parentRegion->scene)->IsVanilla()) ||
+           (quest == RCQUEST_MQ && ctx->GetDungeonFromScene(parentRegion->scene)->IsMQ()));
 
     if (!location->IsAddedToPool() && locPair.ConditionsMet(parentRegion, logic->CalculatingAvailableChecks) &&
         !logic->ShopItemNotForSale(loc)) {
@@ -423,7 +423,7 @@ bool AddCheckToLogic(LocationAccess& locPair, GetAccessibleLocationsStruct& gals
                     ApplyOrStoreItem(location, gals, addToPlaythrough);
                 }
                 // If we want to ignore bombchus, only add if bombchu is not in the name
-                else if (IsBombchus(ignore) && IsBombchus(locItem, true)) {
+                else if (IsBombchus(ignore) && !IsBombchus(locItem, true)) {
                     ApplyOrStoreItem(location, gals, addToPlaythrough);
                 }
                 // We want to ignore a specific Buy item. Buy items with different RandomizerGets are recognised by a
@@ -1281,7 +1281,7 @@ int Fill() {
         // showItemProgress = false;
         ctx->playthroughLocations.clear();
         ctx->GetEntranceShuffler()->playthroughEntrances.clear();
-        RegionTable_Init(); // Reset the world graph to intialize the proper locations
+        RegionTable_Init(); // Reset the world graph to initialize the proper locations
         ctx->ItemReset();   // Reset shops incase of shopsanity random
         ctx->GenerateLocationPool();
         GenerateItemPool();
