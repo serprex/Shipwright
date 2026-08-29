@@ -1867,7 +1867,8 @@ static void InitTrickNames() {
 /// @param iceTrapNamesOption The current value of the RSK_ICE_TRAP_NAMES setting
 /// @param state The rng state
 /// @return A Text object with the selected trick name
-Rando::Traps::TrickName Rando::Traps::GetTrapName(RandomizerGet id, RandoIceTrapNames iceTrapNamesOption, uint64_t* state) {
+Rando::Traps::TrickName Rando::Traps::GetTrapName(RandomizerGet id, RandoIceTrapNames iceTrapNamesOption,
+                                                  uint64_t* state) {
     switch (iceTrapNamesOption) {
         case RO_ICE_TRAP_NAMES_IDENTICAL: {
             auto item = Rando::StaticData::RetrieveItem(id);
