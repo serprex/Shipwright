@@ -1428,8 +1428,8 @@ bool Logic::Water3FCentralToHighEmblem() {
     //"Just jumping" to this ledge is complicated, as the nearest part of the ledge is janky
     // Adult without bunny hood can airdrift left to get a clean ledge grab, however if the scarecrow has spawned (which
     // is a perm flag that with skip scarecrow inevitably activates while setting water to high) the usable ledge area
-    // is much smaller. Unlike most jumps like this, Bunny hood does not solve the jump, at least for Adult. For child it
-    // makes this not only possible but much less prone to issues than either Adult jump. Adult can instead aim even
+    // is much smaller. Unlike most jumps like this, Bunny hood does not solve the jump, at least for Adult. For child
+    // it makes this not only possible but much less prone to issues than either Adult jump. Adult can instead aim even
     // further left to get a good ledge climb, but will almost always be blocked by the scarecrow if that exists.
     // otherwise Adult with bunny will result in worse ledge bugging than not using bunny. You can climb up even if you
     // start doing weird ledge things with a well timed jumpslash. Hovers are similarly unintuitive, needing the player

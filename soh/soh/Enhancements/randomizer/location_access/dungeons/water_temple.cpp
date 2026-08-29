@@ -1,6 +1,7 @@
 #include "soh/Enhancements/randomizer/location_access.h"
 #include "soh/Enhancements/randomizer/entrance.h"
 #include "soh/Enhancements/randomizer/dungeon.h"
+#include "soh/Enhancements/randomizer/randomizerEnums.h"
 
 using namespace Rando;
 
@@ -288,11 +289,17 @@ void RegionTable_Init_WaterTemple() {
 
     areaTable[RR_WATER_TEMPLE_CANAL_ALCOVE] = Region("Water Temple Canal Alcove", SCENE_WATER_TEMPLE, {}, {
         //Locations
+                                                         //Can we grab the token at range?
         LOCATION(RC_WATER_TEMPLE_GS_NEAR_BOSS_KEY_CHEST, logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG) ||
+                                                         //Otherwise we need to be able to reach it...
                                                          //child can also do a hovers backwalk backflip to reach the token after killing the skull
                                                          (((logic->IsAdult && logic->CanUse(RG_HOVER_BOOTS)) || logic->BunnyHovers() || logic->CanMiddairGroundJump()) &&
+                                                         //survive the landing, or don't care if we void
+                                                          (logic->HasItem(RG_BRONZE_SCALE) || (ctx->GetTrickOption(RT_VOIDOUT_COLLECTION) && logic->CanVoid())) &&
+                                                          //and of course kill the skulltula to spawn the token
+                                                          //Adult can kill with a bomb from the canal, and climb back up, handled here for simplicity
                                                          //killing with bombchu from here is hard due to the terrain, but adult can do it much easier from the river so it's only relevant for child
-                                                          (logic->CanKillEnemy(RE_GOLD_SKULLTULA, logic->HasItem(RG_BRONZE_SCALE) && (logic->IsAdult || logic->CanUse(RG_HOVER_BOOTS)) ? ED_SHORT_JUMPSLASH : ED_BOOMERANG)) || (logic->BunnyHood() && (logic->CanUseSword() || logic->CanUse(RG_STICKS))))),
+                                                          (logic->CanKillEnemy(RE_GOLD_SKULLTULA, logic->HasItem(RG_BRONZE_SCALE) && (logic->IsAdult || logic->CanUse(RG_HOVER_BOOTS) || logic->BunnyHood()) ? ED_SHORT_JUMPSLASH : logic->IsAdult ? ED_BOMB_THROW : ED_BOOMERANG)))),
     }, {
         //Exits
         ENTRANCE(RR_WATER_TEMPLE_3_JETS_NO_SWITCH, true),
@@ -304,7 +311,8 @@ void RegionTable_Init_WaterTemple() {
 
     areaTable[RR_WATER_TEMPLE_BOULDER_CANAL] = Region("Water Temple Boulder Canal", SCENE_WATER_TEMPLE, {}, {
         //Locations
-        LOCATION(RC_WATER_TEMPLE_GS_NEAR_BOSS_KEY_CHEST, (logic->IsAdult && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG)) || (logic->CanUse(RG_IRON_BOOTS) && logic->CanUse(RG_HOOKSHOT)) || (((logic->IsAdult && logic->CanKillEnemy(RE_GOLD_SKULLTULA, ED_BOMB_THROW)) || (logic->IsChild && logic->CanKillEnemy(RE_GOLD_SKULLTULA, ED_BOOMERANG))) && (ctx->GetTrickOption(RT_VOIDOUT_COLLECTION) && logic->CanVoid()) && logic->CanUse(RG_HOVER_BOOTS))),
+        LOCATION(RC_WATER_TEMPLE_GS_NEAR_BOSS_KEY_CHEST, (logic->IsAdult && logic->CanGetEnemyDrop(RE_GOLD_SKULLTULA, ED_BOOMERANG)) || 
+                                                                        (logic->CanUse(RG_IRON_BOOTS) && logic->CanUse(RG_HOOKSHOT))),
     }, {
         //Exits
         //making the jump as adult without jumpslash is possible, but hard enough to be a trick
