@@ -370,7 +370,7 @@ void RegionTable_Init_DodongosCavern() {
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_TORCH_PUZZLE_UPPER,   logic->Get(LOGIC_DC_MQ_CLEAR_UPPER_LOBBY_ROCKS)),
         //Bunny hood jump + jumpslash can also make it directly from the raising platform, but it's too tight for unintuitive and overlaps with the recoil trick
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_OUTSIDE_POES_ROOM,    logic->CanUse(RG_HOVER_BOOTS) || (ctx->GetTrickOption(RT_DC_CHILD_LOBBY) && logic->CanJumpslashExceptHammer() && logic->TakeDamage())),
-        ENTRANCE(RR_DODONGOS_CAVERN_MQ_ENTRANCE_SIDE_BRIDGE, ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS) && logic->BunnyHovers() && logic->CanJumpslash()),
+        //ENTRANCE(RR_DODONGOS_CAVERN_MQ_ENTRANCE_SIDE_BRIDGE, ctx->GetTrickOption(RT_UNINTUITIVE_HOVERS) && logic->BunnyHovers() && logic->CanJumpslash()),
     });
 
     areaTable[RR_DODONGOS_CAVERN_MQ_STAIRS_LOWER] = Region("Dodongos Cavern MQ Stairs Lower", SCENE_DODONGOS_CAVERN, {}, {
@@ -455,7 +455,7 @@ void RegionTable_Init_DodongosCavern() {
         //Exits
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_LOBBY,              logic->TakeDamage()),
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_DODONGO_ROOM,       true),
-        ENTRANCE(RR_DODONGOS_CAVERN_MQ_MOUTH_SIDE_BRIDGE,  ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS) && logic->BunnyHovers() && logic->CanJumpslash()),
+       // ENTRANCE(RR_DODONGOS_CAVERN_MQ_MOUTH_SIDE_BRIDGE,  ctx->GetTrickOption(RT_UNINTUITIVE_HOVERS) && logic->BunnyHovers() && logic->CanJumpslash()),
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_LARVAE_ROOM,        logic->CanUse(RG_STICKS) && logic->HasItem(RG_POWER_BRACELET)), //assumes RR_DODONGOS_CAVERN_MQ_TORCH_PUZZLE_LOWER access.
         ENTRANCE(RR_DODONGOS_CAVERN_MQ_TORCH_PUZZLE_UPPER, ((logic->IsAdult || logic->BunnyHood()) && ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS)) || logic->CanUse(RG_HOVER_BOOTS)),
         //Implies access to RR_DODONGOS_CAVERN_MQ_BIG_BLOCK_ROOM and RR_DODONGOS_CAVERN_MQ_TORCH_PUZZLE_LOWER from here

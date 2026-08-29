@@ -1513,7 +1513,7 @@ void RegionTable_Init_WaterTemple() {
     }, {
         //Exits
         ENTRANCE(RR_WATER_TEMPLE_MQ_3_JETS_ROOM_NO_SWITCH_SIDE, (logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS) || (ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS) && logic->IsAdult)) && AnyAgeTime([]{return logic->CanKillEnemy(RE_DODONGO, ED_CLOSE, true, 5);})),
-        //it's possible to go this was as adult with bunny hood, but it's a tight jump
+        //it's possible to do this jump as Adult with bunny hood, but it's a tight jump
         ENTRANCE(RR_WATER_TEMPLE_MQ_CRATE_VORTEX_CAGE,          (logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS)) && AnyAgeTime([]{return logic->CanKillEnemy(RE_DODONGO, ED_CLOSE, true, 5);})),
     });
 

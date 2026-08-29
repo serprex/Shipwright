@@ -714,7 +714,7 @@ void RegionTable_Init_ForestTemple() {
         //Exits
         ENTRANCE(RR_FOREST_TEMPLE_MQ_NE_COURTYARD,           true),
         ENTRANCE(RR_FOREST_TEMPLE_MQ_NE_COURTYARD_DOORFRAME, logic->CanRecoilHover(RECOIL_HAMMER)),
-        ENTRANCE(RR_FOREST_TEMPLE_MQ_COURTYARD_TOP_CHEST,    logic->BunnyHood() || (logic->IsAdult && ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS)) || logic->CanUse(RG_HOOKSHOT) ||logic->CanUse(RG_HOVER_BOOTS)),
+        ENTRANCE(RR_FOREST_TEMPLE_MQ_COURTYARD_TOP_DOOR,     logic->BunnyHood() || (logic->IsAdult && ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS)) || logic->CanUse(RG_HOOKSHOT) ||logic->CanUse(RG_HOVER_BOOTS)),
         ENTRANCE(RR_FOREST_TEMPLE_MQ_NE_COURTYARD_ISLAND,    ((logic->IsAdult && ctx->GetTrickOption(RT_FOREST_COURTYARD_LEDGE)) || logic->BunnyHood()) && logic->CanUse(RG_HOVER_BOOTS)),
     });
 

@@ -335,7 +335,7 @@ void RegionTable_Init_GanonsCastle() {
 
     areaTable[RR_GANONS_CASTLE_SHADOW_TRIAL_END] = Region("Ganon's Castle Shadow Trial End", SCENE_INSIDE_GANONS_CASTLE, {}, {
         //Locations
-        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_HEART_1, logic->BunnyHovers()),
+        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_HEART_1, (ctx->GetTrickOption(RT_VOIDOUT_COLLECTION)  && logic->BunnyHovers())),
         LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_HEART_2, (ctx->GetTrickOption(RT_VOIDOUT_COLLECTION) && logic->CanUse(RG_HOVER_BOOTS)) || logic->CanUse(RG_BOOMERANG)),
         LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_HEART_3, (ctx->GetTrickOption(RT_VOIDOUT_COLLECTION) && (logic->CanUse(RG_HOVER_BOOTS)|| logic->BunnyHood())) || logic->CanUse(RG_BOOMERANG)),
     }, {
@@ -681,7 +681,7 @@ void RegionTable_Init_GanonsCastle() {
         ENTRANCE(RR_GANONS_CASTLE_MQ_WATER_TRIAL_GEYSER_ROOM,     logic->SmallKeys(SCENE_INSIDE_GANONS_CASTLE, 3)),
         ENTRANCE(RR_GANONS_CASTLE_MQ_WATER_TRIAL_BLOCK_ROOM_HIGH, logic->IsAdult && (logic->HasItem(RG_POWER_BRACELET) || logic->CanMiddairGroundJump())),
         ENTRANCE(RR_GANONS_CASTLE_MQ_WATER_TRIAL_BLOCK_ROOM_END,  logic->Get(LOGIC_WATER_TRIAL_MQ_MELTED_FINAL_DOOR_RED_ICE) && 
-                                                                  (logic->IsAdult || (logic->CanUse(RG_HOVER_BOOTS)/* && roll or bunny?*/) || ((ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS)/* && roll or bunny*/) && logic->HasItem(RG_POWER_BRACELET)) || logic->CanGroundJump() || ctx->GetTrickOption(RT_SLIDE_JUMP))),
+                                                                  (logic->IsAdult || (logic->CanUse(RG_HOVER_BOOTS)/* && roll or bunny?*/) || (ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS) && logic->HasItem(RG_POWER_BRACELET)) || logic->CanGroundJump() || ctx->GetTrickOption(RT_SLIDE_JUMP))),
     });
 
     areaTable[RR_GANONS_CASTLE_MQ_WATER_TRIAL_BLOCK_ROOM_HIGH] = Region("Ganon's Castle MQ Water Trial Block Room High", SCENE_INSIDE_GANONS_CASTLE, {}, {
