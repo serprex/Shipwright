@@ -124,12 +124,22 @@ bool Logic::HasItem(RandomizerGet itemName) {
         case RG_DOUBLE_DEFENSE:
             return GetSaveContext()->isDoubleDefenseAcquired;
             // Masks
+        case RG_KEATON_MASK:
+            return CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_KEATON) ||
+                   (!ctx->GetOption(RSK_SHUFFLE_MASKS) && Get(LOGIC_CAN_BORROW_MASKS));
         case RG_SKULL_MASK:
             return CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_SKULL) ||
-                   (!ctx->GetOption(RSK_SHUFFLE_MASKS) && Get(LOGIC_BORROW_SKULL_MASK));
+                   (!ctx->GetOption(RSK_SHUFFLE_MASKS) && Get(LOGIC_CAN_BORROW_MASKS) && Get(LOGIC_SOLD_KEATON_MASK));
+        case RG_SPOOKY_MASK:
+            return CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_SPOOKY) ||
+                   (!ctx->GetOption(RSK_SHUFFLE_MASKS) && Get(LOGIC_CAN_BORROW_MASKS) && Get(LOGIC_SOLD_SKULL_MASK));
+        case RG_BUNNY_HOOD:
+            return CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_BUNNY) ||
+                   (!ctx->GetOption(RSK_SHUFFLE_MASKS) && Get(LOGIC_CAN_BORROW_MASKS) && Get(LOGIC_SOLD_SPOOKY_MASK));
         case RG_MASK_OF_TRUTH:
             return CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_TRUTH) ||
-                   (!ctx->GetOption(RSK_SHUFFLE_MASKS) && Get(LOGIC_BORROW_RIGHT_MASKS));
+                   (!ctx->GetOption(RSK_SHUFFLE_MASKS) && Get(LOGIC_CAN_BORROW_MASKS) && Get(LOGIC_SOLD_KEATON_MASK) &&
+                    Get(LOGIC_SOLD_SKULL_MASK) && Get(LOGIC_SOLD_SPOOKY_MASK) && Get(LOGIC_SOLD_BUNNY_HOOD));
         case RG_POWER_BRACELET:
         case RG_CHILD_WALLET:
         case RG_FISHING_POLE:

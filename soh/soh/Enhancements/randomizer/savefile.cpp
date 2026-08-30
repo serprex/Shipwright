@@ -350,11 +350,12 @@ void SetStartingItems() {
         Item_Give(NULL, ITEM_GERUDO_CARD);
     }
 
-    static const struct {
+    struct StartingMask {
         RandomizerSettingKey setting;
         RandomizerInf randInf;
         uint8_t item;
-    } startingMasks[] = {
+    };
+    static const StartingMask startingMasks[] = {
         { RSK_STARTING_KEATON_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_KEATON, ITEM_MASK_KEATON },
         { RSK_STARTING_SKULL_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_SKULL, ITEM_MASK_SKULL },
         { RSK_STARTING_SPOOKY_MASK, RAND_INF_CHILD_TRADES_HAS_MASK_SPOOKY, ITEM_MASK_SPOOKY },
