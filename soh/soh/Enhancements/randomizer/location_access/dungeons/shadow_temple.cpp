@@ -91,7 +91,6 @@ void RegionTable_Init_ShadowTemple() {
     }, {
         //Exits
         ENTRANCE(RR_SHADOW_TEMPLE_BEGINNING,            ctx->GetTrickOption(RT_VISIBLE_COLLISION) && (logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_HOOKSHOT) || (logic->IsAdult && logic->BunnyHood()))),
-        ENTRANCE(RR_SHADOW_TEMPLE_BEGINNING,            ctx->GetTrickOption(RT_VISIBLE_COLLISION) && (logic->CanUse(RG_HOVER_BOOTS) || logic->CanUse(RG_HOOKSHOT) || (logic->IsAdult && logic->BunnyHood()))),
         ENTRANCE(RR_SHADOW_TEMPLE_COMPASS_ROOM,         true),
         ENTRANCE(RR_SHADOW_TEMPLE_SPINNING_BLADES,      true),
         ENTRANCE(RR_SHADOW_TEMPLE_B2_TO_B3_CORRIDOR_B2, logic->HasExplosives() && logic->SmallKeys(SCENE_SHADOW_TEMPLE, 1)),
