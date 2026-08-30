@@ -44,6 +44,7 @@ extern "C" {
 #endif
 
 bool GenerateRandomizer(std::string seed = "");
+bool IsRandoGenerating();
 void WaitForRandoGeneration();
 
 #ifdef __cplusplus
