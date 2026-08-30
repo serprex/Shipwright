@@ -80,7 +80,7 @@ void RegionTable_Init_DeathMountainTrail() {
     }, {
         //Exits
         ENTRANCE(RR_DEATH_MOUNTAIN_TRAIL,  true),
-        //bunny keeps you ahead of the aimed boulders, but random boulders ahead become unavoidable because the aimed doulders catch you if you change course
+        //bunny keeps you ahead of the aimed boulders, but random boulders ahead become unavoidable because the aimed boulders catch you if you change course
         ENTRANCE(RR_DEATH_MOUNTAIN_SUMMIT, logic->HasItem(RG_CLIMB) &&
                                            (logic->IsAdult || ctx->GetTrickOption(RT_DMT_SHIELDLESS_CLIMB) || logic->HasItem(RG_HYLIAN_SHIELD) || logic->CanUse(RG_NAYRUS_LOVE))),
         ENTRANCE(RR_DMT_COW_GROTTO,        AnyAgeTime([]{return logic->BlastOrSmash();})),

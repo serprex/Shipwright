@@ -335,7 +335,7 @@ void RegionTable_Init_GanonsCastle() {
 
     areaTable[RR_GANONS_CASTLE_SHADOW_TRIAL_END] = Region("Ganon's Castle Shadow Trial End", SCENE_INSIDE_GANONS_CASTLE, {}, {
         //Locations
-        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_HEART_1, (ctx->GetTrickOption(RT_VOIDOUT_COLLECTION)  && logic->BunnyHovers())),
+        LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_HEART_1, ctx->GetTrickOption(RT_VOIDOUT_COLLECTION) && logic->BunnyHovers()),
         LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_HEART_2, (ctx->GetTrickOption(RT_VOIDOUT_COLLECTION) && logic->CanUse(RG_HOVER_BOOTS)) || logic->CanUse(RG_BOOMERANG)),
         LOCATION(RC_GANONS_CASTLE_SHADOW_TRIAL_HEART_3, (ctx->GetTrickOption(RT_VOIDOUT_COLLECTION) && (logic->CanUse(RG_HOVER_BOOTS)|| logic->BunnyHood())) || logic->CanUse(RG_BOOMERANG)),
     }, {
