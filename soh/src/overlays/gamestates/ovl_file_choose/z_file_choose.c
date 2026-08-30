@@ -425,6 +425,9 @@ void FileChoose_UpdateMainMenu(GameState* thisx) {
     bool dpad = CVarGetInteger(CVAR_SETTING("DpadInText"), 0);
 
     FileChoose_UpdateRandomizer();
+    if (generating) {
+        return;
+    }
 
     if (CHECK_BTN_ALL(input->press.button, BTN_START) || CHECK_BTN_ALL(input->press.button, BTN_A)) {
         if (this->buttonIndex <= FS_BTN_MAIN_FILE_3) {
@@ -2508,6 +2511,7 @@ void FileChoose_LoadGame(GameState* thisx) {
                          &gSfxDefaultFreqAndVolScale, &gSfxDefaultReverb);
     gSaveContext.fileNum = this->buttonIndex;
     gSaveContext.gameMode = GAMEMODE_NORMAL;
+    Randomizer_WaitForGeneration();
 
     if ((this->buttonIndex == FS_BTN_SELECT_FILE_1 && CVarGetInteger(CVAR_DEVELOPER_TOOLS("DebugEnabled"), 0)) ||
         this->buttonIndex == 0xFF) {

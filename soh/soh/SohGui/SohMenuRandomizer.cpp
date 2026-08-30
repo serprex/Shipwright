@@ -737,10 +737,8 @@ void SohMenu::AddMenuRandomizer() {
                      .Tooltip("Randomizes all randomizer settings to random valid values (excludes tricks)."))
         .SameLine(true);
     AddWidget(path, "Spoiler File", WIDGET_CUSTOM).CustomFunction([](WidgetInfo& info) {
-        JoinRandoGenerationThread();
         if (!CVarGetInteger(CVAR_RANDOMIZER_SETTING("DontGenerateSpoiler"), 0)) {
-            std::string spoilerfilepath = CVarGetString(CVAR_GENERAL("SpoilerLog"), "");
-            ImGui::Text("Spoiler File: %s", spoilerfilepath.c_str());
+            ImGui::Text("Spoiler File: %s", CVarGetString(CVAR_GENERAL("SpoilerLog"), ""));
         }
     });
 

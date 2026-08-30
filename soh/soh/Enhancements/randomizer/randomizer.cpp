@@ -43,8 +43,6 @@ std::unordered_map<std::string, HintType> SpoilerfileHintTypeNameToEnum;
 std::set<RandomizerCheck> excludedLocations;
 std::set<RandomizerCheck> spoilerExcludedLocations;
 
-bool generated;
-
 bool Rando_HandleSpoilerDrop(char* filePath) {
     if (SohUtils::IsStringEmpty(filePath)) {
         return false;
@@ -966,29 +964,23 @@ void GenerateRandomizerImgui(std::string seed = "") {
     CVarSetInteger(CVAR_GENERAL("RandoGenerating"), 0);
     Ship::Context::GetRawInstance()->GetWindow()->GetGui()->SaveConsoleVariablesNextFrame();
 
-    generated = true;
-
     GameInteractor::Instance->ExecuteHooks<GameInteractor::OnGenerationCompletion>();
 }
 
 bool GenerateRandomizer(std::string seed /*= ""*/) {
-    if (generated) {
-        generated = false;
-        randoThread.join();
+    if (CVarGetInteger(CVAR_GENERAL("RandoGenerating"), 0) != 0) {
+        return false;
     }
-    if (CVarGetInteger(CVAR_GENERAL("RandoGenerating"), 0) == 0) {
-        randoThread = std::thread(&GenerateRandomizerImgui, seed);
-        return true;
-    }
-    return false;
+    WaitForRandoGeneration();
+    randoThread = std::thread(&GenerateRandomizerImgui, seed);
+    return true;
 }
 
 static bool locationsTabOpen = false;
 static bool tricksTabOpen = false;
 
-void JoinRandoGenerationThread() {
-    if (generated) {
-        generated = false;
+void WaitForRandoGeneration() {
+    if (randoThread.joinable()) {
         randoThread.join();
     }
 }
