@@ -126,10 +126,10 @@ bool Logic::HasItem(RandomizerGet itemName) {
             // Masks
         case RG_SKULL_MASK:
             return CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_SKULL) ||
-                   (ctx->GetOption(RSK_MASK_QUEST).Is(RO_MASK_QUEST_VANILLA) && Get(LOGIC_BORROW_SKULL_MASK));
+                   (!ctx->GetOption(RSK_SHUFFLE_MASKS) && Get(LOGIC_BORROW_SKULL_MASK));
         case RG_MASK_OF_TRUTH:
             return CheckRandoInf(RAND_INF_CHILD_TRADES_HAS_MASK_TRUTH) ||
-                   (ctx->GetOption(RSK_MASK_QUEST).Is(RO_MASK_QUEST_VANILLA) && Get(LOGIC_BORROW_RIGHT_MASKS));
+                   (!ctx->GetOption(RSK_SHUFFLE_MASKS) && Get(LOGIC_BORROW_RIGHT_MASKS));
         case RG_POWER_BRACELET:
         case RG_CHILD_WALLET:
         case RG_FISHING_POLE:

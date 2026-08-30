@@ -1685,7 +1685,7 @@ void ConfigVersion7Updater::Update(Ship::Config* conf) {
             CVarSetInteger("gRandoSettings.StartingMaskOfTruth", 1);
             [[fallthrough]];
         case 2: // Shuffle
-            CVarSetInteger("gRandoSettings.ShuffleMasks", RO_MASK_QUEST_SHUFFLE);
+            CVarSetInteger("gRandoSettings.ShuffleMasks", 1);
             break;
     }
     CVarClear("gRandoSettings.CompleteMaskQuest");

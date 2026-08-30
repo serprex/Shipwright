@@ -415,7 +415,7 @@ void GenerateItemPool() {
         AddFixedItemToPool(RG_SKELETON_KEY, 1);
     }
 
-    if (ctx->GetOption(RSK_MASK_QUEST).Is(RO_MASK_QUEST_SHUFFLE)) {
+    if (ctx->GetOption(RSK_SHUFFLE_MASKS)) {
         if (!ctx->GetOption(RSK_STARTING_KEATON_MASK)) AddItemToPool(RG_KEATON_MASK, 2, 1, 1, 1);
         if (!ctx->GetOption(RSK_STARTING_SKULL_MASK)) AddItemToPool(RG_SKULL_MASK, 2, 1, 1, 1);
         if (!ctx->GetOption(RSK_STARTING_SPOOKY_MASK)) AddItemToPool(RG_SPOOKY_MASK, 2, 1, 1, 1);
