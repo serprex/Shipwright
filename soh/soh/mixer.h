@@ -61,6 +61,7 @@ struct OggOpusFile;
 
 void aOPUSdecImpl(void* source_addr, uint16_t dest_addr, uint16_t nbytes, struct OggOpusFile** decState, int32_t pos,
                   uint32_t size);
+void aOPUSFree(struct OggOpusFile* opusFile);
 
 #define aSegment(pkt, s, b) \
     do {                    \

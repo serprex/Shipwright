@@ -489,6 +489,7 @@ typedef struct {
     /* 0x1C */ u16 unk_1C;
     /* 0x1E */ u16 unk_1E;
     struct OggOpusFile* opusFile; // Only for streamed opus audio
+    uintptr_t opusSampleAddr;     // sample opusFile was opened for
 } NoteSynthesisState; // size = 0x20
 
 typedef struct {
