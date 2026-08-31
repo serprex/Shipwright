@@ -114,7 +114,7 @@ static void replaceRandomVowel(std::string& target, uint64_t* randState) {
 
     size_t pos = ShipUtils::RandomElement(vowelPositions, randState);
 
-    const std::vector<char> vowels = { 'a', 'e', 'i', 'o', 'u' };
+    const std::array<char, 5> vowels = { 'a', 'e', 'i', 'o', 'u' };
     char newVowel = ShipUtils::RandomElement(vowels, randState);
 
     if (std::isupper(target[pos])) {
