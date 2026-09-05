@@ -32,9 +32,9 @@ void RegionTable_Init_FireTemple() {
         //and I've only been able to get the nearest 2, regardless it's a trick and probably a specific one like GY crate freestanding with rang
     }, {
         //Exits
-        ENTRANCE(RR_FIRE_TEMPLE_FOYER,           (logic->IsAdult || logic->CanUse(RG_HOVER_BOOTS) || (logic->BunnyHood() && logic->Get(LOGIC_FIRE_HIT_PLATFORM))) && (logic->FireTimer() >= 16 || (logic->Get(LOGIC_FIRE_HIT_PLATFORM) && logic->FireTimer() >= 8))),
-        ENTRANCE(RR_FIRE_TEMPLE_NEAR_BOSS_UPPER, logic->IsAdult && (logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS)) && logic->FireTimer() >= 16),
-        ENTRANCE(RR_FIRE_TEMPLE_BOSS_ENTRYWAY,   logic->FireTimer() >= 16 && (logic->CanUse(RG_HOVER_BOOTS) || (logic->BunnyHood() && logic->Get(LOGIC_FIRE_HIT_PLATFORM)) || (logic->IsAdult && (ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS) || logic->Get(LOGIC_FIRE_HIT_PLATFORM))))),
+        ENTRANCE(RR_FIRE_TEMPLE_FOYER,           true),
+        ENTRANCE(RR_FIRE_TEMPLE_NEAR_BOSS_UPPER, logic->IsAdult && ((logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS) || logic->BunnyHood()) && logic->FireTimer() >= 16)),
+        ENTRANCE(RR_FIRE_TEMPLE_BOSS_ENTRYWAY,   logic->FireTimer() >= 16 && (logic->CanUse(RG_HOVER_BOOTS) || (logic->Get(LOGIC_FIRE_HIT_PLATFORM) && logic->BunnyHood()) || (logic->IsAdult && (ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS) || logic->BunnyHood() || logic->Get(LOGIC_FIRE_HIT_PLATFORM))))),
     });
 
     //This region assumes tunic logic is handled on entry.
@@ -575,7 +575,7 @@ void RegionTable_Init_FireTemple() {
         LOCATION(RC_FIRE_TEMPLE_MQ_OUTSIDE_BOSS_CRATE_2, logic->FireTimer() >= 24 && logic->CanBreakCrates()),
     }, {
         //Exits
-        ENTRANCE(RR_FIRE_TEMPLE_MQ_FOYER_UPPER,      (logic->IsAdult || logic->CanUse(RG_HOVER_BOOTS) || (logic->Get(LOGIC_FIRE_HIT_PLATFORM) && logic->BunnyHood())) && (logic->FireTimer() >= 16 || (logic->Get(LOGIC_FIRE_HIT_PLATFORM) && logic->FireTimer() >= 8))),
+        ENTRANCE(RR_FIRE_TEMPLE_MQ_FOYER_UPPER,      true),
         ENTRANCE(RR_FIRE_TEMPLE_MQ_NEAR_BOSS_TARGET, logic->FireTimer() >= 32 && (logic->CanUse(RG_HOOKSHOT) || logic->CanUse(RG_HOVER_BOOTS) || (logic->IsAdult && logic->BunnyHood()))),
         ENTRANCE(RR_FIRE_TEMPLE_BOSS_ENTRYWAY,       logic->FireTimer() >= 16 && (logic->CanUse(RG_HOVER_BOOTS) || (logic->Get(LOGIC_FIRE_HIT_PLATFORM) && logic->BunnyHood()) || (logic->IsAdult && (ctx->GetTrickOption(RT_UNINTUITIVE_JUMPS) || logic->BunnyHood() || logic->Get(LOGIC_FIRE_HIT_PLATFORM))))),
     });
