@@ -86,10 +86,6 @@ if (NOT TARGET libultraship)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../libultraship ${CMAKE_BINARY_DIR}/libultraship)
 endif()
 
-if (NOT TARGET ZAPDLib)
-    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/ZAPDTR/ZAPD ${CMAKE_BINARY_DIR}/ZAPD)
-endif()
-
 set(PROJECT_NAME 2ship)
 
 ################################################################################
@@ -253,7 +249,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE assets
 	${CMAKE_CURRENT_SOURCE_DIR}/include/PR
 	${CMAKE_CURRENT_SOURCE_DIR}/src/
     ${CMAKE_CURRENT_SOURCE_DIR}/../libultraship/include
-    ${CMAKE_CURRENT_SOURCE_DIR}/ZAPDTR/ZAPD/resource/type
 	${CMAKE_CURRENT_SOURCE_DIR}
 	${CMAKE_CURRENT_SOURCE_DIR}/2s2h/
 	${SDL2-INCLUDE}
@@ -536,33 +531,29 @@ endif()
 # Pre build events
 ################################################################################
 if (CMAKE_GENERATOR MATCHES "Visual Studio")
-    set(VS_COPY_ASSETS_CMD ${CMAKE_COMMAND} -E copy_directory_if_different $<TARGET_FILE_DIR:2ship>/assets ${CMAKE_BINARY_DIR}/2s2h/assets)
-endif()
-if(NOT CMAKE_SYSTEM_NAME MATCHES "NintendoSwitch|CafeOS")
     add_custom_command(
-        TARGET ${PROJECT_NAME}
-        POST_BUILD
-        COMMENT "Copying asset xmls..."
-        COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different ${CMAKE_SOURCE_DIR}/2s2h/assets/extractor $<TARGET_FILE_DIR:2ship>/assets
-        COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different ${CMAKE_SOURCE_DIR}/2s2h/assets/xml $<TARGET_FILE_DIR:2ship>/assets/xml
-        COMMAND ${CMAKE_COMMAND} -E make_directory $<TARGET_FILE_DIR:2ship>/assets/symbols
-        COMMAND ${VS_COPY_ASSETS_CMD}
+    TARGET ${PROJECT_NAME}
+    POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different ${CMAKE_SOURCE_DIR}/2s2h/assets/yml ${CMAKE_BINARY_DIR}/2s2h/assets
     )
 endif()
+add_custom_command(
+    TARGET ${PROJECT_NAME}
+    POST_BUILD
+    COMMENT "Copying asset ymls..."
+    COMMAND ${CMAKE_COMMAND} -E copy_directory_if_different ${CMAKE_SOURCE_DIR}/2s2h/assets/yml $<TARGET_FILE_DIR:2ship>/assets
+)
 ################################################################################
 # Dependencies
 ################################################################################
 add_dependencies(${PROJECT_NAME}
     libultraship
+    torch
 )
-if(NOT CMAKE_SYSTEM_NAME MATCHES "NintendoSwitch|CafeOS")
-add_dependencies(${PROJECT_NAME}
-    ZAPDLib
-)
-endif()
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
     find_package(glfw3 REQUIRED)
+    find_package(PNG REQUIRED)
 
     find_package(Ogg CONFIG REQUIRED)
     link_libraries(Ogg::ogg)
@@ -576,7 +567,8 @@ if (CMAKE_SYSTEM_NAME STREQUAL "Windows")
 
 	set(ADDITIONAL_LIBRARY_DEPENDENCIES
 		"libultraship;"
-		"ZAPDLib;"
+		"torch;"
+		"PNG::PNG;"
 		"glu32;"
 		"SDL2::SDL2;"
 		"SDL2::SDL2main;"
@@ -623,9 +615,11 @@ else()
     find_package(Vorbis REQUIRED)
     find_package(Opus REQUIRED)
     find_package(OpusFile REQUIRED)
+    find_package(PNG REQUIRED)
     set(ADDITIONAL_LIBRARY_DEPENDENCIES
         "libultraship;"
-		"ZAPDLib;"
+		"torch;"
+        "PNG::PNG;"
         "Ogg::ogg"
         "Vorbis::vorbis"
         "Vorbis::vorbisenc"

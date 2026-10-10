@@ -71,35 +71,10 @@ jobs:
       run: |
         echo "/usr/lib/ccache" >> "$GITHUB_PATH"
         echo "/usr/local/opt/ccache/libexec" >> "$GITHUB_PATH"
-    - name: Generate soh.o2r
-      if: matrix.game == 'soh'
+    - name: Generate ${{ matrix.game }}.o2r
       run: |
-        cmake --no-warn-unused-cli -H. -Bbuild-cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Release -DBUILD_2SHIP=OFF -DSOH_TOOLS_ONLY=ON
-        cmake --build build-cmake --config Release --target GenerateSohOtr -j4
-    # ZAPD needs libultraship, so 2ship configures the whole build
-    - name: Install latest SDL
-      if: matrix.game == '2ship'
-      run: |
-        mkdir -p deps
-        wget https://github.com/libsdl-org/SDL/releases/download/release-2.30.3/SDL2-2.30.3.tar.gz
-        tar -xzf SDL2-2.30.3.tar.gz -C deps
-        cd deps/SDL2-2.30.3
-        ./configure --enable-hidapi-libusb
-        make -j 10
-        sudo make install
-        sudo cp -av /usr/local/lib/libSDL* /lib/x86_64-linux-gnu/
-    - uses: ./.github/actions/install-sdl2-net
-      if: matrix.game == '2ship'
-    - name: Remove distro tinyxml2
-      if: matrix.game == '2ship'
-      run: sudo apt-get remove libtinyxml2-dev
-    - uses: ./.github/actions/install-tinyxml2
-      if: matrix.game == '2ship'
-    - name: Generate 2ship.o2r
-      if: matrix.game == '2ship'
-      run: |
-        cmake --no-warn-unused-cli -H. -Bbuild-cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Release -DBUILD_SOH=OFF
-        cmake --build build-cmake --config Release --target Generate2ShipOtr -j4
+        cmake --no-warn-unused-cli -H. -Bbuild-cmake -GNinja -DCMAKE_BUILD_TYPE:STRING=Release ${{ matrix.game == 'soh' && '-DBUILD_2SHIP=OFF' || '-DBUILD_SOH=OFF' }} -DSHIP_TOOLS_ONLY=ON
+        cmake --build build-cmake --config Release --target ${{ matrix.game == 'soh' && 'GenerateSohOtr' || 'Generate2ShipOtr' }} -j4
     - name: Upload o2r
       uses: actions/upload-artifact@v7
       with:

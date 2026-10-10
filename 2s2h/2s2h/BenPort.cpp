@@ -331,7 +331,8 @@ void OTRGlobals::RunExtract(int argc, char* argv[]) {
     }
 
     std::shared_ptr<BS::thread_pool> threadPool = std::make_shared<BS::thread_pool>(1);
-    std::optional<std::future<void>> extractionTask;
+    // Holds whether extraction made an archive
+    std::optional<std::future<bool>> extractionTask;
 
 #if not defined(__SWITCH__) && not defined(__WIIU__)
     CheckAndCreateModFolder();
@@ -465,10 +466,11 @@ void OTRGlobals::RunExtract(int argc, char* argv[]) {
                 args.erase(args.begin());
                 extract = Extractor();
                 if (extract.RunFileStandalone(file)) {
-                    extractionTask = threadPool->submit_task([&]() -> void {
-                        extract.CallZapd(installPath, Ship::Context::GetAppDirectoryPath(appShortName), &extractCount,
-                                         &totalExtract);
+                    extractionTask = threadPool->submit_task([&]() -> bool {
+                        bool ok = extract.CallTorch(installPath, Ship::Context::GetAppDirectoryPath(appShortName),
+                                                    &extractCount, &totalExtract);
                         extractCount = totalExtract = 0;
+                        return ok;
                     });
                 } else {
                     bool open = true;
@@ -517,12 +519,13 @@ void OTRGlobals::RunExtract(int argc, char* argv[]) {
                             promptStep = PS_FILE_CHECK;
                             continue;
                         }
-                        extractionTask = threadPool->submit_task([&]() -> void {
-                            extract.CallZapd(installPath, Ship::Context::GetAppDirectoryPath(appShortName),
-                                             &extractCount, &totalExtract);
+                        extractionTask = threadPool->submit_task([&]() -> bool {
+                            bool ok = extract.CallTorch(installPath, Ship::Context::GetAppDirectoryPath(appShortName),
+                                                        &extractCount, &totalExtract);
                             extractStep = ES_VERIFY;
                             extractCount = 0;
                             totalExtract = 0;
+                            return ok;
                         });
                         continue;
                     }
@@ -533,11 +536,13 @@ void OTRGlobals::RunExtract(int argc, char* argv[]) {
             }
             case ES_VERIFY: {
                 if (!std::filesystem::exists(Ship::Context::LocateFileAcrossAppDirs("mm.o2r", appShortName))) {
+                    // Stay in the loop so the popup shows, the game can't start without mm.o2r
                     BenGui::RegisterPopup("No ROM Archives",
                                           "No ROM O2R files detected. Please generate a ROM O2R and relaunch.", "OK",
                                           "", [&]() { exit(0); });
+                } else {
+                    extractDone = true;
                 }
-                extractDone = true;
                 continue;
             }
             default:
@@ -566,7 +571,10 @@ void OTRGlobals::RunExtract(int argc, char* argv[]) {
             auto status = extractionTask->wait_for(std::chrono::milliseconds(0));
             if (status == std::future_status::ready) {
                 try {
-                    extractionTask->get();
+                    if (!extractionTask->get()) {
+                        BenGui::RegisterPopup("Extraction Failed",
+                                              "Could not generate mm.o2r from the ROM.\nSee the log for details.");
+                    }
                 } catch (const std::exception& e) {
                     BenGui::RegisterPopup("Extraction Crashed", e.what(), "Close", "", []() { exit(1); });
                 }

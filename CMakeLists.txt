@@ -247,7 +247,9 @@ set(BUILD_UI                OFF CACHE BOOL "" FORCE)  # would fetch a 2nd libult
 set(BUILD_STORMLIB          OFF CACHE BOOL "" FORCE)  # target name clashes with LUS's `storm`
 set(BUILD_NAUDIO            OFF CACHE BOOL "" FORCE)
 
+# torch's MM factories build on its OoT ones, so OoT stays on for 2ship too
 set(BUILD_OOT               ON  CACHE BOOL "" FORCE)
+set(BUILD_MM                ${BUILD_2SHIP} CACHE BOOL "" FORCE)
 foreach(_torch_game SM64 MK64 SF64 PM64 FZERO BK64 MARIO_ARTIST)
     set(BUILD_${_torch_game} OFF CACHE BOOL "" FORCE)
 endforeach()
@@ -294,13 +296,12 @@ endfunction()
 add_custom_target(ExtractAssets)
 add_custom_target(ExtractAssetHeaders)
 
-# torch only extracts OoT so far, 2ship uses ZAPDTR (see 2s2h/2ship.cmake)
-if(BUILD_SOH)
 add_subdirectory(torch SYSTEM)
 quiet_dependency_tree(${CMAKE_CURRENT_SOURCE_DIR}/torch)
 
 target_compile_definitions(torch INTERFACE YAML_CPP_STATIC_DEFINE)
 
+if(BUILD_SOH)
 # Build-time ROM extraction. soh links torch as a static library, which compiles out torch's
 # own CLI, so this supplies an entry point around the same code the game runs.
 add_executable(soh-torch EXCLUDE_FROM_ALL
@@ -351,6 +352,8 @@ add_custom_target(
 )
 
 # soh.o2r is rebuilt only when its inputs change, and is part of ALL so `install` never ships a stale one.
+# A tools-only configure never adds soh/, so make its build dir for the packer.
+file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/soh)
 file(GLOB_RECURSE SOH_O2R_ASSETS CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/soh/assets/custom/*)
 list(FILTER SOH_O2R_ASSETS EXCLUDE REGEX "/soh/assets/custom/shaders/")
 file(GLOB_RECURSE SOH_O2R_SHADERS CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/libultraship/src/fast/shaders/*)
@@ -375,18 +378,18 @@ add_custom_target(GenerateSohOtr ALL DEPENDS ${CMAKE_BINARY_DIR}/soh/soh.o2r)
 # ExtractAssets produced soh.o2r as well as the rom archives, so keep doing that.
 add_dependencies(ExtractAssetsSoh GenerateSohOtr)
 add_dependencies(ExtractAssets ExtractAssetsSoh)
-# Only say why soh headers can't be made when no other game can make them
-if(NOT BUILD_2SHIP)
-    add_dependencies(ExtractAssetHeaders ExtractAssetHeadersSoh)
+add_dependencies(ExtractAssetHeaders ExtractAssetHeadersSoh)
 endif()
 
-# The asset tools only need torch, so a tools-only configure can skip libultraship and soh
-# entirely -- that is all CI needs to produce soh.o2r.
-option(SOH_TOOLS_ONLY "Configure only the asset tools, skipping libultraship and soh" OFF)
-if(SOH_TOOLS_ONLY)
-    file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/soh)
-    return()
+if(BUILD_2SHIP)
+    include(2s2h/2ship-tools.cmake)
 endif()
+
+# The asset tools only need torch, so a tools-only configure can skip libultraship and the
+# games entirely -- that is all CI needs to produce soh.o2r and 2ship.o2r.
+option(SHIP_TOOLS_ONLY "Configure only the asset tools, skipping libultraship and the games" OFF)
+if(SHIP_TOOLS_ONLY)
+    return()
 endif()
 
 ################################################################################

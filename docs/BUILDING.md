@@ -40,7 +40,7 @@ It is recommended that you install Python and Git standalone, the install proces
 
 1. Clone the Ship of Harkinian repository
 
-_Note: Be sure to either clone with the ``--recursive`` flag or do ``git submodule update --init`` after cloning to pull in the libultraship, torch, ZAPDTR and OTRExporter submodules!_
+_Note: Be sure to either clone with the ``--recursive`` flag or do ``git submodule update --init`` after cloning to pull in the libultraship and torch submodules!_
 
 2. After setup and initial build, use the built-in OTR extraction to make your oot.o2r/oot-mq.o2r (SoH) and mm.o2r (2ship) files.
 

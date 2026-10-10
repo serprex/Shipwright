@@ -1,8 +1,5 @@
 # 2ship's part of the root build, included from the root CMakeLists.txt when BUILD_2SHIP is on.
-# The root project is SoH's, so 2ship keeps its own version and build name here.
-set(TWOSHIP_VERSION 5.0.1)
-set(TWOSHIP_BUILD_NAME "Battler Bravo")
-set(TWOSHIP_TEAM "github.com/2ship2harkinian")
+# Version, asset tools and extraction targets are in 2ship-tools.cmake.
 
 if (CMAKE_SYSTEM_NAME MATCHES "Windows|Linux")
     if(NOT DEFINED BUILD_CROWD_CONTROL)
@@ -10,25 +7,6 @@ if (CMAKE_SYSTEM_NAME MATCHES "Windows|Linux")
     endif()
 endif()
 
-# Builds ZAPD and OTRExporter for MM, without it they read MM's archive files wrong
-set(GAME_STR "MM")
-add_subdirectory(2s2h/ZAPDTR/ZAPD ${CMAKE_BINARY_DIR}/ZAPD)
-add_subdirectory(2s2h/OTRExporter)
-# OTRExporter looks for libultraship and mm/ next to itself, which held when it sat at 2ship's root.
-# It includes "../../mm/2s2h/resource/type/2shResourceType.h", so copy that header to where
-# an include dir two levels down finds it. Drop this once OTRExporter uses the new path.
-set(OTREXPORTER_MM_SHIM ${CMAKE_BINARY_DIR}/otrexporter-mm)
-configure_file(${CMAKE_SOURCE_DIR}/2s2h/2s2h/resource/type/2shResourceType.h
-    ${OTREXPORTER_MM_SHIM}/mm/2s2h/resource/type/2shResourceType.h COPYONLY)
-file(MAKE_DIRECTORY ${OTREXPORTER_MM_SHIM}/a/b)
-target_include_directories(OTRExporter PRIVATE
-    ${OTREXPORTER_MM_SHIM}/a/b
-    ${CMAKE_SOURCE_DIR}/libultraship/include
-    ${CMAKE_SOURCE_DIR}/libultraship
-    ${CMAKE_SOURCE_DIR}/libultraship/src
-    ${CMAKE_SOURCE_DIR}/libultraship/extern
-    ${CMAKE_SOURCE_DIR}/2s2h/2s2h
-)
 add_subdirectory(2s2h)
 
 set_property(TARGET 2ship PROPERTY APPIMAGE_DESKTOP_FILE_TERMINAL YES)
@@ -37,66 +15,22 @@ set_property(TARGET 2ship PROPERTY APPIMAGE_ICON_FILE "${CMAKE_BINARY_DIR}/2s2hI
 
 if("${CMAKE_SYSTEM_NAME}" STREQUAL "Linux")
 install(FILES "${CMAKE_BINARY_DIR}/2s2h/2ship.o2r" DESTINATION . COMPONENT ship)
-install(TARGETS ZAPD DESTINATION ./assets/extractor COMPONENT extractor)
-install(DIRECTORY "${CMAKE_SOURCE_DIR}/2s2h/assets/extractor/" DESTINATION ./assets/ COMPONENT extractor)
-install(DIRECTORY "${CMAKE_SOURCE_DIR}/2s2h/assets/xml/" DESTINATION ./assets/xml COMPONENT extractor)
+install(DIRECTORY "${CMAKE_SOURCE_DIR}/2s2h/assets/yml/" DESTINATION assets COMPONENT ship)
 endif()
 
 if ("${CMAKE_SYSTEM_NAME}" STREQUAL "Windows")
-install(DIRECTORY "${CMAKE_SOURCE_DIR}/2s2h/assets/extractor/" DESTINATION ./assets/ COMPONENT 2s2h)
-install(DIRECTORY "${CMAKE_SOURCE_DIR}/2s2h/assets/xml/" DESTINATION ./assets/xml COMPONENT 2s2h)
+install(DIRECTORY "${CMAKE_SOURCE_DIR}/2s2h/assets/yml/" DESTINATION assets COMPONENT 2s2h)
 endif()
 
-find_package(Python3 COMPONENTS Interpreter)
-
-# Target to generate OTRs
-add_custom_target(
-    ExtractAssets2Ship
-    # CMake versions prior to 3.17 do not have the rm command, use remove instead for older versions
-    COMMAND ${CMAKE_COMMAND} -E $<IF:$<VERSION_LESS:${CMAKE_VERSION},3.17>,remove,rm> -f mm.zip 2ship.o2r
-    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/2s2h/OTRExporter/extract_assets.py -z "$<TARGET_FILE:ZAPD>" --non-interactive --xml-root ../2s2h/assets/xml --custom-otr-file 2ship.o2r "--custom-assets-path" ${CMAKE_SOURCE_DIR}/2s2h/assets/custom --port-ver "${TWOSHIP_VERSION}"
-    COMMAND ${CMAKE_COMMAND} -DSYSTEM_NAME=${CMAKE_SYSTEM_NAME} -DTARGET_DIR="$<TARGET_FILE_DIR:ZAPD>" -DSOURCE_DIR=${CMAKE_SOURCE_DIR} -DBINARY_DIR=${CMAKE_BINARY_DIR} -P ${CMAKE_SOURCE_DIR}/2s2h/CMake/copy-existing-otrs.cmake
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/2s2h
-    COMMENT "Running asset extraction..."
-    DEPENDS ZAPD
-    BYPRODUCTS mm.o2r ${CMAKE_SOURCE_DIR}/mm.o2r
-)
-add_dependencies(ExtractAssets ExtractAssets2Ship)
-
-# Target to generate headers
-add_custom_target(
-    ExtractAssetHeaders2Ship
-    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/2s2h/OTRExporter/extract_assets.py -z "$<TARGET_FILE:ZAPD>" --non-interactive --xml-root ../2s2h/assets/xml --gen-headers
-    WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/2s2h
-    COMMENT "Generating asset headers..."
-    DEPENDS ZAPD
-)
-add_dependencies(ExtractAssetHeaders ExtractAssetHeaders2Ship)
-
-# 2ship.o2r is rebuilt only when its inputs change, and is part of ALL like soh.o2r.
-# Calls ZAPD directly: extract_assets.py exits 0 even when ZAPD fails.
-file(GLOB_RECURSE TWOSHIP_O2R_ASSETS CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/2s2h/assets/custom/*)
 if(CMAKE_SYSTEM_NAME MATCHES "Windows")
     # Next to 2ship.exe, so it runs from the build folder
-    set(TWOSHIP_O2R_COPY_TO_EXE COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/2s2h/2ship.o2r $<TARGET_FILE_DIR:2ship>)
+    add_dependencies(2ship Generate2ShipOtr)
+    add_custom_command(
+        TARGET 2ship
+        POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/2s2h/2ship.o2r $<TARGET_FILE_DIR:2ship>
+    )
 endif()
-add_custom_command(
-    OUTPUT ${CMAKE_BINARY_DIR}/2s2h/2ship.o2r
-    # ZAPD leaves an existing file alone
-    COMMAND ${CMAKE_COMMAND} -E rm -f ${CMAKE_BINARY_DIR}/2s2h/2ship.o2r
-    COMMAND $<TARGET_FILE:ZAPD> botr -se OTR --norom
-            --customAssetsPath ${CMAKE_SOURCE_DIR}/2s2h/assets/custom
-            --customOtrFile ${CMAKE_BINARY_DIR}/2s2h/2ship.o2r
-            --portVer ${TWOSHIP_VERSION}
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_BINARY_DIR}/2s2h/2ship.o2r ${CMAKE_SOURCE_DIR}/2ship.o2r
-    ${TWOSHIP_O2R_COPY_TO_EXE}
-    COMMENT "Generating 2ship.o2r..."
-    DEPENDS ZAPD ${TWOSHIP_O2R_ASSETS}
-    BYPRODUCTS ${CMAKE_SOURCE_DIR}/2ship.o2r
-    VERBATIM
-)
-add_custom_target(Generate2ShipOtr ALL DEPENDS ${CMAKE_BINARY_DIR}/2s2h/2ship.o2r)
-
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
 file(COPY ${CMAKE_SOURCE_DIR}/2s2h/linux/2s2hIcon.png DESTINATION ${CMAKE_BINARY_DIR})
 endif()
@@ -120,10 +54,7 @@ add_custom_target(CreateOSXIcons2Ship
    )
 add_dependencies(2ship CreateOSXIcons2Ship)
 
-install(TARGETS ZAPD DESTINATION ${CMAKE_BINARY_DIR}/assets/extractor)
-
-install(DIRECTORY "${CMAKE_SOURCE_DIR}/2s2h/assets/extractor/" DESTINATION ./assets/)
-install(DIRECTORY "${CMAKE_SOURCE_DIR}/2s2h/assets/xml/" DESTINATION ./assets/xml)
+install(DIRECTORY "${CMAKE_SOURCE_DIR}/2s2h/assets/yml/" DESTINATION assets)
 
 # Rename the installed 2ship binary to drop the macos suffix
 INSTALL(CODE "FILE(RENAME \${CMAKE_INSTALL_PREFIX}/../MacOS/2s2h-macos \${CMAKE_INSTALL_PREFIX}/../MacOS/2s2h)")
